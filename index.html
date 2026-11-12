@@ -1949,6 +1949,7 @@ function renderSalvato(){
 function renderAvviso(){
   const ub=S.impostazioni.ultimoBackup;
   const giorni=ub?Math.floor((Date.now()-new Date(ub))/864e5):null;
+  if(window.SYNC&&window.SYNC.user){$('#avviso').innerHTML=(giorni===null||giorni>=30)?`<div class="avviso-backup">💾 <span>I dati sono salvati online. Ogni mese conviene comunque scaricare una copia di sicurezza${giorni===null?'':` (l'ultima è di ${giorni} giorni fa)`}.</span><button class="btn piccolo" data-act="esporta">Scarica backup</button></div>`:'';return}
   $('#avviso').innerHTML=(giorni===null||giorni>=7)?`<div class="avviso-backup">💾 <span>${giorni===null?'Non hai ancora fatto un backup.':`Ultimo backup ${giorni} giorni fa.`} I dati stanno solo in questo browser.</span><button class="btn piccolo" data-act="esporta">Scarica backup</button></div>`:'';
 }
 function renderPagina(){
@@ -4685,5 +4686,7 @@ document.addEventListener('keydown',e=>{
 
 carica();salva();render();
 </script>
+<script>window.FIREBASE_CONFIG={"apiKey": "AIzaSyDKDCEyxwAcV7Ol_ycBRHO4qtFCVG9IL8g", "authDomain": "contabilita-4949c.firebaseapp.com", "projectId": "contabilita-4949c", "storageBucket": "contabilita-4949c.firebasestorage.app", "messagingSenderId": "1087110593347", "appId": "1:1087110593347:web:c101301bbd598af5934df6"};</script>
+<script type="module" src="sync.js"></script>
 </body>
 </html>
