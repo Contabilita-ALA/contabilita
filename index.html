@@ -2734,7 +2734,9 @@ function crescitaMinimi(fino){ // media degli aumenti dei minimi (soggettivo + i
 function acVaSel(a){const VF=vaFatture(a);return pvBase()==='prev'?pvVaPrev(a):VF?VF.inc:0}
 function renderAnnuario(){
   const oggi=new Date().getFullYear(), F=S.fiscale||{}, C=crescitaMinimi(oggi), va=acVaSel(oggi);
-  FIS_OVR={va:{[oggi]:va,[oggi+1]:va},min:F[oggi+1]&&(F[oggi+1].o||{}).stima?{[oggi+1]:1+C.g}:{}};
+  let va27=0;try{va27=datiPrevisione(oggi,pvVaX(oggi+1)).va||0}catch(e){}
+  C.daPrev=va27>0.5;
+  FIS_OVR={va:{[oggi]:va,[oggi+1]:C.daPrev?va27:va},min:F[oggi+1]&&(F[oggi+1].o||{}).stima?{[oggi+1]:1+C.g}:{}};
   try{return renderAnnuario0(C)}finally{FIS_OVR=null}
 }
 function renderAnnuario0(CM){
@@ -2800,9 +2802,9 @@ function renderAnnuario0(CM){
   const acVaSel0=b=>{const VF=vaFatture(oggi);return b==='prev'?pvVaPrev(oggi):VF?VF.inc:0};
   const AT=[...(Z27?[Z27]:[]),...AA.slice().reverse()];
   const pcG=v=>numIt(Math.round(v*1000)/10).replace(/0$/,'').replace(/,$/,'');
-  const tit27=Z27?`Stima: stesso volume d'affari del ${oggi}; minimi Inarcassa ${CM.g?`+${pcG(CM.g)}% (media degli aumenti ${CM.da}–${CM.a})`:'come il '+oggi}; aliquote del ${oggi+1} come nel Riepilogo fiscale`:'';
+  const tit27=Z27?`Stima: ${CM.daPrev?`volume d'affari dalle entrate della Previsione anno prossimo`:`nella Previsione anno prossimo non ci sono ancora entrate ${oggi+1}: volume d'affari uguale al ${oggi}`}; minimi Inarcassa ${CM.g?`+${pcG(CM.g)}% (media degli aumenti ${CM.da}–${CM.a})`:'come il '+oggi}; aliquote del ${oggi+1} come nel Riepilogo fiscale`:'';
   const tab=`<div class="ac-scroll" onscroll="this.classList.toggle('mosso',this.scrollLeft>0)"><div class="ac-tab" style="--ny:${AT.length}">
-    <div class="r hh"><span>importi in €</span>${AT.map(Z=>`<span class="n y ${Z.a===oggi?'cor':Z.a>oggi?'fut':''}" data-fis-anno="${Z.a}" data-an-vai="1" title="${Z.a>oggi?esc(tit27):'Apri il Riepilogo fiscale '+Z.a}"><b>${Z.a}</b>${Z.a===oggi?`<small>${pvBase()==='prev'?'previsto':'incassato'}</small>`:Z.a>oggi?`<small>stima${CM.g?' · minimi +'+pcG(CM.g)+'%':''}</small>`:''}</span>`).join('')}</div>
+    <div class="r hh"><span>importi in €</span>${AT.map(Z=>`<span class="n y ${Z.a===oggi?'cor':Z.a>oggi?'fut':''}" data-fis-anno="${Z.a}" data-an-vai="1" title="${Z.a>oggi?esc(tit27):'Apri il Riepilogo fiscale '+Z.a}"><b>${Z.a}</b>${Z.a===oggi?`<small>${pvBase()==='prev'?'previsto':'incassato'}</small>`:Z.a>oggi?`<small>${CM.daPrev?'dalla Previsione':'volume come '+oggi}${CM.g?' · minimi +'+pcG(CM.g)+'%':''}</small>`:''}</span>`).join('')}</div>
     ${righe.map(r=>r[0]==='h'?`<div class="sez"><span>${r[1]}</span></div>`:`<div class="r ${r[0]}" ${(r[3]||{}).k?`style="--c:${r[3].k}"`:''}><span class="nm">${(r[3]||{}).q?fq(r[3].q):''}${(r[3]||{}).cod?`<i class="cod">${r[3].cod}</i>`:''}${r[1]}${(r[3]||{}).nota?`<small>${r[3].nota}</small>`:''}</span>${AT.map(Z=>cella(r,Z)).join('')}</div>`).join('')}
   </div></div>`;
   // grafico: quanto se ne va ogni anno
