@@ -1645,6 +1645,7 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .sync-az{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.sync-col{flex-direction:column;align-items:stretch}.sync-col .btn{text-align:center}
 .sync-nota{font-size:12.5px;color:var(--grigio)}
 .sync-lista{max-height:320px;overflow:auto;margin:0 0 12px;border-top:1px solid var(--cella-bordo)}.sync-r{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--cella-bordo)}.sync-r small{color:var(--grigio);margin-left:6px}
+.imp-gd{margin-top:12px;border-top:1px solid var(--cella-bordo);padding-top:10px}.imp-gd summary{cursor:pointer;font-weight:600}.imp-gd ol{padding-left:20px;margin:8px 0;line-height:1.5}.imp-gd li{margin-bottom:7px}.imp-gd code{font-size:11.5px;background:var(--cella);padding:1px 4px;border-radius:4px;word-break:break-all}.imp-gd .btn.piccolo{padding:3px 8px;font-size:12px}.imp-gd-ok{font-size:12.5px;color:var(--grigio)}.imp-gd-ck{display:flex;gap:6px;align-items:center;font-size:13px;margin-top:6px}
 </style>
 </head>
 <body>
@@ -1753,6 +1754,7 @@ function migra(){
     if(c.id==='rata mutuo'&&c.nome==='rata mutuo') c.nome='mutuo+risparmi';
   }
   // (versione online: i passaggi 3-10 servivano solo a importare il foglio; i dati arrivano dal backup)
+  if(!S.fiscale)S.fiscale={};if(!S.radames)S.radames={};S.impostazioni.trimPrec=S.impostazioni.trimPrec||{};
   if((S.versione||0)<11){ if(S.fiscale&&S.fiscale[2023]&&S.fiscale[2023].rate==null){S.fiscale[2023].rate=3;S.fiscale[2023].rateInt=0.01} }
   S.versione=11;
 }
@@ -1950,7 +1952,7 @@ function renderSalvato(){
 function renderAvviso(){
   const ub=S.impostazioni.ultimoBackup;
   const giorni=ub?Math.floor((Date.now()-new Date(ub))/864e5):null;
-  if(window.SYNC&&window.SYNC.user){$('#avviso').innerHTML=(giorni===null||giorni>=30)?`<div class="avviso-backup">💾 <span>I dati sono salvati online. Ogni mese conviene comunque scaricare una copia di sicurezza${giorni===null?'':` (l'ultima è di ${giorni} giorni fa)`}.</span><button class="btn piccolo" data-act="esporta">Scarica backup</button></div>`:'';return}
+  if(window.SYNC&&window.SYNC.user){$('#avviso').innerHTML=(!S.impostazioni.backupDrive&&(giorni===null||giorni>=30))?`<div class="avviso-backup">💾 <span>I dati sono salvati online. Ogni mese conviene comunque scaricare una copia di sicurezza${giorni===null?'':` (l'ultima è di ${giorni} giorni fa)`}.</span><button class="btn piccolo" data-act="esporta">Scarica backup</button></div>`:'';return}
   $('#avviso').innerHTML=(giorni===null||giorni>=7)?`<div class="avviso-backup">💾 <span>${giorni===null?'Non hai ancora fatto un backup.':`Ultimo backup ${giorni} giorni fa.`} I dati stanno solo in questo browser.</span><button class="btn piccolo" data-act="esporta">Scarica backup</button></div>`:'';
 }
 function renderPagina(){
@@ -4322,9 +4324,19 @@ function renderImpostazioni(){
     <div class="imp-lato">
       <div class="scheda imp-bk ${bkOk?'ok':'no'}"><h3>💾 Backup</h3>
         <div class="imp-bk-st">${ub?`Ultimo backup <b>${dataIt(ub.slice(0,10))}</b>${gg>0?` · ${gg===1?'ieri':gg+' giorni fa'}`:' · oggi'}`:'<b>Non hai ancora fatto un backup</b>'}</div>
-        <p>I dati stanno solo in questo browser. Scarica un file .json ogni tanto e tienilo in una cartella sicura.</p>
+        <p>${window.FIREBASE_CONFIG?'I dati sono salvati online. In più puoi scaricare una copia .json da tenere tu.':'I dati stanno solo in questo browser. Scarica un file .json ogni tanto e tienilo in una cartella sicura.'}</p>
         <div class="imp-btn"><button class="btn" data-act="esporta">Scarica backup</button>
         <label class="btn chiaro">Ripristina… <input type="file" id="in-backup" accept=".json,application/json" hidden></label></div>
+        ${window.FIREBASE_CONFIG?`<details class="imp-gd"><summary>☁︎ Backup automatico su Google Drive</summary>
+          <p>Un piccolo programma nel tuo Google Drive salva il primo di ogni mese una copia nella cartella che scegli (tiene gli ultimi 2 anni). Si prepara una volta sola, in circa 5 minuti.</p>
+          <ol>
+            <li>In <b>Google Drive</b> crea una cartella, per esempio "Backup contabilità", aprila e copia il suo indirizzo dalla barra del browser.</li>
+            <li>Apri <a href="https://script.google.com/home/projects/create" target="_blank" rel="noopener">script.google.com → Nuovo progetto</a> e dagli il nome "Backup contabilità" (clic su "Progetto senza titolo").</li>
+            <li>Cancella il testo che c'è, premi <button type="button" class="btn piccolo" data-copia-gd="gs">Copia il programma</button> e incollalo. Al posto di <code>INCOLLA-QUI-L-INDIRIZZO-DELLA-CARTELLA</code> incolla l'indirizzo della cartella (lascia gli apici ').</li>
+            <li>A sinistra apri l'<b>ingranaggio ⚙ Impostazioni progetto</b> e spunta <b>"Mostra il file manifest appsscript.json"</b>. Torna all'editor (icona &lt;&gt;), apri <b>appsscript.json</b>, cancella tutto e incolla <button type="button" class="btn piccolo" data-copia-gd="man">Copia le impostazioni</button>.</li>
+            <li>Premi 💾 Salva. In alto scegli la funzione <b>attiva</b> e premi <b>▷ Esegui</b>. Google chiede i permessi: scegli il tuo account → <b>Avanzate</b> → <b>Vai a Backup contabilità (non sicuro)</b> → <b>Consenti</b>. Dice "non sicuro" solo perché il programma è tuo e Google non l'ha controllato.</li>
+          </ol>
+          <p class="imp-gd-ok">Fatto: nella cartella trovi subito il primo file, e da lì uno al mese.</p><label class="imp-gd-ck"><input type="checkbox" id="in-bkdrive" ${S.impostazioni.backupDrive?'checked':''}> Ho attivato il backup su Drive (non mostrare più il promemoria mensile)</label></details>`:''}
       </div>
       <div class="scheda"><h3>👋 Il tuo nome</h3>
         <div class="campi-anno"><label class="campo"><span class="c-nome">Nel saluto della Home</span><span class="c-input"><input id="in-nome" value="${esc(S.impostazioni.nome??'')}" style="text-align:left"></span></label></div></div>
@@ -4427,6 +4439,11 @@ function toast(t,conAnnulla){
   clearTimeout(tTimer);tTimer=setTimeout(()=>$('#toast').innerHTML='',conAnnulla?6000:3000);
 }
 
+/* backup automatico su Google Drive: testo del programma Apps Script */
+const GD_GS="/**\n * Contabilità – backup automatico su Google Drive\n * Il primo di ogni mese copia i dati dell'app (Firebase) in un file .json nella cartella scelta.\n * Tiene gli ultimi 24 backup (due anni) e cancella i più vecchi.\n *\n * 1) Incolla qui sotto l'indirizzo della cartella di Drive (quello che vedi nella barra del browser quando la apri).\n * 2) Premi Esegui con la funzione \"attiva\" selezionata e dai i permessi.\n */\nconst CARTELLA = 'INCOLLA-QUI-L-INDIRIZZO-DELLA-CARTELLA';\nconst PROGETTO = 'contabilita-4949c';\nconst QUANTI = 24;\n\nfunction attiva() {\n  ScriptApp.getProjectTriggers().forEach(t => ScriptApp.deleteTrigger(t));\n  ScriptApp.newTrigger('backup').timeBased().onMonthDay(1).atHour(3).create();\n  backup();\n  Logger.log('Fatto: backup attivo il primo di ogni mese, e il primo è già nella cartella.');\n}\n\nfunction backup() {\n  const id = (CARTELLA.match(/folders\\/([\\w-]+)/) || [null, CARTELLA])[1];\n  const cartella = DriveApp.getFolderById(id);\n  const url = 'https://firestore.googleapis.com/v1/projects/' + PROGETTO + '/databases/(default)/documents:runQuery';\n  const corpo = {structuredQuery: {from: [{collectionId: 'dati', allDescendants: true}]}};\n  const r = UrlFetchApp.fetch(url, {method: 'post', contentType: 'application/json', payload: JSON.stringify(corpo),\n    headers: {Authorization: 'Bearer ' + ScriptApp.getOAuthToken()}, muteHttpExceptions: true});\n  if (r.getResponseCode() !== 200) throw new Error('Firebase non risponde: ' + r.getContentText().slice(0, 300));\n  const doc = JSON.parse(r.getContentText()).map(x => x.document).filter(d => d && /\\/dati\\/stato$/.test(d.name))[0];\n  if (!doc) throw new Error('Nessun dato trovato: hai già caricato il backup nell\\'app online?');\n  const json = doc.fields.json.stringValue;\n  const oggi = Utilities.formatDate(new Date(), 'Europe/Rome', 'yyyy-MM-dd');\n  const nome = 'contabilita-backup-' + oggi + '.json';\n  const vecchio = cartella.getFilesByName(nome);\n  while (vecchio.hasNext()) vecchio.next().setTrashed(true);\n  cartella.createFile(nome, json, 'application/json');\n  // tiene solo gli ultimi QUANTI backup\n  const tutti = [];\n  const it = cartella.getFiles();\n  while (it.hasNext()) { const f = it.next(); if (/^contabilita-backup-\\d{4}-\\d\\d-\\d\\d\\.json$/.test(f.getName())) tutti.push(f); }\n  tutti.sort((a, b) => b.getName().localeCompare(a.getName())).slice(QUANTI).forEach(f => f.setTrashed(true));\n}\n", GD_MAN="{\n  \"timeZone\": \"Europe/Rome\",\n  \"exceptionLogging\": \"STACKDRIVER\",\n  \"runtimeVersion\": \"V8\",\n  \"oauthScopes\": [\n    \"https://www.googleapis.com/auth/datastore\",\n    \"https://www.googleapis.com/auth/drive\",\n    \"https://www.googleapis.com/auth/script.external_request\",\n    \"https://www.googleapis.com/auth/script.scriptapp\"\n  ]\n}";
+document.addEventListener('click',e=>{const b=e.target.closest('[data-copia-gd]');if(!b)return;
+  const txt=b.dataset.copiaGd==='gs'?GD_GS.replace("'contabilita-4949c'","'"+((window.FIREBASE_CONFIG||{}).projectId||'')+"'"):GD_MAN;
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('Copiato: ora incollalo (Ctrl+V)'),()=>{const a=document.createElement('textarea');a.value=txt;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();toast('Copiato: ora incollalo (Ctrl+V)')})});
 /* ====== Eventi ====== */
 document.addEventListener('click',e=>{
   const cpk=e.target.closest('[data-cp-v]');if(cpk){const cpv=cpk,cp=cpv.closest('.cp'),id=cpv.dataset.cpV;cp.querySelector('select').value=id;cp.style.setProperty('--g',coloreCat(id)||'var(--cella)');cp.querySelector('.cp-btn').textContent=nomeCat(id);cp.querySelectorAll('[data-cp-v]').forEach(b=>b.classList.toggle('on',b===cpv));cp.classList.remove('aperto');e.preventDefault();return}
@@ -4665,6 +4682,7 @@ document.addEventListener('change',e=>{
   if(id==='in-nome'){modifica(()=>S.impostazioni.nome=el.value.trim(),{ridisegna:false});toast('Nome aggiornato',true);return}
   if(el.dataset.perc){const v=parseNum(el.value.replace('%',''));if(isNaN(v)){toast('Percentuale non valida');return}
     modifica(()=>S.impostazioni.accantonamento[el.dataset.perc]=v/100,{ridisegna:false});el.value=numIt(v).replace(/,00$/,'');toast('Percentuale aggiornata',true);return}
+  if(id==='in-bkdrive'){modifica(()=>{S.impostazioni.backupDrive=el.checked},{ridisegna:false});renderAvviso();misuraTesta();return}
   if(id==='in-backup'&&el.files[0]){leggiFile(el.files[0],t=>{try{const d=JSON.parse(t);if(!d.movimenti||!d.impostazioni)throw 0;modifica(()=>{S=d;migra()});toast('Backup ripristinato',true)}catch(x){toast('Questo file non è un backup valido')}});el.value='';return}
   if(el.dataset.csv&&el.files[0]){const tipo=el.dataset.csv;leggiFile(el.files[0],t=>importaCSV(tipo,t));el.value='';return}
   if(el.id==='f-data'&&bozzaF)calcoliFattura();
