@@ -1745,10 +1745,10 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 /* Conti e risparmi (12/11) */
 .cr-due{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 .cr-dx{display:flex;flex-direction:column;gap:10px;min-height:0}
-.cr-comp{display:flex;height:34px;border:1.5px solid var(--inchiostro);border-radius:7px;overflow:hidden;margin:2px 0 8px;flex:none}
+.cr-comp{display:flex;height:26px;border:1.5px solid var(--inchiostro);border-radius:7px;overflow:hidden;margin:2px 0 8px;flex:none}
 .cr-comp i{display:flex;align-items:center;justify-content:center;min-width:0;border-right:1.5px solid var(--inchiostro);font-style:normal}.cr-comp i:last-child{border-right:0}
-.cr-comp i{flex-direction:column;line-height:1.1}.cr-comp b{font-size:11.5px;font-weight:700;color:#2b2925;white-space:nowrap}.cr-comp em{font-style:normal;font-size:10px;color:#55524c}
-.cr-tab{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,2.3fr) minmax(56px,1fr) auto;grid-template-rows:auto repeat(4,1fr) auto;column-gap:12px;font-variant-numeric:tabular-nums}
+.cr-comp b{font-size:11.5px;font-weight:700;color:#2b2925;white-space:nowrap}.cr-comp-e{position:relative;height:16px;margin:-5px 0 6px;flex:none}.cr-comp-e span{position:absolute;transform:translateX(-50%);font:700 12px var(--font-titoli);white-space:nowrap;top:0}
+.cr-tab{flex:1;min-height:0;display:grid;grid-template-columns:auto minmax(60px,1fr) auto;grid-template-rows:auto repeat(4,1fr) auto;column-gap:12px;font-variant-numeric:tabular-nums}
 .cr-tab>.r{display:grid;grid-column:1/-1;grid-template-columns:subgrid;grid-template-rows:1fr;align-items:stretch;border-bottom:1px solid var(--linea);padding:5px 0;min-height:0}
 .cr-tab>.r.h{grid-template-rows:auto;font-size:10.5px;font-weight:700;color:#55524c;text-transform:uppercase;letter-spacing:.3px;border-bottom:1.5px solid var(--inchiostro);padding:0 0 3px}
 .cr-tab>.r.cl{cursor:pointer}.cr-tab>.r.cl:hover{background:#f8f6f1}
@@ -1787,8 +1787,8 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .cr-col.ora small{font-weight:800;color:var(--inchiostro)}.cr-col.ora::after{content:'';position:absolute;inset:-3px -3px -3px;border:1.5px dashed var(--inchiostro);border-radius:5px;pointer-events:none}
 .cr-leg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;color:#55524c}.cr-leg i{display:inline-block;width:12px;height:9px;border:1.5px solid var(--inchiostro);border-radius:2px;margin-right:4px;vertical-align:-1px}
 .cr-leg i.pr{background:repeating-linear-gradient(45deg,#ddd 0 3px,#fff 3px 6px)}.cr-leg .cr-u{margin-left:auto}
-.cr-mesi{flex:1.15}.cr-risp{flex:1}
-.cr-tt{flex:1;min-height:0;display:grid;grid-template-columns:minmax(52px,.7fr) repeat(5,minmax(0,1fr)) minmax(0,1.1fr) minmax(0,1fr);grid-template-rows:auto repeat(5,minmax(24px,1fr));font-size:12.5px;font-variant-numeric:tabular-nums}
+.cr-mesi{flex:1}.cr-risp{flex:none}.cr-tdue{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px 24px}.cr-tt-t{font:700 15px var(--font-titoli);margin:2px 0 4px}.cr-tt-t small{font:500 11px var(--font);color:var(--grigio);margin-left:6px}.cr-base{margin-left:8px}.cr-base button{font-size:11.5px}
+.cr-tt{display:grid;grid-template-columns:minmax(60px,.8fr) repeat(5,minmax(0,1fr)) minmax(0,1.4fr);grid-template-rows:auto repeat(5,30px);font-size:12.5px;font-variant-numeric:tabular-nums}
 .cr-tt>.r{display:contents}
 .cr-tt>.r>*{display:flex;align-items:center;padding:2px 4px;border-bottom:1px solid var(--linea);white-space:nowrap}
 .cr-tt>.r>.n{justify-content:flex-end;gap:5px}
@@ -1799,7 +1799,7 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .cr-tt>.r>span:first-child{font-weight:700;flex-direction:column;align-items:flex-start;justify-content:center;gap:0}.cr-tt small{font-weight:500;font-size:10px;color:#9a6b00}
 .cr-tt>.r.tot>*{font-weight:700;border-top:1.5px solid var(--inchiostro);border-bottom:0}
 .cr-tt .pos{color:#2e7a45}.cr-tt .neg{color:#b5452f}
-.cr-tt em.tq-d{font-style:normal;font-size:9.5px;padding:0 5px}.cr-tt>.r>.n:nth-child(7){flex-direction:column;align-items:flex-end;justify-content:center;gap:1px}
+.cr-tt em.tq-d{font-style:normal;font-size:9.5px;padding:0 5px}
 .cr-nota{flex:none;margin:6px 0 0;font-size:11.5px;color:#55524c;line-height:1.5}.cr-nota .btn{margin:0 6px}
 @media (max-width:900px){.cr-due{grid-template-columns:minmax(0,1fr)}}
 /* Deposito: aggiorna saldo (12/11) */
@@ -1813,6 +1813,7 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .cr-fr .dp-btn{font:700 11px var(--font);border:1.5px solid var(--inchiostro);background:#fff;border-radius:999px;padding:1px 8px;margin-left:6px;cursor:pointer}
 .cr-fr .dp-btn.da{background:#f7e6a1}
 @media (max-width:1365px){.cr-fr>span{white-space:normal}}
+.tq.cr{height:auto}.cr .cr-due{flex:none;height:calc(100vh - var(--top-h,58px) - var(--avviso-h,0px) - 150px);min-height:480px}
 </style>
 </head>
 <body>
@@ -2454,7 +2455,7 @@ function datiConti(a){
     const qq=ROMANI.indexOf(mm[1])+1;let aa=mm[2]?+mm[2]:annoDi(x.data);if(!mm[2]&&qq*3-2>meseDi(x.data))aa--;return {a:aa,q:qq}};
   const giriDep=S.movimenti.filter(x=>x.giro&&x.verso===depId&&x.ok&&(annoDi(x.data)===a||annoDi(x.data)===a+1));
   const trim=[1,2,3,4].map(k=>{const ms=[k*3-2,k*3-1,k*3], fu=k>qOra, cor=k===qOra;
-    const st=nettoTrim(a,k-1), sp=fu?null:speseMesi(ms,!cor), av=st==null||fu?null:st-sp;
+    const st=nettoTrim(a,k-1), sp=fu?null:speseMesi(ms,!cor||pvBase()==='eff'), av=st==null||fu?null:st-sp;
     const messo=giriDep.filter(x=>{const t=trimDi(x);return t&&t.a===a&&t.q===k}).reduce((s,x)=>s+x.eur,0);
     const coi=(DC.mesi[k*3].saldo-(k===1?DC.ini:DC.mesi[k*3-3].saldo))*q;
     const int=S.movimenti.filter(x=>annoDi(x.data)===a&&ms.includes(meseDi(x.data))&&x.ok&&!x.giro&&x.cat==='interessi').reduce((s,x)=>s-x.eur,0);
@@ -2478,8 +2479,8 @@ function renderContiRisparmi(){
   const pill=(v,t)=>`<span class="tq-d ${v<-0.5?'no':'ok'}" title="${t||''}">${sg(v)}</span>`;
   const risTrim=D.trim.filter(t=>!t.fu&&t.av!=null), rispAnno=risTrim.reduce((s,t)=>s+t.av+t.coi+t.int,0), intAnno=risTrim.reduce((s,t)=>s+t.int,0);
   const mesiFondo=D.mediaMese>0.5?D.oggi.dep/D.mediaMese:null;
-  const kpis=kpi('k-vol','conto','Soldi tuoi oggi',euro(totOggi),`tutti i conti e metà cointestato`,pill(totOggi-totIni,'Rispetto al 1° gennaio ('+e0(totIni)+')'))
-    +kpi('k-a','calendario','A fine anno',euro(totFine),`con entrate e spese previste`,pill(totFine-totOggi,'Rispetto a oggi'))
+  const kpis=kpi('k-vol','conto','Soldi tuoi oggi',euro(totOggi),`tutti i conti e metà cointestato`,`<span class="tq-d ${totOggi-totIni<-0.5?'no':'ok'}" title="Il 1° gennaio avevi ${e0(totIni)}">${sg(totOggi-totIni)} dal 1° gennaio</span>`)
+    +kpi('k-a','calendario','A fine anno',euro(totFine),`con entrate e spese previste`,`<span class="tq-d ${totFine-totOggi<-0.5?'no':'ok'}" title="Differenza tra fine anno e oggi">${sg(totFine-totOggi)} rispetto a oggi</span>`)
     +kpi('k-e','salvadanaio','Risparmiati nel '+a,euro(rispAnno),`avanzi <b>${n0(risTrim.reduce((s,t)=>s+t.av,0))}</b> · cointestato <b>${n0(risTrim.reduce((s,t)=>s+t.coi,0))}</b>${Math.abs(intAnno)>0.005?` · interessi <b>${n0(intAnno)}</b>`:''}`,`<span class="tq-d neutro" title="Trimestri contati">${risTrim.map(t=>ROMANI[t.k-1]).join(' ')} trim</span>`)
     +kpi('k-net','deposito','Fondo di sicurezza',mesiFondo==null?'—':String(Math.round(mesiFondo*10)/10).replace('.',',')+' mesi',mesiFondo==null?'servono mesi conclusi':`<span title="Spese di tutti i giorni: fisse e variabili da Unicredit, media dei mesi chiusi">di spese coperte dal deposito (${e0(D.mediaMese)}/mese)</span>`);
   // ===== sinistra: un conto per riga =====
@@ -2501,16 +2502,17 @@ function renderContiRisparmi(){
     const L=D.DC.L, ult=re=>{const l=L.filter(c=>re.test((c.cat+' '+c.ogg).toUpperCase()));return l.length?l[l.length-1]:null};
     const mutuo=+((ult(/MUTUO/)||{}).add||0), canone=+((ult(/CANONE/)||{}).add||0), bollo=L.filter(c=>/BOLLO/.test(c.cat.toUpperCase())).reduce((s,c)=>s+(+c.add||0),0);
     const extra0=L.filter(c=>+c.add&&!/MUTUO|CANONE|BOLLO/.test(c.cat.toUpperCase())).reduce((s,c)=>s+(+c.add),0), vers=UI.coiVers!=null?UI.coiVers:+((ult(/BONIFICO PAOLO/)||{}).acc||0), extra=UI.coiExtra!=null?UI.coiExtra:Math.round(extra0/10)*10;
-    const annuo=vers*2*12-(mutuo+canone)*12-bollo-extra;o.coi=D.fine.coi+annuo*D.q;o.t.coi=`come nella pagina Conto cointestato: + ${e0(annuo)} all'anno sul conto intero, la tua metà`;
+    const annuo=vers*2*12-(mutuo+canone)*12-bollo-extra;o.annuo=annuo;o.PV=PV;o.coi=D.fine.coi+annuo*D.q;o.t.coi=`come nella pagina Conto cointestato: + ${e0(annuo)} all'anno sul conto intero, la tua metà`;
     o.tot=o.uni==null||o.rev==null?null:o.uni+o.rev+o.dep+o.coi;
     o.spiega=conEnt?'Stima a fine '+N+': entrate e spese dalla Previsione, interessi del deposito, risparmi del cointestato':'Per Unicredit e Revolut servono le entrate '+N+' nella pagina Previsione';return o})();
   const righe=[
     {key:'uni',c:D.uni,ic:'conto',nome:D.uni.nome,ruolo:'per vivere',fr:[D.carteOra>0.5?`<span title="Spese con le carte di ${MESI[D.mOra-1]}: si addebitano il mese dopo, sono già tolte dal saldo">carte da addebitare <b>${e0(D.carteOra)}</b></span>`:'carte già addebitate']},
     D.rev&&{key:'rev',c:D.rev,ic:'salvadanaio',nome:D.rev.nome,ruolo:'per tasse e Inarcassa',neg:revNeg,fr:D.uscRev.length?[`da pagare <b>${e0(D.uscRev.reduce((s,x)=>s+x.eur,0))}</b>`,`${prox}${D.uscRev.length>3?' …':''}`,revNeg?`<span class="no">a ${MESI[D.minRev.k-1]} va sotto di ${e0(-D.minRev.v)}</span>`:''].filter(Boolean):['nessuna uscita prevista']},
-    D.dep&&(()=>{const I=infoDeposito(D.dep,a), e2=v=>euro(v);return {key:'dep',c:D.dep,ic:'deposito',nome:D.dep.nome,ruolo:'risparmi'+(I.t!=null?` · tasso ${String(I.t).replace('.',',')}%`:''),fr:[`versati nel ${a} <b>${e0(D.entrDep)}</b>`,...(D.daSp>0.5?[`<span class="att">da spostare ${e0(D.daSp)}</span>`]:[]),`interessi <b>${e2(I.int)}</b>${I.stima>0.5?` <span title="Stima con il tasso attuale fino al 31/12">(+ circa ${e0(I.stima)} entro fine anno)</span>`:''}`,`<button class="dp-btn ${I.daAgg?'da':''}" data-dep-agg="${esc(D.dep.id)}" title="${I.ult?'Ultimo aggiornamento '+dataIt(I.ult):'Mai aggiornato'}">${I.daAgg?'⟳ da aggiornare':'⟳ aggiorna saldo · '+dataIt(I.ult).slice(0,5)}</button>`]}})(),
+    D.dep&&(()=>{const I=infoDeposito(D.dep,a), e2=v=>euro(v);return {key:'dep',c:D.dep,ic:'deposito',nome:D.dep.nome,ruolo:'risparmi'+(I.t!=null?` · tasso ${String(I.t).replace('.',',')}%`:''),fr:[`versati nel ${a} <b>${e0(D.entrDep)}</b>`,`interessi <b>${e2(I.int)}</b>${I.stima>0.5?` <span title="Stima con il tasso attuale fino al 31/12">(+ circa ${e0(I.stima)} entro fine anno)</span>`:''}`,`<button class="dp-btn ${I.daAgg?'da':''}" data-dep-agg="${esc(D.dep.id)}" title="${I.ult?'Ultimo aggiornamento '+dataIt(I.ult):'Mai aggiornato'}">${I.daAgg?'⟳ da aggiornare':'⟳ aggiorna saldo · '+dataIt(I.ult).slice(0,5)}</button>`]}})(),
     {key:'coi',c:D.DC.coi,ic:'cointestato',nome:D.DC.coi.nome||'Cointestato',ruolo:'casa · la tua metà',fr:[`conto intero <b>${e0(D.DC.saldoOggi)}</b>`,`tua metà <b>+ ${e0((D.fine.coi-D.ini.coi)/12)}</b> al mese`],pag:'cointestato'}].filter(Boolean);
   const comp=['uni','rev','dep','coi'].map(k=>({k,v:Math.max(0,D.oggi[k]),c:col((righe.find(r=>r.key===k)||{}).c)})), compT=comp.reduce((s,x)=>s+x.v,0)||1;
-  const barra=`<div class="cr-comp">${comp.filter(x=>x.v>0.5).map(x=>`<i style="width:${x.v/compT*100}%;background:${x.c}" title="${esc((righe.find(r=>r.key===x.k)||{}).nome||'')}: ${euro(x.v)}">${x.v/compT>=0.09?`<b>${e0(x.v)}</b><em>${Math.round(x.v/compT*100)}%</em>`:''}</i>`).join('')}</div>`;
+  const compV=comp.filter(x=>x.v>0.5);let accW=0;const centri=compV.map(x=>{const w=x.v/compT*100, c=accW+w/2;accW+=w;return {x,w,c}});
+  const barra=`<div class="cr-comp">${centri.map(({x,w})=>`<i style="width:${w}%;background:${x.c}" title="${esc((righe.find(r=>r.key===x.k)||{}).nome||'')}: ${euro(x.v)}">${w>=5?`<b>${Math.round(w)}%</b>`:''}</i>`).join('')}</div><div class="cr-comp-e">${centri.map(({x,c})=>`<span style="left:${c}%">${e0(x.v)}</span>`).join('')}</div>`;
   const sx=`<section class="tq-p cr-conti"><h3>${ico('conto')} Dove sono i tuoi soldi<small class="cr-tot">totale <b>${euro(totOggi)}</b></small></h3>
     ${barra}
     <div class="cr-tab"><div class="r h"><span></span><span>andamento ${a} <em>· tratteggio = previsto</em></span><span class="cr-nh"><span>oggi</span><span>fine ${a}</span></span></div>
@@ -2518,13 +2520,24 @@ function renderContiRisparmi(){
     <div class="r tot"><span>Soldi tuoi</span><span></span><span class="cr-nb"><b>${euro(totOggi)}</b><span>${euro(totFine)}<small>${sg(totFine-totOggi)}</small></span></span></div></div></section>`;
   // ===== destra: quanto metti da parte =====
   const nomeT=k=>ROMANI[k-1]+' trim';
-  const tabT=`<div class="cr-tt"><div class="r h"><span></span><span class="n">stipendio</span><span class="n">spese</span><span class="n">avanzo</span><span class="n">cointest.<br>(metà)</span><span class="n">interessi</span><span class="n">risparmiato</span><span class="n">spostati sul<br>deposito</span></div>
-    ${D.trim.map(t=>{const tot=t.av==null?null:t.av+t.coi+t.int, pc=t.st>0.5&&tot!=null?Math.round(tot/t.st*100):null;
-      return `<div class="r ${t.fu?'fut':''} ${t.cor?'ora':''}" data-trim-side="${t.k}" title="Apri il ${nomeT(t.k)}"><span>${nomeT(t.k)}${t.cor?'<small>in corso</small>':''}</span><span class="n">${t.st==null?'—':n0(t.st)}</span><span class="n">${t.sp==null?'—':n0(t.sp)}</span><span class="n ${t.av==null?'':t.av<-0.5?'neg':'pos'}">${t.av==null?'—':(t.av<-0.5?'− ':'+ ')+n0(Math.abs(t.av))}</span><span class="n ${t.coi<-0.5?'neg':'pos'}">${t.fu?'—':(t.coi<-0.5?'− ':'+ ')+n0(Math.abs(t.coi))}</span><span class="n ${t.int>0.005?'pos':''}">${t.fu?'—':Math.abs(t.int)<0.005?'–':(t.int<0?'− ':'+ ')+numIt(Math.abs(t.int))}</span><span class="n"><b class="${tot==null?'':tot<-0.5?'neg':'pos'}">${tot==null?'—':(tot<-0.5?'− ':'+ ')+n0(Math.abs(tot))}</b>${pc!=null?`<em class="tq-d ${pc<0?'no':'ok'}">${pc}%</em>`:''}</span><span class="n">${t.messo>0.5?n0(t.messo):'–'}</span></div>`}).join('')}
-    <div class="r tot"><span>Totale</span><span class="n">${n0(risTrim.reduce((s,t)=>s+(t.st||0),0))}</span><span class="n">${n0(risTrim.reduce((s,t)=>s+(t.sp||0),0))}</span><span class="n">${sg(risTrim.reduce((s,t)=>s+t.av,0)).replace('€ ','')}</span><span class="n">${sg(risTrim.reduce((s,t)=>s+t.coi,0)).replace('€ ','')}</span><span class="n">${Math.abs(intAnno)<0.005?'–':'+ '+numIt(intAnno)}</span><span class="n"><b>${sg(rispAnno).replace('€ ','')}</b></span><span class="n">${n0(D.messoTot)}</span></div></div>
-    <p class="cr-nota">${D.daSp>0.5?`Degli avanzi dei trimestri chiusi restano su Unicredit <b>${euro(D.daSp)}</b>. <button class="btn piccolo" data-risp-giro="${Math.round(D.daSp*100)/100}" data-risp-nome="${esc(nomeT(Math.max(1,D.qOra-1)))}" title="Apre un giroconto da Unicredit al deposito con questa cifra">Metti da parte ${e0(D.daSp)}</button>`:D.avChiusi<-0.5?`Nei trimestri chiusi le spese hanno superato gli stipendi di <b>${e0(-D.avChiusi)}</b>: non c'è avanzo da spostare sul deposito.`:'Gli avanzi dei trimestri chiusi sono già sul deposito.'} Il trimestre in corso conta anche le spese previste.</p>`;
+  const segn=v=>v==null?'—':Math.abs(v)<0.5?'–':(v<0?'− ':'+ ')+n0(Math.abs(v)), cls=v=>v==null||Math.abs(v)<0.5?'':v<0?'neg':'pos';
+  const tabRisp=(righeT,tit,sotto)=>{const ok=righeT.filter(t=>t.av!=null), S2=f=>ok.reduce((s,t)=>s+(f(t)||0),0), tot=S2(t=>t.av+t.coi+t.int), stT=S2(t=>t.st);
+    return `<div class="cr-tw"><div class="cr-tt-t">${tit}</div><div class="cr-tt"><div class="r h"><span></span><span class="n">stipendio</span><span class="n">spese</span><span class="n">avanzo</span><span class="n">cointest.<br>(metà)</span><span class="n">interessi</span><span class="n">risparmiato</span></div>
+    ${righeT.map(t=>{const r=t.av==null?null:t.av+t.coi+t.int, pc=t.st>0.5&&r!=null?Math.round(r/t.st*100):null;
+      return `<div class="r ${t.fu?'fut':''} ${t.cor?'ora':''}" ${t.vai?`data-trim-side="${t.k}" title="Apri il ${ROMANI[t.k-1]} trimestre"`:''}><span>${ROMANI[t.k-1]} trim${t.cor?'<small>in corso</small>':''}</span><span class="n">${t.st==null?'—':n0(t.st)}</span><span class="n">${t.sp==null?'—':n0(t.sp)}</span><span class="n ${cls(t.av)}">${segn(t.av)}</span><span class="n ${cls(t.coi)}">${t.fu&&t.av==null?'—':segn(t.coi)}</span><span class="n ${cls(t.int)}">${t.fu&&t.av==null?'—':Math.abs(t.int)<0.005?'–':(t.int<0?'− ':'+ ')+numIt(Math.abs(t.int))}</span><span class="n"><b class="${cls(r)}">${segn(r)}</b>${pc!=null?`<em class="tq-d ${pc<0?'no':'ok'}">${pc}%</em>`:''}</span></div>`}).join('')}
+    <div class="r tot"><span>Totale</span><span class="n">${n0(stT)}</span><span class="n">${n0(S2(t=>t.sp))}</span><span class="n ${cls(S2(t=>t.av))}">${segn(S2(t=>t.av))}</span><span class="n">${segn(S2(t=>t.coi))}</span><span class="n">${Math.abs(S2(t=>t.int))<0.005?'–':'+ '+numIt(S2(t=>t.int))}</span><span class="n"><b class="${cls(tot)}">${segn(tot)}</b>${stT>0.5?`<em class="tq-d ${tot<0?'no':'ok'}">${Math.round(tot/stT*100)}%</em>`:''}</span></div></div><p class="cr-nota">${sotto}</p></div>`};
+  const t26=D.trim.map(t=>({...t,vai:1}));
+  // 2027 dalla Previsione: stipendio = netto del trimestre prima (entrate − accantonamento − spese per attività), spese = fisse + variabili
+  const PV=P27.PV, N=a+1, t27=[1,2,3,4].map(k=>{const ms=[k*3-2,k*3-1,k*3];if(!PV)return {k,st:null,sp:null,av:null,coi:0,int:0,fu:1};
+    const sm=(v,mm)=>mm.reduce((s,m)=>s+(v[m]||0),0), netQ=kk=>{const mm=[kk*3-2,kk*3-1,kk*3], e=sm(PV.totE,mm);return e-e*PV.perc-sm(PV.att,mm)};
+    const st=k===1?nettoTrim(a,4):PV.lordo>0.5?netQ(k-1):null, sp=sm(PV.fisse,ms)+sm(PV.vari,ms);
+    const dep=infoDeposito(D.dep||{id:'x'},a);return {k,st,sp,av:st==null?null:st-sp,coi:P27.annuo*D.q/4,int:D.dep?D.fine.dep*(dep.t||0)/100/4:0}});
+  const conEnt27=PV&&PV.lordo>0.5;
+  const tabT=`<div class="cr-tdue">${tabRisp(t26,`${a} <small>${pvBase()==='eff'?'solo spese già fatte':'con le spese previste'}</small>`,`Risparmiato = avanzo dello stipendio + tua metà del cointestato + interessi del deposito. Clic su un trimestre per aprirlo.`)}
+    ${tabRisp(t27,`${N} <small>dalla Previsione anno prossimo</small>`,conEnt27?`Stipendio del I trim = netto del IV trim ${a}; poi netto dei trimestri ${N} (entrate − ${Math.round(PV.perc*100)}% − spese per attività). Cointestato e interessi come oggi.`:`<b>Mancano le entrate ${N}</b>: scrivile nella pagina Previsione anno prossimo, altrimenti lo stipendio da aprile risulta zero.`)}</div>`;
+  const switchB=`<span class="an-filt cr-base" title="Come nella Previsione anno prossimo: attuale = solo quello già fatto e incassato, previsto = anche le voci previste"><button data-cr-base="eff" class="${pvBase()==='eff'?'on':''}">attuale</button><button data-cr-base="prev" class="${pvBase()==='prev'?'on':''}">previsto</button></span>`;
   // grafico: soldi tuoi a fine mese, a strati per conto
-  const keys=['uni','rev','dep','coi'], cols=P27.tot==null?D.serie:[...D.serie,{k:13,stima:true,dopo:true,uni:P27.uni,rev:P27.rev,dep:P27.dep,coi:P27.coi}];
+  const keys=['uni','rev','dep','coi'], cols=D.serie;
   const mxP=Math.max(...cols.map(s=>keys.reduce((t,k)=>t+Math.max(0,s[k]),0)),1), mnN=Math.min(0,...cols.map(s=>keys.reduce((t,k)=>t+Math.min(0,s[k]),0)));
   const passo=mxP>30000?10000:5000, top=Math.ceil(mxP*1.08/passo)*passo, bot=mnN<0?-Math.ceil(-mnN/passo)*passo:0, H=v=>v/(top-bot)*100, z=H(top);
   const grafico=`<div class="cr-gr" style="--z:${z}%;grid-template-columns:repeat(${cols.length},minmax(0,1fr))">${(()=>{const g=[];for(let v=bot;v<=top;v+=passo)g.push(`<span class="cr-gy ${v===0?'zero':''}" style="top:${H(top-v)}%"><em>${v/1000}k</em></span>`);return g.join('')})()}
@@ -2532,13 +2545,14 @@ function renderContiRisparmi(){
       if(v>0){const b=up;up+=v;return `<i style="bottom:${100-z+H(b)}%;height:${H(v)}%;background:${c}"></i>`}
       const b=dn;dn+=-v;return `<i class="neg" style="top:${z+H(b)}%;height:${H(-v)}%;background:${c}"></i>`}).join(''), t=D.tot(s);
       return `<div class="cr-col ${s.stima?'pr':''} ${s.dopo?'dopo':''} ${s.k===D.mOra?'ora':''}" title="${s.dopo?'Stima a fine '+(a+1)+'\n'+keys.map(k=>P27.t[k]).filter(Boolean).join('\n'):(s.k?'Fine '+MESI[s.k-1]:'1° gennaio')+(s.stima?' (previsto)':'')}: soldi tuoi ${euro(t)}\n${righe.map(r=>r.nome+': '+euro(s[r.key])).join('\n')}">${pz}<b style="bottom:${100-z+H(up)}%">${String(Math.round(t/100)/10).replace('.',',')}</b><small>${s.dopo?'fine '+(a+1):s.k?MESI[s.k-1].slice(0,3):'1/1'}</small></div>`}).join('')}</div>
-    <div class="cr-leg">${righe.map(r=>`<span><i style="background:${col(r.c)}"></i>${esc(r.nome+(r.key==='coi'?' (metà)':''))}</span>`).join('')}<span><i class="pr"></i>previsto</span>${P27.tot==null?'':`<span title="${esc(P27.spiega)}"><i class="dp"></i>stima ${a+1}</span>`}<span class="cr-u">in migliaia di €</span></div>`;
-  const dx=`<section class="tq-p cr-mesi"><h3>${ico('anno')} Soldi tuoi mese per mese<small>a fine mese, conto per conto</small></h3>${grafico}</section>
-    <section class="tq-p cr-risp"><h3>${ico('salvadanaio')} Quanto metti da parte<small>spese = fisse e variabili da Unicredit</small></h3>${tabT}</section>`;
+    <div class="cr-leg">${righe.map(r=>`<span><i style="background:${col(r.c)}"></i>${esc(r.nome+(r.key==='coi'?' (metà)':''))}</span>`).join('')}<span><i class="pr"></i>previsto</span><span class="cr-u">in migliaia di €</span></div>`;
+  const dx=`<section class="tq-p cr-mesi"><h3>${ico('anno')} Soldi tuoi mese per mese<small>a fine mese, conto per conto</small></h3>${grafico}</section>`;
+  const rispS=`<section class="tq-p cr-risp"><h3>${ico('salvadanaio')} Quanto metti da parte ${switchB}<small>spese = fisse e variabili da Unicredit</small></h3>${tabT}</section>`;
   $('#main').innerHTML=`<div class="tq cr">
     <div class="tq-testa"><h1>Conti e risparmi ${a}</h1><span class="tq-conf">dove sono i tuoi soldi oggi e quanto riesci a mettere da parte</span></div>
     <div class="tq-kpi">${kpis}</div>
     <div class="cr-due">${sx}<div class="cr-dx">${dx}</div></div>
+    ${rispS}
   </div>`;
 }
 /* ---- Deposito: saldo aggiornato a mano una volta al mese, interessi automatici (Paolo 12/11) ---- */
@@ -2598,6 +2612,8 @@ document.addEventListener('click',e=>{
   });
   chiudi();toast(Math.abs(diff)<0.005?'Saldo confermato: nessuna differenza':`Registrati ${diff<0?'− ':'+ '}${euro(Math.abs(diff))} di interessi`,true);
 },true);
+
+document.addEventListener('click',e=>{const b=e.target.closest('[data-cr-base]');if(!b)return;e.stopPropagation();UI.prevBase=b.dataset.crBase;salvaUI();render()},true);
 /* ---- Riepilogo fiscale (come Foglio20 e ANNUARIO CONTRIBUTI) ---- */
 function vaFatture(a){const L=S.fatture.filter(f=>annoDi(f.data)===a);return L.length?{va:L.reduce((s,f)=>s+calcFattura(f).conBollo,0),inc:datiFatture(a).filter(x=>x.inc).reduce((s,x)=>s+x.c.conBollo,0),n:L.length,lordo:L.reduce((s,f)=>s+calcFattura(f).lordo,0),acc:L.reduce((s,f)=>s+calcFattura(f).accant,0)}:null}
 function fiscoAnno(a,prof=0,vaX=null){
