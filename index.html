@@ -1836,6 +1836,20 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .cr .cr-tab{grid-template-rows:auto repeat(4,1fr)}.cr .cr-tab>.r:last-child{border-bottom:0}
 .cr-tt>.r>span:first-child{flex-direction:row!important;align-items:baseline!important;justify-content:flex-start!important;gap:6px!important}
 .cr-tt>.r.h>span.cr-tt-t{align-items:baseline!important;align-self:end}
+/* Deposito mese per mese (12/11 16:10) */
+.dp-fin{max-width:600px}
+.dp-tl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;font-weight:700;color:#55524c;margin:8px 0 10px}.dp-tl small{font-weight:500;color:var(--grigio)}
+#dp-tasso{width:80px;font:600 15px var(--font);padding:5px 8px;border:1.5px solid #d8d1c3;border-radius:8px;background:#faf8f3;text-align:right}
+.dp-tab{display:grid;grid-template-columns:auto 1fr minmax(150px,1.2fr) 1fr;column-gap:0;font-variant-numeric:tabular-nums;max-height:52vh;overflow:auto;margin-bottom:12px}
+.dp-tab>.r{display:contents}
+.dp-tab>.r>*{display:flex;align-items:center;padding:4px 7px;border-bottom:1px solid var(--linea);font-size:13.5px;white-space:nowrap}
+.dp-tab>.r>.n{justify-content:flex-end}
+.dp-tab>.r.h>*{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:#55524c;border-bottom:1.5px solid var(--inchiostro);padding-bottom:3px}
+.dp-tab>.r>span:first-child{font-weight:700}
+.dp-tab>.r.tot>*{font-weight:700;border-bottom:0;border-top:1.5px solid var(--inchiostro);padding-top:6px}
+.dp-tab input{font:600 14px var(--font);padding:4px 8px;border:1.5px solid #d8d1c3;border-radius:7px;background:#faf8f3;min-width:0;width:100%;text-align:right}
+.dp-tab input.dp-d{width:140px;text-align:left;font-size:12.5px}
+.dp-tab .pos{color:#2e7a45}.dp-tab .neg{color:#b5452f}
 </style>
 </head>
 <body>
@@ -2596,43 +2610,69 @@ function infoDeposito(c,a){
   const daAgg=annoDi(oggi)===a&&(!ult||ult<oggi.slice(0,8)+'01');
   return {ult,int,t,stima,daAgg,saldo};
 }
+function mesiDeposito(c){ // il 1° di ogni mese (dal primo mese con soldi sul deposito fino a oggi) + gli altri giorni già aggiornati
+  const oggi=oggiISO(), a=annoDi(oggi), agg=S.movimenti.filter(x=>x.conto===c.id&&x.aggSaldo&&annoDi(x.data)===a), out=[];
+  for(let m=1;m<=12;m++){const d=`${a}-${String(m).padStart(2,'0')}-01`; if(d>oggi)break;
+    if(!out.length&&!agg.some(x=>x.data<=d)&&Math.abs(saldoContoAl(c.id,d))<0.005)continue;
+    out.push(d)}
+  for(const x of agg)if(!out.includes(x.data))out.push(x.data);
+  return out.sort().map(d=>({d,mov:agg.find(x=>x.data===d)}));
+}
 function apriAggDeposito(id){
   const c=S.conti.find(x=>x.id===id); if(!c) return;
-  const oggi=oggiISO(), t=tassoAl(c,oggi);
+  const oggi=oggiISO(), t=tassoAl(c,oggi), M=mesiDeposito(c);
+  const riga=(d,mov,altra)=>`<div class="r" data-dp-r="${altra?'':d}">${altra?`<span><input type="date" class="dp-d" value="" title="Un altro giorno"></span>`:`<span>${d.slice(8)==='01'?'1°':+d.slice(8)} ${MESI[+d.slice(5,7)-1]}</span>`}<span class="n dp-app"></span><span class="dp-eur">€<input class="dp-v" inputmode="decimal" value="${mov?numIt(saldoContoAl(c.id,d)):''}" placeholder="${altra?'saldo':'saldo al 1°'}"></span><span class="n dp-int"></span></div>`;
   $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra dp-fin" role="dialog" aria-modal="true">
     <h3>Aggiorna il saldo di ${esc(c.nome)}</h3>
-    <p class="aiuto">Scrivi quanto vedi sul conto oggi (o nel giorno che scegli). La differenza con il saldo che conosce l'app viene registrata come <b>interessi</b>: un movimento sul deposito, fuori da spese ed entrate.</p>
-    <div class="dp-campi">
-      <label>Data<input type="date" id="dp-data" value="${oggi}"></label>
-      <label>Saldo sul conto<span class="dp-eur">€<input id="dp-saldo" inputmode="decimal" placeholder="es. 10.059,66"></span></label>
-      <label>Tasso annuo<span class="dp-eur"><input id="dp-tasso" inputmode="decimal" value="${t==null?'':String(t).replace('.',',')}" placeholder="es. 1,44">%</span></label>
-    </div>
-    <div class="dp-conto" id="dp-conto"></div>
-    ${(c.tassi||[]).length?`<p class="aiuto">Tassi: ${(c.tassi||[]).slice().sort((x,y)=>x.dal<y.dal?-1:1).map(x=>`${String(x.t).replace('.',',')}% dal ${dataIt(x.dal)}`).join(' · ')}</p>`:''}
+    <p class="aiuto">Il 1° di ogni mese scrivi il saldo che vedi sul conto. La differenza con il saldo che conosce l'app viene registrata come <b>interessi</b> del mese prima: un movimento sul deposito, fuori da spese ed entrate. Le righe già scritte si possono correggere.</p>
+    <label class="dp-tl">Tasso annuo <span class="dp-eur"><input id="dp-tasso" inputmode="decimal" value="${t==null?'':String(t).replace('.',',')}" placeholder="1,44">%</span>${(c.tassi||[]).length>1?`<small>${(c.tassi||[]).slice().sort((x,y)=>x.dal<y.dal?-1:1).map(x=>`${String(x.t).replace('.',',')}% dal ${dataIt(x.dal)}`).join(' · ')}</small>`:''}</label>
+    <div class="dp-tab"><div class="r h"><span>saldo al</span><span class="n">nell'app</span><span>sul conto</span><span class="n">interessi</span></div>
+      ${M.map(x=>riga(x.d,x.mov)).join('')}${riga('',null,true)}
+      <div class="r tot"><span>Interessi ${annoDi(oggi)}</span><span></span><span></span><span class="n" id="dp-tot"></span></div></div>
     <div class="azioni"><button class="btn chiaro" data-act="chiudi">Annulla</button><button class="btn" data-dp-salva="${esc(c.id)}">Salva</button></div>
   </div></div>`;
-  aggiornaDpConto(c.id);$('#dp-saldo').focus();
+  aggiornaDpConto(c.id);const v=[...document.querySelectorAll('.dp-tab .dp-v')].find(x=>!x.value);if(v)v.focus();
+}
+function righeDp(){return [...document.querySelectorAll('.dp-tab .r[data-dp-r]')].map(r=>{const d=r.dataset.dpR||(r.querySelector('.dp-d')||{}).value||'', tx=r.querySelector('.dp-v').value.trim();return {r,d,tx,v:tx?parseNum(tx):NaN}})}
+function calcolaDp(id){ // simula le righe in ordine: ogni riga sostituisce l'eventuale aggiornamento già fatto in quella data
+  const L=righeDp().filter(x=>x.d).sort((x,y)=>x.d<y.d?-1:1), base=S.movimenti.filter(x=>!(x.conto===id&&x.aggSaldo&&L.some(l=>l.d===x.data&&l.tx)));
+  const salvo=S.movimenti;S.movimenti=base.slice();const out=[];
+  try{for(const l of L){const app=saldoContoAl(id,l.d);let diff=null;
+    if(l.tx&&!isNaN(l.v)){diff=r2(l.v-app);S.movimenti.push({conto:id,data:l.d,eur:-diff,ok:true,aggSaldo:true})}
+    out.push({...l,app,diff})}}finally{S.movimenti=salvo}
+  return out;
 }
 function aggiornaDpConto(id){
-  const el=$('#dp-conto');if(!el)return;const d=$('#dp-data').value, v=parseNum($('#dp-saldo').value);
-  if(!d){el.innerHTML='';return}
-  const app=saldoContoAl(id,d);
-  el.innerHTML=`<span>Nell'app al ${dataIt(d)}: <b>${euro(app)}</b></span>${isNaN(v)?'':`<span>Interessi da registrare: <b class="${v-app<0?'neg':'pos'}">${v-app<0?'− ':'+ '}${euro(Math.abs(v-app))}</b></span>`}`;
+  if(!$('.dp-tab'))return;const C=calcolaDp(id), a=annoDi(oggiISO());
+  for(const x of righeDp()){const c=C.find(y=>y.r===x.r);x.r.querySelector('.dp-app').textContent=c?euro(c.app):'';
+    const el=x.r.querySelector('.dp-int');el.className='n dp-int '+(c&&c.diff!=null?(c.diff<0?'neg':'pos'):'');el.textContent=c&&c.diff!=null?(c.diff<0?'− ':'+ ')+euro(Math.abs(c.diff)):''}
+  const giaPrima=S.movimenti.filter(x=>x.conto===id&&x.cat==='interessi'&&annoDi(x.data)===a&&x.ok&&!C.some(c=>c.tx&&c.d===x.data)).reduce((s,x)=>s-x.eur,0);
+  const tot=giaPrima+C.filter(c=>c.diff!=null&&annoDi(c.d)===a).reduce((s,c)=>s+c.diff,0);
+  $('#dp-tot').textContent=(tot<0?'− ':'+ ')+euro(Math.abs(tot));
 }
 document.addEventListener('input',e=>{if(e.target.closest('.dp-fin')){const b=$('[data-dp-salva]');if(b)aggiornaDpConto(b.dataset.dpSalva)}});
 document.addEventListener('click',e=>{
   const a=e.target.closest('[data-dep-agg]');if(a){e.preventDefault();e.stopPropagation();apriAggDeposito(a.dataset.depAgg);return}
   const s=e.target.closest('[data-dp-salva]');if(!s)return;
-  const id=s.dataset.dpSalva, c=S.conti.find(x=>x.id===id), d=$('#dp-data').value, v=parseNum($('#dp-saldo').value), tt=$('#dp-tasso').value.trim(), t=tt?parseNum(tt):null;
-  if(!d){toast('Scegli la data');return} if(isNaN(v)){toast('Scrivi il saldo che vedi sul conto');$('#dp-saldo').focus();return}
-  if(tt&&isNaN(t)){toast('Controlla il tasso');return}
-  const diff=r2(v-saldoContoAl(id,d));
+  const id=s.dataset.dpSalva, c=S.conti.find(x=>x.id===id), tt=$('#dp-tasso').value.trim(), t=tt?parseNum(tt):null;
+  if(tt&&isNaN(t)){toast('Controlla il tasso');$('#dp-tasso').focus();return}
+  const R=righeDp();
+  const bad=R.find(x=>x.tx&&isNaN(x.v));if(bad){toast('Controlla il saldo');bad.r.querySelector('.dp-v').focus();return}
+  const altra=R.find(x=>!x.r.dataset.dpR);if(altra&&altra.tx&&!altra.d){toast('Scegli la data della riga in fondo');return}
+  const C=calcolaDp(id).filter(x=>x.tx);
+  if(!C.length&&(t==null||tassoAl(c,oggiISO())===t)){chiudi();return}
+  let n=0,tot=0;
   modifica(()=>{
-    if(t!=null&&tassoAl(c,d)!==t){c.tassi=(c.tassi||[]).filter(x=>x.dal!==d);c.tassi.push({dal:d,t})}
-    c.ultAgg=d;
-    S.movimenti.push({id:nuovoId(),data:d,det:'INTERESSI '+c.nome.toUpperCase()+' FINO AL '+dataIt(d),ok:true,eur:-diff,cat:catInteressi(),conto:id,nota:'',rip:false,aggSaldo:true});
+    if(t!=null&&tassoAl(c,oggiISO())!==t){const dal=C.length?C[C.length-1].d:oggiISO();c.tassi=(c.tassi||[]).filter(x=>x.dal!==dal);c.tassi.push({dal,t})}
+    for(const x of C){
+      const vecchio=S.movimenti.find(m=>m.conto===id&&m.aggSaldo&&m.data===x.d);
+      if(vecchio){if(Math.abs(-vecchio.eur-x.diff)<0.005)continue;S.movimenti=S.movimenti.filter(m=>m!==vecchio)}
+      S.movimenti.push({id:nuovoId(),data:x.d,det:'INTERESSI '+c.nome.toUpperCase()+' FINO AL '+dataIt(x.d),ok:true,eur:-x.diff,cat:catInteressi(),conto:id,nota:'',rip:false,aggSaldo:true});
+      n++;tot+=x.diff;
+    }
+    if(C.length){const u=C[C.length-1].d;if(!c.ultAgg||u>c.ultAgg)c.ultAgg=u}
   });
-  chiudi();toast(Math.abs(diff)<0.005?'Saldo confermato: nessuna differenza':`Registrati ${diff<0?'− ':'+ '}${euro(Math.abs(diff))} di interessi`,true);
+  chiudi();toast(n?`Registrati ${n===1?'gli':''} interessi${n>1?` di ${n} mesi`:''}: ${tot<0?'− ':'+ '}${euro(Math.abs(tot))}`:'Salvato',true);
 },true);
 
 document.addEventListener('click',e=>{const b=e.target.closest('[data-cr-base]');if(!b)return;e.stopPropagation();UI.prevBase=b.dataset.crBase;salvaUI();render()},true);
@@ -2738,7 +2778,7 @@ function renderAnnuario(){
     ['','Inarcassa + tasse pagate',Z=>cassa(Z),{forte:1,nota:'nell\'anno'}],
     ['','sul volume d\'affari dell\'anno',Z=>cassa(Z)/Z.va,{pc:1,grigio:1}],
   ];
-  const cella=(r,Z)=>{const o=r[3]||{},v=r[2](Z);if(o.vuoto&&Math.abs(v)<0.005)return `<span class="n ${Z.a===oggi?'cor':''} gr">—</span>`;let t=o.pc?pc(o.esatta?v:Math.round(v*1000)/1000):n2(o.segno?Math.abs(v):v);if(o.segno&&v<0)t=`<span class="ac-cr" title="a credito (LM047)">${t} cr.</span>`;return `<span class="n ${Z.a===oggi?'cor':''} ${o.grigio?'gr':''} ${o.forte?'fo':''}" ${Z.rate>1&&o.vuoto?`title="Conguaglio ${Z.a} in ${Z.rate} rate nel ${Z.a+2}"`:''}>${t}</span>`};
+  const cella=(r,Z)=>{const o=r[3]||{},v=r[2](Z);if(o.vuoto&&Math.abs(v)<0.005)return `<span class="n ${Z.a===oggi?'cor':''} gr">—</span>`;let t=o.pc?pc(o.esatta?v:Math.round(v*1000)/1000):n2(o.segno?Math.abs(v):v);if(o.segno&&v<0)t=`<span class="ac-cr" title="a credito (LM047)">${t} cr.</span>`;return `<span class="n ${Z.a===oggi?'cor':''} ${o.grigio?'gr':''} ${o.forte?'fo':''}" ${Z.a===oggi&&(o.q||r[0]==='ev')?`style="background:${o.q?FIS_COL[o.q]:o.k}"`:''} ${Z.rate>1&&o.vuoto?`title="Conguaglio ${Z.a} in ${Z.rate} rate nel ${Z.a+2}"`:''}>${t}</span>`};
   const AT=AA.slice().reverse();
   const tab=`<div class="ac-scroll" onscroll="this.classList.toggle('mosso',this.scrollLeft>0)"><div class="ac-tab" style="--ny:${AT.length}">
     <div class="r hh"><span>importi in €</span>${AT.map(Z=>`<span class="n y ${Z.a===oggi?'cor':''}" data-fis-anno="${Z.a}" data-an-vai="1" title="Apri il Riepilogo fiscale ${Z.a}"><b>${Z.a}</b>${Z.a===oggi?'<small>previsto</small>':Z.a>oggi?'<small>stima</small>':''}</span>`).join('')}</div>
