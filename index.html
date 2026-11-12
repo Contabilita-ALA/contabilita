@@ -1814,6 +1814,28 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .cr-fr .dp-btn.da{background:#f7e6a1}
 @media (max-width:1365px){.cr-fr>span{white-space:normal}}
 .tq.cr{height:auto}.cr .cr-due{flex:none;height:calc(100vh - var(--top-h,58px) - var(--avviso-h,0px) - 150px);min-height:480px}
+
+/* 12/11 15:30 tutto in una schermata */
+.tq.cr{height:calc(100vh - var(--top-h,58px) - var(--avviso-h,0px) - 24px);min-height:620px}
+.cr .cr-due{flex:1 1 0;height:auto;min-height:auto}
+.cr .cr-tab,.cr .cr-tab>.r{min-height:auto}
+.cr .cr-tab>.r{padding:3px 0}
+.cr .cr-n>span{flex-direction:row;align-items:baseline;gap:6px;white-space:nowrap}
+.cr .cr-n small::before{content:'· '}
+.cr .cr-n>i{width:26px;height:26px}
+.cr .cr-sx{gap:3px}.cr .cr-fr{gap:1px;padding-left:34px;line-height:1.25}
+.cr .cr-fr .dp-btn{padding:0 7px;font-size:10.5px}
+.cr .cr-g{min-height:34px}
+.cr .cr-comp{height:22px;margin-bottom:6px}
+.cr-tt{grid-template-rows:auto repeat(5,26px)}
+.cr-tt>.r.h>span.cr-tt-t{font:700 15px var(--font-titoli);text-transform:none;letter-spacing:0!important;color:var(--inchiostro);flex-direction:column;align-items:flex-start;justify-content:flex-end;text-align:left;white-space:nowrap}
+.cr-tt>.r.h>span.cr-tt-t small{font:500 10.5px var(--font);color:var(--grigio);margin:0}
+.cr-nota{font-size:11px;line-height:1.35;margin-top:4px}
+.cr-risp h3{margin-bottom:4px}
+.cr .cr-g{position:relative}.cr .cr-g>.cr-sp{position:absolute;inset:2px 0;width:100%;height:calc(100% - 4px)}
+.cr .cr-tab{grid-template-rows:auto repeat(4,1fr)}.cr .cr-tab>.r:last-child{border-bottom:0}
+.cr-tt>.r>span:first-child{flex-direction:row!important;align-items:baseline!important;justify-content:flex-start!important;gap:6px!important}
+.cr-tt>.r.h>span.cr-tt-t{align-items:baseline!important;align-self:end}
 </style>
 </head>
 <body>
@@ -2517,12 +2539,12 @@ function renderContiRisparmi(){
     ${barra}
     <div class="cr-tab"><div class="r h"><span></span><span>andamento ${a} <em>· tratteggio = previsto</em></span><span class="cr-nh"><span>oggi</span><span>fine ${a}</span></span></div>
     ${righe.map(r=>{const v27=P27[r.key], cl=v=>v!=null&&v<-0.5?'no':'';return `<div class="r ${r.pag?'cl':''}" ${r.pag?`data-pag="${r.pag}" title="Apri la pagina del conto"`:''}><span class="cr-sx"><span class="cr-n"><i style="background:${col(r.c)}">${ico(r.ic)}</i><span>${esc(r.nome)}<small>${r.ruolo}</small></span></span><span class="cr-fr ${r.neg?'neg':''}">${r.fr.map(l=>`<span>${l}</span>`).join('')}</span></span><span class="cr-g">${spark(r.key,r.c)}</span><span class="cr-nb"><b class="${cl(D.oggi[r.key])}">${euro(D.oggi[r.key])}</b><span class="${cl(D.fine[r.key])}">${euro(D.fine[r.key])}<small>${sg(D.fine[r.key]-D.oggi[r.key])}</small></span></span></div>`}).join('')}
-    <div class="r tot"><span>Soldi tuoi</span><span></span><span class="cr-nb"><b>${euro(totOggi)}</b><span>${euro(totFine)}<small>${sg(totFine-totOggi)}</small></span></span></div></div></section>`;
+    </div></section>`;
   // ===== destra: quanto metti da parte =====
   const nomeT=k=>ROMANI[k-1]+' trim';
   const segn=v=>v==null?'—':Math.abs(v)<0.5?'–':(v<0?'− ':'+ ')+n0(Math.abs(v)), cls=v=>v==null||Math.abs(v)<0.5?'':v<0?'neg':'pos';
   const tabRisp=(righeT,tit,sotto)=>{const ok=righeT.filter(t=>t.av!=null), S2=f=>ok.reduce((s,t)=>s+(f(t)||0),0), tot=S2(t=>t.av+t.coi+t.int), stT=S2(t=>t.st);
-    return `<div class="cr-tw"><div class="cr-tt-t">${tit}</div><div class="cr-tt"><div class="r h"><span></span><span class="n">stipendio</span><span class="n">spese</span><span class="n">avanzo</span><span class="n">cointest.<br>(metà)</span><span class="n">interessi</span><span class="n">risparmiato</span></div>
+    return `<div class="cr-tw"><div class="cr-tt"><div class="r h"><span class="cr-tt-t">${tit}</span><span class="n">stipendio</span><span class="n">spese</span><span class="n">avanzo</span><span class="n">cointest.<br>(metà)</span><span class="n">interessi</span><span class="n">risparmiato</span></div>
     ${righeT.map(t=>{const r=t.av==null?null:t.av+t.coi+t.int, pc=t.st>0.5&&r!=null?Math.round(r/t.st*100):null;
       return `<div class="r ${t.fu?'fut':''} ${t.cor?'ora':''}" ${t.vai?`data-trim-side="${t.k}" title="Apri il ${ROMANI[t.k-1]} trimestre"`:''}><span>${ROMANI[t.k-1]} trim${t.cor?'<small>in corso</small>':''}</span><span class="n">${t.st==null?'—':n0(t.st)}</span><span class="n">${t.sp==null?'—':n0(t.sp)}</span><span class="n ${cls(t.av)}">${segn(t.av)}</span><span class="n ${cls(t.coi)}">${t.fu&&t.av==null?'—':segn(t.coi)}</span><span class="n ${cls(t.int)}">${t.fu&&t.av==null?'—':Math.abs(t.int)<0.005?'–':(t.int<0?'− ':'+ ')+numIt(Math.abs(t.int))}</span><span class="n"><b class="${cls(r)}">${segn(r)}</b>${pc!=null?`<em class="tq-d ${pc<0?'no':'ok'}">${pc}%</em>`:''}</span></div>`}).join('')}
     <div class="r tot"><span>Totale</span><span class="n">${n0(stT)}</span><span class="n">${n0(S2(t=>t.sp))}</span><span class="n ${cls(S2(t=>t.av))}">${segn(S2(t=>t.av))}</span><span class="n">${segn(S2(t=>t.coi))}</span><span class="n">${Math.abs(S2(t=>t.int))<0.005?'–':'+ '+numIt(S2(t=>t.int))}</span><span class="n"><b class="${cls(tot)}">${segn(tot)}</b>${stT>0.5?`<em class="tq-d ${tot<0?'no':'ok'}">${Math.round(tot/stT*100)}%</em>`:''}</span></div></div><p class="cr-nota">${sotto}</p></div>`};
@@ -2533,8 +2555,8 @@ function renderContiRisparmi(){
     const st=k===1?nettoTrim(a,4):PV.lordo>0.5?netQ(k-1):null, sp=sm(PV.fisse,ms)+sm(PV.vari,ms);
     const dep=infoDeposito(D.dep||{id:'x'},a);return {k,st,sp,av:st==null?null:st-sp,coi:P27.annuo*D.q/4,int:D.dep?D.fine.dep*(dep.t||0)/100/4:0}});
   const conEnt27=PV&&PV.lordo>0.5;
-  const tabT=`<div class="cr-tdue">${tabRisp(t26,`${a} <small>${pvBase()==='eff'?'solo spese già fatte':'con le spese previste'}</small>`,`Risparmiato = avanzo dello stipendio + tua metà del cointestato + interessi del deposito. Clic su un trimestre per aprirlo.`)}
-    ${tabRisp(t27,`${N} <small>dalla Previsione anno prossimo</small>`,conEnt27?`Stipendio del I trim = netto del IV trim ${a}; poi netto dei trimestri ${N} (entrate − ${Math.round(PV.perc*100)}% − spese per attività). Cointestato e interessi come oggi.`:`<b>Mancano le entrate ${N}</b>: scrivile nella pagina Previsione anno prossimo, altrimenti lo stipendio da aprile risulta zero.`)}</div>`;
+  const tabT=`<div class="cr-tdue">${tabRisp(t26,`${a} <small>${pvBase()==='eff'?'spese fatte':'con previste'}</small>`,`Risparmiato = avanzo dello stipendio + metà cointestato + interessi. Clic su un trimestre per aprirlo.`)}
+    ${tabRisp(t27,`${N} <small>dalla Previsione</small>`,conEnt27?`Stipendio del I trim = netto del IV trim ${a}; poi netto dei trimestri ${N} (entrate − ${Math.round(PV.perc*100)}% − spese per attività). Cointestato e interessi come oggi.`:`<b>Mancano le entrate ${N}</b>: scrivile nella pagina Previsione anno prossimo, altrimenti lo stipendio da aprile risulta zero.`)}</div>`;
   const switchB=`<span class="an-filt cr-base" title="Come nella Previsione anno prossimo: attuale = solo quello già fatto e incassato, previsto = anche le voci previste"><button data-cr-base="eff" class="${pvBase()==='eff'?'on':''}">attuale</button><button data-cr-base="prev" class="${pvBase()==='prev'?'on':''}">previsto</button></span>`;
   // grafico: soldi tuoi a fine mese, a strati per conto
   const keys=['uni','rev','dep','coi'], cols=D.serie;
