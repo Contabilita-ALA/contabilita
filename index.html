@@ -1839,6 +1839,7 @@ function carica(){
   if(!S) daFoglio();
   migra();
   try{Object.assign(UI,JSON.parse(lsGet(CHIAVE_UI)||'{}'))}catch(e){}
+  UI.pagina='home'; // all'apertura si parte sempre dalla Home (Paolo 12/11)
   if(UI.cat==='b:rate')UI.cat='b:variabili';
 }
 function salva(){
