@@ -1952,7 +1952,13 @@ function bollaBase(g,id){
   return '';
 }
 /* Aggiorna i dati salvati con una versione precedente dell'app */
-function migra(){
+let annoVisto=null; // anno che si sta guardando su questo computer: non lo cambiano la sincronizzazione né un ripristino
+function annoLocale(){
+  if(annoVisto!=null){S.anno=annoVisto;return}
+  const y=new Date().getFullYear(); // all'apertura si parte sempre dall'anno corrente (Paolo 12/11)
+  try{if(anniDisponibili().includes(y))S.anno=y}catch(e){}
+}
+function migra(){annoLocale();
   S.conti.forEach(c=>{if(c.tipo==='cointestato'&&c.colore==='#f6c9d3')c.colore='#f1d98f'}); // 11/11: il cointestato non è più rosa (si confondeva con DA DIVIDERE)
   if(!S.note) S.note=NOTE_BASE.map(n=>({...n}));
   for(const c of S.categorie){
@@ -2104,7 +2110,7 @@ const NAV={st:[],i:-1};
 const NAV_K=['pagina','mese','trim','annoConto'];
 function navTraccia(){const k=JSON.stringify(NAV_K.map(x=>UI[x]??''));if(NAV.st[NAV.i]===k)return;NAV.st=NAV.st.slice(0,NAV.i+1);NAV.st.push(k);if(NAV.st.length>80)NAV.st.shift();NAV.i=NAV.st.length-1}
 function navVai(d){const j=NAV.i+d;if(j<0||j>=NAV.st.length)return;NAV.i=j;JSON.parse(NAV.st[j]).forEach((v,n)=>UI[NAV_K[n]]=v);salvaUI();render();window.scrollTo(0,0)}
-function render(){navTraccia();try{aggiornaAutoFisc()}catch(e){}document.querySelector('.app').classList.toggle('chiusa',!!UI.sideChiusa&&innerWidth>900);const cc=S.conti.find(c=>c.tipo==='cointestato');document.documentElement.style.setProperty('--coi',cc&&cc.colore||'#f1d98f');renderSide();renderTop();renderAvviso();renderPagina();adattaLarghezza();misuraTesta();adattaTesti();piediConti();}
+function render(){annoVisto=S.anno;navTraccia();try{aggiornaAutoFisc()}catch(e){}document.querySelector('.app').classList.toggle('chiusa',!!UI.sideChiusa&&innerWidth>900);const cc=S.conti.find(c=>c.tipo==='cointestato');document.documentElement.style.setProperty('--coi',cc&&cc.colore||'#f1d98f');renderSide();renderTop();renderAvviso();renderPagina();adattaLarghezza();misuraTesta();adattaTesti();piediConti();}
 /* Testi che non ci stanno: prima si rimpicciolisce il carattere (fino al 78%), poi resta il "…" con il testo intero al passaggio del mouse */
 function adattaTesti(root){
   const box=root||document.querySelector('#main'); if(!box) return;
