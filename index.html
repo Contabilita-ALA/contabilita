@@ -1783,6 +1783,10 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .pp-link{font:700 11.5px var(--font);border:1.5px solid var(--inchiostro);background:#fff;border-radius:999px;padding:0 8px;margin-left:4px;cursor:pointer}
 .btn-posso{white-space:nowrap}
 @media (max-width:1500px){#top .oggi{display:none}}
+.pp-tot small{display:block;font:600 10.5px var(--font);color:#6b665f;text-align:right}
+.pp-alt{display:flex;gap:8px;align-items:center;margin-top:8px;padding:6px 8px;border-radius:9px;background:rgba(255,255,255,.65);border:1.5px dashed rgba(0,0,0,.25);font-size:12.5px}
+.pp-alt small{display:block;font-size:10.5px;color:#55524c}.pp-alt b{font-weight:700}.pp-alt b.ok{color:#2e7a45}.pp-alt b.no{color:#b5452f}.pp-alt em{font-style:normal;color:#6b665f;font-size:11px}
+.pp-alt.si>span:last-child>b:first-of-type{color:#2e7a45}.pp-alt.forse>span:last-child>b:first-of-type{color:#9a6b00}.pp-alt.no>span:last-child>b:first-of-type{color:#b5452f}
 /* Conti e risparmi (12/11) */
 .cr-due{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 .cr-dx{display:flex;flex-direction:column;gap:10px;min-height:0}
@@ -2587,10 +2591,15 @@ function ppAggiorna(){
   const el=$('#pp-ris');if(!el)return;const imp=parseNum($('#pp-imp').value), b=$('[data-pp-segna]');
   if(isNaN(imp)||imp<=0){el.innerHTML='';el.className='pp-ris';if(b)b.disabled=true;return}
   const R=ppCalcola(imp,+$('#pp-mese').value,+$('#pp-nr').value), T=ppTesto(R);
+  // l'altro scenario del tasto in alto (incassato / previsto)
+  const base=pvBase(), altra=base==='prev'?'eff':'prev', A=new Date().getFullYear();let R2=null;
+  {const s=UI.prevBase;UI.prevBase=altra;try{R2=ppCalcola(imp,+$('#pp-mese').value,+$('#pp-nr').value)}finally{UI.prevBase=s}}
+  const e0=v=>euro(Math.round(v)).replace(/,00$/,''), titE={si:'sì',forse:'sì, con attenzione',no:'meglio di no'};
+  const altroH=R2?`<div class="pp-alt ${R2.esito}"><span class="pp-ic">${ico('fattura')}</span><span><small>${altra==='prev'?`Se incassi quello che hai previsto (fatturato ${A} ${e0(pvVaPrev(A))})`:`Contando solo quello già incassato (${e0(pvVaEff(A))})`}</small><b>${titE[R2.esito]}</b>${R2.minU!=null?` · Unicredit al punto più basso <b class="${R2.minU<-0.5?'no':'ok'}">${(R2.minU<-0.5?'− ':'')+e0(Math.abs(R2.minU))}</b> a fine ${MESI3[R2.minK-1]}${R.minU!=null?` <em>(${R2.minU-R.minU>=0?'+':'−'} ${e0(Math.abs(R2.minU-R.minU))})</em>`:''}`:''}</span></div>`:'';
   el.className='pp-ris '+T.cl;
   const ok={ok:'✓',forse:'!',no:'✕'};
-  el.innerHTML=`<div class="pp-tit"><i>${ok[T.cl==='si'?'ok':T.cl]}</i>${T.tit}<span class="pp-tot">${euro(imp)}${R.nr>1?` · ${R.nr} rate`:''}</span></div>
-    <div class="pp-tab"><div class="pp-h"><span></span><span></span><span>prima</span><span></span><span>dopo</span><span></span></div>${T.L.map(r=>`<div class="pp-r ${r.cl}"><span class="pp-ic">${ico(r.ic)}</span><span class="pp-n"><b>${r.tit}</b><small>${r.sub}</small></span><span class="pp-p">${r.pr??''}</span><span class="pp-fr">${r.pr!=null?'→':''}</span><span class="pp-d">${r.dp}</span><span class="pp-s"><i>${ok[r.cl]}</i>${r.nota||''}</span></div>`).join('')}</div>
+  el.innerHTML=`<div class="pp-tit"><i>${ok[T.cl==='si'?'ok':T.cl]}</i>${T.tit}<span class="pp-tot">${euro(imp)}${R.nr>1?` · ${R.nr} rate`:''}<small>${base==='prev'?'con il previsto':"con l'incassato"}</small></span></div>
+    <div class="pp-tab"><div class="pp-h"><span></span><span></span><span>prima</span><span></span><span>dopo</span><span></span></div>${T.L.map(r=>`<div class="pp-r ${r.cl}"><span class="pp-ic">${ico(r.ic)}</span><span class="pp-n"><b>${r.tit}</b><small>${r.sub}</small></span><span class="pp-p">${r.pr??''}</span><span class="pp-fr">${r.pr!=null?'→':''}</span><span class="pp-d">${r.dp}</span><span class="pp-s"><i>${ok[r.cl]}</i>${r.nota||''}</span></div>`).join('')}</div>${altroH}
     ${T.C.length?`<div class="pp-cons"><div class="pp-ct">Se la vuoi fare comunque</div><div class="pp-cg">${T.C.map(c=>`<${c.b?'button type="button" '+c.b:'div'} class="pp-c${c.b?' cl':''}"><span class="pp-ic">${ico(c.ic)}</span><span><small>${c.t}</small><b>${c.v}</b><em>${c.s}${c.b?' · prova ↻':''}</em></span></${c.b?'button':'div'}>`).join('')}</div></div>`:''}`;
   if(b)b.disabled=false;
 }
