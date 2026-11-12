@@ -169,29 +169,61 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .pg-b s{position:absolute;top:0;bottom:0;width:0;border-left:2px dotted var(--inchiostro);z-index:1}
 .pg-v.pg-cor{background:#efece5;color:#55524c;white-space:nowrap}
 .pk-prv{color:#8a5a12}
-.rs{display:flex;flex-direction:column;gap:6px}
-.rs h3{display:flex;align-items:center;gap:6px}
-.rs-sp{margin:0;font-size:11.5px;line-height:1.35;color:#55524c}
-.rs-t{display:flex;flex-direction:column}
-.rs-r{display:grid;grid-template-columns:88px 76px 76px minmax(0,1fr) 84px 92px 92px;column-gap:10px;align-items:center;font-size:12.5px;padding:4px 2px;border-bottom:1px solid var(--linea);font-variant-numeric:tabular-nums}
-.rs-r:last-child{border-bottom:0}
-.rs-r.h{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:#7d7870;padding-top:0}
-.rs-r.h>span{text-align:right}
-.rs-cum{font-weight:700}
-.rs-cum.no{color:var(--rosso)}
-.rs-cum small{font-weight:400;color:#7d7870}
-.rs-b i.neg{background:#e8a49a;margin-left:auto}
-.rs-tot .rb .btn{align-self:flex-start;margin-top:2px}
-.rs-r.cor{color:#7d7870}
-.rs-r.qui .rs-n{font-weight:700}
-.rs-n small{font-weight:400}
-.rs-av{font-weight:600}
-.rs-av.no{color:var(--rosso)}
-.rs-b{display:flex}
-.rs-b i{display:block;height:6px;border-radius:3px}
-i.av{background:#7cc694}
-i.me{background:#5b7fb0}
-.rs-tot .rb b{font-size:16px}
+.tq-due.sub{align-items:stretch;grid-template-rows:auto auto auto auto;row-gap:8px}
+.tq-due.sub>.tq-meta{display:grid;grid-row:span 4;grid-template-rows:subgrid;row-gap:8px}
+.tq-due.sub .tq-meta-t{min-height:24px}
+.tq-due.sub .rb-r{align-items:stretch}
+.pk-mid{display:flex;flex-direction:column;gap:8px;min-width:0}
+.pk-mid .pk-cons{flex:1 1 auto;max-height:none}
+.pk-mid>.pk-l.sx{flex:1}
+.pk-mid>.pk-l.sx>.pk{flex:1}
+.rb b{font-variant-numeric:tabular-nums}
+.pk-l .pk-m b,.pk-l .pk-v{font-variant-numeric:tabular-nums}
+.rq{gap:8px}
+.rq h3{margin:0}
+.rq h3 small{margin-left:auto}
+.rq-nd{margin:0;font-size:12.5px;color:#55524c}
+.rq-bar{position:relative;display:flex;height:22px;border:1.5px solid var(--inchiostro);border-radius:7px;background:#fff;margin-top:14px}
+.rq-bar>i{display:block;height:100%;border-right:1.5px solid var(--inchiostro)}
+.rq-bar>i:first-child{border-radius:5px 0 0 5px}
+.rq-bar>i:last-of-type{border-right:0}
+.rq-bar s{position:absolute;top:-16px;bottom:-4px;border-left:2px solid var(--rosso);text-decoration:none}
+.rq-bar s b{position:absolute;top:-1px;right:5px;white-space:nowrap;font:600 10.5px var(--font);color:var(--rosso)}
+.rq-bar u{position:absolute;top:0;bottom:0;right:0;background:repeating-linear-gradient(45deg,rgba(192,57,43,.35) 0 3px,transparent 3px 7px);border-radius:0 5px 5px 0;text-decoration:none}
+.rq-f{background:#a9cbe8}
+.rq-v{background:#c9bdf0}
+.rq-av{background:#7cc694}
+.rq-sf{background:repeating-linear-gradient(45deg,rgba(192,57,43,.6) 0 2px,#fff 2px 4px)}
+.rq-f.hat{background:repeating-linear-gradient(45deg,#a9cbe8 0 3px,#fff 3px 6px)}
+.rq-v.hat{background:repeating-linear-gradient(45deg,#c9bdf0 0 3px,#fff 3px 6px)}
+.rq-leg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:#3d3a35}
+.rq-leg span{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.rq-leg i{display:inline-block;width:12px;height:12px;border:1.5px solid var(--inchiostro);border-radius:3px}
+.rq-leg b{font-variant-numeric:tabular-nums}
+.rq-leg em{font-style:normal;color:#7d7870}
+.rq-leg .ok b{color:var(--verde)}
+.rq-leg .no b{color:var(--rosso)}
+.rq-4{flex:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.rq-4>div{border:1.5px dashed #bdb6a8;border-radius:10px;padding:5px 10px 6px;background:#fffdf8;display:flex;flex-direction:column;gap:1px;min-width:0}
+.rq-4 small{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#7d7870;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rq-4 b{font:700 18px/1.15 var(--font-titoli);white-space:nowrap;font-variant-numeric:tabular-nums}
+.rq-4 b small{font:500 11px var(--font);text-transform:none;letter-spacing:0;color:#55524c}
+.rq-4 b.ok{color:var(--verde)}
+.rq-4 b.no{color:var(--rosso)}
+.rq-4 span{font-size:11px;line-height:1.3;color:#55524c}
+.rq-4 .btn{align-self:flex-start;margin-top:3px;white-space:nowrap}
+.rq-tr{flex:1;display:flex;gap:4px;min-height:74px;padding-top:4px}
+.rq-tr>span{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0}
+.rq-tr-a{position:relative;flex:1;width:100%;min-height:40px;background:linear-gradient(var(--inchiostro),var(--inchiostro)) 0 calc(100% - var(--z)) / 100% 1px no-repeat}
+.rq-tr i{position:absolute;left:50%;transform:translateX(-50%);width:60%;max-width:24px;background:#7cc694;border:1.5px solid var(--inchiostro)}
+.rq-tr i.neg{background:#f0b2a8}
+.rq-tr span.prev i{background:repeating-linear-gradient(45deg,#7cc694 0 3px,#fff 3px 6px)}
+.rq-tr span.prev i.neg{background:repeating-linear-gradient(45deg,#f0b2a8 0 3px,#fff 3px 6px)}
+.rq-tr em{font:600 10.5px/1.2 var(--font);font-style:normal;color:#3d3a35;font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:2px}
+.rq-tr em.no{color:var(--rosso)}
+.rq-tr small{font-size:10px !important;line-height:1.2;color:#7d7870 !important;letter-spacing:0 !important}
+.rq-tr span.qui small{color:var(--inchiostro) !important;background:#fbe0c8;border-radius:4px;padding:0 4px}
+.rq-tr span.qui em{font-weight:800}
 
 .pk-l .pk,.pk-h{display:grid;grid-template-columns:minmax(0,1fr) 138px 84px;column-gap:14px;align-items:center}
 .pk-l .pk{padding:6px 12px 7px;gap:0 14px;justify-content:normal;border-radius:10px}
@@ -498,7 +530,7 @@ i.me{background:#5b7fb0}
 .tq-dtab2>.r>*{border-bottom:1px solid var(--linea);padding:4px 0}
 .tq-dtab2>.r.tot>*{border-bottom:0;border-top:1.5px solid var(--inchiostro);font-weight:700}
 .tq-dtab2 b.n{font:700 17px var(--font-titoli)}.tq-dtab2 b.ok{color:var(--verde)}.tq-dtab2 b.no{color:var(--rosso)}
-@media (max-width:1100px){.tq{height:auto}.tq-due{grid-template-columns:minmax(0,1fr)}.tq-meta.dx{border-left:0;padding-left:0;margin-left:0}.tq-g{grid-template-rows:none}.tq-p{min-height:190px}}
+@media (max-width:1100px){.tq{height:auto}.tq-due{grid-template-columns:minmax(0,1fr)}.tq-due.sub>.tq-meta{display:flex;grid-row:auto}.tq-meta.dx{border-left:0;padding-left:0;margin-left:0}.tq-g{grid-template-rows:none}.tq-p{min-height:190px}}
 .tq-vm-top{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;font-size:11.5px;white-space:nowrap}
 .tq-vm-top>div{display:flex;flex-direction:column}.tq-vm-top small{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--grigio)}
 .tq-vm-f{font-size:10.5px;color:var(--grigio);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -3397,54 +3429,71 @@ function renderTrimestre(){
       +rb('Stipendio',e0(stipN)+'<small> al mese</small>',`il netto ÷ 3: quanto potrai spendere ogni mese di ${mAb(mesiN[0])}–${mAb(mesiN[2])}`)
       +rb(`Spese ${nomeN}`,e0(speseN),stimaN?'stimate: la spesa tipica dei trimestri già chiusi (mediana)':'fisse e variabili già segnate da Unicredit')
       +rb('Per le variabili',e0(vm)+'<small> al mese</small>',`(netto − fisse ${e0(totObb)}) ÷ 3`,'fin')}</div>`;
-  // ===== Paolo 12/11: analisi dei risparmi dell'anno =====
+  // ===== Paolo 12/11 (2): il risparmio DEL trimestre (sx) e quello atteso nel trimestre dopo (dx) =====
   const dep=S.conti.find(c=>c.tipo==='deposito'), depId=dep?dep.id:'DEPOSITO';
   const giriDep=S.movimenti.filter(x=>x.giro&&x.verso===depId&&x.ok&&(annoDi(x.data)===a||annoDi(x.data)===a+1));
   const trimDi=x=>{const mm=(x.det||'').toUpperCase().match(/RISPARMIO\s+(IV|III|II|I)\s+TRIM(?:\S*)?(?:\s+(\d{4}))?/);if(!mm)return null;
     const qq=ROMANI.indexOf(mm[1])+1;let aa=mm[2]?+mm[2]:annoDi(x.data);if(!mm[2]&&qq*3-2>meseDi(x.data))aa--;return {a:aa,q:qq}};
-  const righeR=[];for(let k=1;k<=4;k++){const dk=datiEsatti(a,k);const cor=a===o.getFullYear()&&k===Math.ceil((o.getMonth()+1)/3), fu=a>o.getFullYear()||(a===o.getFullYear()&&k*3-2>o.getMonth()+1);
-    if(fu)break;const st=nettoDi(datiEsatti(k===1?a-1:a,k===1?4:k-1))??nettoTrim(a,k-1);
-    const sp=dk?dk.mov.filter(x=>!x.giro&&x.ok&&daUni(x)&&fs(bollaDi(x.cat))).reduce((s,x)=>s+x.eur,0):0;
-    const messo=giriDep.filter(x=>{const t2=trimDi(x);return t2&&t2.a===a&&t2.q===k}).reduce((s,x)=>s+x.eur,0);
-    righeR.push({k,cor,st,sp,av:st==null?null:st-sp,messo})}
-  const altriDep=giriDep.filter(x=>!trimDi(x)&&annoDi(x.data)===a);
-  const chiusi=righeR.filter(r=>!r.cor&&r.av!=null), totAv=chiusi.reduce((s,r)=>s+r.av,0), totMes=righeR.reduce((s,r)=>s+r.messo,0), daSp=Math.max(0,totAv-totMes);
+  const messoDi=(aa,k)=>giriDep.filter(x=>{const t2=trimDi(x);return t2&&t2.a===aa&&t2.q===k}).reduce((s,x)=>s+x.eur,0);
+  const qOggi=a===o.getFullYear()?Math.ceil((o.getMonth()+1)/3):a<o.getFullYear()?5:0;
+  const righeR=[];for(let k=1;k<=4;k++){const dk=datiEsatti(a,k), cor=k===qOggi, fu=k>qOggi;
+    const st=nettoDi(datiEsatti(k===1?a-1:a,k===1?4:k-1))??nettoTrim(a,k-1);
+    const sp=dk&&!fu?dk.mov.filter(x=>!x.giro&&(x.ok||cor)&&daUni(x)&&fs(bollaDi(x.cat))).reduce((s,x)=>s+x.eur,0):0;
+    righeR.push({k,cor,fu,st,sp,av:st==null||fu?null:st-sp,messo:messoDi(a,k)})}
+  const chiusi=righeR.filter(r=>!r.cor&&!r.fu&&r.av!=null), totAv=chiusi.reduce((s,r)=>s+r.av,0), totMes=righeR.reduce((s,r)=>s+r.messo,0), daSp=Math.max(0,totAv-totMes);
   const salDep=(reali[Math.max(1,mc)]||{})[depId];
-  const mxR=Math.max(1,...righeR.map(r=>Math.abs(r.av||0)));
-  let cum=0;righeR.forEach(r=>{if(!r.cor&&r.av!=null)cum+=r.av;cum-=r.messo;r.cum=r.cor?null:cum});
-  const cellaR=r=>`<div class="rs-r${r.cor?' cor':''}${r.k===q?' qui':''}"><span class="rs-n">${ROMANI[r.k-1]} trim${r.cor?' <small>finora</small>':''}</span>
-      <span class="n">${r.st==null?'—':e0(r.st)}</span><span class="n">${e0(r.sp)}</span>
-      <span class="rs-b">${r.av==null?'':`<i class="${r.av<0?'neg':'av'}" style="width:${Math.abs(r.av)/mxR*100}%"></i>`}</span>
-      <span class="n rs-av ${r.av!=null&&r.av<-0.5?'no':''}">${r.av==null?'—':(r.av<-0.5?'− ':'+ ')+e0(Math.abs(r.av))}</span>
-      <span class="n">${r.messo>0.5?'− '+e0(r.messo):'—'}</span>
-      <span class="n rs-cum ${r.cum!=null&&r.cum<-0.5?'no':''}">${r.cum==null?'<small>a fine trim</small>':(r.cum<-0.5?'− ':'')+e0(Math.abs(r.cum))}</span></div>`;
-  const nUlt=chiusi.length?nomeT(a,chiusi[chiusi.length-1].k)+' '+a:'';
-  const risparmi=`<section class="tq-p rs"><h3>${ico('salvadanaio')} I tuoi risparmi nel ${a}</h3>
-    <p class="rs-sp">L'<b>avanzo</b> è quello che resta dello stipendio del trimestre (il netto del trimestre prima) dopo fisse e variabili; se è negativo hai speso più dello stipendio. Gli avanzi si sommano trimestre dopo trimestre (un trimestre in rosso si mangia quelli di prima): quello che resta, finché non lo sposti sul deposito, è ancora su Unicredit mescolato ai soldi da spendere.</p>
-    <div class="rs-t"><div class="rs-r h"><span></span><span>stipendio</span><span>spese</span><span></span><span>avanzo</span><span>sul deposito</span><span>da parte</span></div>${righeR.map(cellaR).join('')}</div>
-    <div class="rb-r rs-tot">${rb('Avanzi trim. chiusi',(totAv<-0.5?'− ':'')+e0(Math.abs(totAv)),chiusi.length?chiusi.map(r=>ROMANI[r.k-1]).join(' + ')+' trim':'nessun trimestre chiuso')
-      +rb('Già sul deposito',e0(totMes),'giroconti «Risparmio» da Unicredit al deposito')
-      +`<div class="rb fin"><small>Da mettere da parte</small><b>${e0(daSp)}</b>${daSp>0.5?`<button class="btn piccolo" data-risp-giro="${Math.round(daSp*100)/100}" data-risp-nome="${esc(nUlt)}" title="Apre un giroconto da Unicredit al deposito con questa cifra">Metti da parte</button>`:`<span>${totAv-totMes<-0.5?'gli avanzi non coprono i trimestri in rosso':'niente in sospeso'}</span>`}</div>`
-      +rb('Sul deposito oggi',salDep==null?'—':e0(salDep),altriDep.length?'compresi '+altriDep.map(x=>`${e0(x.eur)} del ${dataIt(x.data).slice(0,5)} (${esc((x.det||'').toLowerCase())})`).join(', '):'saldo del Revolut deposito')}</div>
-  </section>`;
+  const pc=v=>(v<0?'− ':'')+Math.abs(Math.round(v*100))+'%';
+  // barra: lo stipendio diviso in fisse, variabili e avanzo (se le spese lo superano: tacca dello stipendio e sforo)
+  const flusso=(st,segs)=>{const sp=segs.reduce((s,x)=>s+Math.max(0,x.v),0), av=st-sp, tot=Math.max(1,st,sp);
+    const pz=segs.filter(x=>x.v>0.5).map(x=>`<i class="${x.cls}${x.hat?' hat':''}" style="width:${x.v/tot*100}%" title="${x.n} ${euro(x.v)}"></i>`).join('')+(av>0.5?`<i class="rq-av" style="width:${av/tot*100}%" title="Avanzo ${euro(av)}"></i>`:'');
+    const leg=segs.filter(x=>x.v>0.5).map(x=>`<span><i class="${x.cls}${x.hat?' hat':''}"></i>${x.n} <b>${e0(x.v)}</b> <em>${st>0.5?pc(x.v/st):''}</em></span>`).join('')
+      +`<span class="${av<-0.5?'no':'ok'}"><i class="${av<-0.5?'rq-sf':'rq-av'}"></i>${av<-0.5?'Sforo':'Avanzo'} <b>${e0(Math.abs(av))}</b> <em>${st>0.5?pc(Math.abs(av)/st):''}</em></span>`;
+    return `<div class="rq-bar">${pz}${av<-0.5?`<s style="left:${st/tot*100}%"><b>stipendio ${e0(st)}</b></s><u style="left:${st/tot*100}%"></u>`:''}</div><div class="rq-leg">${leg}</div>`};
+  const tasso=(extra)=>{const col=[...righeR.filter(r=>!r.fu&&!(extra&&N1.a===a&&r.k===N1.q)).map(r=>({n:ROMANI[r.k-1],r:r.st>0.5&&r.av!=null?r.av/r.st:null,cor:r.cor,qui:r.k===q&&!extra})),...(extra?[extra]:[])];
+    const mx=Math.min(0.5,Math.max(0.25,...col.map(c=>Math.abs(c.r||0)))), neg=col.some(c=>c.r!=null&&c.r<0), pos=col.some(c=>c.r!=null&&c.r>0), z=neg&&pos?55:neg?0:100;
+    return `<div class="rq-tr" style="--z:${z}%">${col.map(c=>{const zona=c.r!=null&&c.r<0?100-z:z, h=c.r==null?0:Math.max(4,Math.min(zona,Math.abs(c.r)/mx*zona));
+      return `<span class="${c.qui?'qui':''}${c.prev||c.cor?' prev':''}" title="${c.r==null?'':'Avanzo ÷ stipendio: '+pc(c.r)}"><span class="rq-tr-a"><i class="${c.r!=null&&c.r<0?'neg':''}" style="height:${h}%;${c.r!=null&&c.r<0?'top:'+(100-z)+'%':'bottom:'+z+'%'}"></i></span><em class="${c.r!=null&&c.r<0?'no':''}">${c.r==null?'—':pc(c.r).replace(' ','')}</em><small>${c.n}</small></span>`}).join('')}</div>`};
+  // sinistra
+  const spSx=fF+fPr+vFt+vPr, avQ=budQ==null?null:budQ-spSx, ipot=inCorsoQ||(fPr+vPr>0.5);
+  const messoQ=messoDi(a,q), restaQ=avQ==null?0:avQ-messoQ, propQ=D.concluso?Math.min(Math.max(0,restaQ),daSp):0;
+  const rispQ=budQ==null?`<section class="tq-p rq"><h3>${ico('salvadanaio')} Il risparmio del ${nomeQc}</h3><p class="rq-nd">Manca lo stipendio del trimestre (il netto del trimestre prima): scrivilo in Impostazioni → Dati di partenza.</p></section>`:
+  `<section class="tq-p rq"><h3>${ico('salvadanaio')} Il risparmio del ${nomeQc}${ipot?'<small>con le spese previste: se resti così</small>':''}</h3>
+    ${flusso(budQ,[{n:'Fisse',v:fF,cls:'rq-f'},{n:'previste',v:fPr,cls:'rq-f',hat:1},{n:'Variabili',v:vFt,cls:'rq-v'},{n:'previste',v:vPr,cls:'rq-v',hat:1}])}
+    <div class="rq-4">
+      <div><small>${avQ<-0.5?'Hai speso in più':'Hai risparmiato'}</small><b class="${avQ<-0.5?'no':'ok'}">${avQ<-0.5?'− ':''}${e0(Math.abs(avQ))}</b><span>${pc(avQ/budQ)} dello stipendio di ${e0(budQ)}</span></div>
+      <div><small>Messo sul deposito</small><b>${e0(messoQ)}</b>${propQ>0.5?`<button class="btn piccolo" data-risp-giro="${Math.round(propQ*100)/100}" data-risp-nome="${esc(nomeT(a,q)+' '+a)}" title="Apre un giroconto da Unicredit al deposito con questa cifra">Metti da parte ${e0(propQ)}</button>`:`<span>${inCorsoQ?'si sposta a fine trimestre':avQ<-0.5?'niente da spostare':restaQ>0.5?`i trimestri in rosso dell'anno ne hanno già usati ${e0(restaQ)}`:restaQ>-0.5?'✓ tutto spostato':''}</span>`}</div>
+      <div><small>Nel ${a}, trim. chiusi</small><b class="${totAv<-0.5?'no':''}">${totAv<-0.5?'− ':''}${e0(Math.abs(totAv))}</b><span>${chiusi.length?`avanzi ${chiusi.map(r=>ROMANI[r.k-1]).join('+')} · sul deposito ${e0(totMes)}`:'nessun trimestre chiuso'}</span></div>
+      <div class="rq-trc"><small>% di stipendio risparmiata</small>${tasso()}</div>
+    </div></section>`;
+  // destra: il gemello per il trimestre dopo
+  const varN=Math.max(0,speseN-totObb), obb10=budgetN*0.1, varMax=(budgetN-obb10-totObb)/3;
+  const rispN=`<section class="tq-p rq"><h3>${ico('salvadanaio')} Il risparmio atteso nel ${nomeN}<small>${stimaN?'spese stimate sui trimestri chiusi':'con le spese già segnate'}</small></h3>
+    ${flusso(budgetN,[{n:'Fisse',v:totObb,cls:'rq-f',hat:1},{n:stimaN?'Variabili al solito':'Variabili',v:varN,cls:'rq-v',hat:1}])}
+    <div class="rq-4">
+      <div><small>${mancaN<-0.5?'Spenderai in più':'Risparmierai'}</small><b class="${mancaN<-0.5?'no':'ok'}">${mancaN<-0.5?'− ':''}${e0(Math.abs(mancaN))}</b><span>${budgetN>0.5?pc(mancaN/budgetN)+' dello stipendio di '+e0(budgetN):'manca lo stipendio'}</span></div>
+      <div><small>Per risparmiare il 10%</small><b>${varMax>0?e0(varMax):'—'}<small> al mese</small></b><span>${varMax>0?`di variabili al massimo (${e0(obb10)} da parte) · oggi ne spendi ${e0(mediaVar)}`:'le fisse da sole superano il 90% dello stipendio'}</span></div>
+      <div><small>Deposito a fine ${nomeN}</small><b>${salDep==null?'—':e0(salDep+daSp+Math.max(0,mancaN))}</b><span>oggi ${e0(salDep||0)}${daSp>0.5?` + da spostare ${e0(daSp)}`:''} + risparmio atteso</span></div>
+      <div class="rq-trc"><small>% risparmiata · ${ROMANI[N1.q-1]}${N1.a!==a?" '"+String(N1.a).slice(2):''} previsto</small>${tasso({n:ROMANI[N1.q-1]+(N1.a!==a?"'"+String(N1.a).slice(2):''),r:budgetN>0.5?mancaN/budgetN:null,prev:1,qui:1})}</div>
+    </div></section>`;
   const vTit=v=>v==null?'':`<span class="pk-voto">voto ${pill(v)}</span>`;
 
   $('#main').innerHTML=`<div class="tq tq2">
     <div class="tq-testa"><h1>${nomeQ}</h1><span class="tq-mesi">${mesiTxt}</span><span class="tq-stato ${stato[1]}">${stato[0]}</span>
       <span class="spazio"></span>
       <button class="btn chiaro piccolo" data-trim-vai="${q-1}" ${q<=1?'disabled':''}>‹ ${q>1?ROMANI[q-2]:''}</button><button class="btn chiaro piccolo" data-trim-vai="${q+1}" ${q>=4?'disabled':''}>${q<4?ROMANI[q]:''} ›</button></div>
-    <div class="tq-due">
+    <div class="tq-due sub">
       <div class="tq-meta">
         <div class="tq-meta-t"><span class="n">1</span>Com'è andato il ${nomeQc}${P?`<small>rispetto al ${nomeP}</small>`:''}${vTit(votoQ)}</div>
         ${rbSx}
-        <div class="pk-l sx">${testaR(D.mesi)}${tilesQ}</div>
-        ${risparmi}
+        <div class="pk-mid"><div class="pk-l sx">${testaR(D.mesi)}${tilesQ}</div></div>
+        ${rispQ}
       </div>
       <div class="tq-meta dx">
         <div class="tq-meta-t"><span class="n">2</span>Cosa ti aspetta nel ${nomeN}<small>${mesiNtxt} · ${statoN}</small>${vTit(votoN)}</div>
         ${rbDx}
-        <div class="pk-l dx">${testaR(mesiN)}${tilesN}</div>
-        <section class="tq-p tq-cons pk-cons"><h3>${ico('netto')} Come migliorare</h3>${daSp>0.5?consigli.replace(/<\/div>$/,`<div class="ps-l ok"><span class="ps-l-i">✓</span><span>Dagli stipendi dei trimestri chiusi ti avanzano <b>${euro(daSp)}</b> ancora su Unicredit: mettili da parte sul deposito (sotto, «I tuoi risparmi»).</span></div></div>`):consigli}</section>
+        <div class="pk-mid"><div class="pk-l dx">${testaR(mesiN)}${tilesN}</div>
+        <section class="tq-p tq-cons pk-cons"><h3>${ico('netto')} Come migliorare</h3>${propQ>0.5?consigli.replace(/<\/div>$/,`<div class="ps-l ok"><span class="ps-l-i">✓</span><span>Dallo stipendio del ${nomeQc} ti avanzano <b>${euro(propQ)}</b> ancora su Unicredit: mettili da parte sul deposito (sotto, «Il risparmio del ${nomeQc}»).</span></div></div>`):consigli}</section></div>
+        ${rispN}
       </div>
     </div></div>`;
   adattaListe();
