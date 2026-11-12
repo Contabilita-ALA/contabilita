@@ -923,6 +923,9 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .ac-tab>.r>*{display:flex;align-items:center;padding:1px 8px;border-bottom:1px solid var(--linea);white-space:nowrap;min-width:0}
 .ac-tab>.r>.n{justify-content:flex-end;padding-left:14px}
 .ac-tab .n.cor{background:#fbf3e6}
+.ac-tab .n.fut{color:#9a958d;font-style:italic;font-weight:500!important}.ac-tab>.r.hh .y.fut b{color:#8a8680;font-style:italic}.ac-tab>.r.hh .y.fut small{color:#8a8680;font-weight:500;white-space:nowrap}
+.ac-tab>.r.tot>.n.fut{font:italic 500 13px var(--font-titoli)}
+.ac-base{margin-left:10px;font-size:11.5px}.ac-base b{font-weight:700;margin-left:3px}
 .ac-tab .n.gr{color:#8a8680}
 .ac-tab>.r.hh>*{border-bottom:1.5px solid var(--inchiostro);font-size:10px;color:#8a8680;align-items:flex-end;padding-bottom:3px}
 .ac-tab>.r.hh .y{flex-direction:column;align-items:flex-end;cursor:pointer;font-size:12px;color:var(--inchiostro);line-height:1.1}
@@ -2678,10 +2681,12 @@ document.addEventListener('click',e=>{
 document.addEventListener('click',e=>{const b=e.target.closest('[data-cr-base]');if(!b)return;e.stopPropagation();UI.prevBase=b.dataset.crBase;salvaUI();render()},true);
 /* ---- Riepilogo fiscale (come Foglio20 e ANNUARIO CONTRIBUTI) ---- */
 function vaFatture(a){const L=S.fatture.filter(f=>annoDi(f.data)===a);return L.length?{va:L.reduce((s,f)=>s+calcFattura(f).conBollo,0),inc:datiFatture(a).filter(x=>x.inc).reduce((s,x)=>s+x.c.conBollo,0),n:L.length,lordo:L.reduce((s,f)=>s+calcFattura(f).lordo,0),acc:L.reduce((s,f)=>s+calcFattura(f).accant,0)}:null}
+let FIS_OVR=null; // {va:{anno:volume}, min:{anno:fattore}}: usato dall'Annuario per incassato/previsto e la stima dell'anno dopo
 function fiscoAnno(a,prof=0,vaX=null){
   const d=(S.fiscale||{})[a]; if(!d||prof>12) return null;
-  const o=d.o||{}, VF=vaFatture(a), va=vaX!=null?vaX:VF?VF.va:(+d.va||0), red=va*(S.impostazioni.aliquote.reddito||0.78);
-  const sm=(+d.s1||0)+(+d.s2||0), im=(+d.i1||0)+(+d.i2||0), mt=(+d.m1||0)+(+d.m2||0), minimi=sm+im+mt;
+  const ov=FIS_OVR||{}, o=d.o||{}, VF=vaFatture(a), va=vaX!=null?vaX:(ov.va&&ov.va[a]!=null)?ov.va[a]:VF?VF.va:(+d.va||0), red=va*(S.impostazioni.aliquote.reddito||0.78);
+  const dp=(S.fiscale||{})[a-1], fm=ov.min&&ov.min[a]&&dp?ov.min[a]:null;
+  const sm=fm?((+dp.s1||0)+(+dp.s2||0))*fm:(+d.s1||0)+(+d.s2||0), im=fm?((+dp.i1||0)+(+dp.i2||0))*fm:(+d.i1||0)+(+d.i2||0), mt=(+d.m1||0)+(+d.m2||0), minimi=sm+im+mt;
   const congS=o.congS!=null?o.congS:Math.max(0,red*d.aS-sm), congI=o.congI!=null?o.congI:Math.max(0,va*0.04-im);
   const P=fiscoAnno(a-1,prof+1);
   const lm035=o.lm035!=null?o.lm035:sm+mt+(P?P.congS:0);
@@ -2720,9 +2725,22 @@ function ricordaTolti(L){for(const m of L)if(m&&m.auto){const d=S.fiscale[annoDi
 const FIS_COL={sogg:'#c6def2',integr:'#c4ebdc',mat:'#f6c9d3',imposta:'#f8c9a8',saldo:'#f2b8b0',acconti:'#f7e6a1'};
 const FIS_NOME={sogg:'Inarcassa soggettivo',integr:'Inarcassa integrativo',mat:'Inarcassa maternità',imposta:'Imposta sostitutiva',saldo:'Saldo imposta',acconti:'Acconti imposta'};
 const fq=k=>`<i class="fi-q" style="--c:${FIS_COL[k]}" title="${FIS_NOME[k]}"></i>`;
+function crescitaMinimi(fino){ // media degli aumenti dei minimi (soggettivo + integrativo) tra anni con la stessa aliquota
+  const F=S.fiscale||{}, L=[];
+  for(const y of Object.keys(F).map(Number).sort()){const d=F[y],p=F[y-1];if(!p||y>fino||d.aS!==p.aS)continue;
+    const t=v=>(+v.s1||0)+(+v.s2||0)+(+v.i1||0)+(+v.i2||0), r=t(d)/t(p);if(t(p)>0&&r>0.9&&r<1.3)L.push({y,r})}
+  return L.length?{g:L.reduce((s,x)=>s+x.r,0)/L.length-1,da:L[0].y-1,a:L[L.length-1].y}:{g:0}
+}
+function acVaSel(a){const VF=vaFatture(a);return pvBase()==='prev'?pvVaPrev(a):VF?VF.inc:0}
 function renderAnnuario(){
+  const oggi=new Date().getFullYear(), F=S.fiscale||{}, C=crescitaMinimi(oggi), va=acVaSel(oggi);
+  FIS_OVR={va:{[oggi]:va,[oggi+1]:va},min:F[oggi+1]&&(F[oggi+1].o||{}).stima?{[oggi+1]:1+C.g}:{}};
+  try{return renderAnnuario0(C)}finally{FIS_OVR=null}
+}
+function renderAnnuario0(CM){
   const oggi=new Date().getFullYear();
-  const AA=Object.keys(S.fiscale||{}).map(Number).sort((x,y)=>x-y).map(y=>fiscoAnno(y)).filter(Z=>Z&&Z.va>0.5);
+  const AA=Object.keys(S.fiscale||{}).map(Number).filter(y=>y<=oggi).sort((x,y)=>x-y).map(y=>fiscoAnno(y)).filter(Z=>Z&&Z.va>0.5);
+  const Z27=AA.some(Z=>Z.a===oggi)?fiscoAnno(oggi+1):null;
   if(!AA.length){$('#main').innerHTML='<h1>Annuario contributi</h1><p>Non ci sono ancora anni con il volume d\'affari.</p>';return}
   const pc=v=>numIt(v*100).replace(/,00$/,'').replace(/,(\d)0$/,',$1')+'%';
   const n2=v=>numIt(Math.round(v*100)/100);
@@ -2778,10 +2796,13 @@ function renderAnnuario(){
     ['','Inarcassa + tasse pagate',Z=>cassa(Z),{forte:1,nota:'nell\'anno'}],
     ['','sul volume d\'affari dell\'anno',Z=>cassa(Z)/Z.va,{pc:1,grigio:1}],
   ];
-  const cella=(r,Z)=>{const o=r[3]||{},v=r[2](Z);if(o.vuoto&&Math.abs(v)<0.005)return `<span class="n ${Z.a===oggi?'cor':''} gr">—</span>`;let t=o.pc?pc(o.esatta?v:Math.round(v*1000)/1000):n2(o.segno?Math.abs(v):v);if(o.segno&&v<0)t=`<span class="ac-cr" title="a credito (LM047)">${t} cr.</span>`;return `<span class="n ${Z.a===oggi?'cor':''} ${o.grigio?'gr':''} ${o.forte?'fo':''}" ${Z.a===oggi&&(o.q||r[0]==='ev')?`style="background:${o.q?FIS_COL[o.q]:o.k}"`:''} ${Z.rate>1&&o.vuoto?`title="Conguaglio ${Z.a} in ${Z.rate} rate nel ${Z.a+2}"`:''}>${t}</span>`};
-  const AT=AA.slice().reverse();
+  const cella=(r,Z)=>{const o=r[3]||{},v=r[2](Z);if(o.vuoto&&Math.abs(v)<0.005)return `<span class="n ${Z.a===oggi?'cor':Z.a>oggi?'fut':''} gr">—</span>`;let t=o.pc?pc(o.esatta?v:Math.round(v*1000)/1000):n2(o.segno?Math.abs(v):v);if(o.segno&&v<0)t=`<span class="ac-cr" title="a credito (LM047)">${t} cr.</span>`;return `<span class="n ${Z.a===oggi?'cor':Z.a>oggi?'fut':''} ${o.grigio?'gr':''} ${o.forte?'fo':''}" ${Z.a===oggi&&(o.q||r[0]==='ev')?`style="background:${o.q?FIS_COL[o.q]:o.k}"`:''} ${Z.rate>1&&o.vuoto?`title="Conguaglio ${Z.a} in ${Z.rate} rate nel ${Z.a+2}"`:''}>${t}</span>`};
+  const acVaSel0=b=>{const VF=vaFatture(oggi);return b==='prev'?pvVaPrev(oggi):VF?VF.inc:0};
+  const AT=[...(Z27?[Z27]:[]),...AA.slice().reverse()];
+  const pcG=v=>numIt(Math.round(v*1000)/10).replace(/0$/,'').replace(/,$/,'');
+  const tit27=Z27?`Stima: stesso volume d'affari del ${oggi}; minimi Inarcassa ${CM.g?`+${pcG(CM.g)}% (media degli aumenti ${CM.da}–${CM.a})`:'come il '+oggi}; aliquote del ${oggi+1} come nel Riepilogo fiscale`:'';
   const tab=`<div class="ac-scroll" onscroll="this.classList.toggle('mosso',this.scrollLeft>0)"><div class="ac-tab" style="--ny:${AT.length}">
-    <div class="r hh"><span>importi in €</span>${AT.map(Z=>`<span class="n y ${Z.a===oggi?'cor':''}" data-fis-anno="${Z.a}" data-an-vai="1" title="Apri il Riepilogo fiscale ${Z.a}"><b>${Z.a}</b>${Z.a===oggi?'<small>previsto</small>':Z.a>oggi?'<small>stima</small>':''}</span>`).join('')}</div>
+    <div class="r hh"><span>importi in €</span>${AT.map(Z=>`<span class="n y ${Z.a===oggi?'cor':Z.a>oggi?'fut':''}" data-fis-anno="${Z.a}" data-an-vai="1" title="${Z.a>oggi?esc(tit27):'Apri il Riepilogo fiscale '+Z.a}"><b>${Z.a}</b>${Z.a===oggi?`<small>${pvBase()==='prev'?'previsto':'incassato'}</small>`:Z.a>oggi?`<small>stima${CM.g?' · minimi +'+pcG(CM.g)+'%':''}</small>`:''}</span>`).join('')}</div>
     ${righe.map(r=>r[0]==='h'?`<div class="sez"><span>${r[1]}</span></div>`:`<div class="r ${r[0]}" ${(r[3]||{}).k?`style="--c:${r[3].k}"`:''}><span class="nm">${(r[3]||{}).q?fq(r[3].q):''}${(r[3]||{}).cod?`<i class="cod">${r[3].cod}</i>`:''}${r[1]}${(r[3]||{}).nota?`<small>${r[3].nota}</small>`:''}</span>${AT.map(Z=>cella(r,Z)).join('')}</div>`).join('')}
   </div></div>`;
   // grafico: quanto se ne va ogni anno
@@ -2799,9 +2820,9 @@ function renderAnnuario(){
       ${riga('Sul reddito dell\'anno','Inarcassa + imposta che maturano (le paghi l\'anno dopo)',tot(corr),tot(P))}
     </section>`;}
   $('#main').innerHTML=`<div class="tq ac">
-    <div class="tq-testa"><h1>Annuario contributi</h1><span class="tq-conf">per competenza · il ${oggi} è previsto con tutte le fatture · clicca un anno per aprire il suo Riepilogo fiscale</span></div>
+    <div class="tq-testa"><h1>Annuario contributi</h1><span class="tq-conf">per competenza · il ${oggi} ${pvBase()==='prev'?'con tutte le fatture previste':'con le fatture incassate a oggi'} · il ${oggi+1} è una stima · clicca un anno per aprire il suo Riepilogo fiscale</span></div>
     <div class="ac-due">
-      <section class="tq-p"><h3>${ico('anno')} Anno per anno<small class="ac-scorri" hidden>scorri a destra per gli anni precedenti →</small></h3>${tab}</section>
+      <section class="tq-p"><h3>${ico('anno')} Anno per anno<span class="an-filt cr-base ac-base" title="Volume d'affari del ${oggi}: incassato a oggi oppure previsto con tutte le fatture. Cambia il ${oggi} e la stima del ${oggi+1}"><button data-cr-base="eff" class="${pvBase()==='eff'?'on':''}">incassato <b>${euro(acVaSel0('eff'))}</b></button><button data-cr-base="prev" class="${pvBase()==='prev'?'on':''}">previsto <b>${euro(acVaSel0('prev'))}</b></button></span><small class="ac-scorri" hidden>scorri a destra per gli anni precedenti →</small></h3>${tab}</section>
       <div class="ac-dx">${confr}<section class="tq-p"><h3>${ico('fiscali')} Quanto se ne va ogni anno<small>${AA.length>6?'ultimi 6 anni · ':''}Inarcassa + imposta</small></h3>${graf}${nota}</section></div>
     </div></div>`;
   const sc=$('.ac-scroll');if(sc&&sc.scrollWidth>sc.clientWidth+1)$('.ac-scorri').hidden=false;
