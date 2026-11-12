@@ -2311,10 +2311,11 @@ function renderFatture(){
   const vol=som(L,'conBollo'), lordo=som(L,'lordo'), acc=som(L,'accant'), netto=som(L,'netto');
   const Li=L.filter(x=>x.inc), Ld=L.filter(x=>!x.inc), lordoInc=som(Li,'lordo'), lordoDa=som(Ld,'lordo');
   const kpi=(cls,ic,tit,val,sub,dl)=>`<div class="tq-k ${cls}"><div class="tq-k-t"><span>${ico(ic)}${tit}</span>${dl||''}</div><div class="tq-k-v">${val}</div><div class="tq-k-s">${sub}</div></div>`;
-  const kpis=kpi('k-vol','fattura','Volume d\'affari',euro(som(Li,'conBollo')),Ld.length?`<span class="tq-d att">${euro(vol)} se incassi tutto</span>`:`<span class="tq-d ok">tutto incassato</span>`,`<span class="ft-mese ft-mv" title="fatture incassate su quelle dell'anno · volume = prestazioni + bollo">${Li.length} di ${L.length} fatture</span>`)
-    +kpi('k-e','entrate','Reddito professionale IRPEF 78%',euro(som(Li,'reddito')),Ld.length?`<span class="tq-d att">${euro(som(L,'reddito'))} se incassi tutto</span>`:`<span class="tq-d ok">tutto incassato</span>`)
-    +kpi('k-a','salvadanaio','Da accantonare',euro(som(Li,'accant')),Ld.length?`<span class="tq-d att">${euro(acc)} se incassi tutto</span>`:`<span class="tq-d ok">tutto incassato</span>`)
-    +kpi('k-net','netto','Netto',euro(som(Li,'netto')),(Ld.length?`<span class="tq-d att">${euro(netto)} se incassi tutto</span>`:`<span class="tq-d ok">tutto incassato</span>`),`<span class="ft-mese" title="netto delle fatture già incassate diviso 12">circa <b>${euro(Math.round(som(Li,'netto')/12)).replace(/,00$/,'')}</b> al mese</span>`);
+  const Lx=pvBase()==='prev'?L:Li, sx=pvBase()==='prev'?(Ld.length?`tutte le fatture, anche ${Ld.length} da incassare`:'tutte incassate'):'fatture già incassate';
+  const kpis=kpi('k-vol','fattura','Volume d\'affari',euro(som(Lx,'conBollo')),sx,`<span class="ft-mese ft-mv" title="fatture incassate su quelle dell'anno · volume = prestazioni + bollo">${Li.length} di ${L.length} fatture</span>`)
+    +kpi('k-e','entrate','Reddito professionale IRPEF 78%',euro(som(Lx,'reddito')),sx)
+    +kpi('k-a','salvadanaio','Da accantonare',euro(som(Lx,'accant')),sx)
+    +kpi('k-net','netto','Netto',euro(som(Lx,'netto')),sx,`<span class="ft-mese" title="netto diviso 12">circa <b>${euro(Math.round(som(Lx,'netto')/12)).replace(/,00$/,'')}</b> al mese</span>`);
   // tabella
   const ap=UI.fatAperta;
   const righe=L.map(x=>{const {f,c,m}=x, aperta=ap===f.id;
@@ -3010,16 +3011,16 @@ function renderFiscale(){
   const inp=(k,v,tip,cls)=>`<input class="fi-in ${cls||''}" data-fis="${k}" value="${numIt(v)}" inputmode="decimal" title="${esc(tip||'')}">`;
   const inpP=(k,v,tip)=>`<span class="fi-pc"><input class="fi-in" data-fis="${k}" data-pc="1" value="${numIt(v*100).replace(/,00$/,'').replace(/,(\d)0$/,',$1')}" inputmode="decimal" title="${esc(tip||'')}"><i>%</i></span>`;
   const kpi=(cls,ic,tit,val,sub,dl,extra)=>`<div class="tq-k ${cls}"><div class="tq-k-t"><span>${ico(ic)}${tit}</span>${dl||''}</div><div class="tq-k-v">${val}</div><div class="tq-k-s">${sub}</div>${extra||''}</div>`;
-  const prevTxt=v=>`<span class="fi-prev">${altW} <b>${euro(v)}</b></span>`;
+  const prevTxt=v=>`<span class="fi-prev">${inPrev?'tutte le fatture del '+a:'solo fatture incassate'}</span>`;
   const stk=(parti)=>{const tt=parti.reduce((s,x)=>s+Math.max(0,x[1]),0)||1;return `<div class="fi-stk">${parti.filter(x=>x[1]>0.5).map(([k,v])=>`<i style="flex:${v/tt};--c:${FIS_COL[k]}" title="${FIS_NOME[k]} ${euro(v)}"></i>`).join('')}</div>`};
-  const daInc=LF.filter(x=>!x.inc).length;
+  const daInc=LF.filter(x=>!x.inc).length, accSel=inPrev?accPrev:accOggi;
   const kpis=kpi('k-e','fattura',"Volume d'affari",euro(O.va),X.VF?prevTxt(X.va):'scritto a mano',X.VF?`<span class="tq-d ${daInc?'att':'ok'}">${daInc?daInc+' da incassare':'tutto incassato'}</span>`:'')
     +kpi('k-vol','netto','Reddito netto',euro(O.lm036),X.VF?prevTxt(X.lm036):`reddito 78% <b>${euro(X.red)}</b>`,`<span class="tq-d neutro">LM036</span>`)
-    +kpi('k-a','fiscali','Contributi e tasse',euro(O.inarcassa+O.imposta),X.VF?prevTxt(X.inarcassa+X.imposta):'',`<span class="tq-d neutro" title="Contributi e tasse sul fatturato lordo previsto">${lordo?pc(Math.round((X.inarcassa+X.imposta)/lordo*1000)/1000)+' del lordo':''}</span>`)
-    +(X.VF?kpi(spostato+0.5>=accOggi?'k-e':'k-s','netto','Accantonato',euro(spostato),`<span class="fi-prev">da accantonare <b>${euro(accOggi)}</b> · previsto <b>${euro(accPrev)}</b></span>`,`<span class="tq-d ${spostato+0.5>=accOggi?'ok':'no'}" title="Spostato sul Revolut rispetto a quanto va accantonato sulle fatture già incassate">${accOggi?Math.round(spostato/accOggi*100):0}%</span>`)
+    +kpi('k-a','fiscali','Contributi e tasse',euro(O.inarcassa+O.imposta),X.VF?prevTxt(X.inarcassa+X.imposta):'',`<span class="tq-d neutro" title="Contributi e tasse sul fatturato lordo">${O.va>0.5?pc(Math.round((O.inarcassa+O.imposta)/(O.va*(1+(S.impostazioni.aliquote.integrativo||0.04)))*1000)/1000)+' del lordo':''}</span>`)
+    +(X.VF?kpi(spostato+0.5>=accSel?'k-e':'k-s','netto','Accantonato',euro(spostato),`<span class="fi-prev">da accantonare <b>${euro(accSel)}</b></span>`,`<span class="tq-d ${spostato+0.5>=accSel?'ok':'no'}" title="Spostato sul Revolut rispetto a quanto va accantonato sulle fatture ${inPrev?'del '+a:'già incassate'}">${accSel?Math.round(spostato/accSel*100):0}%</span>`)
       :kpi('k-a','netto','Da pagare nel '+(a+1),euro(totDopo),'Inarcassa e F24 sul '+a,''));
   // ---- riquadri colorati (come la prima versione), in grande ad oggi e sotto il previsto ----
-  const due=!!X.VF;
+  const due=false; // Paolo 12/11: l'altro scenario si vede cambiando il tasto, non sotto i box
   const pv=(o,p)=>due&&Math.abs(o-p)>0.5?`<em>${altW} <b>${euro(p)}</b></em>`:'';
   const tile=(o)=>`<div class="fx-t ${o.cls||''}" ${o.k?`style="--c:${FIS_COL[o.k]}"`:''} ${o.tip?`title="${esc(o.tip)}"`:''}><small>${o.cod?`<i>${o.cod}</i>`:''}${o.lab}</small><b>${o.val}</b>${o.sub||''}</div>`;
   // Inarcassa: tre colonne (soggettivo, integrativo, maternità)
@@ -3044,7 +3045,7 @@ function renderFiscale(){
   // Stato: imposta sostitutiva
   const lm=(cod,nome,vo,vp,o={})=>`<div class="r ${o.cls||''}" ${o.k?`style="--c:${FIS_COL[o.k]}"`:''} ${o.tip?`title="${esc(o.tip)}"`:''}><span class="cod">${cod||''}</span><span class="nm">${nome}${o.nota?`<small>${o.nota}</small>`:''}</span><span class="n og">${o.txt??euro(vo)}</span>${due?`<span class="n pr">${o.txt!=null?'':euro(vp)}</span>`:''}</div>`;
   const stato=`<div class="fx-lm ${due?'due':''}">
-      <div class="r h"><span>rigo</span><span></span><span class="n">${due?(inPrev?'previsto':'incassato'):''}</span>${due?`<span class="n">${altW}</span>`:''}</div>
+      <div class="r h"><span>rigo</span><span></span><span class="n">${X.VF?(inPrev?'previsto':'incassato'):''}</span>${due?`<span class="n">${altW}</span>`:''}</div>
       ${lm('LM034','Reddito lordo',O.red,X.red,{nota:pc(S.impostazioni.aliquote.reddito||0.78)+' del volume d\'affari'})}
       ${lm('LM035','Contributi previdenziali',O.lm035,X.lm035,{nota:'Inarcassa pagata nel '+a,tip:X.d.o.lm035!=null?'Scritto a mano (come nel foglio)':`Soggettivi minimi ${euro(X.sm)} + maternità ${euro(X.mt)} + conguaglio soggettivo del ${a-1} ${euro(P?P.congS:0)}`})}
       ${lm('LM036','Reddito netto',O.lm036,X.lm036)}
@@ -3078,7 +3079,7 @@ function renderFiscale(){
       </div>
     </div>`;
   $('#main').innerHTML=`<div class="tq fi">
-    <div class="tq-testa"><h1>Riepilogo fiscale ${a}</h1><span class="tq-conf">regime forfettario · in grande ${inPrev?`il previsto (tutte le fatture del ${a}), sotto quello già incassato`:`quello già incassato, sotto il previsto con tutte le fatture del ${a}`} · si cambia col tasto in alto · i campi chiari si possono modificare</span></div>
+    <div class="tq-testa"><h1>Riepilogo fiscale ${a}</h1><span class="tq-conf">regime forfettario · ${inPrev?`previsto: tutte le fatture del ${a}`:`incassato: solo le fatture già incassate`} · si cambia col tasto in alto · i campi chiari si possono modificare</span></div>
     <div class="tq-kpi">${kpis}</div>
     <div class="fx">
       <section class="tq-p fx-in"><h3>${fq('sogg')} Inarcassa ${a}<small>${d.daAgg?`<a class="fi-agg" data-pag="impostazioni" title="Sono ancora le cifre del ${a-1}: aggiornale in Impostazioni">da aggiornare</a>`:`<a class="fi-mod" data-pag="impostazioni" title="Rate e aliquote si cambiano in Impostazioni">modifica in Impostazioni</a>`} · minimi nel ${a} · conguaglio nel ${a+1}</small></h3>${inar}</section>
@@ -3162,7 +3163,7 @@ function renderPrevisione(){
     voci+=rg('pd-g',esc(g.nome),totG[g.id],{p:pcT(totG[g.id]),bar:totG[g.id]/mxR,bc:col,st:`--gc:color-mix(in srgb,${col} 40%,#fff)`,at:` data-pv-vai="${g.id}" title="Apri il gruppo nella tabella"`});
     if(!(cs.length===1&&nomeCat(cs[0].id).toLowerCase()===g.nome.toLowerCase()))cs.forEach(x=>voci+=rg('pd-c',`<i class="pd-dot" style="background:${coloreCat(x.id)||col}"></i>${esc(nomeCat(x.id))}`,x.tot))});
   const colF='#ddc8b2';
-  voci+=rg('pd-g pd-fis','Spese per attività, Inarcassa e F24',tFA,{p:pcT(tFA),bar:tFA/mxR,bc:colF,st:`--gc:color-mix(in srgb,${colF} 45%,#fff)`,at:` data-pag="fiscale" title="Calcolati sul fatturato ${a} ${pvBase()==='prev'?'previsto':'effettivo'} · apri il Riepilogo fiscale"`});
+  voci+=rg('pd-g pd-fis','Spese per attività, Inarcassa e F24',tFA,{p:pcT(tFA),bar:tFA/mxR,bc:colF,st:`--gc:color-mix(in srgb,${colF} 45%,#fff)`,at:` data-pag="fiscale" title="Calcolati sul fatturato ${a} ${pvBase()==='prev'?'previsto':'incassato'} · apri il Riepilogo fiscale"`});
   D.L.filter(x=>(S.categorie.find(c=>c.id===x.id)||{}).gruppo==='attivita'&&x.tot>0.5).sort((x,y)=>y.tot-x.tot).forEach(x=>voci+=rg('pd-c',`<i class="pd-dot" style="background:${coloreCat(x.id)||colF}"></i>${esc(nomeCat(x.id))}`,x.tot));
   D.pag.slice().sort((x,y)=>x.data<y.data?-1:1).forEach(x=>voci+=rg('pd-c',`<span class="pd-d">${dataIt(x.data).slice(0,5)}</span>${NOMI[x.k]}`,x.eur,{m:false}));
   voci+=`<div class="pd-tot"><span class="pd-n">Totale spese <small>senza Inarcassa e F24</small></span><span></span><span></span><span class="pd-t">${euro(tG)}</span><span class="pd-m">${euro(tG/12)}</span></div>`
@@ -3187,7 +3188,7 @@ function pvRighe(a,D,c,cat,m){
   const fisAuto=x=>x.auto||/F24|INARCASSA|ACCONTO|SALDO|CONGUAGLIO|RATA/i.test(x.det||'');
   const rip=sel(x=>x.rip&&meseDi(x.data)===m&&!(fis&&fisAuto(x))).map(x=>({id:x.id,data:x.data,det:x.det,st:ent?-x.eur:x.eur,sub:`dai Movimenti ${a}`,s:'rip'}));
   let L=[], fonte=[], sp=[];
-  if(fis){L=D.pag.filter(x=>x.cat===cat&&meseDi(x.data)===m).map(x=>({id:x.k,data:x.data,det:x.det,st:x.eur,sub:`sul fatturato ${a} ${pvBase()==='prev'?'previsto':'effettivo'}`,s:'fis'}));sp.push(`Inarcassa e tasse calcolate sul fatturato ${a} ${pvBase()==='prev'?'previsto':'effettivo'} (${euro(D.va26)}).`)}
+  if(fis){L=D.pag.filter(x=>x.cat===cat&&meseDi(x.data)===m).map(x=>({id:x.k,data:x.data,det:x.det,st:x.eur,sub:`sul fatturato ${a} ${pvBase()==='prev'?'previsto':'incassato'}`,s:'fis'}));sp.push(`Inarcassa e tasse calcolate sul fatturato ${a} ${pvBase()==='prev'?'previsto':'incassato'} (${euro(D.va26)}).`)}
   L=L.concat(rip);if(rip.length)sp.push(`↻ = segnate "si ripete ogni anno" in Movimenti.`);
   if(ent)sp.push(rip.length?'Aggiungi qui sotto le altre entrate che ti aspetti.':`Nessuna entrata ↻ a ${mm}: aggiungi qui sotto quelle che ti aspetti.`);
   else if(!fis&&c.come==='stima'){const al=sel(x=>!x.rip&&meseDi(x.data)===m).map(x=>({id:x.id,data:x.data,det:x.det,st:x.eur,sub:`dai Movimenti ${a}`,s:'stima'}));L=L.concat(al);if(al.length)sp.push(`Nessuna spesa della voce è segnata ↻: riprendo quelle di ${mm} ${a}.`)}
@@ -3266,7 +3267,7 @@ function renderPrevisioneTab(D,vista){
   h+=`<tr class="an-sez"><th colspan="15">In sintesi <span>le entrate sono le tue ipotesi: clicca un mese di una voce per aggiungerle</span></th></tr>`;
   h+=riga('Entrate',totE,{c:'pos'})+riga(`− accantonamento ${Math.round(D.perc*100)}%`,acc.map(v=>-v),{c:'neg',tit:`Il ${Math.round(D.perc*100)}% delle entrate di ogni trimestre si sposta sul Revolut ad aprile, luglio, ottobre e dicembre`})+riga('= netto',net,{r:'tot',c:'pos',tit:'Quello che resta delle entrate dopo l\'accantonamento'});
   const rev=Array(13).fill(0);let sr=D.acc26;M.forEach(m=>{sr+=acc[m]-D.fis[m];rev[m]=sr});
-  h+=`<tr class="an-sez"><th colspan="15">Il Revolut nel ${N} <span>parte da ${euro(D.acc26)} accantonati sul fatturato ${a} ${pvBase()==='prev'?'previsto':'effettivo'} (${euro(D.va26)}), riceve l'accantonamento del ${N} e paga Inarcassa e tasse</span></th></tr>`;
+  h+=`<tr class="an-sez"><th colspan="15">Il Revolut nel ${N} <span>parte da ${euro(D.acc26)} accantonati sul fatturato ${a} ${pvBase()==='prev'?'previsto':'incassato'} (${euro(D.va26)}), riceve l'accantonamento del ${N} e paga Inarcassa e tasse</span></th></tr>`;
   h+=riga(`+ accantonamento ${N}`,acc,{c:'pos',tit:'Spostato dal conto al Revolut a fine trimestre: aprile, luglio, ottobre, dicembre'})+riga('− Inarcassa e tasse',D.fis.map(v=>-v),{c:'neg'});
   h+=`<tr class="tot"><th class="${rev[12]<0?'neg':'pos'}" title="Saldo stimato del Revolut a fine mese">= Revolut a fine mese</th>${M.map(m=>`<td class="${rev[m]<-0.5?'neg':'pos'}">${n0(rev[m])}</td>`).join('')}<td class="tot ${rev[12]<0?'neg':'pos'}">${n0(rev[12])}</td><td class="med"></td></tr>`;
   const testa=`<tr><th class="an-v">${N}</th>${M.map(m=>`<th>${MESI[m-1].slice(0,3)}</th>`).join('')}<th class="tot">totale<small>${N}</small></th><th class="med">media<small>al mese</small></th></tr>`;
@@ -4388,7 +4389,9 @@ function renderHome(){
       <div class="anno-box">${riassuntoAnno(S.anno,oggi)}</div></section>
   </div></div>`;
 }
-function renderHome2(){ // Home in due metà: mese (con calendario) | anno
+function renderHome2(){return conScen(renderHome2b)} // segue il tasto incassato/previsto (Paolo 12/11)
+function renderHome2b(){ // Home in due metà: mese (con calendario) | anno
+  const inPrev=pvBase()==='prev';
   const oggi=oggiISO();
   if(!HM) HM={a:S.anno,m:annoDi(oggi)===S.anno?meseDi(oggi):1};
   const {a,m}=HM, mov=movMese(a,m), meseCorrente=annoDi(oggi)===a&&meseDi(oggi)===m;
@@ -4404,7 +4407,7 @@ function renderHome2(){ // Home in due metà: mese (con calendario) | anno
   const tF=F.pag+F.prv, tV=V.pag+V.prv, tt=tF+tV, lim=D.bud, resta=lim-tt;
   const entr=B.entrate.pag+B.entrate.prv;
   const alG=giornoOggi&&resta>0?resta/(giorniMese-giornoOggi+1):null;
-  const kM=kpi('k-e','entrate','Entrate',euro(B.entrate.pag),entr-B.entrate.pag>0.5?`previste in tutto ${euro(entr)}`:'tutte incassate')
+  const kM=kpi('k-e','entrate','Entrate',euro(inPrev?entr:B.entrate.pag),inPrev?(entr-B.entrate.pag>0.5?'incassate e da incassare':'tutte incassate'):'già incassate')
     +(D.completo?kpi('k-a','netto','Stipendio',euro(lim),`netto trim. prima ÷ 3`):kpi('k-a','netto','Stipendio','—',`manca il trim. prima`))
     +kpi('k-s','variabili','Spese',euro(tt),`fisse + variabili`)
     +(D.completo?`<div class="tq-k k-nero perche" data-perche="${m}" title="Clicca per la spiegazione"><div class="tq-k-t"><span>${ico('salvadanaio')}${resta>=-0.5?'Restano':'Sfori di'}</span>${resta<-0.5?'<span class="ps-q">perché?</span>':''}</div><div class="tq-k-v ${resta>=-0.5?'':'neg'}">${euro(Math.abs(resta))}</div><div class="tq-k-s">${alG!=null?euro(alG)+' al giorno':'stipendio − spese'}</div></div>`
@@ -4483,11 +4486,12 @@ function renderHome2(){ // Home in due metà: mese (con calendario) | anno
   const catRighe=cats.map(([c,v])=>`<div class="hm-cr" data-cat-home="${esc(c)}" data-fit-v="${v}"><span class="hm-cr-n" style="--cc:${coloreCat(c)||'#ccc'}">${esc(nomeCat(c))}</span><span class="tq-cr-b"><i style="width:${v/cats[0][1]*100}%;background:${coloreCat(c)||'#ccc'}"></i></span><b>${eu0(v)}</b></div>`).join('')
     +`<div class="hm-cr altro" data-fit-altro data-n="0" data-v="0"><span class="tq-cr-n hm-cr-n"></span><span></span><b></b></div>`;
   const LF=datiFatture(a), LFi=LF.filter(x=>x.inc), LFd=LF.filter(x=>!x.inc), sF=(arr,k)=>arr.reduce((s,x)=>s+x.c[k],0);
-  const seTutto=k=>LFd.length?`<span class="tq-d att" title="se incassi tutte le fatture dell'anno">se tutto: ${euro(sF(LF,k))}</span>`:`<span class="tq-d ok">tutto incassato</span>`;
-  const kA=kpi('k-vol','fattura','Volume d\'affari',euro(sF(LFi,'conBollo')),seTutto('conBollo'))
-    +kpi('k-e','entrate','Reddito IRPEF 78%',euro(sF(LFi,'reddito')),seTutto('reddito'))
-    +kpi('k-a','salvadanaio','Da accantonare',euro(sF(LFi,'accant')),`<span class="tq-d ${pct>=99.5?'ok':'no'}" title="Già spostati sul Revolut ${euro(spostato)} su ${euro(incFat)} da accantonare per gli incassi">${Math.round(pct)}%</span> accantonato`)
-    +kpi('k-net','netto','Netto',euro(sF(LFi,'netto')),seTutto('netto'));
+  const LX=inPrev?LF:LFi, sTxt=inPrev?(LFd.length?`tutte le fatture, anche ${LFd.length} da incassare`:'tutte incassate'):'fatture già incassate';
+  const daAcc=inPrev?incFat+sF(LFd,'accant'):incFat, pctX=daAcc?spostato/daAcc*100:0;
+  const kA=kpi('k-vol','fattura','Volume d\'affari',euro(sF(LX,'conBollo')),sTxt)
+    +kpi('k-e','entrate','Reddito IRPEF 78%',euro(sF(LX,'reddito')),sTxt)
+    +kpi('k-a','salvadanaio','Da accantonare',euro(sF(LX,'accant')),`<span class="tq-d ${pctX>=99.5?'ok':'no'}" title="Già spostati sul Revolut ${euro(spostato)} su ${euro(daAcc)} da accantonare">${Math.round(pctX)}%</span> accantonato`)
+    +kpi('k-net','netto','Netto',euro(sF(LX,'netto')),sTxt);
   const dx=`<div class="tq-meta dx"><div class="tq-meta-t"><span class="n">2</span>Com'è l'andamento del ${a}<small>${mOggi&&mOggi<12?'fino a oggi':'anno completo'}</small></div>
     <div class="tq-kpi">${kA}</div>
     <div class="tq-g hm-gdx">
