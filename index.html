@@ -1797,6 +1797,16 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .cr-tt em.tq-d{font-style:normal;font-size:10px;padding:0 5px}
 .cr-nota{flex:none;margin:6px 0 0;font-size:11.5px;color:#55524c;line-height:1.5}.cr-nota .btn{margin:0 6px}
 @media (max-width:900px){.cr-due{grid-template-columns:minmax(0,1fr)}}
+/* Deposito: aggiorna saldo (12/11) */
+.dp-campi{display:grid;grid-template-columns:auto 1fr auto;gap:10px;margin:10px 0}
+.dp-campi label{display:flex;flex-direction:column;gap:3px;font-size:12px;font-weight:700;color:#55524c}
+.dp-campi input{font:600 15px var(--font);padding:6px 8px;border:1.5px solid #d8d1c3;border-radius:8px;background:#faf8f3;min-width:0;width:100%}
+.dp-eur{display:flex;align-items:center;gap:5px;font-size:14px;color:var(--inchiostro)}
+#dp-tasso{width:70px}
+.dp-conto{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#f3f0ea;border-radius:8px;padding:8px 10px;font-size:13px;min-height:20px}
+.dp-conto .pos{color:#2e7a45}.dp-conto .neg{color:#b5452f}
+.cr-fr .dp-btn{font:700 11px var(--font);border:1.5px solid var(--inchiostro);background:#fff;border-radius:999px;padding:1px 8px;margin-left:6px;cursor:pointer}
+.cr-fr .dp-btn.da{background:#f7e6a1}
 </style>
 </head>
 <body>
@@ -2476,7 +2486,7 @@ function renderContiRisparmi(){
   const righe=[
     {key:'uni',c:D.uni,ic:'conto',nome:D.uni.nome,ruolo:'per vivere',fr:`${D.carteOra>0.5?`carte di ${MESI[D.mOra-1]} da addebitare <b>${e0(D.carteOra)}</b> (già tolte)`:'carte già addebitate'}`},
     D.rev&&{key:'rev',c:D.rev,ic:'salvadanaio',nome:D.rev.nome,ruolo:'per tasse e Inarcassa',neg:revNeg,fr:D.uscRev.length?`da pagare <b>${e0(D.uscRev.reduce((s,x)=>s+x.eur,0))}</b>: ${prox}${D.uscRev.length>3?' …':''}${revNeg?` · <span class="no">a ${MESI[D.minRev.k-1]} va sotto di ${e0(-D.minRev.v)}</span>`:''}`:'nessuna uscita prevista'},
-    D.dep&&{key:'dep',c:D.dep,ic:'deposito',nome:D.dep.nome,ruolo:'risparmi',fr:`entrati nel ${a} <b>${e0(D.entrDep)}</b>${D.daSp>0.5?` · <span class="att">da spostare ${e0(D.daSp)}</span>`:''}`},
+    D.dep&&(()=>{const I=infoDeposito(D.dep,a), e2=v=>euro(v);return {key:'dep',c:D.dep,ic:'deposito',nome:D.dep.nome,ruolo:'risparmi'+(I.t!=null?` · tasso ${String(I.t).replace('.',',')}%`:''),fr:`versati nel ${a} <b>${e0(D.entrDep)}</b> · interessi <b>${e2(I.int)}</b>${I.stima>0.5?` <span title="Stima con il tasso attuale fino al 31/12">(+ circa ${e0(I.stima)} entro fine anno)</span>`:''}${D.daSp>0.5?` · <span class="att">da spostare ${e0(D.daSp)}</span>`:''}<button class="dp-btn ${I.daAgg?'da':''}" data-dep-agg="${esc(D.dep.id)}" title="${I.ult?'Ultimo aggiornamento '+dataIt(I.ult):'Mai aggiornato'}">${I.daAgg?'⟳ da aggiornare':'⟳ aggiorna saldo · '+dataIt(I.ult).slice(0,5)}</button>`}})(),
     {key:'coi',c:D.DC.coi,ic:'cointestato',nome:D.DC.coi.nome||'Cointestato',ruolo:'casa · la tua metà',fr:`conto intero <b>${e0(D.DC.saldoOggi)}</b> · la tua metà cresce di ${e0((D.fine.coi-D.ini.coi)/12)} al mese`,pag:'cointestato'}].filter(Boolean);
   const comp=['uni','rev','dep','coi'].map(k=>({k,v:Math.max(0,D.oggi[k]),c:col((righe.find(r=>r.key===k)||{}).c)})), compT=comp.reduce((s,x)=>s+x.v,0)||1;
   const barra=`<div class="cr-comp">${comp.filter(x=>x.v>0.5).map(x=>`<i style="width:${x.v/compT*100}%;background:${x.c}" title="${esc((righe.find(r=>r.key===x.k)||{}).nome||'')}: ${euro(x.v)}"><b>${Math.round(x.v/compT*100)}%</b></i>`).join('')}</div>`;
@@ -2510,6 +2520,63 @@ function renderContiRisparmi(){
     <div class="cr-due">${sx}<div class="cr-dx">${dx}</div></div>
   </div>`;
 }
+/* ---- Deposito: saldo aggiornato a mano una volta al mese, interessi automatici (Paolo 12/11) ---- */
+function catInteressi(){if(!S.categorie.some(c=>c.id==='interessi'))S.categorie.push({id:'interessi',nome:'interessi del deposito',gruppo:'entrate',colore:'#c4ebdc',bolla:''});return 'interessi'}
+function saldoContoAl(id,iso){ // saldo di un conto (non carta) alla fine del giorno iso, con i soli movimenti fatti
+  const a=annoDi(iso);let s=+((S.impostazioni.saldiIniziali[a]||{})[id])||0;
+  for(const x of S.movimenti){if(annoDi(x.data)!==a||x.data>iso||!x.ok)continue;
+    if(x.giro){if(x.verso===id)s+=x.eur;if(x.conto===id)s-=x.eur}else if(x.conto===id)s-=x.eur}
+  return r2(s);
+}
+function tassoAl(c,iso){const l=(c.tassi||[]).filter(t=>t.dal<=iso).sort((x,y)=>x.dal<y.dal?-1:1);return l.length?l[l.length-1].t:((c.tassi||[])[0]||{}).t??null}
+function infoDeposito(c,a){
+  const oggi=oggiISO(), aggL=S.movimenti.filter(x=>x.conto===c.id&&x.aggSaldo).sort((x,y)=>x.data<y.data?-1:1);
+  const ult=aggL.length?aggL[aggL.length-1].data:(c.ultAgg||null);
+  const int=S.movimenti.filter(x=>x.conto===c.id&&x.cat==='interessi'&&annoDi(x.data)===a&&x.ok).reduce((s,x)=>s-x.eur,0);
+  const t=tassoAl(c,oggi), saldo=saldoContoAl(c.id,oggi>`${a}-12-31`?`${a}-12-31`:oggi);
+  const fine=new Date(a,11,31), gg=Math.max(0,Math.round((fine-new Date())/864e5));
+  const stima=t!=null&&annoDi(oggi)===a?saldo*t/100*gg/365:0;
+  const daAgg=annoDi(oggi)===a&&(!ult||ult<oggi.slice(0,8)+'01');
+  return {ult,int,t,stima,daAgg,saldo};
+}
+function apriAggDeposito(id){
+  const c=S.conti.find(x=>x.id===id); if(!c) return;
+  const oggi=oggiISO(), t=tassoAl(c,oggi);
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra dp-fin" role="dialog" aria-modal="true">
+    <h3>Aggiorna il saldo di ${esc(c.nome)}</h3>
+    <p class="aiuto">Scrivi quanto vedi sul conto oggi (o nel giorno che scegli). La differenza con il saldo che conosce l'app viene registrata come <b>interessi</b>: un movimento sul deposito, fuori da spese ed entrate.</p>
+    <div class="dp-campi">
+      <label>Data<input type="date" id="dp-data" value="${oggi}"></label>
+      <label>Saldo sul conto<span class="dp-eur">€<input id="dp-saldo" inputmode="decimal" placeholder="es. 10.059,66"></span></label>
+      <label>Tasso annuo<span class="dp-eur"><input id="dp-tasso" inputmode="decimal" value="${t==null?'':String(t).replace('.',',')}" placeholder="es. 1,44">%</span></label>
+    </div>
+    <div class="dp-conto" id="dp-conto"></div>
+    ${(c.tassi||[]).length?`<p class="aiuto">Tassi: ${(c.tassi||[]).slice().sort((x,y)=>x.dal<y.dal?-1:1).map(x=>`${String(x.t).replace('.',',')}% dal ${dataIt(x.dal)}`).join(' · ')}</p>`:''}
+    <div class="azioni"><button class="btn chiaro" data-act="chiudi">Annulla</button><button class="btn" data-dp-salva="${esc(c.id)}">Salva</button></div>
+  </div></div>`;
+  aggiornaDpConto(c.id);$('#dp-saldo').focus();
+}
+function aggiornaDpConto(id){
+  const el=$('#dp-conto');if(!el)return;const d=$('#dp-data').value, v=parseNum($('#dp-saldo').value);
+  if(!d){el.innerHTML='';return}
+  const app=saldoContoAl(id,d);
+  el.innerHTML=`<span>Nell'app al ${dataIt(d)}: <b>${euro(app)}</b></span>${isNaN(v)?'':`<span>Interessi da registrare: <b class="${v-app<0?'neg':'pos'}">${v-app<0?'− ':'+ '}${euro(Math.abs(v-app))}</b></span>`}`;
+}
+document.addEventListener('input',e=>{if(e.target.closest('.dp-fin')){const b=$('[data-dp-salva]');if(b)aggiornaDpConto(b.dataset.dpSalva)}});
+document.addEventListener('click',e=>{
+  const a=e.target.closest('[data-dep-agg]');if(a){e.preventDefault();e.stopPropagation();apriAggDeposito(a.dataset.depAgg);return}
+  const s=e.target.closest('[data-dp-salva]');if(!s)return;
+  const id=s.dataset.dpSalva, c=S.conti.find(x=>x.id===id), d=$('#dp-data').value, v=parseNum($('#dp-saldo').value), tt=$('#dp-tasso').value.trim(), t=tt?parseNum(tt):null;
+  if(!d){toast('Scegli la data');return} if(isNaN(v)){toast('Scrivi il saldo che vedi sul conto');$('#dp-saldo').focus();return}
+  if(tt&&isNaN(t)){toast('Controlla il tasso');return}
+  const diff=r2(v-saldoContoAl(id,d));
+  modifica(()=>{
+    if(t!=null&&tassoAl(c,d)!==t){c.tassi=(c.tassi||[]).filter(x=>x.dal!==d);c.tassi.push({dal:d,t})}
+    c.ultAgg=d;
+    S.movimenti.push({id:nuovoId(),data:d,det:'INTERESSI '+c.nome.toUpperCase()+' FINO AL '+dataIt(d),ok:true,eur:-diff,cat:catInteressi(),conto:id,nota:'',rip:false,aggSaldo:true});
+  });
+  chiudi();toast(Math.abs(diff)<0.005?'Saldo confermato: nessuna differenza':`Registrati ${diff<0?'− ':'+ '}${euro(Math.abs(diff))} di interessi`,true);
+},true);
 /* ---- Riepilogo fiscale (come Foglio20 e ANNUARIO CONTRIBUTI) ---- */
 function vaFatture(a){const L=S.fatture.filter(f=>annoDi(f.data)===a);return L.length?{va:L.reduce((s,f)=>s+calcFattura(f).conBollo,0),inc:datiFatture(a).filter(x=>x.inc).reduce((s,x)=>s+x.c.conBollo,0),n:L.length,lordo:L.reduce((s,f)=>s+calcFattura(f).lordo,0),acc:L.reduce((s,f)=>s+calcFattura(f).accant,0)}:null}
 function fiscoAnno(a,prof=0,vaX=null){
