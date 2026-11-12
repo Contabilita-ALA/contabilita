@@ -156,6 +156,25 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .pk-g .pk-m{flex:1;min-height:34px;align-items:stretch}.pk-g .pk-m span{display:grid;grid-template-rows:auto minmax(0,1fr) auto;justify-items:center;gap:2px}.pk-g .pk-m i{display:block;align-self:end;width:70%;height:var(--h);min-height:2px;background:rgba(29,27,24,.22);border-radius:4px 4px 0 0}.pk-g .pk-m span{grid-template-rows:minmax(0,1fr) auto auto}.pk-g .pk-m small{order:3}.pk-g .pk-m b{order:2}.pk-m small{color:#7d7870}.pk-m b{font-weight:500}.pk-m b.no{color:var(--rosso)}.pk.k-r .pk-m b.no{color:#ff9d8f}
 .pk-str{display:flex;flex-direction:column;gap:4px;flex:none}.pk-str .pg-pecc,.pk-str .pg-risp{margin:0}
 .pk-cons{flex:0 1 auto;min-height:0;max-height:48%}.pk-cons .ps-ls{overflow:auto;min-height:0}
+/* Trimestre compatto (12/11): ogni voce è una riga di pagella, niente riquadri che si allungano */
+.tq.tq2{height:auto;min-height:0}.tq2 .tq-due{flex:none;align-items:start}.tq2 .tq-meta{gap:6px}
+.pk-l{display:flex;flex-direction:column;gap:5px}
+.pk-l .pk,.pk-h{display:grid;grid-template-columns:minmax(0,1fr) 138px 84px;column-gap:14px;align-items:center}
+.pk-l .pk{padding:6px 12px 7px;gap:0 14px;justify-content:normal;border-radius:10px}
+.pk-h{padding:0 13px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#7d7870}.pk-h>span:last-child{text-align:center}
+.pk-hm{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center}
+.pk-c{display:flex;flex-direction:column;gap:3px;min-width:0}
+.pk-l .pk-t{align-items:baseline}.pk-l .pk-v{font-size:21px;line-height:1.1;text-align:right}
+.pk-l .pk .pg-b{height:7px}.pk-l .pk-s{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pk-pv{justify-self:center}.pk-pv .pg-v{font-size:11px;padding:2px 9px}
+.pk-l .pk-m{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;border:0;padding:0;align-self:stretch;font-size:11.5px}
+.pk-l .pk-m span{display:grid;grid-template-rows:28px auto;justify-items:center;gap:2px}
+.pk-l .pk-m small{display:none}.pk-l .pk-m b{font-weight:500;grid-row:2}
+.pk-l .pk-m i{display:block;grid-row:1;align-self:end;width:60%;max-width:30px;height:var(--h);min-height:2px;background:rgba(29,27,24,.22);border-radius:3px 3px 0 0}
+.pk-l .pk-v small{text-transform:none;letter-spacing:0;font:500 12px var(--font);margin-left:4px}
+.pk-l .pk-m i.neg{background:rgba(196,60,40,.45)}.pk-l .pk.k-r .pk-m i{background:rgba(255,255,255,.3)}.pk-l .pk.k-r .pk-m i.neg{background:#ff9d8f}
+.tq2 .pk-cons{max-height:none}.tq2 .pk-cons .ps-ls{overflow:visible}
+.tq2 .pk-str{margin-top:1px}
 @media (max-height:700px){.pk{padding:6px 10px;gap:2px}.pk-v{font-size:21px}.pk-s{font-size:11px}.pk-m{font-size:11.5px;padding-top:2px}}
 .pv-dx.pd{display:flex;flex-direction:column}.pd-p0{flex:1;min-height:0}
 .pd-l{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;justify-content:space-between;font-variant-numeric:tabular-nums}
@@ -2545,13 +2564,15 @@ function renderPrevisione(){
   // Paolo 11/11 sera: una sola tabella allineata (gruppi, voci, Inarcassa e F24), niente buchi
   const tAll=tG+D.tFis, pcT=v=>tAll>0.5?Math.round(v/tAll*100)+'%':'';
   const rg=(cls,nome,v,o={})=>`<div class="pd-r ${cls}"${o.at||''}${o.st?` style="${o.st}"`:''}><span class="pd-n">${nome}</span><span class="pd-b">${o.bar!=null?`<i style="width:${Math.max(1,o.bar*100).toFixed(1)}%;background:${o.bc}"></i>`:''}</span><span class="pd-p">${o.p||''}</span><span class="pd-t">${euro(v)}</span><span class="pd-m">${o.m===false?'':euro(v/12)}</span></div>`;
-  const mxR=Math.max(1,...GR.map(g=>totG[g.id]),D.tFis);
+  const tAtt=totG.attivita||0, tFA=D.tFis+tAtt, GRv=GR.filter(g=>g.id!=='attivita');
+  const mxR=Math.max(1,...GRv.map(g=>totG[g.id]),tFA);
   let voci=`<div class="pd-r pd-h"><span class="pd-n"></span><span class="pd-b"></span><span class="pd-p">%</span><span class="pd-t">in tutto</span><span class="pd-m">al mese</span></div>`;
-  GR.forEach(g=>{const col=g.colore||'#e7e3da',cs=D.L.filter(x=>(S.categorie.find(c=>c.id===x.id)||{}).gruppo===g.id&&x.tot>0.5).sort((x,y)=>y.tot-x.tot);
+  GRv.forEach(g=>{const col=g.colore||'#e7e3da',cs=D.L.filter(x=>(S.categorie.find(c=>c.id===x.id)||{}).gruppo===g.id&&x.tot>0.5).sort((x,y)=>y.tot-x.tot);
     voci+=rg('pd-g',esc(g.nome),totG[g.id],{p:pcT(totG[g.id]),bar:totG[g.id]/mxR,bc:col,st:`--gc:color-mix(in srgb,${col} 40%,#fff)`,at:` data-pv-vai="${g.id}" title="Apri il gruppo nella tabella"`});
     if(!(cs.length===1&&nomeCat(cs[0].id).toLowerCase()===g.nome.toLowerCase()))cs.forEach(x=>voci+=rg('pd-c',`<i class="pd-dot" style="background:${coloreCat(x.id)||col}"></i>${esc(nomeCat(x.id))}`,x.tot))});
   const colF='#ddc8b2';
-  voci+=rg('pd-g pd-fis','Inarcassa e F24',D.tFis,{p:pcT(D.tFis),bar:D.tFis/mxR,bc:colF,st:`--gc:color-mix(in srgb,${colF} 45%,#fff)`,at:` data-pag="fiscale" title="Calcolati sul fatturato ${a} ${pvBase()==='prev'?'previsto':'effettivo'} · apri il Riepilogo fiscale"`});
+  voci+=rg('pd-g pd-fis','Spese per attività, Inarcassa e F24',tFA,{p:pcT(tFA),bar:tFA/mxR,bc:colF,st:`--gc:color-mix(in srgb,${colF} 45%,#fff)`,at:` data-pag="fiscale" title="Calcolati sul fatturato ${a} ${pvBase()==='prev'?'previsto':'effettivo'} · apri il Riepilogo fiscale"`});
+  D.L.filter(x=>(S.categorie.find(c=>c.id===x.id)||{}).gruppo==='attivita'&&x.tot>0.5).sort((x,y)=>y.tot-x.tot).forEach(x=>voci+=rg('pd-c',`<i class="pd-dot" style="background:${coloreCat(x.id)||colF}"></i>${esc(nomeCat(x.id))}`,x.tot));
   D.pag.slice().sort((x,y)=>x.data<y.data?-1:1).forEach(x=>voci+=rg('pd-c',`<span class="pd-d">${dataIt(x.data).slice(0,5)}</span>${NOMI[x.k]}`,x.eur,{m:false}));
   voci+=`<div class="pd-tot"><span class="pd-n">Totale spese <small>senza Inarcassa e F24</small></span><span></span><span></span><span class="pd-t">${euro(tG)}</span><span class="pd-m">${euro(tG/12)}</span></div>`
     +`<div class="pd-tot pd-tot2"><span class="pd-n">Con Inarcassa e F24</span><span></span><span></span><span class="pd-t">${euro(tAll)}</span><span class="pd-m">${euro(tAll/12)}</span></div>`;
@@ -3289,7 +3310,8 @@ function renderTrimestre(){
   const n0=v=>numIt(Math.round(v)).replace(/,00$/,''), mAb=m=>MESI[m-1].slice(0,3).toLowerCase();
   const uM=(d,m,f)=>d?d.mov.filter(x=>!x.giro&&daUni(x)&&meseDi(x.data)===m&&f(bollaDi(x.cat))).reduce((s,x)=>s+x.eur,0):0;
   const mini=(ms,fn,cls)=>{const vs=ms.map(fn),mx=Math.max(1,...vs.map(v=>Math.abs(v||0)));return `<div class="pk-m">${ms.map((m,k)=>{const v=vs[k];return `<span><small>${mAb(m)}</small><i class="${v<-0.5?'neg':''}" style="--h:${Math.max(2,Math.abs(v||0)/mx*100).toFixed(0)}%"></i><b class="${cls&&v<-0.5?'no':''}">${v==null?'—':n0(v)}</b></span>`}).join('')}</div>`};
-  const tile=(cls,ic,tit,v,big,r,sub,mm,extra)=>`<div class="pk ${cls}"${extra||''}><div class="pk-t"><span>${ico(ic)}${tit}</span>${pill(v)}</div><div class="pk-v">${big}</div>${barra(r,v)}<div class="pk-s">${sub}</div>${mm||''}</div>`;
+  const tile=(cls,ic,tit,v,big,r,sub,mm,extra)=>`<div class="pk ${cls}"${extra||''}><div class="pk-c"><div class="pk-t"><span>${ico(ic)}${tit}</span><span class="pk-v">${big}</span></div>${barra(r,v)}<div class="pk-s">${sub}</div></div>${mm||''}<div class="pk-pv">${pill(v)}</div></div>`;
+  const testaR=ms=>`<div class="pk-h"><span></span><span class="pk-hm">${ms.map(m=>`<span>${mAb(m)}</span>`).join('')}</span><span>voto</span></div>`;
   const media=vs=>{const x=vs.filter(v=>v!=null);return x.length?Math.round(x.reduce((s,v)=>s+v,0)/x.length):null};
   const fs=b=>b==='fisse'||b==='variabili';
   // sinistra: com'è andato
@@ -3324,12 +3346,12 @@ function renderTrimestre(){
     <div class="tq-due">
       <div class="tq-meta">
         <div class="tq-meta-t"><span class="n">1</span>Com'è andato il ${nomeQc}${P?`<small>rispetto al ${nomeP}</small>`:''}${vTit(votoQ)}</div>
-        <div class="pk-g sx">${tilesQ}</div>
+        <div class="pk-l sx">${testaR(D.mesi)}${tilesQ}</div>
         ${striscia?`<div class="pk-str">${striscia}</div>`:''}
       </div>
       <div class="tq-meta dx">
         <div class="tq-meta-t"><span class="n">2</span>Cosa ti aspetta nel ${nomeN}<small>${mesiNtxt} · ${statoN}</small>${vTit(votoN)}</div>
-        <div class="pk-g dx">${tilesN}</div>
+        <div class="pk-l dx">${testaR(mesiN)}${tilesN}</div>
         <section class="tq-p tq-cons pk-cons"><h3>${ico('netto')} Come migliorare</h3>${consigli}</section>
       </div>
     </div></div>`;
