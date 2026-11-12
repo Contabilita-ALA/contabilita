@@ -925,7 +925,7 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .ac-tab .n.cor{background:#fbf3e6}
 .ac-tab .n.fut{color:#9a958d;font-style:italic;font-weight:500!important}.ac-tab>.r.hh .y.fut b{color:#8a8680;font-style:italic}.ac-tab>.r.hh .y.fut small{color:#8a8680;font-weight:500;white-space:nowrap}
 .ac-tab>.r.tot>.n.fut{font:italic 500 13px var(--font-titoli)}
-.ac-base{margin-left:10px;font-size:11.5px}.ac-base b{font-weight:700;margin-left:3px}
+.top-base{align-items:center;font-size:12px;margin-right:14px}.top-base .tb-l{padding:0 8px 0 10px;color:#55524c;font-size:11.5px}.top-base button b{margin-left:4px}
 .ac-tab .n.gr{color:#8a8680}
 .ac-tab>.r.hh>*{border-bottom:1.5px solid var(--inchiostro);font-size:10px;color:#8a8680;align-items:flex-end;padding-bottom:3px}
 .ac-tab>.r.hh .y{flex-direction:column;align-items:flex-end;cursor:pointer;font-size:12px;color:var(--inchiostro);line-height:1.1}
@@ -1745,6 +1745,24 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .sync-nota{font-size:12.5px;color:var(--grigio)}
 .sync-lista{max-height:320px;overflow:auto;margin:0 0 12px;border-top:1px solid var(--cella-bordo)}.sync-r{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--cella-bordo)}.sync-r small{color:var(--grigio);margin-left:6px}
 .imp-gd{margin-top:12px;border-top:1px solid var(--cella-bordo);padding-top:10px}.imp-gd summary{cursor:pointer;font-weight:600}.imp-gd ol{padding-left:20px;margin:8px 0;line-height:1.5}.imp-gd li{margin-bottom:7px}.imp-gd code{font-size:11.5px;background:var(--cella);padding:1px 4px;border-radius:4px;word-break:break-all}.imp-gd .btn.piccolo{padding:3px 8px;font-size:12px}.imp-gd-ok{font-size:12.5px;color:var(--grigio)}.imp-gd-ck{display:flex;gap:6px;align-items:center;font-size:13px;margin-top:6px}
+/* Posso permettermelo? (12/11) */
+.pp-fin{max-width:600px}
+.pp-campi{display:grid;grid-template-columns:150px 1fr 1fr;gap:10px;margin:10px 0}
+.pp-campi label{display:flex;flex-direction:column;gap:3px;font-size:12px;font-weight:700;color:#55524c;min-width:0}
+.pp-campi input,.pp-campi select{font:600 14px var(--font);padding:6px 8px;border:1.5px solid #d8d1c3;border-radius:8px;background:#faf8f3;min-width:0;width:100%}
+.pp-campi label:nth-child(2){grid-column:2/4}
+.pp-ris{border-radius:10px;font-size:13px;line-height:1.45;margin-bottom:12px}
+.pp-ris:empty{display:none}
+.pp-ris.si{background:#e3f3e8}.pp-ris.forse{background:#fbf0d2}.pp-ris.no{background:#fbe3df}
+.pp-ris{padding:10px 14px}
+.pp-tit{display:flex;align-items:center;gap:8px;font:700 17px var(--font-titoli);margin-bottom:4px}
+.pp-tit i{font-style:normal;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 14px var(--font);color:#fff;flex:none}
+.pp-ris.si .pp-tit i{background:#2e7a45}.pp-ris.forse .pp-tit i{background:#b07d00}.pp-ris.no .pp-tit i{background:#b5452f}
+.pp-ris ul{margin:2px 0 0;padding-left:18px}.pp-ris li{margin:2px 0}
+.pp-cons{margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,.12)}
+.pp-link{font:700 11.5px var(--font);border:1.5px solid var(--inchiostro);background:#fff;border-radius:999px;padding:0 8px;margin-left:4px;cursor:pointer}
+.btn-posso{white-space:nowrap}
+@media (max-width:1500px){#top .oggi{display:none}}
 /* Conti e risparmi (12/11) */
 .cr-due{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 .cr-dx{display:flex;flex-direction:column;gap:10px;min-height:0}
@@ -2153,7 +2171,8 @@ function renderTop(){
     <span class="nav-b"><button class="btn chiaro piccolo" data-act="nav-indietro" title="Pagina precedente" ${NAV.i>0?'':'disabled'}>←</button><button class="btn chiaro piccolo" data-act="nav-avanti" title="Pagina successiva" ${NAV.i<NAV.st.length-1?'':'disabled'}>→</button></span>
     <button class="btn" data-act="nuova-spesa" title="Spesa, entrata (non da fattura), giroconto tra conti o voce del conto cointestato">+ Movimento</button>
     <button class="btn" data-act="nuova-fattura" title="Fattura: crea da sola l'incasso in Movimenti">+ Fattura</button>
-    <span class="spazio"></span>
+    <button class="btn chiaro piccolo btn-posso" data-act="posso" title="Dimmi quanto costa e ti dico se ci sta nello stipendio del mese e del trimestre">Posso permettermelo?</button>
+    <span class="spazio"></span>${(()=>{const A=d.getFullYear();return `<span class="an-filt top-base" title="Vale per tutte le pagine: su quale fatturato ${A} fare i conti (Inarcassa e tasse, accantonamento, Previsione, Conti e risparmi, Annuario)"><span class="tb-l">fatturato ${A}</span><button data-cr-base="eff" class="${pvBase()==='eff'?'on':''}" title="Solo le fatture ${A} già incassate">incassato <b>${euro(pvVaEff(A)).replace(/,\d\d$/,'')}</b></button><button data-cr-base="prev" class="${pvBase()==='prev'?'on':''}" title="Tutte le fatture ${A}, anche da incassare (o il volume previsto nel Riepilogo fiscale)">previsto <b>${euro(pvVaPrev(A)).replace(/,\d\d$/,'')}</b></button></span>`})()}
     <span class="oggi">${d.getDate()} ${MESI[d.getMonth()]} ${d.getFullYear()}</span>
     <span class="salvato" id="salvato"></span>`;
   renderSalvato();
@@ -2474,6 +2493,96 @@ function renderCointestato(){
     </div>
   </div>`;
 }
+/* ---- Posso permettermelo? (12/11/2026) ---- */
+function ppCalcola(imp,m0,nr){ // m0 = mese della (prima) spesa, nr = rate mensili
+  const o=new Date(), a=o.getFullYear(), mOra=o.getMonth()+1, gOggi=o.getDate(), gMese=new Date(a,mOra,0).getDate();
+  const rata=imp/nr, mesiR=[];for(let i=0;i<nr;i++)mesiR.push(m0+i);
+  const dentro=mesiR.filter(m=>m<=12);
+  const spM=m=>{const F=speseUni(a,[m],'fisse'),V=speseUni(a,[m],'variabili');return {f:F.pag+F.prv,v:V.pag+V.prv,t:F.pag+F.prv+V.pag+V.prv}};
+  const limM=m=>{const n=nettoTrim(a,Math.ceil(m/3)-1);return n==null?null:n/3};
+  const q=Math.ceil(m0/3), msQ=[q*3-2,q*3-1,q*3], stQ=nettoTrim(a,q-1);
+  const spQ=msQ.reduce((s,m)=>s+spM(m).t,0), rateQ=dentro.filter(m=>msQ.includes(m)).length*rata;
+  const restaQ=stQ==null?null:stQ-spQ, dopoQ=restaQ==null?null:restaQ-rateQ;
+  const lim=limM(m0), sm=spM(m0), restaM=lim==null?null:lim-sm.t, dopoM=restaM==null?null:restaM-rata;
+  // conto Unicredit: punto più basso da qui a fine anno, togliendo le rate dal loro mese in poi
+  let minU=null,minK=null;try{const D=datiConti(a);for(let k=Math.max(m0,mOra);k<=12;k++){const giu=dentro.filter(m=>m<=k).length*rata, v=D.serie[k].uni-giu;if(minU==null||v<minU){minU=v;minK=k}}}catch(e){}
+  // media delle variabili dei mesi chiusi (per dire se il mese è già "pesante")
+  const chiusi=[];for(let m=1;m<mOra;m++)chiusi.push(m);
+  const mediaV=chiusi.length?chiusi.reduce((s,m)=>s+speseUni(a,[m],'variabili').pag,0)/chiusi.length:null;
+  let risp=null;try{const D=datiConti(a);risp={av:D.avChiusi,dep:D.oggi.dep,mese:D.mediaMese}}catch(e){}
+  const giorniRest=m0===mOra?gMese-gOggi+1:new Date(a,m0,0).getDate();
+  const stDopo=nettoTrim(a,q); // stipendio del trimestre dopo (netto di questo trimestre, se già si vede)
+  const mNo=dopoM!=null&&dopoM<-0.5, qNo=dopoQ!=null&&dopoQ<-0.5, qGia=restaQ!=null&&restaQ<-0.5;
+  let esito='si';
+  if((minU!=null&&minU<-0.5)||(mNo&&qNo)) esito='no';
+  else if(mNo||qNo||(stQ&&dopoQ!=null&&dopoQ<stQ*0.1)) esito='forse';
+  return {qGia,a,mOra,m0,q,msQ,nr,rata,imp,lim,sm,restaM,dopoM,stQ,spQ,restaQ,dopoQ,minU,minK,mediaV,risp,giorniRest,stDopo,esito,fuori:mesiR.length-dentro.length};
+}
+function ppTesto(R){
+  const e0=v=>euro(Math.round(v)).replace(/,00$/,''), Mm=m=>MESI[m-1], L=[], C=[];
+  const nomeQ=ROMANI[R.q-1]+' trimestre';
+  if(R.lim==null) return {tit:'Non riesco a dirlo',cl:'forse',L:[`Per ${Mm(R.m0)} non c'è ancora lo stipendio: serve il netto del trimestre prima.`],C:[]};
+  // considerazioni
+  L.push(R.dopoM>=-0.5?`Dopo questa spesa a ${Mm(R.m0)} ti restano <b>${e0(R.dopoM)}</b> dello stipendio del mese (${e0(R.lim)}).`:`A ${Mm(R.m0)} sfori lo stipendio del mese di <b>${e0(-R.dopoM)}</b> (stipendio ${e0(R.lim)}, spese già ${e0(R.sm.t)}).`);
+  if(R.dopoQ!=null) L.push(R.dopoQ>=-0.5?`Sul ${nomeQ} restano <b>${e0(R.dopoQ)}</b> (stipendio ${e0(R.stQ)}, spese fisse e variabili ${e0(R.spQ)} con le previste).`:(R.qGia?`Il ${nomeQ} è già in rosso di ${e0(-R.restaQ)} per le spese previste (stipendio ${e0(R.stQ)}, spese ${e0(R.spQ)}): con questa spesa arrivi a <b>${e0(-R.dopoQ)}</b>.`:`Sul ${nomeQ} sfori di <b>${e0(-R.dopoQ)}</b> (stipendio ${e0(R.stQ)}, spese ${e0(R.spQ)} con le previste).`));
+  if(R.m0===R.mOra&&R.dopoM>0.5&&R.giorniRest>1) L.push(`Per il resto di ${Mm(R.m0)} avresti circa <b>${e0(R.dopoM/R.giorniRest)} al giorno</b> per le altre spese.`);
+  if(R.mediaV!=null&&R.sm.v+R.rata>R.mediaV*1.25) L.push(`Le variabili di ${Mm(R.m0)} salirebbero a ${e0(R.sm.v+R.rata)}: di solito sono ${e0(R.mediaV)} al mese.`);
+  if(R.minU!=null) L.push(R.minU>=-0.5?`Il conto Unicredit non va sotto zero: il punto più basso è ${e0(R.minU)} a fine ${Mm(R.minK)}.`:`<b>Il conto Unicredit andrebbe sotto zero</b>: ${e0(R.minU)} a fine ${Mm(R.minK)}, con le spese già previste.`);
+  if(R.fuori) L.push(`${R.fuori} ${R.fuori===1?'rata cade':'rate cadono'} nel ${R.a+1}: qui non le conto.`);
+  // consigli se non ci sta
+  if(R.esito!=='si'){
+    const sforo=Math.max(R.dopoQ!=null?-R.dopoQ:0,R.dopoM!=null&&R.esito==='forse'?-R.dopoM:0,0);
+    const mesiRestQ=R.msQ.filter(m=>m>=Math.max(R.m0,R.mOra)).length;
+    if(sforo>0.5&&mesiRestQ>0) C.push(`Per rientrare taglia le variabili di circa <b>${e0(sforo/mesiRestQ)} al mese</b> fino a fine ${nomeQ}${R.mediaV!=null?` (di solito ne spendi ${e0(R.mediaV)})`:''}.`);
+    if(R.nr===1){let n=0;for(let k=2;k<=12;k++){const S2=ppCalcola(R.imp,R.m0,k);if(S2.esito==='si'){n=k;break}}
+      if(n) C.push(`<b>A rate</b>: in ${n} rate da ${e0(R.imp/n)} al mese ci staresti. <button type="button" class="pp-link" data-pp-rate="${n}">prova con ${n} rate</button>`);}
+    if(R.q<4||R.m0<12){const mq=R.q*3+1; if(mq<=12) C.push(`<b>Aspetta</b>: dal 1° ${Mm(mq)} parte lo stipendio del trimestre dopo${R.stDopo!=null?`, oggi circa ${e0(R.stDopo/3)} al mese`:''}. <button type="button" class="pp-link" data-pp-mese="${mq}">prova a ${Mm(mq)}</button>`)}
+    if(R.risp&&R.risp.av>0.5) C.push(`<b>Con i risparmi</b>: gli avanzi dei trimestri chiusi sono ${e0(R.risp.av)}${R.risp.av>=R.imp?': coprono tutta la spesa':''}.`);
+    if(R.esito==='no'&&R.risp&&R.risp.dep>0.5&&R.risp.mese) C.push(`Dal deposito (${e0(R.risp.dep)}) il fondo di sicurezza scenderebbe da ${(R.risp.dep/R.risp.mese).toFixed(1).replace('.',',')} a ${Math.max(0,(R.risp.dep-R.imp)/R.risp.mese).toFixed(1).replace('.',',')} mesi di spese.`);
+  }
+  const tit={si:'Sì, te lo puoi permettere',forse:'Sì, ma con attenzione',no:'Meglio di no, per ora'}[R.esito];
+  return {tit,cl:R.esito,L,C};
+}
+function apriPosso(){
+  const o=new Date(), mOra=o.getMonth()+1, cats=S.categorie.filter(c=>c.bolla==='variabili'||c.bolla==='fisse');
+  const def=cats.find(c=>c.id==='spese variabili')||cats[0];
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra pp-fin" role="dialog" aria-modal="true">
+    <h3>Posso permettermelo?</h3>
+    <p class="aiuto">Guardo lo stipendio del mese e del trimestre, le spese già fatte e quelle previste, e il conto Unicredit fino a fine anno.</p>
+    <div class="pp-campi">
+      <label>Quanto costa<span class="dp-eur">€<input id="pp-imp" inputmode="decimal" placeholder="es. 350"></span></label>
+      <label>Cosa<input id="pp-det" placeholder="es. giacca"></label>
+      <label>Categoria<select id="pp-cat">${cats.map(c=>`<option value="${esc(c.id)}" ${c===def?'selected':''}>${esc(c.nome)}</option>`).join('')}</select></label>
+      <label>Quando<select id="pp-mese">${[0,1,2,3].map(i=>mOra+i).filter(m=>m<=12).map(m=>`<option value="${m}">${m===mOra?'questo mese':MESI[m-1]}</option>`).join('')}</select></label>
+      <label>Rate<select id="pp-nr">${[1,2,3,4,5,6,10,12].map(n=>`<option value="${n}">${n===1?'tutto subito':n+' rate'}</option>`).join('')}</select></label>
+    </div>
+    <div id="pp-ris" class="pp-ris"></div>
+    <div class="azioni"><button class="btn chiaro" data-act="chiudi">Chiudi</button><button class="btn" data-pp-segna disabled title="Aggiunge la spesa in Movimenti come prevista">Segna come spesa prevista</button></div>
+  </div></div>`;
+  $('#pp-imp').focus();
+}
+function ppAggiorna(){
+  const el=$('#pp-ris');if(!el)return;const imp=parseNum($('#pp-imp').value), b=$('[data-pp-segna]');
+  if(isNaN(imp)||imp<=0){el.innerHTML='';el.className='pp-ris';if(b)b.disabled=true;return}
+  const R=ppCalcola(imp,+$('#pp-mese').value,+$('#pp-nr').value), T=ppTesto(R);
+  el.className='pp-ris '+T.cl;
+  el.innerHTML=`<div class="pp-tit"><i>${T.cl==='si'?'✓':T.cl==='no'?'✕':'!'}</i>${T.tit}</div><ul>${T.L.map(x=>`<li>${x}</li>`).join('')}</ul>${T.C.length?`<div class="pp-cons"><b>Se la vuoi fare comunque</b><ul>${T.C.map(x=>`<li>${x}</li>`).join('')}</ul></div>`:''}`;
+  if(b)b.disabled=false;
+}
+document.addEventListener('input',e=>{if(e.target.closest('.pp-fin'))ppAggiorna()});
+document.addEventListener('change',e=>{if(e.target.closest('.pp-fin'))ppAggiorna()});
+document.addEventListener('click',e=>{
+  if(e.target.closest('[data-act="posso"]')){e.preventDefault();e.stopPropagation();apriPosso();return}
+  const r=e.target.closest('[data-pp-rate]');if(r){e.stopPropagation();$('#pp-nr').value=r.dataset.ppRate;ppAggiorna();return}
+  const mm=e.target.closest('[data-pp-mese]');if(mm){e.stopPropagation();$('#pp-mese').value=mm.dataset.ppMese;ppAggiorna();return}
+  const s=e.target.closest('[data-pp-segna]');if(!s)return;e.stopPropagation();
+  const imp=parseNum($('#pp-imp').value);if(isNaN(imp)||imp<=0)return;
+  const m0=+$('#pp-mese').value, nr=+$('#pp-nr').value, cat=$('#pp-cat').value, det=($('#pp-det').value.trim()||'SPESA').toUpperCase(), o=new Date(), a=o.getFullYear(), mOra=o.getMonth()+1;
+  const r2c=v=>Math.round(v*100)/100, rata=r2c(imp/nr);let n=0;
+  modifica(()=>{for(let i=0;i<nr;i++){const m=m0+i;if(m>12)break;const g=m===mOra?o.getDate():1;
+    S.movimenti.push({id:nuovoId(),data:`${a}-${String(m).padStart(2,'0')}-${String(g).padStart(2,'0')}`,det:nr>1?`${det} RATA ${i+1}/${nr}`:det,ok:false,eur:i===nr-1?r2c(imp-rata*(nr-1)):rata,cat,conto:'CONTO',nota:'',rip:false});n++}});
+  chiudi();toast(n>1?`Aggiunte ${n} rate previste in Movimenti`:'Aggiunta in Movimenti come prevista',true);
+},true);
 /* ---- Conti e risparmi (12/11/2026) ---- */
 function datiConti(a){
   const o=new Date(), mOra=o.getFullYear()===a?o.getMonth()+1:(o.getFullYear()>a?12:0);
@@ -2580,7 +2689,7 @@ function renderContiRisparmi(){
   const conEnt27=PV&&PV.lordo>0.5;
   const tabT=`<div class="cr-tdue">${tabRisp(t26,`${a} <small>${pvBase()==='eff'?'spese fatte':'con previste'}</small>`,`Risparmiato = avanzo dello stipendio + metà cointestato + interessi. Clic su un trimestre per aprirlo.`)}
     ${tabRisp(t27,`${N} <small>dalla Previsione</small>`,conEnt27?`Stipendio del I trim = netto del IV trim ${a}; poi netto dei trimestri ${N} (entrate − ${Math.round(PV.perc*100)}% − spese per attività). Cointestato e interessi come oggi.`:`<b>Mancano le entrate ${N}</b>: scrivile nella pagina Previsione anno prossimo, altrimenti lo stipendio da aprile risulta zero.`)}</div>`;
-  const switchB=`<span class="an-filt cr-base" title="Come nella Previsione anno prossimo: attuale = solo quello già fatto e incassato, previsto = anche le voci previste"><button data-cr-base="eff" class="${pvBase()==='eff'?'on':''}">attuale</button><button data-cr-base="prev" class="${pvBase()==='prev'?'on':''}">previsto</button></span>`;
+  const switchB='';
   // grafico: soldi tuoi a fine mese, a strati per conto
   const keys=['uni','rev','dep','coi'], cols=D.serie;
   const mxP=Math.max(...cols.map(s=>keys.reduce((t,k)=>t+Math.max(0,s[k]),0)),1), mnN=Math.min(0,...cols.map(s=>keys.reduce((t,k)=>t+Math.min(0,s[k]),0)));
@@ -2830,7 +2939,7 @@ function renderAnnuario0(CM){
   $('#main').innerHTML=`<div class="tq ac">
     <div class="tq-testa"><h1>Annuario contributi</h1><span class="tq-conf">per competenza · il ${oggi} ${pvBase()==='prev'?'con tutte le fatture previste':'con le fatture incassate a oggi'} · il ${oggi+1} è una stima · clicca un anno per aprire il suo Riepilogo fiscale</span></div>
     <div class="ac-due">
-      <section class="tq-p"><h3>${ico('anno')} Anno per anno<span class="an-filt cr-base ac-base" title="Volume d'affari del ${oggi}: incassato a oggi oppure previsto con tutte le fatture. Cambia il ${oggi} e la stima del ${oggi+1}"><button data-cr-base="eff" class="${pvBase()==='eff'?'on':''}">incassato <b>${euro(acVaSel0('eff'))}</b></button><button data-cr-base="prev" class="${pvBase()==='prev'?'on':''}">previsto <b>${euro(acVaSel0('prev'))}</b></button></span><small class="ac-scorri" hidden>scorri a destra per gli anni precedenti →</small></h3>${tab}</section>
+      <section class="tq-p"><h3>${ico('anno')} Anno per anno<small class="ac-scorri" hidden>scorri a destra per gli anni precedenti →</small></h3>${tab}</section>
       <div class="ac-dx">${confr}<section class="tq-p"><h3>${ico('fiscali')} Quanto se ne va ogni anno<small>${AA.length>6?'ultimi 6 anni · ':''}Inarcassa + imposta</small></h3>${graf}${nota}</section></div>
     </div></div>`;
   const sc=$('.ac-scroll');if(sc&&sc.scrollWidth>sc.clientWidth+1)$('.ac-scorri').hidden=false;
@@ -2963,10 +3072,10 @@ function datiPrevisione(a,vaX){
 
 // volume d'affari della previsione: 'eff' = fatture dell'anno in corso, 'prev' = quello scritto da Paolo
 function pvBase(){return UI.prevBase==='prev'?'prev':'eff'}
-function pvVaEff(a){const o=oggiISO();return S.fatture.filter(f=>annoDi(f.data)===a&&f.data<=o).reduce((s,f)=>s+calcFattura(f).conBollo,0)}
+function pvVaEff(a){const VF=vaFatture(a);return VF?VF.inc:0} // incassato a oggi (Paolo 12/11: un solo tasto per tutta l'app)
 function pvVaPrev(a){const F=(S.fiscale||{})[a];if(F&&F.vaPrev!=null)return +F.vaPrev;const VF=vaFatture(a);return VF?VF.va:0}
 function pvVaX(N){return pvBase()==='prev'?pvVaPrev(N-1):pvVaEff(N-1)}
-function pvSwitch(D){const a=D.a;return `<span class="pv-va"><span class="an-filt pv-base" title="Su quale fatturato ${a} calcolare Inarcassa e tasse del ${a+1} e l'accantonamento sul Revolut"><span class="pv-bl">fatturato ${a}</span><button data-pv-base="eff" class="${pvBase()==='eff'?'on':''}" title="Le fatture del ${a} fino a oggi">effettivo <b>${euro(pvVaEff(a))}</b></button><button data-pv-base="prev" class="${pvBase()==='prev'?'on':''}" title="Tutte le fatture del ${a}, anche quelle future (o il volume previsto nel Riepilogo fiscale)">previsto <b>${euro(pvVaPrev(a))}</b></button></span></span>`}
+function pvSwitch(D){return ''} // il tasto incassato/previsto ora è nella barra in alto
 function renderPrevisione(){
   const a=S.anno, vaX=pvVaX(a+1), D=datiPrevisione(a,vaX), N=D.N;
   const vista=`<div class="an-filt" title="Come vedere la previsione">${[['tabella','Tabella'],['riquadri','Riquadri']].map(([k,n])=>`<button data-pv-vista="${k}" class="${(UI.prevVista||'tabella')===k?'on':''}">${n}</button>`).join('')}</div>`;
