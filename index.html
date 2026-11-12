@@ -2020,6 +2020,7 @@ function migra(){annoLocale();
   for(const c of S.categorie){
     if(!c.colore){const g=S.gruppi.find(g=>g.id===c.gruppo);c.colore=g?g.colore:'#e7e3da'}
     if(c.bolla===undefined) c.bolla=bollaBase(c.gruppo,c.id);
+    if(c.bolla===''&&!NON_FATT.has(c.id)&&(S.gruppi.find(g=>g.id===c.gruppo)||{}).tipo==='entrata') c.bolla='entrate'; // 12/11: nuove entrate (es. catasto) nel totale Entrate
     if(c.id==='rata mutuo'&&c.nome==='rata mutuo') c.nome='mutuo+risparmi';
   }
   // (versione online: i passaggi 3-10 servivano solo a importare il foglio; i dati arrivano dal backup)
@@ -2039,6 +2040,10 @@ function catId(nome){
   return n;
 }
 const TIPO_CAT={APE:'ape',PRATICHE:'pratiche',RADAMES:'radames'};
+const NON_FATT=new Set(['bonifici a mio favore','interessi']); // entrate che non sono fatture
+function catFatturabili(){return S.categorie.filter(c=>(S.gruppi.find(g=>g.id===c.gruppo)||{}).tipo==='entrata'&&!NON_FATT.has(c.id))}
+function codiceTipo(c){return Object.keys(TIPO_CAT).find(k=>TIPO_CAT[k]===c.id)||c.id.toUpperCase()}
+function catTipo(t){return TIPO_CAT[t]||(catFatturabili().find(c=>codiceTipo(c)===t)||{}).id||'ape'}
 
 /* ====== Calcoli fattura (come nel foglio RIASSUNTO FATTURE) ====== */
 function calcFattura(f){
@@ -2056,7 +2061,7 @@ function collegaFatture(anno){
   const usati=new Set(S.movimenti.filter(m=>m.fat).map(m=>m.id));
   for(const f of S.fatture.filter(f=>annoDi(f.data)===anno)){
     if(S.movimenti.some(m=>m.fat===f.id&&m.fatParte!=='rimborso')) continue;
-    const L=calcFattura(f).lordo, cat=TIPO_CAT[f.tipo]||'ape', fd=new Date(f.data);
+    const L=calcFattura(f).lordo, cat=catTipo(f.tipo), fd=new Date(f.data);
     let best=null;
     for(const m of S.movimenti){
       if(usati.has(m.id)||m.fat||m.cat!==cat||Math.abs(-m.eur-L)>0.015) continue;
@@ -2064,7 +2069,7 @@ function collegaFatture(anno){
       if(gg<=60&&(!best||gg<best.gg)) best={m,gg};
     }
     if(best){best.m.fat=f.id;usati.add(best.m.id);}
-    else S.movimenti.push({id:nuovoId(),data:f.data,det:(f.tipo+' '+(f.rif||'')).trim(),ok:false,eur:-L,cat,conto:'CONTO',nota:'',rip:false,fat:f.id});
+    else S.movimenti.push({id:nuovoId(),data:f.data,det:(nomeTipo(f.tipo).toUpperCase()+' '+(f.rif||'')).trim(),ok:false,eur:-L,cat,conto:'CONTO',nota:'',rip:false,fat:f.id});
   }
 }
 
@@ -2254,9 +2259,12 @@ function renderPagina(){
 
 
 /* ---- Fatture ---- */
-const TIPI_FAT=[['APE','APE','#bfe3c8'],['PRATICHE','Pratiche','#f7c8a8'],['RADAMES','Radames','#cfc7e8']];
-const coloreTipo=t=>(TIPI_FAT.find(x=>x[0]===t)||[0,0,'#e7e3da'])[2];
-const nomeTipo=t=>(TIPI_FAT.find(x=>x[0]===t)||[0,t])[1];
+document.addEventListener('change',e=>{if(e.target.id==='f-tipo'&&bozzaF)bozzaF.tipo=e.target.value});
+const TIPI_COL={APE:'#bfe3c8',PRATICHE:'#f7c8a8',RADAMES:'#cfc7e8'}, TIPI_NOM={APE:'APE',PRATICHE:'Pratiche',RADAMES:'Radames'}, TIPI_ALT=['#f1d98f','#c6def2','#f6c9d3','#f2b8b0','#ddc8b2','#c4ebdc'];
+function tipiFat(){let i=0;const L=catFatturabili().map(c=>{const k=codiceTipo(c);return [k,TIPI_NOM[k]||c.nome.replace(/^./,x=>x.toUpperCase()),TIPI_COL[k]||TIPI_ALT[i++%TIPI_ALT.length]]});
+  S.fatture.forEach(f=>{if(f.tipo&&!L.some(x=>x[0]===f.tipo))L.push([f.tipo,f.tipo,'#e7e3da'])});return L}
+const coloreTipo=t=>(tipiFat().find(x=>x[0]===t)||[0,0,'#e7e3da'])[2];
+const nomeTipo=t=>(tipiFat().find(x=>x[0]===t)||[0,t])[1];
 function datiFatture(a){
   const oggi=oggiISO();
   return S.fatture.filter(f=>annoDi(f.data)===a).sort((x,y)=>x.data.localeCompare(y.data)||x.n-y.n).map(f=>{
@@ -2344,13 +2352,13 @@ function renderFatture(){
     <div class="ft-corpo">${righe||'<p class="vuoto">Nessuna fattura in questo anno.</p>'}</div>
     <div class="ft-r tot"><span></span><span></span><span></span><span>${L.length} fatture</span><span class="n">${numIt(L.reduce((s,x)=>s+(+x.f.prest||0),0))}</span><span class="n">${numIt(lordo)}</span><span class="n ft-nt">${numIt(netto)}</span></div></div>`;
   // mese per mese per tipo
-  const perM=MESI3.map((n,i)=>{const r={n};TIPI_FAT.forEach(([t])=>r[t]=L.filter(x=>meseDi(x.f.data)===i+1&&x.f.tipo===t).reduce((s,x)=>s+x.c.conBollo,0));r.tot=TIPI_FAT.reduce((s,[t])=>s+r[t],0);return r});
+  const perM=MESI3.map((n,i)=>{const r={n};tipiFat().forEach(([t])=>r[t]=L.filter(x=>meseDi(x.f.data)===i+1&&x.f.tipo===t).reduce((s,x)=>s+x.c.conBollo,0));r.tot=tipiFat().reduce((s,[t])=>s+r[t],0);return r});
   const maxM=Math.max(1,...perM.map(r=>r.tot)), oggiM=new Date().getFullYear()===a?new Date().getMonth()+1:0;
   const kf=v=>v>=1000?(v/1000).toFixed(1).replace('.',',').replace(',0','')+'k':Math.round(v)+'';
-  const barre=perM.map((r,i)=>`<div class="fm-col ${i+1===oggiM?'ora':''}" title="${MESI[i]}: ${euro(r.tot)}${TIPI_FAT.map(([t,nm])=>r[t]?' · '+nm+' '+euro(r[t]):'').join('')}"><span class="fm-v">${r.tot?kf(r.tot):''}</span><div class="fm-b" style="height:${r.tot/maxM*100}%">${TIPI_FAT.map(([t,,col])=>r[t]?`<i style="flex:${r[t]};background:${col}"></i>`:'').join('')}</div><span class="fm-n">${r.n}</span></div>`).join('');
-  const leg=TIPI_FAT.map(([t,nm,col])=>`<span><i style="background:${col}"></i>${nm}</span>`).join('');
+  const barre=perM.map((r,i)=>`<div class="fm-col ${i+1===oggiM?'ora':''}" title="${MESI[i]}: ${euro(r.tot)}${tipiFat().map(([t,nm])=>r[t]?' · '+nm+' '+euro(r[t]):'').join('')}"><span class="fm-v">${r.tot?kf(r.tot):''}</span><div class="fm-b" style="height:${r.tot/maxM*100}%">${tipiFat().map(([t,,col])=>r[t]?`<i style="flex:${r[t]};background:${col}"></i>`:'').join('')}</div><span class="fm-n">${r.n}</span></div>`).join('');
+  const leg=tipiFat().map(([t,nm,col])=>`<span><i style="background:${col}"></i>${nm}</span>`).join('');
   // per tipo
-  const perT=TIPI_FAT.map(([t,nm,col])=>{const xs=L.filter(x=>x.f.tipo===t), v=xs.reduce((s,x)=>s+x.c.conBollo,0);return {t,nm,col,n:xs.length,v,media:xs.length?v/xs.length:0}});
+  const perT=tipiFat().map(([t,nm,col])=>{const xs=L.filter(x=>x.f.tipo===t), v=xs.reduce((s,x)=>s+x.c.conBollo,0);return {t,nm,col,n:xs.length,v,media:xs.length?v/xs.length:0}});
   const tipoR=perT.map(r=>`<div class="r"><span><i class="ft-tipo" style="--c:${r.col}">${r.nm}</i></span><span class="n">${r.n}</span><span class="n">${r.n?numIt(Math.round(r.media)).replace(/,00$/,''):'—'}</span><span class="tq-cr-b"><i style="width:${vol?r.v/vol*100:0}%;background:${r.col}"></i></span><b class="n">${euro(r.v)}</b></div>`).join('');
   const calcSalv=UI.fcX||'', daSalv=UI.fcDa||'prest';
   $('#main').innerHTML=`<div class="tq ft">
@@ -3370,7 +3378,7 @@ function renderAnno(){
     gout:{nome:'Mandati agli altri tuoi conti',seg:1,giro:'out',L:m=>movG.filter(x=>inM(x,m)&&(x.giro?x.conto===fC:x.eur>0))}};
   const hPrima=h; // sezione "Il mese in sintesi" nascosta per ora (Paolo 11/11: fa confusione); il codice resta per una pagina futura
   h+=`<tr class="an-sez"><th colspan="15">Il mese in sintesi <span>${fC?'solo '+esc(cF.nome)+', compresi i giroconti con gli altri tuoi conti · ':''}dove va ogni euro che entra · pagati e previsti</span></th></tr>`;
-  h+=riga('Entrate',ent,{c:'pos',pop:'ent',tit:'Fatture incassate (APE, pratiche, Radames, al lordo) e bonifici a tuo favore',tot:sT(ent),med:sT(ent)/12});
+  h+=riga('Entrate',ent,{c:'pos',pop:'ent',tit:'Fatture incassate (al lordo) e bonifici a tuo favore',tot:sT(ent),med:sT(ent)/12});
   if(nz(fisc)) h+=riga('− spese per attività',arr(m=>-fisc[m]),{c:'piva',pop:'piva',tit:'Inarcassa, tasse e spese per l\'attività',tt:'spese per attività',tot:-sT(fisc),med:-sT(fisc)/12});
   h+=riga('= netto',netto,{r:'sub',c:'netto',segno:1,tit:'Entrate meno spese per attività',tot:sT(netto),med:sT(netto)/12});
   if(nz(gIn)) h+=riga('+ arrivati dagli altri tuoi conti',gIn,{c:'pos',pop:'gin',tit:'Giroconti in entrata (es. accantonamento da Unicredit) e altri passaggi tra i tuoi conti',tt:'arrivati da altri conti',tot:sT(gIn),med:sT(gIn)/12});
@@ -3698,7 +3706,7 @@ const ICONE={
 const ico=(n,cls)=>`<svg class="ico ${cls||''}" viewBox="0 0 24 24" aria-hidden="true">${ICONE[n]||''}</svg>`;
 
 const BOLLE=[
-  {id:'entrate',ico:'entrate',nome:'Entrate',colore:'var(--salvia)',entrata:true,filtro:m=>!m.giro&&bollaDi(m.cat)==='entrate',spiega:'APE, pratiche, Radames e bonifici a tuo favore'},
+  {id:'entrate',ico:'entrate',nome:'Entrate',colore:'var(--salvia)',entrata:true,filtro:m=>!m.giro&&bollaDi(m.cat)==='entrate',spiega:'Fatture incassate e bonifici a tuo favore'},
   {id:'variabili',ico:'variabili',nome:'Spese variabili',colore:'var(--lavanda)',focus:true,cat:'spese variabili',filtro:m=>!m.giro&&bollaDi(m.cat)==='variabili',spiega:'spese di tutti i giorni, prelievi e rate (resi e rimborsi già sottratti)'},
   {id:'fisse',ico:'fisse',nome:'Spese fisse',colore:'var(--azzurro)',filtro:m=>!m.giro&&bollaDi(m.cat)==='fisse',spiega:'spese generiche, bollette e abbonamenti'},
   {id:'fiscali',ico:'fiscali',nome:'Spese per attività',colore:'var(--cappuccino)',filtro:m=>!m.giro&&bollaDi(m.cat)==='fiscali',spiega:'Inarcassa, tasse e spese per l\'attività (escono dal Revolut)'}];
@@ -4744,7 +4752,7 @@ function disegnaFattura(){
   const b=bozzaF;
   $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra" role="dialog" aria-modal="true">
     <h3>${b.id?'Fattura n. '+b.n:'Nuova fattura'}</h3>
-    <div class="tipi">${['APE','PRATICHE','RADAMES'].map(t=>`<button data-ftipo="${t}" class="${b.tipo===t?'on':''}">${t}</button>`).join('')}</div>
+    <div class="campi"><label title="I tipi sono le categorie del gruppo Entrate: per aggiungerne uno crea la categoria in Impostazioni › Categorie">Tipo di fattura<select id="f-tipo">${tipiFat().map(([k,n])=>`<option value="${esc(k)}" ${b.tipo===k?'selected':''}>${esc(n)}</option>`).join('')}</select></label></div>
     <div class="importo"><span>€</span><input id="f-prest" inputmode="decimal" placeholder="prestazione" value="${b.prest===''?'':numIt(b.prest)}"></div>
     <div class="campi f-3">
       <label>N.<input id="f-n" inputmode="numeric" value="${b.n}"></label>
@@ -4785,7 +4793,7 @@ function calcoliFattura(){
 }
 function salvaFattura(){
   const b=bozzaF;
-  b.prest=parseNum($('#f-prest').value);b.n=parseInt($('#f-n').value)||b.n;b.data=$('#f-data').value;b.rif=$('#f-rif').value.trim();
+  b.tipo=$('#f-tipo')?$('#f-tipo').value:b.tipo;b.prest=parseNum($('#f-prest').value);b.n=parseInt($('#f-n').value)||b.n;b.data=$('#f-data').value;b.rif=$('#f-rif').value.trim();
   b.nonImp=parseNum($('#f-nonimp').value)||0;if(b.nonImp<0){toast('Le spese non imponibili devono essere positive');return}
   b.incassata=$('#f-inc').checked;b.dataInc=$('#f-dinc').value||b.data;b.conto=$('#f-conto').value;b.rip=$('#f-rip').checked;
   if(!(b.prest>0)){toast('Scrivi l\'importo della prestazione');return}
@@ -4796,14 +4804,14 @@ function salvaFattura(){
     if(b.id){f=S.fatture.find(x=>x.id===b.id);Object.assign(f,rec)}else{f={id:nuovoId(),...rec};S.fatture.push(f)}
     const L=calcFattura(f).lordo;
     let m=S.movimenti.find(x=>x.fat===f.id&&x.fatParte!=='rimborso');
-    if(!m){m={id:nuovoId(),fat:f.id,det:(f.tipo+' '+f.rif).trim(),nota:'',rip:false};S.movimenti.push(m)}
-    Object.assign(m,{data:b.dataInc,ok:b.incassata,eur:-L,cat:TIPO_CAT[f.tipo]||'ape',conto:b.conto,rip:b.rip});
-    if(!b.id) m.det=(f.tipo+' '+f.rif).trim();
+    if(!m){m={id:nuovoId(),fat:f.id,det:(nomeTipo(f.tipo).toUpperCase()+' '+f.rif).trim(),nota:'',rip:false};S.movimenti.push(m)}
+    Object.assign(m,{data:b.dataInc,ok:b.incassata,eur:-L,cat:catTipo(f.tipo),conto:b.conto,rip:b.rip});
+    if(!b.id) m.det=(nomeTipo(f.tipo).toUpperCase()+' '+f.rif).trim();
     // parte non imponibile: rimborso nelle spese per attività (importo negativo = riduce le spese)
     let r=S.movimenti.find(x=>x.fat===f.id&&x.fatParte==='rimborso');
     if(f.nonImp>0){
       if(!r){r={id:nuovoId(),fat:f.id,fatParte:'rimborso',nota:'',rip:false};S.movimenti.push(r)}
-      Object.assign(r,{det:('RIMBORSO SPESE '+f.tipo+' '+f.rif).trim(),data:b.dataInc,ok:b.incassata,eur:-f.nonImp,cat:'spese per attività',conto:b.conto,rip:b.rip});
+      Object.assign(r,{det:('RIMBORSO SPESE '+nomeTipo(f.tipo).toUpperCase()+' '+f.rif).trim(),data:b.dataInc,ok:b.incassata,eur:-f.nonImp,cat:'spese per attività',conto:b.conto,rip:b.rip});
     }else if(r) S.movimenti=S.movimenti.filter(x=>x!==r);
   });
   toast(b.id?'Fattura aggiornata':'Fattura salvata: incasso aggiunto in Movimenti',true);chiudi();
@@ -4853,8 +4861,8 @@ function creaAnno(anno){
     for(const f of S.fatture.filter(f=>annoDi(f.data)===prec&&f.rip)){
       const nf={...f,id:nuovoId(),data:sposta(f.data)};S.fatture.push(nf);
       const c=calcFattura(nf);
-      S.movimenti.push({id:nuovoId(),data:nf.data,det:(nf.tipo+' '+(nf.rif||'')).trim(),ok:false,eur:-c.lordo,cat:TIPO_CAT[nf.tipo]||'ape',conto:'CONTO',nota:'',rip:true,fat:nf.id});
-      if(nf.nonImp>0)S.movimenti.push({id:nuovoId(),data:nf.data,det:('RIMBORSO SPESE '+nf.tipo+' '+(nf.rif||'')).trim(),ok:false,eur:-nf.nonImp,cat:'spese per attività',conto:'CONTO',nota:'',rip:true,fat:nf.id,fatParte:'rimborso'});
+      S.movimenti.push({id:nuovoId(),data:nf.data,det:(nomeTipo(nf.tipo).toUpperCase()+' '+(nf.rif||'')).trim(),ok:false,eur:-c.lordo,cat:catTipo(nf.tipo),conto:'CONTO',nota:'',rip:true,fat:nf.id});
+      if(nf.nonImp>0)S.movimenti.push({id:nuovoId(),data:nf.data,det:('RIMBORSO SPESE '+nomeTipo(nf.tipo).toUpperCase()+' '+(nf.rif||'')).trim(),ok:false,eur:-nf.nonImp,cat:'spese per attività',conto:'CONTO',nota:'',rip:true,fat:nf.id,fatParte:'rimborso'});
     }
     S.anno=anno;HM=null;
   });
@@ -4864,7 +4872,7 @@ function creaAnno(anno){
 /* ---- Categorie, conti e note (Impostazioni) ---- */
 const BOLLE_NOMI=[['','fuori dai totali'],['entrate','Entrate'],['fisse','Spese fisse'],['variabili','Spese variabili'],['fiscali','Spese per attività']];
 const TIPI_CONTO=[['conto','Conto corrente'],['carta','Carta di credito'],['salvadanaio','Accantonamenti'],['deposito','Deposito'],['contanti','Contanti']];
-const catProtette=()=>new Set([...Object.values(TIPO_CAT),'spese per attività']);
+const catProtette=()=>new Set([...Object.values(TIPO_CAT),...S.fatture.map(f=>catTipo(f.tipo)),'spese per attività']);
 const usoCat=id=>S.movimenti.filter(m=>m.cat===id).length;
 const usoConto=id=>S.movimenti.filter(m=>m.conto===id||m.verso===id).length;
 const usoNota=n=>S.movimenti.filter(m=>m.nota===n).length+S.cointestato.filter(c=>c.nota===n).length;
@@ -5247,6 +5255,7 @@ document.addEventListener('click',e=>{
   if(pag){UI.pagina=pag.dataset.pag;salvaUI();$('#side').classList.remove('aperto');render();window.scrollTo(0,0);return}
   const t=e.target.closest('[data-tipo]');if(t&&bozza){leggiFinestra();const da=bozza.tipo;bozza.tipo=t.dataset.tipo;if((da==='coi')!==(bozza.tipo==='coi'))bozza.cat=bozza.tipo==='coi'?'':'spese variabili';disegnaFinestra();return}
   const cv=e.target.closest('[data-coi-v]');if(cv&&bozza){leggiFinestra();bozza.coiV=cv.dataset.coiV;disegnaFinestra();return}
+  if(e.target.id==='f-tipo'&&bozzaF)bozzaF.tipo=e.target.value;
   const ft=e.target.closest('[data-ftipo]');if(ft&&bozzaF){bozzaF.prest=parseNum($('#f-prest').value);if(isNaN(bozzaF.prest))bozzaF.prest='';bozzaF.tipo=ft.dataset.ftipo;bozzaF.rif=$('#f-rif').value;disegnaFattura();return}
   const box=e.target.closest('.conto[data-conto],.cc[data-conto]');
   if(box){const id=box.dataset.conto;if(id==='COINTESTATO'){UI.pagina='cointestato';salvaUI();render();window.scrollTo(0,0);return}if(UI.pagina!=='movimenti'){Object.assign(UI,{pagina:'movimenti',mese:'',cat:'',stato:'',nota:'',q:'',conto:id});salvaUI();render();window.scrollTo(0,0);return}UI.conto=UI.conto===id?'':id;salvaUI();renderMovimenti();return}
@@ -5298,7 +5307,7 @@ document.addEventListener('click',e=>{
     case 'cal-succ':HM.m++;if(HM.m>12){HM.m=1;HM.a++}renderHome();break;
     case 'cal-oggi':HM=null;renderHome();break;
     case 'giorno-nuova':{const d=a.dataset.data;chiudi();apriMovimento(null,'uscita');bozza.data=d;disegnaFinestra();break}
-    case 'cat-nuova':{const g=a.dataset.gr;let nid;modifica(()=>{nid='c'+nuovoId();S.categorie.push({id:nid,nome:nomeLibero('nuova categoria',S.categorie.map(c=>c.nome.toLowerCase())),gruppo:g,colore:'#e7e3da',bolla:''})});focusUltimo(`[data-cat="${nid}"] [data-cat-campo=nome]`);break}
+    case 'cat-nuova':{const g=a.dataset.gr;let nid;modifica(()=>{nid='c'+nuovoId();const gg=S.gruppi.find(x=>x.id===g)||{};S.categorie.push({id:nid,nome:nomeLibero('nuova categoria',S.categorie.map(c=>c.nome.toLowerCase())),gruppo:g,colore:gg.tipo==='entrata'?(gg.colore||'#cadcc1'):'#e7e3da',bolla:gg.tipo==='entrata'?'entrate':''})});focusUltimo(`[data-cat="${nid}"] [data-cat-campo=nome]`);break}
     case 'gr-nuovo':modifica(()=>S.gruppi.push({id:'g'+nuovoId(),nome:nomeLibero('Nuovo gruppo',S.gruppi.map(g=>g.nome.toLowerCase())),colore:'#e7e3da',tipo:'spesa'}));focusUltimo('[data-gr-nome]');break;
     case 'gr-elimina':{const g=a.dataset.gr;modifica(()=>S.gruppi=S.gruppi.filter(x=>x.id!==g));toast('Gruppo eliminato',true);break}
     case 'cat-elimina':{const id=a.closest('[data-cat]').dataset.cat;if(usoCat(id))apriSposta('cat',id);else eliminaCon('cat',id,'');break}
