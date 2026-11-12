@@ -1758,6 +1758,26 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .pp-tit{display:flex;align-items:center;gap:8px;font:700 17px var(--font-titoli);margin-bottom:4px}
 .pp-tit i{font-style:normal;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 14px var(--font);color:#fff;flex:none}
 .pp-ris.si .pp-tit i{background:#2e7a45}.pp-ris.forse .pp-tit i{background:#b07d00}.pp-ris.no .pp-tit i{background:#b5452f}
+.pp-tot{margin-left:auto;font:700 15px var(--font-titoli);color:#55524c}
+.pp-tab{display:grid;grid-template-columns:28px 1fr auto 16px auto auto;column-gap:8px;align-items:center;font-variant-numeric:tabular-nums}
+.pp-h,.pp-r{display:contents}
+.pp-h>span{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:#8a8680;text-align:right}
+.pp-r>span{padding:5px 0;border-top:1px solid rgba(0,0,0,.08)}
+.pp-ic{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.75);border:1.5px solid var(--inchiostro);box-sizing:border-box;padding:0!important}.pp-ic .ico{width:14px;height:14px}
+.pp-r>.pp-ic{align-self:center;margin:4px 0}
+.pp-n{display:flex;flex-direction:column;line-height:1.15}.pp-n b{font-size:13px;color:var(--inchiostro)}.pp-n small{font-size:10.5px;color:#6b665f}
+.pp-p{text-align:right;color:#8a8680;font-size:12.5px;white-space:nowrap}
+.pp-fr{text-align:center;color:#8a8680;font-weight:700}
+.pp-d{text-align:right;font:700 15px var(--font-titoli);white-space:nowrap}
+.pp-r.ok .pp-d{color:#2e7a45}.pp-r.forse .pp-d{color:#9a6b00}.pp-r.no .pp-d{color:#b5452f}
+.pp-s{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;white-space:nowrap;padding-left:6px!important}
+.pp-s i{font-style:normal;width:16px;height:16px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;flex:none}
+.pp-r.ok .pp-s{color:#2e7a45}.pp-r.ok .pp-s i{background:#2e7a45}.pp-r.forse .pp-s{color:#9a6b00}.pp-r.forse .pp-s i{background:#b07d00}.pp-r.no .pp-s{color:#b5452f}.pp-r.no .pp-s i{background:#b5452f}
+.pp-ct{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:#55524c;margin-bottom:6px}
+.pp-cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px}
+.pp-c{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.7);border:1.5px solid rgba(0,0,0,.12);border-radius:9px;padding:6px 8px;text-align:left;font:inherit;color:inherit}
+.pp-c.cl{cursor:pointer;border-color:var(--inchiostro)}.pp-c.cl:hover{background:#fff}
+.pp-c>span:last-child{display:flex;flex-direction:column;line-height:1.2;min-width:0}.pp-c small{font-size:10.5px;color:#55524c}.pp-c b{font:700 14px var(--font-titoli)}.pp-c em{font-style:normal;font-size:10.5px;color:#6b665f}
 .pp-ris ul{margin:2px 0 0;padding-left:18px}.pp-ris li{margin:2px 0}
 .pp-cons{margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,.12)}
 .pp-link{font:700 11.5px var(--font);border:1.5px solid var(--inchiostro);background:#fff;border-radius:999px;padding:0 8px;margin-left:4px;cursor:pointer}
@@ -2516,29 +2536,28 @@ function ppCalcola(imp,m0,nr){ // m0 = mese della (prima) spesa, nr = rate mensi
   let esito='si';
   if((minU!=null&&minU<-0.5)||(mNo&&qNo)) esito='no';
   else if(mNo||qNo||(stQ&&dopoQ!=null&&dopoQ<stQ*0.1)) esito='forse';
-  return {qGia,a,mOra,m0,q,msQ,nr,rata,imp,lim,sm,restaM,dopoM,stQ,spQ,restaQ,dopoQ,minU,minK,mediaV,risp,giorniRest,stDopo,esito,fuori:mesiR.length-dentro.length};
+  return {dentroImp:dentro.length*rata,qGia,a,mOra,m0,q,msQ,nr,rata,imp,lim,sm,restaM,dopoM,stQ,spQ,restaQ,dopoQ,minU,minK,mediaV,risp,giorniRest,stDopo,esito,fuori:mesiR.length-dentro.length};
 }
 function ppTesto(R){
-  const e0=v=>euro(Math.round(v)).replace(/,00$/,''), Mm=m=>MESI[m-1], L=[], C=[];
-  const nomeQ=ROMANI[R.q-1]+' trimestre';
-  if(R.lim==null) return {tit:'Non riesco a dirlo',cl:'forse',L:[`Per ${Mm(R.m0)} non c'è ancora lo stipendio: serve il netto del trimestre prima.`],C:[]};
-  // considerazioni
-  L.push(R.dopoM>=-0.5?`Dopo questa spesa a ${Mm(R.m0)} ti restano <b>${e0(R.dopoM)}</b> dello stipendio del mese (${e0(R.lim)}).`:`A ${Mm(R.m0)} sfori lo stipendio del mese di <b>${e0(-R.dopoM)}</b> (stipendio ${e0(R.lim)}, spese già ${e0(R.sm.t)}).`);
-  if(R.dopoQ!=null) L.push(R.dopoQ>=-0.5?`Sul ${nomeQ} restano <b>${e0(R.dopoQ)}</b> (stipendio ${e0(R.stQ)}, spese fisse e variabili ${e0(R.spQ)} con le previste).`:(R.qGia?`Il ${nomeQ} è già in rosso di ${e0(-R.restaQ)} per le spese previste (stipendio ${e0(R.stQ)}, spese ${e0(R.spQ)}): con questa spesa arrivi a <b>${e0(-R.dopoQ)}</b>.`:`Sul ${nomeQ} sfori di <b>${e0(-R.dopoQ)}</b> (stipendio ${e0(R.stQ)}, spese ${e0(R.spQ)} con le previste).`));
-  if(R.m0===R.mOra&&R.dopoM>0.5&&R.giorniRest>1) L.push(`Per il resto di ${Mm(R.m0)} avresti circa <b>${e0(R.dopoM/R.giorniRest)} al giorno</b> per le altre spese.`);
-  if(R.mediaV!=null&&R.sm.v+R.rata>R.mediaV*1.25) L.push(`Le variabili di ${Mm(R.m0)} salirebbero a ${e0(R.sm.v+R.rata)}: di solito sono ${e0(R.mediaV)} al mese.`);
-  if(R.minU!=null) L.push(R.minU>=-0.5?`Il conto Unicredit non va sotto zero: il punto più basso è ${e0(R.minU)} a fine ${Mm(R.minK)}.`:`<b>Il conto Unicredit andrebbe sotto zero</b>: ${e0(R.minU)} a fine ${Mm(R.minK)}, con le spese già previste.`);
-  if(R.fuori) L.push(`${R.fuori} ${R.fuori===1?'rata cade':'rate cadono'} nel ${R.a+1}: qui non le conto.`);
-  // consigli se non ci sta
+  const e0=v=>euro(Math.round(v)).replace(/,00$/,''), sg=v=>(v<-0.5?'− ':'')+e0(Math.abs(v)), M3=m=>MESI3[m-1], L=[], C=[];
+  const st=v=>v<-0.5?'no':'ok';
+  const riga=(ic,tit,sub,pr,dp,cl,nota)=>({ic,tit,sub,pr,dp,cl,nota});
+  if(R.lim==null) return {tit:'Non riesco a dirlo',cl:'forse',L:[riga('calendario','Stipendio',M3(R.m0),null,'manca','forse','serve il netto del trimestre prima')],C:[]};
+  L.push(riga('calendario','Mese',`${M3(R.m0)} · stipendio ${e0(R.lim)}`,sg(R.restaM),sg(R.dopoM),st(R.dopoM),R.dopoM<-0.5?'sfori':'resta'));
+  if(R.dopoQ!=null) L.push(riga('anno','Trimestre',`${ROMANI[R.q-1]} · stipendio ${e0(R.stQ)}`,sg(R.restaQ),sg(R.dopoQ),R.dopoQ<-0.5?'no':R.stQ&&R.dopoQ<R.stQ*0.1?'forse':'ok',R.qGia?'già in rosso':R.dopoQ<-0.5?'sfori':'resta'));
+  if(R.m0===R.mOra&&R.dopoM>0.5&&R.giorniRest>1) L.push(riga('oggi','Al giorno',`fino a fine ${M3(R.m0)}`,sg(R.restaM/R.giorniRest),sg(R.dopoM/R.giorniRest),'ok',R.giorniRest+' giorni'));
+  if(R.mediaV!=null&&R.sm.v+R.rata>R.mediaV*1.25) L.push(riga('variabili','Variabili',`media ${e0(R.mediaV)}/mese`,e0(R.sm.v),e0(R.sm.v+R.rata),'forse','sopra la media'));
+  if(R.minU!=null) L.push(riga('conto','Unicredit',`punto più basso · fine ${M3(R.minK)}`,sg(R.minU+R.dentroImp),sg(R.minU),st(R.minU),R.minU<-0.5?'sotto zero':'ok'));
+  if(R.fuori) L.push(riga('rate','Rate',`${R.fuori} nel ${R.a+1}`,null,'non contate','forse',''));
   if(R.esito!=='si'){
     const sforo=Math.max(R.dopoQ!=null?-R.dopoQ:0,R.dopoM!=null&&R.esito==='forse'?-R.dopoM:0,0);
     const mesiRestQ=R.msQ.filter(m=>m>=Math.max(R.m0,R.mOra)).length;
-    if(sforo>0.5&&mesiRestQ>0) C.push(`Per rientrare taglia le variabili di circa <b>${e0(sforo/mesiRestQ)} al mese</b> fino a fine ${nomeQ}${R.mediaV!=null?` (di solito ne spendi ${e0(R.mediaV)})`:''}.`);
+    if(sforo>0.5&&mesiRestQ>0) C.push({ic:'variabili',t:`Taglia le variabili`,v:`− ${e0(sforo/mesiRestQ)}/mese`,s:`fino a fine ${ROMANI[R.q-1]} trim`});
     if(R.nr===1){let n=0;for(let k=2;k<=12;k++){const S2=ppCalcola(R.imp,R.m0,k);if(S2.esito==='si'){n=k;break}}
-      if(n) C.push(`<b>A rate</b>: in ${n} rate da ${e0(R.imp/n)} al mese ci staresti. <button type="button" class="pp-link" data-pp-rate="${n}">prova con ${n} rate</button>`);}
-    if(R.q<4||R.m0<12){const mq=R.q*3+1; if(mq<=12) C.push(`<b>Aspetta</b>: dal 1° ${Mm(mq)} parte lo stipendio del trimestre dopo${R.stDopo!=null?`, oggi circa ${e0(R.stDopo/3)} al mese`:''}. <button type="button" class="pp-link" data-pp-mese="${mq}">prova a ${Mm(mq)}</button>`)}
-    if(R.risp&&R.risp.av>0.5) C.push(`<b>Con i risparmi</b>: gli avanzi dei trimestri chiusi sono ${e0(R.risp.av)}${R.risp.av>=R.imp?': coprono tutta la spesa':''}.`);
-    if(R.esito==='no'&&R.risp&&R.risp.dep>0.5&&R.risp.mese) C.push(`Dal deposito (${e0(R.risp.dep)}) il fondo di sicurezza scenderebbe da ${(R.risp.dep/R.risp.mese).toFixed(1).replace('.',',')} a ${Math.max(0,(R.risp.dep-R.imp)/R.risp.mese).toFixed(1).replace('.',',')} mesi di spese.`);
+      if(n) C.push({ic:'rate',t:'A rate',v:`${n} × ${e0(R.imp/n)}`,s:'ci staresti',b:`data-pp-rate="${n}"`});}
+    const mq=R.q*3+1; if(mq<=12) C.push({ic:'calendario',t:'Aspetta',v:`dal 1° ${M3(mq)}`,s:R.stDopo!=null?`stipendio ≈ ${e0(R.stDopo/3)}/mese`:'trimestre nuovo',b:`data-pp-mese="${mq}"`});
+    if(R.risp&&R.risp.av>0.5) C.push({ic:'salvadanaio',t:'Avanzi messi da parte',v:e0(R.risp.av),s:R.risp.av>=R.imp?'coprono tutto':'ne coprono una parte'});
+    if(R.esito==='no'&&R.risp&&R.risp.dep>0.5&&R.risp.mese){const f=v=>v.toFixed(1).replace('.',',');C.push({ic:'deposito',t:'Dal deposito',v:`${f(R.risp.dep/R.risp.mese)} → ${f(Math.max(0,(R.risp.dep-R.imp)/R.risp.mese))} mesi`,s:'fondo di sicurezza'})}
   }
   const tit={si:'Sì, te lo puoi permettere',forse:'Sì, ma con attenzione',no:'Meglio di no, per ora'}[R.esito];
   return {tit,cl:R.esito,L,C};
@@ -2566,7 +2585,10 @@ function ppAggiorna(){
   if(isNaN(imp)||imp<=0){el.innerHTML='';el.className='pp-ris';if(b)b.disabled=true;return}
   const R=ppCalcola(imp,+$('#pp-mese').value,+$('#pp-nr').value), T=ppTesto(R);
   el.className='pp-ris '+T.cl;
-  el.innerHTML=`<div class="pp-tit"><i>${T.cl==='si'?'✓':T.cl==='no'?'✕':'!'}</i>${T.tit}</div><ul>${T.L.map(x=>`<li>${x}</li>`).join('')}</ul>${T.C.length?`<div class="pp-cons"><b>Se la vuoi fare comunque</b><ul>${T.C.map(x=>`<li>${x}</li>`).join('')}</ul></div>`:''}`;
+  const ok={ok:'✓',forse:'!',no:'✕'};
+  el.innerHTML=`<div class="pp-tit"><i>${ok[T.cl==='si'?'ok':T.cl]}</i>${T.tit}<span class="pp-tot">${euro(imp)}${R.nr>1?` · ${R.nr} rate`:''}</span></div>
+    <div class="pp-tab"><div class="pp-h"><span></span><span></span><span>prima</span><span></span><span>dopo</span><span></span></div>${T.L.map(r=>`<div class="pp-r ${r.cl}"><span class="pp-ic">${ico(r.ic)}</span><span class="pp-n"><b>${r.tit}</b><small>${r.sub}</small></span><span class="pp-p">${r.pr??''}</span><span class="pp-fr">${r.pr!=null?'→':''}</span><span class="pp-d">${r.dp}</span><span class="pp-s"><i>${ok[r.cl]}</i>${r.nota||''}</span></div>`).join('')}</div>
+    ${T.C.length?`<div class="pp-cons"><div class="pp-ct">Se la vuoi fare comunque</div><div class="pp-cg">${T.C.map(c=>`<${c.b?'button type="button" '+c.b:'div'} class="pp-c${c.b?' cl':''}"><span class="pp-ic">${ico(c.ic)}</span><span><small>${c.t}</small><b>${c.v}</b><em>${c.s}${c.b?' · prova ↻':''}</em></span></${c.b?'button':'div'}>`).join('')}</div></div>`:''}`;
   if(b)b.disabled=false;
 }
 document.addEventListener('input',e=>{if(e.target.closest('.pp-fin'))ppAggiorna()});
