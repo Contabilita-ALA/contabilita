@@ -1746,7 +1746,7 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .sync-lista{max-height:320px;overflow:auto;margin:0 0 12px;border-top:1px solid var(--cella-bordo)}.sync-r{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--cella-bordo)}.sync-r small{color:var(--grigio);margin-left:6px}
 .imp-gd{margin-top:12px;border-top:1px solid var(--cella-bordo);padding-top:10px}.imp-gd summary{cursor:pointer;font-weight:600}.imp-gd ol{padding-left:20px;margin:8px 0;line-height:1.5}.imp-gd li{margin-bottom:7px}.imp-gd code{font-size:11.5px;background:var(--cella);padding:1px 4px;border-radius:4px;word-break:break-all}.imp-gd .btn.piccolo{padding:3px 8px;font-size:12px}.imp-gd-ok{font-size:12.5px;color:var(--grigio)}.imp-gd-ck{display:flex;gap:6px;align-items:center;font-size:13px;margin-top:6px}
 /* Posso permettermelo? (12/11) */
-.pp-fin{max-width:600px}
+.pp-fin{max-width:720px}
 .pp-campi{display:grid;grid-template-columns:150px 1fr 1fr;gap:10px;margin:10px 0}
 .pp-campi label{display:flex;flex-direction:column;gap:3px;font-size:12px;font-weight:700;color:#55524c;min-width:0}
 .pp-campi input,.pp-campi select{font:600 14px var(--font);padding:6px 8px;border:1.5px solid #d8d1c3;border-radius:8px;background:#faf8f3;min-width:0;width:100%}
@@ -1759,7 +1759,7 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .pp-tit i{font-style:normal;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 14px var(--font);color:#fff;flex:none}
 .pp-ris.si .pp-tit i{background:#2e7a45}.pp-ris.forse .pp-tit i{background:#b07d00}.pp-ris.no .pp-tit i{background:#b5452f}
 .pp-tot{margin-left:auto;font:700 15px var(--font-titoli);color:#55524c}
-.pp-tab{display:grid;grid-template-columns:28px 1fr auto 16px auto auto;column-gap:8px;align-items:center;font-variant-numeric:tabular-nums}
+.pp-tab{display:grid;grid-template-columns:28px 1fr auto 16px auto auto auto;column-gap:8px;align-items:center;font-variant-numeric:tabular-nums}
 .pp-h,.pp-r{display:contents}
 .pp-h>span{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:#8a8680;text-align:right}
 .pp-r>span{padding:5px 0;border-top:1px solid rgba(0,0,0,.08)}
@@ -1787,6 +1787,14 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .pp-alt{display:flex;gap:8px;align-items:center;margin-top:8px;padding:6px 8px;border-radius:9px;background:rgba(255,255,255,.65);border:1.5px dashed rgba(0,0,0,.25);font-size:12.5px}
 .pp-alt small{display:block;font-size:10.5px;color:#55524c}.pp-alt b{font-weight:700}.pp-alt b.ok{color:#2e7a45}.pp-alt b.no{color:#b5452f}.pp-alt em{font-style:normal;color:#6b665f;font-size:11px}
 .pp-alt.si>span:last-child>b:first-of-type{color:#2e7a45}.pp-alt.forse>span:last-child>b:first-of-type{color:#9a6b00}.pp-alt.no>span:last-child>b:first-of-type{color:#b5452f}
+.pp-icc{display:flex;align-items:center;justify-content:center;align-self:stretch}
+.pp-icc .pp-ic{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--inchiostro);background:rgba(255,255,255,.75);display:flex;align-items:center;justify-content:center;box-sizing:border-box;font-style:normal}
+.pp-x{display:flex;align-items:center;justify-content:flex-end;gap:5px;white-space:nowrap;background:rgba(255,255,255,.45);padding-left:10px!important;padding-right:8px!important;border-left:1.5px dashed rgba(0,0,0,.2)}
+.pp-h>.pp-x{flex-direction:column;align-items:flex-end;gap:2px;border-radius:8px 8px 0 0;padding-top:4px!important;text-transform:uppercase}
+.pp-xe{font-style:normal;font-size:10px;text-transform:none;letter-spacing:0;border-radius:999px;padding:0 7px;color:#fff}.pp-xe.si{background:#2e7a45}.pp-xe.forse{background:#b07d00}.pp-xe.no{background:#b5452f}
+.pp-x b{font:700 14px var(--font-titoli)}.pp-x.ok b{color:#2e7a45}.pp-x.forse b{color:#9a6b00}.pp-x.no b{color:#b5452f}
+.pp-x i{font-style:normal;width:15px;height:15px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9.5px}.pp-x.ok i{background:#2e7a45}.pp-x.forse i{background:#b07d00}.pp-x.no i{background:#b5452f}
+.pp-x small{font-size:10px;color:#8a8680}
 /* Conti e risparmi (12/11) */
 .cr-due{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 .cr-dx{display:flex;flex-direction:column;gap:10px;min-height:0}
@@ -2595,11 +2603,11 @@ function ppAggiorna(){
   const base=pvBase(), altra=base==='prev'?'eff':'prev', A=new Date().getFullYear();let R2=null;
   {const s=UI.prevBase;UI.prevBase=altra;try{R2=ppCalcola(imp,+$('#pp-mese').value,+$('#pp-nr').value)}finally{UI.prevBase=s}}
   const e0=v=>euro(Math.round(v)).replace(/,00$/,''), titE={si:'sì',forse:'sì, con attenzione',no:'meglio di no'};
-  const altroH=R2?`<div class="pp-alt ${R2.esito}"><span class="pp-ic">${ico('fattura')}</span><span><small>${altra==='prev'?`Se incassi quello che hai previsto (fatturato ${A} ${e0(pvVaPrev(A))})`:`Contando solo quello già incassato (${e0(pvVaEff(A))})`}</small><b>${titE[R2.esito]}</b>${R2.minU!=null?` · Unicredit al punto più basso <b class="${R2.minU<-0.5?'no':'ok'}">${(R2.minU<-0.5?'− ':'')+e0(Math.abs(R2.minU))}</b> a fine ${MESI3[R2.minK-1]}${R.minU!=null?` <em>(${R2.minU-R.minU>=0?'+':'−'} ${e0(Math.abs(R2.minU-R.minU))})</em>`:''}`:''}</span></div>`:'';
+  const L2=R2?ppTesto(R2).L:[], altTit=altra==='prev'?`Se incassi quello che hai previsto: fatturato ${A} ${e0(pvVaPrev(A))}`:`Contando solo quello già incassato: ${e0(pvVaEff(A))}`;
   el.className='pp-ris '+T.cl;
   const ok={ok:'✓',forse:'!',no:'✕'};
   el.innerHTML=`<div class="pp-tit"><i>${ok[T.cl==='si'?'ok':T.cl]}</i>${T.tit}<span class="pp-tot">${euro(imp)}${R.nr>1?` · ${R.nr} rate`:''}<small>${base==='prev'?'con il previsto':"con l'incassato"}</small></span></div>
-    <div class="pp-tab"><div class="pp-h"><span></span><span></span><span>prima</span><span></span><span>dopo</span><span></span></div>${T.L.map(r=>`<div class="pp-r ${r.cl}"><span class="pp-ic">${ico(r.ic)}</span><span class="pp-n"><b>${r.tit}</b><small>${r.sub}</small></span><span class="pp-p">${r.pr??''}</span><span class="pp-fr">${r.pr!=null?'→':''}</span><span class="pp-d">${r.dp}</span><span class="pp-s"><i>${ok[r.cl]}</i>${r.nota||''}</span></div>`).join('')}</div>${altroH}
+    <div class="pp-tab"><div class="pp-h"><span></span><span></span><span>prima</span><span></span><span>dopo</span><span></span><span class="pp-x" title="${esc(altTit)}">${altra==='prev'?'se incassi il previsto':'solo incassato'}${R2?`<em class="pp-xe ${R2.esito}">${titE[R2.esito]}</em>`:''}</span></div>${T.L.map(r=>{const r2=L2.find(x=>x.tit===r.tit);return `<div class="pp-r ${r.cl}"><span class="pp-icc"><i class="pp-ic">${ico(r.ic)}</i></span><span class="pp-n"><b>${r.tit}</b><small>${r.sub}</small></span><span class="pp-p">${r.pr??''}</span><span class="pp-fr">${r.pr!=null?'→':''}</span><span class="pp-d">${r.dp}</span><span class="pp-s"><i>${ok[r.cl]}</i>${r.nota||''}</span><span class="pp-x ${r2?r2.cl:''}">${r2?`<b>${r2.dp}</b><i>${ok[r2.cl]}</i>${r2.dp!==r.dp?'':'<small>uguale</small>'}`:'–'}</span></div>`}).join('')}</div>
     ${T.C.length?`<div class="pp-cons"><div class="pp-ct">Se la vuoi fare comunque</div><div class="pp-cg">${T.C.map(c=>`<${c.b?'button type="button" '+c.b:'div'} class="pp-c${c.b?' cl':''}"><span class="pp-ic">${ico(c.ic)}</span><span><small>${c.t}</small><b>${c.v}</b><em>${c.s}${c.b?' · prova ↻':''}</em></span></${c.b?'button':'div'}>`).join('')}</div></div>`:''}`;
   if(b)b.disabled=false;
 }
