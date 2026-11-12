@@ -1795,6 +1795,12 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .pp-x b{font:700 14px var(--font-titoli)}.pp-x.ok b{color:#2e7a45}.pp-x.forse b{color:#9a6b00}.pp-x.no b{color:#b5452f}
 .pp-x i{font-style:normal;width:15px;height:15px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9.5px}.pp-x.ok i{background:#2e7a45}.pp-x.forse i{background:#b07d00}.pp-x.no i{background:#b5452f}
 .pp-x small{font-size:10px;color:#8a8680}
+
+/* colonne allineate (12/11) */
+.pp-r>.pp-x{display:grid;grid-template-columns:minmax(78px,1fr) 15px 38px;justify-content:end;column-gap:5px}
+.pp-r>.pp-x>b{text-align:right}.pp-r>.pp-x>small{text-align:left}
+.pp-p,.pp-d,.pp-x b{font-variant-numeric:tabular-nums lining-nums}
+.pp-d{min-width:78px}
 /* Conti e risparmi (12/11) */
 .cr-due{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 .cr-dx{display:flex;flex-direction:column;gap:10px;min-height:0}
@@ -2607,7 +2613,7 @@ function ppAggiorna(){
   el.className='pp-ris '+T.cl;
   const ok={ok:'✓',forse:'!',no:'✕'};
   el.innerHTML=`<div class="pp-tit"><i>${ok[T.cl==='si'?'ok':T.cl]}</i>${T.tit}<span class="pp-tot">${euro(imp)}${R.nr>1?` · ${R.nr} rate`:''}<small>${base==='prev'?'con il previsto':"con l'incassato"}</small></span></div>
-    <div class="pp-tab"><div class="pp-h"><span></span><span></span><span>prima</span><span></span><span>dopo</span><span></span><span class="pp-x" title="${esc(altTit)}">${altra==='prev'?'se incassi il previsto':'solo incassato'}${R2?`<em class="pp-xe ${R2.esito}">${titE[R2.esito]}</em>`:''}</span></div>${T.L.map(r=>{const r2=L2.find(x=>x.tit===r.tit);return `<div class="pp-r ${r.cl}"><span class="pp-icc"><i class="pp-ic">${ico(r.ic)}</i></span><span class="pp-n"><b>${r.tit}</b><small>${r.sub}</small></span><span class="pp-p">${r.pr??''}</span><span class="pp-fr">${r.pr!=null?'→':''}</span><span class="pp-d">${r.dp}</span><span class="pp-s"><i>${ok[r.cl]}</i>${r.nota||''}</span><span class="pp-x ${r2?r2.cl:''}">${r2?`<b>${r2.dp}</b><i>${ok[r2.cl]}</i>${r2.dp!==r.dp?'':'<small>uguale</small>'}`:'–'}</span></div>`}).join('')}</div>
+    <div class="pp-tab"><div class="pp-h"><span></span><span></span><span>prima</span><span></span><span>dopo</span><span></span><span class="pp-x" title="${esc(altTit)}">${altra==='prev'?'se incassi il previsto':'solo incassato'}${R2?`<em class="pp-xe ${R2.esito}">${titE[R2.esito]}</em>`:''}</span></div>${T.L.map(r=>{const r2=L2.find(x=>x.tit===r.tit);return `<div class="pp-r ${r.cl}"><span class="pp-icc"><i class="pp-ic">${ico(r.ic)}</i></span><span class="pp-n"><b>${r.tit}</b><small>${r.sub}</small></span><span class="pp-p">${r.pr??''}</span><span class="pp-fr">${r.pr!=null?'→':''}</span><span class="pp-d">${r.dp}</span><span class="pp-s"><i>${ok[r.cl]}</i>${r.nota||''}</span><span class="pp-x ${r2?r2.cl:''}">${r2?`<b>${r2.dp}</b><i>${ok[r2.cl]}</i><small>${r2.dp!==r.dp?'':'uguale'}</small>`:'–'}</span></div>`}).join('')}</div>
     ${T.C.length?`<div class="pp-cons"><div class="pp-ct">Se la vuoi fare comunque</div><div class="pp-cg">${T.C.map(c=>`<${c.b?'button type="button" '+c.b:'div'} class="pp-c${c.b?' cl':''}"><span class="pp-ic">${ico(c.ic)}</span><span><small>${c.t}</small><b>${c.v}</b><em>${c.s}${c.b?' · prova ↻':''}</em></span></${c.b?'button':'div'}>`).join('')}</div></div>`:''}`;
   if(b)b.disabled=false;
 }
@@ -2987,21 +2993,24 @@ function renderAnnuario0(CM){
   const sc=$('.ac-scroll');if(sc&&sc.scrollWidth>sc.clientWidth+1)$('.ac-scorri').hidden=false;
 }
 function renderFiscale(){
-  const a=S.anno, X=fiscoAnno(a);
+  const a=S.anno;let X=fiscoAnno(a);
   if(!X){$('#main').innerHTML=`<h1>Riepilogo fiscale ${a}</h1><p>Mancano i dati fiscali del ${a}: le rate minime di Inarcassa e le aliquote.</p><button class="btn" data-fis-crea="${a}">Crea il ${a} con le cifre del ${a-1}</button>`;return}
   const d=X.d, P=fiscoAnno(a-1), N=fiscoAnno(a+1)||X, pc=v=>numIt(v*100).replace(/,00$/,'').replace(/,(\d)0$/,',$1')+'%';
-  const O=X.VF?fiscoAnno(a,0,X.VF.inc):X; // ad oggi: solo le fatture incassate (il forfettario conta gli incassi)
+  let O=X.VF?fiscoAnno(a,0,X.VF.inc):X; // ad oggi: solo le fatture incassate (il forfettario conta gli incassi)
+  // tasto in alto (Paolo 12/11): in grande lo scenario scelto, sotto l'altro
+  const inPrev=pvBase()==='prev', altW=inPrev?'incassato':'previsto';
+  if(X.VF){const Xp=fiscoAnno(a,0,pvVaPrev(a)), Oi=O; O=inPrev?Xp:Oi; X=inPrev?Oi:Xp;}
   const LF=X.VF?datiFatture(a):[], accOggi=LF.filter(x=>x.inc).reduce((s,x)=>s+x.c.accant,0), accPrev=X.VF?X.VF.acc:0, lordo=X.VF?X.VF.lordo:0;
   const spostato=S.movimenti.filter(x=>annoDi(x.data)===a&&x.giro&&x.ok&&(S.conti.find(c=>c.id===x.verso)||{}).tipo==='salvadanaio').reduce((s,x)=>s+x.eur,0);
   const percAcc=S.impostazioni.accantonamento[a]??0.25, percDopo=S.impostazioni.accantonamento[a+1];
   // scenario: volume d'affari previsto (si può cambiare)
-  const vaPrev=d.vaPrev!=null?+d.vaPrev:X.va, Y=fiscoAnno(a,0,vaPrev), lordoY=vaPrev*(1+(S.impostazioni.aliquote.integrativo||0.04));
+  const vaPrev=d.vaPrev!=null?+d.vaPrev:(fiscoAnno(a)||X).va, vaInc=X.VF?X.VF.inc:vaPrev, vaY=inPrev||!X.VF?vaPrev:vaInc, Y=fiscoAnno(a,0,vaY), lordoY=vaY*(1+(S.impostazioni.aliquote.integrativo||0.04));
   const dopo=[['sogg',N.sm,'minimi '+(a+1)],['integr',N.im,'minimi '+(a+1)],['mat',N.mt,'minimi '+(a+1)],...(Y.rate>1?[]:[['sogg',Y.congS,'conguaglio '+a],['integr',Y.congI,'conguaglio '+a]]),['saldo',Y.saldo,'giugno '+(a+1)],['acconti',Y.imposta,'giugno e novembre '+(a+1)]];
-  const totDopo=dopo.reduce((s,x)=>s+x[1],0), serve=lordoY?totDopo/lordoY:0, extraAcc=Math.max(0,spostato-accOggi), accY=(d.vaPrev!=null?lordoY*percAcc:accPrev)+extraAcc, copre=totDopo?accY/totDopo:0;
+  const totDopo=dopo.reduce((s,x)=>s+x[1],0), serve=lordoY?totDopo/lordoY:0, extraAcc=Math.max(0,spostato-accOggi), accY=(!inPrev&&X.VF?accOggi:d.vaPrev!=null?lordoY*percAcc:accPrev)+extraAcc, copre=totDopo?accY/totDopo:0;
   const inp=(k,v,tip,cls)=>`<input class="fi-in ${cls||''}" data-fis="${k}" value="${numIt(v)}" inputmode="decimal" title="${esc(tip||'')}">`;
   const inpP=(k,v,tip)=>`<span class="fi-pc"><input class="fi-in" data-fis="${k}" data-pc="1" value="${numIt(v*100).replace(/,00$/,'').replace(/,(\d)0$/,',$1')}" inputmode="decimal" title="${esc(tip||'')}"><i>%</i></span>`;
   const kpi=(cls,ic,tit,val,sub,dl,extra)=>`<div class="tq-k ${cls}"><div class="tq-k-t"><span>${ico(ic)}${tit}</span>${dl||''}</div><div class="tq-k-v">${val}</div><div class="tq-k-s">${sub}</div>${extra||''}</div>`;
-  const prevTxt=v=>`<span class="fi-prev">previsto <b>${euro(v)}</b></span>`;
+  const prevTxt=v=>`<span class="fi-prev">${altW} <b>${euro(v)}</b></span>`;
   const stk=(parti)=>{const tt=parti.reduce((s,x)=>s+Math.max(0,x[1]),0)||1;return `<div class="fi-stk">${parti.filter(x=>x[1]>0.5).map(([k,v])=>`<i style="flex:${v/tt};--c:${FIS_COL[k]}" title="${FIS_NOME[k]} ${euro(v)}"></i>`).join('')}</div>`};
   const daInc=LF.filter(x=>!x.inc).length;
   const kpis=kpi('k-e','fattura',"Volume d'affari",euro(O.va),X.VF?prevTxt(X.va):'scritto a mano',X.VF?`<span class="tq-d ${daInc?'att':'ok'}">${daInc?daInc+' da incassare':'tutto incassato'}</span>`:'')
@@ -3011,7 +3020,7 @@ function renderFiscale(){
       :kpi('k-a','netto','Da pagare nel '+(a+1),euro(totDopo),'Inarcassa e F24 sul '+a,''));
   // ---- riquadri colorati (come la prima versione), in grande ad oggi e sotto il previsto ----
   const due=!!X.VF;
-  const pv=(o,p)=>due&&Math.abs(o-p)>0.5?`<em>previsto <b>${euro(p)}</b></em>`:'';
+  const pv=(o,p)=>due&&Math.abs(o-p)>0.5?`<em>${altW} <b>${euro(p)}</b></em>`:'';
   const tile=(o)=>`<div class="fx-t ${o.cls||''}" ${o.k?`style="--c:${FIS_COL[o.k]}"`:''} ${o.tip?`title="${esc(o.tip)}"`:''}><small>${o.cod?`<i>${o.cod}</i>`:''}${o.lab}</small><b>${o.val}</b>${o.sub||''}</div>`;
   // Inarcassa: tre colonne (soggettivo, integrativo, maternità)
   const col=(k,nome,head,k1,k2,min,cO,cP,tip)=>`<div class="fx-c" style="--c:${FIS_COL[k]}">
@@ -3019,7 +3028,7 @@ function renderFiscale(){
       <div class="fx-c-r"><span>Rata I</span><span class="fx-c-v">${euro(+d[k1]||0)}</span></div>
       <div class="fx-c-r"><span>Rata II</span><span class="fx-c-v">${euro(+d[k2]||0)}</span></div>
       <div class="fx-c-s mi"><span>Minimi</span><b>${euro(min)}</b></div>
-      ${cO!=null?`<div class="fx-c-s cg" title="${esc(tip)}"><span>Conguaglio</span><b>${euro(cO)}</b></div><div class="fx-c-p">${due&&Math.abs(cO-cP)>0.5?`previsto <b>${euro(cP)}</b>`:'&nbsp;'}</div>`
+      ${cO!=null?`<div class="fx-c-s cg" title="${esc(tip)}"><span>Conguaglio</span><b>${euro(cO)}</b></div><div class="fx-c-p">${due&&Math.abs(cO-cP)>0.5?`${altW} <b>${euro(cP)}</b>`:'&nbsp;'}</div>`
         :`<div class="fx-c-s cg vuoto"><span>Conguaglio</span><b>—</b></div><div class="fx-c-p">non c'è</div>`}
     </div>`;
   const inar=`<div class="fx-cols">
@@ -3035,7 +3044,7 @@ function renderFiscale(){
   // Stato: imposta sostitutiva
   const lm=(cod,nome,vo,vp,o={})=>`<div class="r ${o.cls||''}" ${o.k?`style="--c:${FIS_COL[o.k]}"`:''} ${o.tip?`title="${esc(o.tip)}"`:''}><span class="cod">${cod||''}</span><span class="nm">${nome}${o.nota?`<small>${o.nota}</small>`:''}</span><span class="n og">${o.txt??euro(vo)}</span>${due?`<span class="n pr">${o.txt!=null?'':euro(vp)}</span>`:''}</div>`;
   const stato=`<div class="fx-lm ${due?'due':''}">
-      <div class="r h"><span>rigo</span><span></span><span class="n">${due?'ad oggi':''}</span>${due?'<span class="n">previsto</span>':''}</div>
+      <div class="r h"><span>rigo</span><span></span><span class="n">${due?(inPrev?'previsto':'incassato'):''}</span>${due?`<span class="n">${altW}</span>`:''}</div>
       ${lm('LM034','Reddito lordo',O.red,X.red,{nota:pc(S.impostazioni.aliquote.reddito||0.78)+' del volume d\'affari'})}
       ${lm('LM035','Contributi previdenziali',O.lm035,X.lm035,{nota:'Inarcassa pagata nel '+a,tip:X.d.o.lm035!=null?'Scritto a mano (come nel foglio)':`Soggettivi minimi ${euro(X.sm)} + maternità ${euro(X.mt)} + conguaglio soggettivo del ${a-1} ${euro(P?P.congS:0)}`})}
       ${lm('LM036','Reddito netto',O.lm036,X.lm036)}
@@ -3055,7 +3064,7 @@ function renderFiscale(){
       <div class="fx-m-tot">${euro(t)}</div></div>`};
   const aspetta=`<div class="fx-asp">
       <div class="fx-asp-sx">
-        <div class="fx-t in"><small>Se il volume d'affari ${a} è</small><b>${inp('vaPrev',vaPrev,"Scrivi quanto pensi di fatturare in tutto il "+a+" (prestazioni + bollo)",'gr')}</b>${d.vaPrev!=null?`<em><button class="fi-reset" data-fis-reset title="Torna al totale delle fatture del ${a}">↺ torna alle fatture</button></em>`:`<em>= tutte le fatture del ${a}</em>`}</div>
+        <div class="fx-t in"><small>Se il volume d'affari ${a} è</small><b>${!inPrev&&X.VF?`<span class="fi-inc" title="Fatture già incassate. Metti il tasto in alto su &quot;previsto&quot; per scrivere il volume che pensi di fare">${euro(vaInc)}</span>`:inp('vaPrev',vaPrev,"Scrivi quanto pensi di fatturare in tutto il "+a+" (prestazioni + bollo)",'gr')}</b>${!inPrev&&X.VF?`<em>= fatture incassate a oggi</em>`:d.vaPrev!=null?`<em><button class="fi-reset" data-fis-reset title="Torna al totale delle fatture del ${a}">↺ torna alle fatture</button></em>`:`<em>= tutte le fatture del ${a}</em>`}</div>
         <div class="fx-t ${copre>=0.995?'ok':'no'}"><small>Accantonamento previsto · ${pc(percAcc)}</small><div class="fx-cop"><b>${euro(accY)}</b>${copre>=0.995?(accY-totDopo>=1?`<span class="im-st ok">avanzano ${euro(accY-totDopo)}</span>`:'<span class="im-st ok">basta</span>'):`<span class="im-st no">mancano ${euro(totDopo-accY)}</span>`}</div>
           <div class="fi-bar"><i style="width:${Math.min(100,copre*100)}%"></i>${copre<1?`<em style="left:${copre*100}%;width:${100-copre*100}%"></em>`:''}</div>
           <em>copre ${(n=>n===1||n===11||/^8/.test(String(n))?"l'":'il ')(Math.round(copre*100))}<b>${Math.round(copre*100)}%</b> · servirebbe il <b>${pc(Math.ceil(serve*1000)/1000)}</b></em></div>
@@ -3069,7 +3078,7 @@ function renderFiscale(){
       </div>
     </div>`;
   $('#main').innerHTML=`<div class="tq fi">
-    <div class="tq-testa"><h1>Riepilogo fiscale ${a}</h1><span class="tq-conf">regime forfettario · in grande quello che è già incassato, sotto il previsto con tutte le fatture del ${a} · i campi chiari si possono modificare</span></div>
+    <div class="tq-testa"><h1>Riepilogo fiscale ${a}</h1><span class="tq-conf">regime forfettario · in grande ${inPrev?`il previsto (tutte le fatture del ${a}), sotto quello già incassato`:`quello già incassato, sotto il previsto con tutte le fatture del ${a}`} · si cambia col tasto in alto · i campi chiari si possono modificare</span></div>
     <div class="tq-kpi">${kpis}</div>
     <div class="fx">
       <section class="tq-p fx-in"><h3>${fq('sogg')} Inarcassa ${a}<small>${d.daAgg?`<a class="fi-agg" data-pag="impostazioni" title="Sono ancora le cifre del ${a-1}: aggiornale in Impostazioni">da aggiornare</a>`:`<a class="fi-mod" data-pag="impostazioni" title="Rate e aliquote si cambiano in Impostazioni">modifica in Impostazioni</a>`} · minimi nel ${a} · conguaglio nel ${a+1}</small></h3>${inar}</section>
