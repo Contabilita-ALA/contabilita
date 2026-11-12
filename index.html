@@ -2092,10 +2092,13 @@ function annulla(){
 // Regole: € positivo = uscita, negativo = entrata.
 // Le spese con CARTE di un mese si addebitano sul conto di appoggio il mese successivo.
 // I giroconti (es. accantonamento) escono da un conto ed entrano in un altro.
+// Scenario del tasto in alto: con "incassato" le fatture non ancora incassate non entrano nelle previsioni dei saldi
+function movScen(){return pvBase()==='prev'?S.movimenti:S.movimenti.filter(m=>!(m.fat&&!m.ok&&m.eur<0))}
+function conScen(fn){const s=S.movimenti;S.movimenti=movScen();try{return fn()}finally{S.movimenti=s}}
 function saldiMensili(anno,soloPagati){
   const si=S.impostazioni.saldiIniziali[anno]||{};
   const ids=S.conti.map(c=>c.id);
-  const mov=S.movimenti.filter(m=>annoDi(m.data)===anno&&(!soloPagati||m.ok));
+  const mov=(soloPagati?S.movimenti:movScen()).filter(m=>annoDi(m.data)===anno&&(!soloPagati||m.ok));
   const perMese=Array.from({length:13},()=>({}));
   const carte=S.conti.filter(c=>c.tipo==='carta'), coiC=S.conti.find(c=>c.tipo==='cointestato');
   const carteMese={};carte.forEach(c=>carteMese[c.id]=Array(13).fill(0));
@@ -2220,7 +2223,7 @@ function renderPagina(){
   if(p==='impostazioni') return renderImpostazioni();
   if(p==='fatture') return renderFatture();
   if(p==='radames') return renderRadames();
-  if(p==='anno') return renderAnno();
+  if(p==='anno') return conScen(renderAnno); // segue il tasto incassato/previsto
   if(p==='cointestato') return renderCointestato();
   if(p==='conti') return renderContiRisparmi();
   if(p==='fiscale') return renderFiscale();
@@ -2656,7 +2659,7 @@ function renderContiRisparmi(){
   const risTrim=D.trim.filter(t=>!t.fu&&t.av!=null), rispAnno=risTrim.reduce((s,t)=>s+t.av+t.coi+t.int,0), intAnno=risTrim.reduce((s,t)=>s+t.int,0);
   const mesiFondo=D.mediaMese>0.5?D.oggi.dep/D.mediaMese:null;
   const kpis=kpi('k-vol','conto','Soldi tuoi oggi',euro(totOggi),`tutti i conti e metà cointestato`,`<span class="tq-d ${totOggi-totIni<-0.5?'no':'ok'}" title="Il 1° gennaio avevi ${e0(totIni)}">${sg(totOggi-totIni)} dal 1° gennaio</span>`)
-    +kpi('k-a','calendario','A fine anno',euro(totFine),`con entrate e spese previste`,`<span class="tq-d ${totFine-totOggi<-0.5?'no':'ok'}" title="Differenza tra fine anno e oggi">${sg(totFine-totOggi)} rispetto a oggi</span>`)
+    +kpi('k-a','calendario','A fine anno',euro(totFine),(pvBase()==='prev'?`con entrate e spese previste`:`con le spese previste, solo fatture già incassate`),`<span class="tq-d ${totFine-totOggi<-0.5?'no':'ok'}" title="Differenza tra fine anno e oggi">${sg(totFine-totOggi)} rispetto a oggi</span>`)
     +kpi('k-e','salvadanaio','Risparmiati nel '+a,euro(rispAnno),`avanzi <b>${n0(risTrim.reduce((s,t)=>s+t.av,0))}</b> · cointestato <b>${n0(risTrim.reduce((s,t)=>s+t.coi,0))}</b>${Math.abs(intAnno)>0.005?` · interessi <b>${n0(intAnno)}</b>`:''}`,`<span class="tq-d neutro" title="Trimestri contati">${risTrim.map(t=>ROMANI[t.k-1]).join(' ')} trim</span>`)
     +kpi('k-net','deposito','Fondo di sicurezza',mesiFondo==null?'—':String(Math.round(mesiFondo*10)/10).replace('.',',')+' mesi',mesiFondo==null?'servono mesi conclusi':`<span title="Spese di tutti i giorni: fisse e variabili da Unicredit, media dei mesi chiusi">di spese coperte dal deposito (${e0(D.mediaMese)}/mese)</span>`);
   // ===== sinistra: un conto per riga =====
@@ -2706,7 +2709,7 @@ function renderContiRisparmi(){
   // 2027 dalla Previsione: stipendio = netto del trimestre prima (entrate − accantonamento − spese per attività), spese = fisse + variabili
   const PV=P27.PV, N=a+1, t27=[1,2,3,4].map(k=>{const ms=[k*3-2,k*3-1,k*3];if(!PV)return {k,st:null,sp:null,av:null,coi:0,int:0,fu:1};
     const sm=(v,mm)=>mm.reduce((s,m)=>s+(v[m]||0),0), netQ=kk=>{const mm=[kk*3-2,kk*3-1,kk*3], e=sm(PV.totE,mm);return e-e*PV.perc-sm(PV.att,mm)};
-    const st=k===1?nettoTrim(a,4):PV.lordo>0.5?netQ(k-1):null, sp=sm(PV.fisse,ms)+sm(PV.vari,ms);
+    const st=k===1?conScen(()=>nettoTrim(a,4)):PV.lordo>0.5?netQ(k-1):null, sp=sm(PV.fisse,ms)+sm(PV.vari,ms);
     const dep=infoDeposito(D.dep||{id:'x'},a);return {k,st,sp,av:st==null?null:st-sp,coi:P27.annuo*D.q/4,int:D.dep?D.fine.dep*(dep.t||0)/100/4:0}});
   const conEnt27=PV&&PV.lordo>0.5;
   const tabT=`<div class="cr-tdue">${tabRisp(t26,`${a} <small>${pvBase()==='eff'?'spese fatte':'con previste'}</small>`,`Risparmiato = avanzo dello stipendio + metà cointestato + interessi. Clic su un trimestre per aprirlo.`)}
