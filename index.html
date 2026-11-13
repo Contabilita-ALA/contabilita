@@ -168,6 +168,31 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .tb-meta .tq-meta-t small{font:500 12px var(--font);color:#7d7870}
 .tb-meta .tq-meta-t .n{align-self:center}
 .tb .tq-p{overflow:visible}
+.tb-sw{display:inline-block;width:11px;height:11px;border-radius:3px;border:1.5px solid var(--inchiostro);margin-right:7px;vertical-align:-1px;background:var(--cc,#fff)}
+.tb .c-ent{--cc:var(--salvia);--ct:#e3eedd}
+.tb .c-att{--cc:var(--cappuccino);--ct:#f1e7dc}
+.tb .c-net{--cc:#9fd3ae;--ct:#d9efdf}
+.tb .c-sti{--cc:#9fd3ae;--ct:#d9efdf}
+.tb .c-fis{--cc:var(--azzurro);--ct:#e3eef8}
+.tb .c-var{--cc:var(--lavanda);--ct:#ece7f9}
+.tb .c-ris{--cc:#7cc694;--ct:#cfe9d6}
+.tb .c-acc{--cc:#e7e3da;--ct:#f1efea}
+.tb .tb-tab .r b.q{background:var(--cc,#f3efe6)}
+.tb .tb-tab .r.c-ris b.q{color:#14532d}
+.tb .tb-tab .r.tot:not([class*=" c-"]) b.q{background:#f3efe6}
+.tb .tb-tab .r b.q.neg{background:#fde3df;color:var(--rosso)}
+.tb-tab .r.c-net>span:first-child,.tb-tab .r.c-ris>span:first-child{font-weight:700}
+.tb .tb-t[class*=" c-"]{background:var(--ct)}
+.tb .tb-t.no{background:#fdeeeb}
+.tb-t.fatto[class*=" c-"] .tb-c{background:#2e7a45}
+.tb-t.c-var .tb-c{background:var(--cc)}
+.tb-sca.c-att{background:var(--ct)}
+.tb-sca.c-att .tb-tab .r{border-color:rgba(0,0,0,.08)}
+.tb-tab.tb-mm .r{grid-template-columns:minmax(0,1fr) 84px 84px 84px 96px}
+.tb-mm .r.rev{display:flex;justify-content:space-between;gap:12px;font-size:11.5px;color:#6b5a48;padding-top:3px}
+.tb-mm .r.rev>span:last-child{font-weight:700;white-space:nowrap}
+.tb-mm .r.tas{color:#6b5a48;border-top:1px dashed #bdb6a8}
+.tb-mm .r.tot>span:first-child{font-weight:700}
 .tb-tab{display:flex;flex-direction:column;font-size:13px;font-variant-numeric:tabular-nums}
 .tb-tab .r{display:grid;grid-template-columns:minmax(0,1fr) 92px 92px 104px;gap:8px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--linea)}
 .tb-tab .r>*:not(:first-child){text-align:right}
@@ -2314,44 +2339,60 @@ function renderTrimestreB(){conScen(()=>{
   const N=q===4?{a:a+1,q:1}:{a,q:q+1}, mesiN=[N.q*3-2,N.q*3-1,N.q*3], nomeN=ROMANI[N.q-1]+' trim'+(N.a!==a?' '+N.a:''), nomeP=P?P.nome:ROMANI[(q+2)%4]+' trim';
   const mAb=m=>MESI[m-1].slice(0,3).toLowerCase(), mesiNtxt=`${mAb(mesiN[0])}–${mAb(mesiN[2])}`;
   // ---- sinistra: bilancio ----
-  const righe=[['Incassato su Unicredit',x=>x.inc,1,'entrate da fatture e altro, sul conto'],['Spese per l\'attività',x=>x.att,0,'pagate da Unicredit'],['Netto',x=>x.netto,1,'incassato − Revolut − attività: è lo stipendio del trim dopo'],
-    ['Stipendio di questo trim',x=>x.stip,1,'il netto del trimestre prima'],['Fisse',x=>x.fis,0,''],['Variabili',x=>x.vari,0,''],['Risparmio del trimestre',x=>x.avanzo,1,'stipendio − fisse − variabili: resta su Unicredit']];
+  const righe=[['Incassato su Unicredit',x=>x.inc,1,'entrate da fatture e altro, sul conto','ent'],['Spese per l\'attività',x=>x.att,0,'pagate da Unicredit','att'],['Netto',x=>x.netto,1,'incassato − Revolut − attività: è lo stipendio del trim dopo','net'],
+    ['Stipendio di questo trim',x=>x.stip,1,'il netto del trimestre prima','sti'],['Fisse',x=>x.fis,0,'','fis'],['Variabili',x=>x.vari,0,'','var'],['Risparmio del trimestre',x=>x.avanzo,1,'stipendio − fisse − variabili: resta su Unicredit','ris']];
   const diff=(v,ref,piu)=>{if(ref==null||v==null)return '';const dd=v-ref,b=piu?dd>=0:dd<=0;return `<small class="${Math.abs(dd)<1?'gr':b?'ok':'no'}">${dd>=0?'+':'−'} ${e0(Math.abs(dd)).slice(2)}</small>`};
   const val=v=>v==null?'<span class="gr">—</span>':e0(v);
   const tab=`<div class="tb-tab"><div class="r h"><span></span><span>${B.nome}</span><span>${nomeP}</span><span>media ${media.length?media.length+' ':''}trim. prima</span></div>
-    ${righe.map(([n,f,piu,sp],i)=>{const v=f(B),vp=P?f(P):null,vm=media.length?med(f):null;
-      return `<div class="r${i===6?' tot':''}${i===2||i===3?' sep':''}"><span>${n}${sp?`<em>${sp}</em>`:''}</span><b class="q ${i===6&&v!=null?(v<0?'no':'ok'):''}">${val(v)}</b><span>${val(vp)}${diff(v,vp,piu)}</span><span>${val(vm)}${diff(v,vm,piu)}</span></div>`}).join('')}</div>`;
+    ${righe.map(([n,f,piu,sp,cc],i)=>{const v=f(B),vp=P?f(P):null,vm=media.length?med(f):null;
+      return `<div class="r c-${cc}${i===6?' tot':''}${i===2||i===3?' sep':''}"><span><i class="tb-sw"></i>${n}${sp?`<em>${sp}</em>`:''}</span><b class="q ${i===6&&v!=null&&v<0?'neg':''}">${val(v)}</b><span>${val(vp)}${diff(v,vp,piu)}</span><span>${val(vm)}${diff(v,vm,piu)}</span></div>`}).join('')}</div>`;
   const perC=X=>{const r={};X.d.mov.filter(x=>!x.giro&&daUni(x)&&['fisse','variabili'].includes(bollaDi(x.cat))).forEach(x=>{r[x.cat]=(r[x.cat]||0)+x.eur});return r};
   const oC=perC(B), pC=P?perC(P):{}, cambi=[...new Set([...Object.keys(oC),...Object.keys(pC)])].map(k=>[k,oC[k]||0,pC[k]||0]).map(x=>[...x,x[1]-x[2]]).filter(x=>Math.abs(x[3])>=1).sort((x,y)=>Math.abs(y[3])-Math.abs(x[3])).slice(0,7);
   const camb=!P?'<p class="gr">Il trimestre prima non è nell\'app: niente da confrontare.</p>':`<div class="tb-tab tb-camb"><div class="r h"><span></span><span>${B.nome}</span><span>${nomeP}</span><span>differenza</span></div>
-    ${cambi.length?cambi.map(([k,v,vp,dd])=>`<div class="r" data-vedi-cat="${esc(k)}" title="Clicca per vedere i movimenti"><span><i style="background:${coloreCat(k)||'#ddd'}"></i>${esc(nomeCat(k))}</span><b class="q">${e0(v)}</b><span>${e0(vp)}</span><span class="${dd>0?'no':'ok'}">${dd>=0?'+':'−'} ${e0(Math.abs(dd)).slice(2)}</span></div>`).join(''):'<p class="gr">Niente da confrontare.</p>'}</div>`;
+    ${cambi.length?cambi.map(([k,v,vp,dd])=>`<div class="r" data-vedi-cat="${esc(k)}" title="Clicca per vedere i movimenti"><span><i style="background:${coloreCat(k)||'#ddd'}"></i>${esc(nomeCat(k))}</span><b class="q" style="--cc:${coloreCat(k)||'#eee'}">${e0(v)}</b><span>${e0(vp)}</span><span class="${dd>0?'no':'ok'}">${dd>=0?'+':'−'} ${e0(Math.abs(dd)).slice(2)}</span></div>`).join(''):'<p class="gr">Niente da confrontare.</p>'}</div>`;
   // ---- destra: cose da fare ----
   const acc=B.d.accant, spo=B.d.spostato, accRes=acc-spo, chiuso=B.d.concluso;
-  const voce=(st,tit,sub,cifra)=>`<div class="tb-t ${st}"><span class="tb-c">${st==='fatto'?'✓':st==='no'?'!':''}</span><span><b>${tit}</b><small>${sub}</small></span><strong>${cifra}</strong></div>`;
-  const vAcc=acc<0.5?voce('fatto','Accantonamento sul Revolut','nessuna entrata da accantonare','€ 0')
-    :!chiuso?voce('','Accantonamento sul Revolut',`dovuti finora ${e0(acc)}: si spostano a inizio ${MESI[(q*3)%12].toLowerCase()}`,e0(acc))
-    :accRes<0.5?voce('fatto','Accantonamento sul Revolut',`fatto: spostati ${e0(spo)} su ${e0(acc)} dovuti`,e0(spo))
-    :voce('','Sposta l\'accantonamento sul Revolut',`dovuti ${e0(acc)}, già spostati ${e0(spo)}`,e0(accRes));
+  const voce=(st,tit,sub,cifra,cc)=>`<div class="tb-t ${st} c-${cc||''}"><span class="tb-c">${st==='fatto'?'✓':st==='no'?'!':''}</span><span><b>${tit}</b><small>${sub}</small></span><strong>${cifra}</strong></div>`;
+  const vAcc=acc<0.5?voce('fatto','Accantonamento sul Revolut','nessuna entrata da accantonare','€ 0','acc')
+    :!chiuso?voce('','Accantonamento sul Revolut',`dovuti finora ${e0(acc)}: si spostano a inizio ${MESI[(q*3)%12].toLowerCase()}`,e0(acc),'acc')
+    :accRes<0.5?voce('fatto','Accantonamento sul Revolut',`fatto: spostati ${e0(spo)} su ${e0(acc)} dovuti`,e0(spo),'acc')
+    :voce('','Sposta l\'accantonamento sul Revolut',`dovuti ${e0(acc)}, già spostati ${e0(spo)}`,e0(accRes),'acc');
   const vRis=B.avanzo==null?voce('','Il risparmio del trimestre','manca lo stipendio del trimestre prima (Impostazioni → Dati di partenza)','—')
-    :B.avanzo>=-0.5?voce('fatto',`Il risparmio del ${B.nome}${chiuso?'':' (finora)'}`,`stipendio ${e0(B.stip)} − spese ${e0(B.fis+B.vari)}: resta su Unicredit`,e0(B.avanzo))
+    :B.avanzo>=-0.5?voce('fatto',`Il risparmio del ${B.nome}${chiuso?'':' (finora)'}`,`stipendio ${e0(B.stip)} − spese ${e0(B.fis+B.vari)}: resta su Unicredit`,e0(B.avanzo),'ris')
     :voce('no',`Nel ${B.nome} hai speso più dello stipendio`,`stipendio ${e0(B.stip)} − spese ${e0(B.fis+B.vari)}`,e0(B.avanzo));
   const movN=S.movimenti.filter(x=>annoDi(x.data)===N.a&&mesiN.includes(meseDi(x.data))&&!x.giro);
   const fisN=movN.filter(x=>daUni(x)&&bollaDi(x.cat)==='fisse').reduce((s,x)=>s+x.eur,0);
   const stipN=B.netto, vStip=stipN==null?voce('','Il tuo stipendio','manca il netto','—')
-    :voce(chiuso?'fatto':'',`Il tuo stipendio da ${MESI[mesiN[0]-1].toLowerCase()}`,`netto del ${B.nome} ${e0(stipN)} ÷ 3${chiuso?'':' · cambia finché il trimestre non è chiuso'}`,e0(stipN/3)+'<small>/mese</small>');
+    :voce(chiuso?'fatto':'',`Il tuo stipendio da ${MESI[mesiN[0]-1].toLowerCase()}`,`netto del ${B.nome} ${e0(stipN)} ÷ 3${chiuso?'':' · cambia finché il trimestre non è chiuso'}`,e0(stipN/3)+'<small>/mese</small>','sti');
   // tetto variabili
   const tetQ=tettoVar(a,B.d.mesi), tetN=tettoVar(N.a,mesiN), tm=tettoMese(N.a,mesiN[0])??tettoMese(a,q*3);
   const varM=B.d.mesi.map(m=>({m,v:B.su(b=>b==='variabili',m),t:tettoMese(a,m)}));
-  const restoN=stipN==null?null:stipN-fisN-(tetN??0);
+  const fisNs=fisN>0.5?fisN:B.fis, restoN=stipN==null?null:stipN-fisNs-(tetN??0);
   const vTet=tm==null?voce('','Tetto alle variabili','non l\'hai ancora fissato: Impostazioni → Tetto mensile alle variabili','—')
-    :`<div class="tb-t tet"><span class="tb-c">€</span><span><b>Tetto alle variabili: ${e0(tm)} al mese</b><small>nel ${B.nome} hai speso ${varM.map(x=>`${mAb(x.m)} <i class="${tettoCl(x.v,x.t)}">${e0(x.v)}</i>`).join(' · ')}</small>
-      ${restoN==null?'':`<small>nel ${nomeN}: stipendio ${e0(stipN)} − fisse ${e0(fisN)} − tetto ${e0(tetN??0)} = <i class="${restoN<-0.5?'no':'ok'}">${restoN<-0.5?'mancano':'restano'} ${e0(Math.abs(restoN))}</i></small>`}</span><strong>${e0(varM.reduce((s,x)=>s+x.v,0))}<small> su ${tetQ==null?'—':e0(tetQ)}</small></strong></div>`;
+    :`<div class="tb-t tet c-var"><span class="tb-c">€</span><span><b>Tetto alle variabili: ${e0(tm)} al mese</b><small>nel ${B.nome} hai speso ${varM.map(x=>`${mAb(x.m)} <i class="${tettoCl(x.v,x.t)}">${e0(x.v)}</i>`).join(' · ')}</small>
+      ${restoN==null?'':`<small>nel ${nomeN}: stipendio ${e0(stipN)} − fisse ${fisN>0.5?'':'≈ '}${e0(fisNs)} − tetto ${e0(tetN??0)} = <i class="${restoN<-0.5?'no':'ok'}">${restoN<-0.5?'mancano':'restano'} ${e0(Math.abs(restoN))}</i></small>`}</span><strong>${e0(varM.reduce((s,x)=>s+x.v,0))}<small> su ${tetQ==null?'—':e0(tetQ)}</small></strong></div>`;
   // scadenze del trimestre dopo
   const scad=movN.filter(x=>['inarcassa','tasse stato'].includes(x.cat)).sort((x,y)=>x.data<y.data?-1:1);
   const totSc=scad.reduce((s,x)=>s+x.eur,0), rev=dispPeriodo(N.a,mesiN).rev, mancaR=totSc-rev;
-  const scadenze=`<section class="tq-p tb-sca"><h3>${ico('fiscali')} Tasse e Inarcassa nel ${nomeN}<small>sul Revolut ci saranno ${e0(rev)}</small></h3>
+  const scadenze=`<section class="tq-p tb-sca c-att"><h3>${ico('fiscali')} Tasse e Inarcassa nel ${nomeN}<small>sul Revolut ci saranno ${e0(rev)}</small></h3>
     ${scad.length?`<div class="tb-tab"><div class="r h"><span>quando</span><span>cosa</span><span>da pagare</span></div>${scad.map(x=>`<div class="r"><span>${dataIt(x.data).slice(0,5)}</span><span>${esc(nomeCat(x.cat))}${x.det?' · '+esc(x.det.toLowerCase()):''}${x.ok?' <em>pagato</em>':''}</span><b>${e0(x.eur)}</b></div>`).join('')}
       <div class="r tot"><span></span><span class="${mancaR>0.5?'no':'ok'}">${mancaR>0.5?`sul Revolut mancano ${e0(mancaR)}`:`il Revolut basta, avanzano ${e0(-mancaR)}`}</span><b>${e0(totSc)}</b></div></div>`:'<p class="gr">Nessuna scadenza segnata in questo trimestre.</p>'}</section>`;
+  // il trimestre dopo mese per mese: stipendio, fisse, tetto variabili, tasse dal Revolut
+  const fisM=m=>movN.filter(x=>daUni(x)&&meseDi(x.data)===m&&bollaDi(x.cat)==='fisse').reduce((s,x)=>s+x.eur,0);
+  const scM=m=>scad.filter(x=>meseDi(x.data)===m).reduce((s,x)=>s+x.eur,0);
+  const colN=mesiN.map(m=>{const f=fisM(m),st=f<0.5;return {m,sti:stipN==null?null:stipN/3,fis:st?B.fis/3:f,stima:st,tet:tettoMese(N.a,m),tas:scM(m)}});
+  colN.forEach(c=>{c.resta=c.sti==null?null:c.sti-c.fis-(c.tet||0)});
+  const totC=k=>colN.reduce((s,c)=>s+(c[k]||0),0);
+  const rigaN=(n,k,cc,segno,nota)=>`<div class="r c-${cc}"><span><i class="tb-sw"></i>${n}${nota?`<em>${nota}</em>`:''}</span>${colN.map(c=>`<span>${c[k]==null?'—':(segno||'')+(k==='fis'&&c.stima?'≈ ':'')+e0(c[k])}</span>`).join('')}<b class="q">${(segno||'')+e0(totC(k))}</b></div>`;
+  const prossimo=`<section class="tq-p tb-pro"><h3>${ico('calendario')} Il ${nomeN} mese per mese<small>${stipN==null?'manca lo stipendio':chiuso?'con lo stipendio nuovo':'stipendio con i numeri di oggi'}</small></h3>
+    <div class="tb-tab tb-mm"><div class="r h"><span></span>${mesiN.map(m=>`<span>${MESI[m-1]}</span>`).join('')}<span>trimestre</span></div>
+      ${rigaN('Stipendio','sti','sti','','il netto del '+B.nome+' ÷ 3')}
+      ${rigaN('Fisse','fis','fis','− ',colN.some(c=>c.stima)?'≈ stimate come nel '+B.nome:'già segnate')}
+      ${colN.some(c=>c.tet!=null)?rigaN('Tetto variabili','tet','var','− ','quello che ti concedi'):''}
+      <div class="r tot"><span>Resta</span>${colN.map(c=>`<span class="${c.resta!=null&&c.resta<-0.5?'no':'ok'}">${c.resta==null?'—':e0(c.resta)}</span>`).join('')}<b class="q ${totC('resta')<-0.5?'neg':''}">${e0(totC('resta'))}</b></div>
+      ${scad.length?`<div class="r c-att tas"><span><i class="tb-sw"></i>Tasse e Inarcassa<em>dal Revolut, non dallo stipendio</em></span>${colN.map(c=>`<span>${c.tas>0.5?e0(c.tas):'—'}</span>`).join('')}<b class="q">${e0(totC('tas'))}</b></div>
+      <div class="r rev"><span>${scad.map(x=>`${dataIt(x.data).slice(0,5)} ${esc(nomeCat(x.cat))}${x.det?' · '+esc(x.det.toLowerCase().replace(nomeCat(x.cat).toLowerCase(),'').trim()):''} ${e0(x.eur)}${x.ok?' ✓':''}`).join(' · ')}</span><span class="${mancaR>0.5?'no':'ok'}">${mancaR>0.5?`sul Revolut ci saranno ${e0(rev)}: mancano ${e0(mancaR)}`:`sul Revolut ci saranno ${e0(rev)}: bastano`}</span></div>`:`<div class="r rev"><span>Nessuna tassa o Inarcassa segnata nel ${nomeN}.</span><span></span></div>`}
+    </div></section>`;
   const titDx=chiuso?`Cosa fare adesso<small>per chiudere il ${B.nome} e partire col ${nomeN}</small>`:`Cosa fare a fine trimestre<small>con i numeri di oggi</small>`;
   $('#main').innerHTML=`<div class="tq tb">${testa}
     <div class="tb-due">
@@ -2360,7 +2401,7 @@ function renderTrimestreB(){conScen(()=>{
         <section class="tq-p"><h3>${ico('variabili')} Le spese cambiate di più<small>rispetto al ${nomeP} · clic per i movimenti</small></h3>${camb}</section></div>
       <div class="tb-meta dx"><div class="tq-meta-t"><span class="n">2</span>${titDx}</div>
         <div class="tb-todo">${vAcc}${vRis}${vStip}${vTet}</div>
-        ${scadenze}</div>
+        ${prossimo}</div>
     </div></div>`;
 })}
 function renderTrimestreInArrivo(){
