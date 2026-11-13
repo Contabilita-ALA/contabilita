@@ -2506,6 +2506,27 @@ button.h3-allarme:hover,.h3-allarme.clic:hover{box-shadow:2px 2px 0 var(--inchio
 .ob.f4 .tb-meta>section.ob-quando{overflow-y:auto}
 .ob.f1 .ob-c select,.ob.f1 .ob-c input{padding-top:0;padding-bottom:0;line-height:1.2}
 .ob-g-v{white-space:nowrap}.ob-g-v small{display:inline;margin-left:4px}
+/* 13/11 sera (Paolo): una fascia per obiettivo, tutto in colonna */
+.ob .tb-due{grid-template-columns:minmax(0,2.25fr) minmax(0,1fr)}
+.ob-f{display:grid;grid-template-columns:30px minmax(130px,1fr) 96px 124px minmax(120px,.8fr) 66px minmax(160px,1.3fr) 104px 78px;column-gap:8px;align-items:center;border:1.5px solid var(--inchiostro);border-radius:12px;padding:5px 10px;background:var(--carta)}
+.ob-f.fatto{background:#eef6ef}
+.ob-f.ob-fh{border:0;background:none;padding:0 10px 2px;font:700 10px var(--font);letter-spacing:.06em;text-transform:uppercase;color:#7d7870}
+.ob-f .ob-bar{grid-column:auto;height:26px}
+.ob-f .ob-bar b{font-size:12.5px}
+.ob-f .ob-g-b{height:16px}
+.ob-f .ob-g-b.asse{height:14px}.ob-f .ob-g-b.asse em{position:absolute;transform:translateX(-50%);font:600 10.5px var(--font);font-style:normal;letter-spacing:0;text-transform:none;color:#7d7870}
+.ob-f .ob-g-b.asse em:first-child{transform:none}
+.ob-qd{line-height:1.15;font-size:12.5px;white-space:nowrap}.ob-qd b{display:block;font-weight:700}.ob-qd small{display:block;font-size:10.5px;color:#55524c}
+.ob-qd .ok{color:var(--verde)}.ob-qd .no{color:var(--rosso)}.ob-qd b.neutro{color:var(--inchiostro)}
+.ob-f .ob-ris{text-align:right}
+.ob-lista{gap:6px}
+.ob .tq-meta-t small i.ob-lg{margin-left:6px}
+.ob.f1 .ob-f{padding:2px 10px}.ob.f1 .ob-f input,.ob.f1 .ob-f select{height:26px;padding-top:0;padding-bottom:0}
+@media (max-width:1500px){.ob-f{grid-template-columns:26px minmax(110px,1fr) 86px 116px minmax(100px,.7fr) 60px minmax(120px,1.1fr) 96px 74px;column-gap:6px}}
+@media (max-width:1500px){.ob .tb-due{grid-template-columns:minmax(0,2.7fr) minmax(0,1fr)}
+  .ob-f>.ic-ico,.ob-fh>span:first-child{display:none}
+  .ob-f{grid-template-columns:minmax(110px,1fr) 80px 112px minmax(90px,.6fr) 58px minmax(90px,1fr) 92px 72px;column-gap:5px;padding-left:8px;padding-right:8px}
+  .ob-qd{overflow:hidden;text-overflow:ellipsis}.ob-qd small{overflow:hidden;text-overflow:ellipsis}}
 </style>
 </head>
 <body>
@@ -3065,31 +3086,42 @@ function renderObiettivi(){
       <span class="tq-d ${o.speso!=null&&o.speso>o.target+0.5?'no':'ok'}">${o.speso==null?'—':o.speso>o.target+0.5?'+ '+n0(o.speso-o.target)+' oltre':'− '+n0(o.target-o.speso)+' risparmiati'}</span><button class="ob-ripr" data-ob-ripr="${o.i}" title="Rimettilo tra gli obiettivi">↺</button></div>`).join('')}</details>`:'';
   const modo=`<span class="ob-pil ob-modo"><button data-ob-modo="ordine" class="${X.perc?'':'on'}">uno dopo l'altro</button><button data-ob-modo="perc" class="${X.perc?'on':''}">in percentuale</button></span>`;
   const sPc=X.L.reduce((s,o)=>s+(o.pc||0),0);
-  const sx=`<div class="tb-meta"><div class="tq-meta-t"><span class="n">1</span>I tuoi obiettivi ${modo}<small>${X.perc?(sPc>0?`dividi l'avanzo: ${sPc}% assegnato${sPc!==100?' (scrivi i numeri che vuoi: conta la proporzione)':''}`:'scrivi la % accanto al nome'):'quello che avanza va prima al 1°'}</small></div>
-    <section class="tq-p ob-lista">${X.L.length?`<div class="ob-hd"><span></span><span>obiettivo</span><span>quanto</span><span>entro</span><span></span></div>${X.L.map(card).join('')}`:`<p class="ob-vuoto">Non hai ancora obiettivi. Scegline uno qui sotto, scrivi quanto ti serve ed entro quando: ti dico quanto togliere ogni mese allo stipendio.</p>`}${arch}${add}</section></div>`;
+  // Paolo 13/11 sera: una fascia per obiettivo, tutto in colonna (obiettivo, quanto, entro, messi da parte, al mese, quando ci arrivi)
   const fin=Math.max(X.nOra+12,...X.L.map(o=>Math.max(o.fine||0,o.pronto||0)))+1, span=Math.min(fin,X.nOra+60)-X.nOra, P=n=>Math.max(0,Math.min(100,(n-X.nOra)/span*100));
   const anni=[];for(let n=X.nOra+1;n<X.nOra+span;n++)if(n%12===0)anni.push(n);
-  const gantt=X.L.map((o,j)=>{const pr=o.pronto==null?X.nOra+span:o.pronto, os=XS&&XS.L[j], ps=os&&(os.pronto==null?X.nOra+span:os.pronto);
-    return `<div class="ob-g"><span class="ob-g-n"><i style="background:${o.col}"></i>${esc(o.nome)}</span><span class="ob-g-b">${anni.map(n=>`<u style="left:${P(n)}%"></u>`).join('')}
+  const fascia=(o,j)=>{const pc=o.target>0.5?Math.min(100,o.hai/o.target*100):0, pr=o.pronto==null?X.nOra+span:o.pronto, os=XS&&XS.L[j], ps=os&&(os.pronto==null?X.nOra+span:os.pronto);
+    const st=o.fatto?['ok','raggiunto ✓']:o.target<0.5?['neutro','scrivi la cifra']:o.fine==null?['neutro',o.pronto!=null?'senza scadenza':'non ci arrivi']:o.inTempo?['ok','in tempo']:['no',o.pronto!=null?'in ritardo di '+(o.pronto-o.fine)+(o.pronto-o.fine===1?' mese':' mesi'):'non ci arrivi'];
+    const simT=os&&!o.fatto&&os.pronto!=null&&(o.pronto==null||os.pronto<o.pronto)?`<small class="ok">con il taglio ${obMeseTxt(os.pronto)}</small>`:'';
+    return `<div class="ob-f ${o.fatto?'fatto':''}" style="--oc:${o.col}">
+      <span class="ic-ico" style="--b:${o.col}">${ico(o.ic)}</span>
+      <span class="ob-nm"><span class="ob-num">${j+1}°</span><input class="ob-nome" data-ob="${o.i}" data-ob-k="nome" value="${esc(o.nome)}">${X.perc?`<span class="ob-pc"><input data-ob="${o.i}" data-ob-k="perc" inputmode="numeric" value="${o.pc||''}" placeholder="—">%</span>`:''}</span>
+      <span class="dp-eur ob-in">€<input data-ob="${o.i}" data-ob-k="target" inputmode="decimal" value="${o.target?n0(o.target):''}" placeholder="quanto"></span>
+      <span class="ob-en">${selMese(o)}<button class="ob-ogni ${o.ogni?'on':''}" data-ob-ogni="${o.i}" title="${o.ogni?'Si ripete ogni anno: clicca per toglierlo':'Spesa che torna ogni anno (bollo, assicurazione, regali): clicca per ripeterla'}">↻</button></span>
+      <div class="ob-bar" title="${o.ogni?'ogni anno, da ':'dal '}${obMeseTxt(o.dalN)}"><i style="width:${pc}%"></i><b>${e0(o.hai)} <small>di ${e0(o.target)}</small></b></div>
+      <span class="ob-ris">${o.fatto?`<button class="ob-arch" data-ob-arch="${o.i}" title="Segna quanto hai speso e spostalo tra i raggiunti">archivia ✓</button>`:o.alMese!=null?`<b>${e0(o.alMese)}</b><small>al mese</small>`:'<small>—</small>'}</span>
+      <span class="ob-g-b">${anni.map(n=>`<u style="left:${P(n)}%"></u>`).join('')}
       ${o.fatto?`<em class="ok" style="left:0">✓</em>`:`<i class="${o.inTempo?'':'tardi'} ${o.pronto==null?'mai':''}" style="left:0;width:${Math.max(1.5,P(pr+1))}%;background:${o.col}"></i>`}
       ${os&&!o.fatto&&ps<pr?`<b class="ob-g-sim" style="left:${P(ps+1)}%" title="Con ${e0(sim)} in meno di variabili: ${obMeseTxt(ps)}"></b>`:''}
       ${o.fine!=null&&!o.fatto?`<s style="left:${P(o.fine+1)}%" title="entro ${obMeseTxt(o.fine)}"></s>`:''}</span>
-      <span class="ob-g-v">${o.fatto?'già fatto':o.pronto==null?'—':obMeseTxt(o.pronto)}${os&&!o.fatto&&os.pronto!=null&&(o.pronto==null||os.pronto<o.pronto)?`<small class="ok">→ ${obMeseTxt(os.pronto)}</small>`:''}</span></div>`}).join('');
-  const asse=`<div class="ob-g asse"><span></span><span class="ob-g-b">${[X.nOra,...anni.filter(n=>P(n)>7)].map(n=>`<em style="left:${P(n)}%">${n===X.nOra?'oggi':Math.floor(n/12)}</em>`).join('')}</span><span></span></div>`;
+      <span class="ob-qd">${o.pronto==null&&!o.fatto?`<b class="${st[0]}">${st[1]}</b>`:`<b class="${st[0]}">${o.fatto?'già fatto':obMeseTxt(o.pronto)}</b><small class="${st[0]}">${st[1]}</small>`}${simT}</span>
+      <span class="ob-az"><button data-ob-su="${o.i}" title="Più importante" ${j?'':'disabled'}>▲</button><button data-ob-giu="${o.i}" title="Meno importante" ${j<X.L.length-1?'':'disabled'}>▼</button><button data-ob-via="${o.i}" title="Togli l'obiettivo">✕</button></span></div>`};
+  const asse=`<span class="ob-g-b asse">${[X.nOra,...anni.filter(n=>P(n)>20)].map(n=>`<em style="left:${P(n)}%">${n===X.nOra?'oggi':Math.floor(n/12)}</em>`).join('')}</span>`;
+  const sx=`<div class="tb-meta"><div class="tq-meta-t"><span class="n">1</span>I tuoi obiettivi ${modo}<small>${X.perc?(sPc>0?`dividi l'avanzo: ${sPc}% assegnato${sPc!==100?' (conta la proporzione)':''}`:'scrivi la % accanto al nome'):'quello che avanza va prima al 1°'} · <i class="ob-lg"></i>quando ci arrivi ${XS?'<i class="ob-lg g"></i>con il taglio ':''}<i class="ob-lg s"></i>la tua scadenza</small></div>
+    <section class="tq-p ob-lista">${X.L.length?`<div class="ob-f ob-fh"><span></span><span>obiettivo</span><span>quanto</span><span>entro</span><span>messi da parte</span><span>al mese</span>${asse}<span>ci arrivi</span><span></span></div>${X.L.map(fascia).join('')}`:`<p class="ob-vuoto">Non hai ancora obiettivi. Scegline uno qui sotto, scrivi quanto ti serve ed entro quando: ti dico quanto togliere ogni mese allo stipendio.</p>`}${arch}${add}</section></div>`;
   // simulatore
   const guad=XS?X.L.map((o,j)=>({o,d:o.fatto?0:(o.pronto==null?99:o.pronto)-(XS.L[j].pronto==null?99:XS.L[j].pronto)})).filter(x=>x.d>0):[];
   const simS=`<div class="ob-sim"><span>E se spendessi</span><span class="dp-eur ob-in">€<input data-ob-sim inputmode="decimal" value="${sim?n0(sim):''}" placeholder="100"></span><span>in meno di variabili al mese?</span>
     <b>${!XS?'<small>scrivi una cifra</small>':guad.length?guad.map(x=>`${esc(x.o.nome)} <span class="ok">${x.d>=99?'ci arrivi':x.d+(x.d===1?' mese':' mesi')+' prima'}</span>`).join(' · '):'<small>non cambia nulla</small>'}</b></div>`;
   // dove tagliare
   const TG=obTagli(X.a,X.D);
-  const tagli=`<section class="tq-p ob-tagli"><h3>${ico('variabili')} Dove tagliare<small>${TG.length?`ultimi 3 mesi chiusi (${TG[0].mesi.map(m=>MESI3[m-1]).join(', ')}) contro la tua media · tornando alla media risparmi <b class="ok">${e0(TG.reduce((s,x)=>s+x.d,0))} al mese</b>`:''}</small></h3>
+  const tagli=`<section class="tq-p ob-tagli"><h3>${ico('variabili')} Dove tagliare<small>${TG.length?`ultimi 3 mesi chiusi (${TG[0].mesi.map(m=>MESI3[m-1]).join(', ')}) contro la tua media`:''}</small></h3>
     ${TG.length?TG.map(x=>{const mx=Math.max(x.rec,1);return `<div class="ob-tg" data-vedi-cat="${x.c.id}" title="Media ${e0(x.med)} al mese, ultimi 3 mesi ${e0(x.rec)} al mese"><span class="ob-tg-n"><i style="background:${x.c.colore||'#e6e0f7'}"></i>${esc(x.c.nome)}</span>
       <span class="ob-tg-b"><i style="width:${x.med/mx*100}%"></i><i class="su" style="width:${x.d/mx*100}%"></i></span><span class="ob-tg-v">${e0(x.rec)}<small>media ${e0(x.med)}</small></span><b class="no">− ${n0(x.d)}<small>al mese</small></b></div>`}).join('')
-      :'<p class="qf-nota">Nessuna voce variabile sopra la tua media negli ultimi 3 mesi: bene così.</p>'}</section>`;
+      +`<p class="qf-nota">Tornando alla media risparmieresti circa <b class="ok">${e0(TG.reduce((s,x)=>s+x.d,0))} al mese</b>.</p>`:'<p class="qf-nota">Nessuna voce variabile sopra la tua media negli ultimi 3 mesi: bene così.</p>'}</section>`;
   const dx=`<div class="tb-meta dx"><div class="tq-meta-t"><span class="n">2</span>Ce la fai?<small>con quello che ti avanza dallo stipendio</small></div>
     <section class="tq-p ob-ritmo"><p class="qf-nota">${X.servono<0.5?'Quando dai una scadenza a un obiettivo, qui vedi se gli avanzi bastano.':`Per le scadenze ti servono <b>${e0(X.servono)} al mese</b>, ti avanza in media <b class="${X.A<-0.5?'no':''}">${e0(X.A)}</b>. `+(ok?`Con quello che ti avanza <b class="ok">ci stai dentro</b>: non serve tagliare le variabili.`:`Per stare nei tempi devi spendere <b class="no">${e0(gap)} in meno al mese</b>${gap>=(X.tm??X.mV??0)-0.5?`: <b class="no">anche senza spese variabili non basta</b>. Servono più incassi, scadenze più lontane oppure obiettivi più piccoli.`:` sulle variabili: ${X.tm!=null?`abbassa il tetto da ${e0(X.tm)} a ${e0(Math.max(0,X.tm-gap))}`:`da ${e0(X.mV||0)} (la tua media) a ${e0(Math.max(0,(X.mV||0)-gap))}`}.`} <button class="ob-tet" data-tb-tet="${qT}">cambia il tetto →</button>`)}</p>${simS}</section>
     ${tagli}
-    <section class="tq-p ob-quando"><h3>${ico('calendario')} Quando ci arrivi<small><i class="ob-lg"></i>con gli avanzi previsti ${XS?'<i class="ob-lg g"></i>con il taglio ':''}<i class="ob-lg s"></i>la tua scadenza</small></h3>${X.L.length?gantt+asse:'<p class="qf-nota">Nessun obiettivo.</p>'}</section></div>`;
+    </div>`;
   $('#main').innerHTML=`<div class="tq tb ob"><div class="tq-testa"><h1>Obiettivi di risparmio</h1><span class="tq-mesi">${X.a}</span><span class="tb-scen">si pagano con quello che avanza dallo stipendio</span></div>
     <div class="tq-kpi">${kpis}</div>${obStriscia(X,e0,n0)}<div class="tb-due">${sx}${dx}</div></div>`;
   obFit();requestAnimationFrame(obFit);if(document.fonts&&document.fonts.status!=='loaded')document.fonts.ready.then(obFit);
