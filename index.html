@@ -161,17 +161,79 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .pk-l{display:flex;flex-direction:column;gap:5px}
 .tb .tq-testa{margin-bottom:10px}
 .tb-scen{font-size:11.5px;color:#55524c;border:1px dashed #bdb6a8;border-radius:12px;padding:2px 9px;white-space:nowrap}
-.tb-due{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.tb-due{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:stretch}
+.tb-due.misura{align-items:start}
+.tb-meta>section:last-child{flex:1 1 auto}
 .tb-meta{display:flex;flex-direction:column;gap:10px;min-width:0}
 .tb-meta.dx{border-left:1.5px dashed #bdb6a8;padding-left:16px;margin-left:-8px}
 .tb-meta .tq-meta-t{display:flex;align-items:baseline;gap:8px;font:700 16px var(--font-titoli)}
 .tb-meta .tq-meta-t small{font:500 12px var(--font);color:#7d7870}
 .tb-meta .tq-meta-t .n{align-self:center}
 .tb .tq-p{overflow:visible}
+.tb-sw{display:inline-block;width:11px;height:11px;border-radius:3px;border:1.5px solid var(--inchiostro);margin-right:7px;vertical-align:-1px;background:var(--cc,#fff)}
+.tb .c-ent{--cc:var(--salvia);--ct:#e3eedd}
+.tb .c-att{--cc:var(--cappuccino);--ct:#f1e7dc}
+.tb .c-net{--cc:#9fd3ae;--ct:#d9efdf}
+.tb .c-sti{--cc:#9fd3ae;--ct:#d9efdf}
+.tb .c-fis{--cc:var(--azzurro);--ct:#e3eef8}
+.tb .c-var{--cc:var(--lavanda);--ct:#ece7f9}
+.tb .c-ris{--cc:#7cc694;--ct:#cfe9d6}
+.tb .c-acc{--cc:#e7e3da;--ct:#f1efea}
+.tb .tb-tab .r b.q{background:var(--cc,#f3efe6)}
+.tb .tb-tab .r.c-ris b.q{color:#14532d}
+.tb .tb-tab .r.tot:not([class*=" c-"]) b.q{background:#f3efe6}
+.tb .tb-tab .r b.q.neg{background:#fde3df;color:var(--rosso)}
+.tb-tab .r.c-net>span:first-child,.tb-tab .r.c-ris>span:first-child{font-weight:700}
+.tb .tb-t[class*=" c-"]{background:var(--ct)}
+.tb .tb-t.no{background:#fdeeeb}
+.tb-t.fatto[class*=" c-"] .tb-c{background:#2e7a45}
+.tb-t.c-var .tb-c{background:var(--cc)}
+.tb-sca.c-att{background:var(--ct)}
+.tb-sca.c-att .tb-tab .r{border-color:rgba(0,0,0,.08)}
+.tb-tab.tb-mm .r{grid-template-columns:minmax(0,1fr) 84px 84px 84px 96px}
+.tb-pro .tb-tab.tb-mm>.r:not(.h):not(.rev){height:46px;padding-top:0;padding-bottom:0}
+.tb-pro .tb-tab.tb-mm>.r.rev{height:42px;overflow:hidden;align-items:center;padding-top:0}
+.tb-pro .tb-tab.tb-mm>.r.rev>span:first-child{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tb-meta.dx>section.tb-pro{flex:none}
+.tb-meta.dx .tb-todo{flex:1 1 auto}
+.tb-meta.dx .tb-todo>.tb-t{flex:1 1 auto}
+.tb-mm .r.rev{display:flex;justify-content:space-between;gap:12px;font-size:11.5px;color:#6b5a48;padding-top:3px}
+.tb-mm .r.rev>span:last-child{font-weight:700;white-space:nowrap}
+.tb-mm .r.tas{color:#6b5a48;border-top:1px dashed #bdb6a8}
+.tb-mm .r.tot>span:first-child{font-weight:700}
+.tb-tab.tb-bil .r{grid-template-columns:minmax(0,1fr) 92px 84px 84px 26px;height:41px;padding-top:0;padding-bottom:0}
+.tb-tab.tb-bil .r.h{height:auto;padding:0 4px 5px}
+.tb-tab.tb-camb .r{height:32px}
+.tb-tab.tb-camb .r.h{height:auto}
+.tb-tab.tb-camb .r.h.sub{padding-top:8px}
+.tb-tab .r.h>span:first-child{text-align:left}
+.tb-tab .r.vuota{color:#cfc8bb;cursor:default}
+.tb-tab .r.vuota:hover{background:none}
+.tb-g{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;font:700 12px var(--font);justify-self:end}
+.tb-g.su{background:#dff1e4;color:#2e7a45}
+.tb-g.giu{background:#fde3df;color:var(--rosso)}
+.tb-g.ug{background:#fbf0cf;color:#a37514;font-size:15px}
+.tb-g.nd{color:#bdb6a8}
+.tb .gi{color:#a37514}
+.tq-p.tb-pag{display:grid;grid-template-columns:110px minmax(0,1fr);gap:14px;align-items:center;min-height:0;padding:10px 14px}
+.tb-pag-v{display:flex;flex-direction:column;align-items:center;gap:3px}
+.tb-pag-v .pg-v{font-size:15px;padding:5px 14px}
+.tb-pag-v small{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:#7d7870}
+.tb-pag-t b{display:block;font-size:14.5px;margin-bottom:3px}
+.tb-pag-t>span{font-size:12.5px;color:#3d3a35;line-height:1.45}
+.tb-pag.ottimo{background:#eef6ef}.tb-pag.bene{background:#f3f9f4}.tb-pag.att{background:#fdf7e6}.tb-pag.male{background:#fdeeeb}
+.tb .tb-t{grid-template-columns:26px minmax(0,1fr) 150px}
+.tb .tb-t strong{text-align:right}
+.tb .tb-t strong small{display:block;font:500 11px var(--font);color:#55524c;margin-top:1px}
+.tb-meta>section.tq-p:last-child{flex:none}
+.tb-meta:not(.dx)>section.tq-p:nth-last-child(2){flex:1 1 auto}
+.tb-pro .tb-tab.tb-mm{flex:1 1 auto}
+.tb-pro .tb-tab.tb-mm>.r.rev{flex:1 1 auto}
 .tb-tab{display:flex;flex-direction:column;font-size:13px;font-variant-numeric:tabular-nums}
 .tb-tab .r{display:grid;grid-template-columns:minmax(0,1fr) 92px 92px 104px;gap:8px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--linea)}
 .tb-tab .r>*:not(:first-child){text-align:right}
 .tb-tab .r:last-child{border-bottom:0}
+.tb-tab .r.h>span:first-child{text-transform:none;letter-spacing:0;font-weight:500}
 .tb-tab .r.h{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#7d7870;border-bottom:1.5px solid var(--inchiostro);padding-top:0}
 .tb-tab .r>span:first-child em{display:block;font-style:normal;font-size:10.5px;line-height:1.3;color:#7d7870}
 @media (max-width:1500px){.tb-tab .r>span:first-child em{display:none}}
@@ -2309,60 +2371,111 @@ function renderTrimestreB(){conScen(()=>{
   const testa=`<div class="tq-testa"><h1>${ROMANI[q-1]} trimestre ${a}</h1><span class="tq-mesi">${MESI[q*3-3]} – ${MESI[q*3-1]}</span><span class="tq-stato ${stato[1]}">${stato[0]}</span><span class="tb-scen" title="Si cambia con il tasto in alto">${scen}</span>${nav}</div>`;
   const B=trimB(a,q);
   if(!B){$('#main').innerHTML=`<div class="tq tb">${testa}<div class="presto-box"><p>Nessun movimento in questo trimestre.</p></div></div>`;return}
+  const chiuso=B.d.concluso;
   const P=trimB(a,q-1), media=[];{let aa=a,qq=q;for(let k=0;k<4;k++){qq--;if(qq<1){qq=4;aa--}const x=trimB(aa,qq);if(x&&x.d.concluso)media.push(x)}}
   const med=f=>{const v=media.map(f).filter(x=>x!=null);return v.length?v.reduce((s,x)=>s+x,0)/v.length:null};
   const N=q===4?{a:a+1,q:1}:{a,q:q+1}, mesiN=[N.q*3-2,N.q*3-1,N.q*3], nomeN=ROMANI[N.q-1]+' trim'+(N.a!==a?' '+N.a:''), nomeP=P?P.nome:ROMANI[(q+2)%4]+' trim';
   const mAb=m=>MESI[m-1].slice(0,3).toLowerCase(), mesiNtxt=`${mAb(mesiN[0])}–${mAb(mesiN[2])}`;
   // ---- sinistra: bilancio ----
-  const righe=[['Incassato su Unicredit',x=>x.inc,1,'entrate da fatture e altro, sul conto'],['Spese per l\'attività',x=>x.att,0,'pagate da Unicredit'],['Netto',x=>x.netto,1,'incassato − Revolut − attività: è lo stipendio del trim dopo'],
-    ['Stipendio di questo trim',x=>x.stip,1,'il netto del trimestre prima'],['Fisse',x=>x.fis,0,''],['Variabili',x=>x.vari,0,''],['Risparmio del trimestre',x=>x.avanzo,1,'stipendio − fisse − variabili: resta su Unicredit']];
-  const diff=(v,ref,piu)=>{if(ref==null||v==null)return '';const dd=v-ref,b=piu?dd>=0:dd<=0;return `<small class="${Math.abs(dd)<1?'gr':b?'ok':'no'}">${dd>=0?'+':'−'} ${e0(Math.abs(dd)).slice(2)}</small>`};
+  const righe=[['Incassato su Unicredit',x=>x.inc,1,'entrate da fatture e altro, sul conto','ent'],['Spese per l\'attività',x=>x.att,0,'pagate da Unicredit','att'],['Netto',x=>x.netto,1,'incassato − Revolut − attività: è lo stipendio del trim dopo','net'],
+    ['Stipendio di questo trim',x=>x.stip,1,'il netto del trimestre prima','sti'],['Fisse',x=>x.fis,0,'','fis'],['Variabili',x=>x.vari,0,'','var'],['Risparmio del trimestre',x=>x.avanzo,1,'stipendio − fisse − variabili: resta su Unicredit','ris']];
+  // giudizio: ▲ verde = meglio, ▼ rosso = peggio, = giallo = più o meno uguale (per le spese "meglio" vuol dire spendere meno)
+  const giud=(v,ref,piu)=>{if(ref==null||v==null)return null;const dd=v-ref;if(Math.abs(dd)<Math.max(30,Math.abs(ref)*0.05))return 0;return (piu?dd>0:dd<0)?1:-1};
+  const simb=g=>g==null?'<span class="tb-g nd">—</span>':g>0?'<span class="tb-g su" title="meglio del trimestre prima">▲</span>':g<0?'<span class="tb-g giu" title="peggio del trimestre prima">▼</span>':'<span class="tb-g ug" title="più o meno come il trimestre prima">=</span>';
+  const dTxt=(v,ref,g)=>v==null||ref==null?'<span class="gr">—</span>':`<span class="${g>0?'ok':g<0?'no':'gi'}">${v-ref>=0?'+':'−'} ${e0(Math.abs(v-ref)).slice(2)}</span>`;
   const val=v=>v==null?'<span class="gr">—</span>':e0(v);
-  const tab=`<div class="tb-tab"><div class="r h"><span></span><span>${B.nome}</span><span>${nomeP}</span><span>media ${media.length?media.length+' ':''}trim. prima</span></div>
-    ${righe.map(([n,f,piu,sp],i)=>{const v=f(B),vp=P?f(P):null,vm=media.length?med(f):null;
-      return `<div class="r${i===6?' tot':''}${i===2||i===3?' sep':''}"><span>${n}${sp?`<em>${sp}</em>`:''}</span><b class="q ${i===6&&v!=null?(v<0?'no':'ok'):''}">${val(v)}</b><span>${val(vp)}${diff(v,vp,piu)}</span><span>${val(vm)}${diff(v,vm,piu)}</span></div>`}).join('')}</div>`;
+  const G=righe.map(([n,f,piu])=>giud(f(B),P?f(P):null,piu));
+  const tab=`<div class="tb-tab tb-bil"><div class="r h"><span></span><span>${B.nome}</span><span>${P?nomeP:''}</span><span>${P?'differenza':''}</span><span></span></div>
+    ${righe.map(([n,f,piu,sp,cc],i)=>{const v=f(B),vp=P?f(P):null;
+      return `<div class="r c-${cc}${i===6?' tot':''}${i===2||i===3?' sep':''}"><span><i class="tb-sw"></i>${n}${sp?`<em>${sp}</em>`:''}</span><b class="q ${i===6&&v!=null&&v<0?'neg':''}">${val(v)}</b>${P?`<span>${val(vp)}</span>${dTxt(v,vp,G[i])}${simb(G[i])}`:'<span></span><span></span><span></span>'}</div>`}).join('')}</div>`;
+  // pagella: voto sul risparmio, poi cosa è andato meglio e peggio
+  const pr=B.avanzo!=null&&B.stip>0.5?B.avanzo/B.stip:null;
+  const VT=pr==null?null:pr>=0.15?['ottimo','Ottimo']:pr>=0.05?['bene','Bene']:pr>=-0.05?['att','Occhio']:['male','Da rivedere'];
+  const nomiR=['l\'incassato','le spese per l\'attività','il netto','lo stipendio','le fisse','le variabili','il risparmio'];
+  const meglio=G.map((g,i)=>g>0&&i!==6&&i!==3?nomiR[i]:null).filter(Boolean), peggio=G.map((g,i)=>g<0&&i!==6&&i!==3?nomiR[i]:null).filter(Boolean);
+  const elenco=l=>l.length>1?l.slice(0,-1).join(', ')+' e '+l[l.length-1]:l[0];
+  const pagella=`<section class="tq-p tb-pag ${VT?VT[0]:''}"><div class="tb-pag-v">${VT?`<span class="pg-v ${VT[0]}">${VT[1]}</span>`:'<span class="pg-v nd">—</span>'}<small>${chiuso?'voto':'voto finora'}</small></div>
+    <div class="tb-pag-t"><b>${pr==null?'Manca lo stipendio del trimestre prima: il voto non si può dare.':B.avanzo>=0?`Hai risparmiato il ${Math.round(pr*100)}% dello stipendio (${e0(B.avanzo)}).`:`Hai speso ${e0(-B.avanzo)} più dello stipendio (${Math.round(-pr*100)}%).`}</b>
+      <span>${!P?'Il trimestre prima non è nell\'app: niente confronto.':`Rispetto al ${nomeP} <span class="ok">▲ meglio</span> ${meglio.length?elenco(meglio):'niente'} · <span class="no">▼ peggio</span> ${peggio.length?elenco(peggio):'niente'}.`}</span></div></section>`;
+  // spese: sempre 8 righe. Con il trimestre prima: le 4 salite di più e le 4 scese di più
   const perC=X=>{const r={};X.d.mov.filter(x=>!x.giro&&daUni(x)&&['fisse','variabili'].includes(bollaDi(x.cat))).forEach(x=>{r[x.cat]=(r[x.cat]||0)+x.eur});return r};
-  const oC=perC(B), pC=P?perC(P):{}, cambi=[...new Set([...Object.keys(oC),...Object.keys(pC)])].map(k=>[k,oC[k]||0,pC[k]||0]).map(x=>[...x,x[1]-x[2]]).filter(x=>Math.abs(x[3])>=1).sort((x,y)=>Math.abs(y[3])-Math.abs(x[3])).slice(0,7);
-  const camb=!P?'<p class="gr">Il trimestre prima non è nell\'app: niente da confrontare.</p>':`<div class="tb-tab tb-camb"><div class="r h"><span></span><span>${B.nome}</span><span>${nomeP}</span><span>differenza</span></div>
-    ${cambi.length?cambi.map(([k,v,vp,dd])=>`<div class="r" data-vedi-cat="${esc(k)}" title="Clicca per vedere i movimenti"><span><i style="background:${coloreCat(k)||'#ddd'}"></i>${esc(nomeCat(k))}</span><b class="q">${e0(v)}</b><span>${e0(vp)}</span><span class="${dd>0?'no':'ok'}">${dd>=0?'+':'−'} ${e0(Math.abs(dd)).slice(2)}</span></div>`).join(''):'<p class="gr">Niente da confrontare.</p>'}</div>`;
+  const oC=perC(B), pC=P?perC(P):{}, tutte=[...new Set([...Object.keys(oC),...Object.keys(pC)])].map(k=>({k,v:oC[k]||0,vp:pC[k]||0})).map(x=>({...x,dd:x.v-x.vp}));
+  const totSp=Object.values(oC).reduce((s,v)=>s+v,0);
+  const rigaC=x=>x?`<div class="r" data-vedi-cat="${esc(x.k)}" title="Clicca per vedere i movimenti"><span><i style="background:${coloreCat(x.k)||'#ddd'}"></i>${esc(nomeCat(x.k))}</span><b class="q" style="--cc:${coloreCat(x.k)||'#eee'}">${e0(x.v)}</b>${P?`<span>${e0(x.vp)}</span>${dTxt(x.v,x.vp,giud(x.v,x.vp,0))}${simb(giud(x.v,x.vp,0))}`:`<span></span><span class="gr">${totSp>0.5?Math.round(x.v/totSp*100)+'%':''}</span><span></span>`}</div>`:'<div class="r vuota"><span>—</span><span></span><span></span><span></span><span></span></div>';
+  const quattro=l=>[0,1,2,3].map(k=>rigaC(l[k])).join('');
+  const salite=tutte.filter(x=>x.dd>=1).sort((x,y)=>y.dd-x.dd), scese=tutte.filter(x=>x.dd<=-1).sort((x,y)=>x.dd-y.dd);
+  const camb=`<div class="tb-tab tb-camb tb-bil">${P?`<div class="r h"><span>salite di più</span><span>${B.nome}</span><span>${nomeP}</span><span>differenza</span><span></span></div>${quattro(salite)}
+      <div class="r h sub"><span>scese di più</span><span></span><span></span><span></span><span></span></div>${quattro(scese)}`
+    :`<div class="r h"><span>le più pesanti (il trimestre prima non è nell'app)</span><span>${B.nome}</span><span></span><span>sul totale</span><span></span></div>${quattro(tutte.filter(x=>x.v>0.5).sort((x,y)=>y.v-x.v))}<div class="r h sub"><span></span><span></span><span></span><span></span><span></span></div>${quattro(tutte.filter(x=>x.v>0.5).sort((x,y)=>y.v-x.v).slice(4))}`}</div>`;
   // ---- destra: cose da fare ----
-  const acc=B.d.accant, spo=B.d.spostato, accRes=acc-spo, chiuso=B.d.concluso;
-  const voce=(st,tit,sub,cifra)=>`<div class="tb-t ${st}"><span class="tb-c">${st==='fatto'?'✓':st==='no'?'!':''}</span><span><b>${tit}</b><small>${sub}</small></span><strong>${cifra}</strong></div>`;
-  const vAcc=acc<0.5?voce('fatto','Accantonamento sul Revolut','nessuna entrata da accantonare','€ 0')
-    :!chiuso?voce('','Accantonamento sul Revolut',`dovuti finora ${e0(acc)}: si spostano a inizio ${MESI[(q*3)%12].toLowerCase()}`,e0(acc))
-    :accRes<0.5?voce('fatto','Accantonamento sul Revolut',`fatto: spostati ${e0(spo)} su ${e0(acc)} dovuti`,e0(spo))
-    :voce('','Sposta l\'accantonamento sul Revolut',`dovuti ${e0(acc)}, già spostati ${e0(spo)}`,e0(accRes));
+  const acc=B.d.accant, spo=B.d.spostato, accRes=acc-spo;
+  const voce=(st,tit,sub,cifra,cc)=>`<div class="tb-t ${st} c-${cc||''}"><span class="tb-c">${st==='fatto'?'✓':st==='no'?'!':''}</span><span><b>${tit}</b><small>${sub}</small></span><strong>${cifra}</strong></div>`;
+  const vAcc=acc<0.5?voce('fatto','Accantonamento sul Revolut','nessuna entrata da accantonare','€ 0','acc')
+    :!chiuso?voce('','Accantonamento sul Revolut',`dovuti finora ${e0(acc)}: si spostano a inizio ${MESI[(q*3)%12].toLowerCase()}`,e0(acc),'acc')
+    :accRes<0.5?voce('fatto','Accantonamento sul Revolut',`fatto: spostati ${e0(spo)} su ${e0(acc)} dovuti`,e0(spo),'acc')
+    :voce('','Sposta l\'accantonamento sul Revolut',`dovuti ${e0(acc)}, già spostati ${e0(spo)}`,e0(accRes),'acc');
   const vRis=B.avanzo==null?voce('','Il risparmio del trimestre','manca lo stipendio del trimestre prima (Impostazioni → Dati di partenza)','—')
-    :B.avanzo>=-0.5?voce('fatto',`Il risparmio del ${B.nome}${chiuso?'':' (finora)'}`,`stipendio ${e0(B.stip)} − spese ${e0(B.fis+B.vari)}: resta su Unicredit`,e0(B.avanzo))
+    :B.avanzo>=-0.5?voce('fatto',`Il risparmio del ${B.nome}${chiuso?'':' (finora)'}`,`stipendio ${e0(B.stip)} − spese ${e0(B.fis+B.vari)}: resta su Unicredit`,e0(B.avanzo),'ris')
     :voce('no',`Nel ${B.nome} hai speso più dello stipendio`,`stipendio ${e0(B.stip)} − spese ${e0(B.fis+B.vari)}`,e0(B.avanzo));
   const movN=S.movimenti.filter(x=>annoDi(x.data)===N.a&&mesiN.includes(meseDi(x.data))&&!x.giro);
   const fisN=movN.filter(x=>daUni(x)&&bollaDi(x.cat)==='fisse').reduce((s,x)=>s+x.eur,0);
   const stipN=B.netto, vStip=stipN==null?voce('','Il tuo stipendio','manca il netto','—')
-    :voce(chiuso?'fatto':'',`Il tuo stipendio da ${MESI[mesiN[0]-1].toLowerCase()}`,`netto del ${B.nome} ${e0(stipN)} ÷ 3${chiuso?'':' · cambia finché il trimestre non è chiuso'}`,e0(stipN/3)+'<small>/mese</small>');
+    :voce(chiuso?'fatto':'',`Il tuo stipendio da ${MESI[mesiN[0]-1].toLowerCase()}`,`netto del ${B.nome} ${e0(stipN)} ÷ 3${chiuso?'':' · cambia finché il trimestre non è chiuso'}`,e0(stipN/3)+'<small>/mese</small>','sti');
   // tetto variabili
   const tetQ=tettoVar(a,B.d.mesi), tetN=tettoVar(N.a,mesiN), tm=tettoMese(N.a,mesiN[0])??tettoMese(a,q*3);
   const varM=B.d.mesi.map(m=>({m,v:B.su(b=>b==='variabili',m),t:tettoMese(a,m)}));
-  const restoN=stipN==null?null:stipN-fisN-(tetN??0);
+  const fisNs=fisN>0.5?fisN:B.fis, restoN=stipN==null?null:stipN-fisNs-(tetN??0);
   const vTet=tm==null?voce('','Tetto alle variabili','non l\'hai ancora fissato: Impostazioni → Tetto mensile alle variabili','—')
-    :`<div class="tb-t tet"><span class="tb-c">€</span><span><b>Tetto alle variabili: ${e0(tm)} al mese</b><small>nel ${B.nome} hai speso ${varM.map(x=>`${mAb(x.m)} <i class="${tettoCl(x.v,x.t)}">${e0(x.v)}</i>`).join(' · ')}</small>
-      ${restoN==null?'':`<small>nel ${nomeN}: stipendio ${e0(stipN)} − fisse ${e0(fisN)} − tetto ${e0(tetN??0)} = <i class="${restoN<-0.5?'no':'ok'}">${restoN<-0.5?'mancano':'restano'} ${e0(Math.abs(restoN))}</i></small>`}</span><strong>${e0(varM.reduce((s,x)=>s+x.v,0))}<small> su ${tetQ==null?'—':e0(tetQ)}</small></strong></div>`;
+    :`<div class="tb-t tet c-var"><span class="tb-c">€</span><span><b>Tetto alle variabili: ${e0(tm)} al mese</b><small>nel ${B.nome} hai speso ${varM.map(x=>`${mAb(x.m)} <i class="${tettoCl(x.v,x.t)}">${e0(x.v)}</i>`).join(' · ')}</small>
+      ${restoN==null?'':`<small>nel ${nomeN}: stipendio ${e0(stipN)} − fisse ${fisN>0.5?'':'≈ '}${e0(fisNs)} − tetto ${e0(tetN??0)} = <i class="${restoN<-0.5?'no':'ok'}">${restoN<-0.5?'mancano':'restano'} ${e0(Math.abs(restoN))}</i></small>`}</span><strong>${e0(varM.reduce((s,x)=>s+x.v,0))}<small> su ${tetQ==null?'—':e0(tetQ)}</small></strong></div>`;
   // scadenze del trimestre dopo
   const scad=movN.filter(x=>['inarcassa','tasse stato'].includes(x.cat)).sort((x,y)=>x.data<y.data?-1:1);
   const totSc=scad.reduce((s,x)=>s+x.eur,0), rev=dispPeriodo(N.a,mesiN).rev, mancaR=totSc-rev;
-  const scadenze=`<section class="tq-p tb-sca"><h3>${ico('fiscali')} Tasse e Inarcassa nel ${nomeN}<small>sul Revolut ci saranno ${e0(rev)}</small></h3>
+  const scadenze=`<section class="tq-p tb-sca c-att"><h3>${ico('fiscali')} Tasse e Inarcassa nel ${nomeN}<small>sul Revolut ci saranno ${e0(rev)}</small></h3>
     ${scad.length?`<div class="tb-tab"><div class="r h"><span>quando</span><span>cosa</span><span>da pagare</span></div>${scad.map(x=>`<div class="r"><span>${dataIt(x.data).slice(0,5)}</span><span>${esc(nomeCat(x.cat))}${x.det?' · '+esc(x.det.toLowerCase()):''}${x.ok?' <em>pagato</em>':''}</span><b>${e0(x.eur)}</b></div>`).join('')}
       <div class="r tot"><span></span><span class="${mancaR>0.5?'no':'ok'}">${mancaR>0.5?`sul Revolut mancano ${e0(mancaR)}`:`il Revolut basta, avanzano ${e0(-mancaR)}`}</span><b>${e0(totSc)}</b></div></div>`:'<p class="gr">Nessuna scadenza segnata in questo trimestre.</p>'}</section>`;
+  // il trimestre dopo mese per mese: stipendio, fisse, tetto variabili, tasse dal Revolut
+  const fisM=m=>movN.filter(x=>daUni(x)&&meseDi(x.data)===m&&bollaDi(x.cat)==='fisse').reduce((s,x)=>s+x.eur,0);
+  const scM=m=>scad.filter(x=>meseDi(x.data)===m).reduce((s,x)=>s+x.eur,0);
+  const colN=mesiN.map(m=>{const f=fisM(m),st=f<0.5;return {m,sti:stipN==null?null:stipN/3,fis:st?B.fis/3:f,stima:st,tet:tettoMese(N.a,m),tas:scM(m)}});
+  colN.forEach(c=>{c.resta=c.sti==null?null:c.sti-c.fis-(c.tet||0)});
+  const totC=k=>colN.reduce((s,c)=>s+(c[k]||0),0);
+  const rigaN=(n,k,cc,segno,nota)=>`<div class="r c-${cc}"><span><i class="tb-sw"></i>${n}${nota?`<em>${nota}</em>`:''}</span>${colN.map(c=>`<span>${c[k]==null?'—':(segno||'')+(k==='fis'&&c.stima?'≈ ':'')+e0(c[k])}</span>`).join('')}<b class="q">${(segno||'')+e0(totC(k))}</b></div>`;
+  const prossimo=`<section class="tq-p tb-pro"><h3>${ico('calendario')} Il ${nomeN} mese per mese<small>${stipN==null?'manca lo stipendio':chiuso?'con lo stipendio nuovo':'stipendio con i numeri di oggi'}</small></h3>
+    <div class="tb-tab tb-mm"><div class="r h"><span></span>${mesiN.map(m=>`<span>${MESI[m-1]}</span>`).join('')}<span>trimestre</span></div>
+      ${rigaN('Stipendio','sti','sti','','il netto del '+B.nome+' ÷ 3')}
+      ${rigaN('Fisse','fis','fis','− ',colN.some(c=>c.stima)?'≈ stimate come nel '+B.nome:'già segnate')}
+      ${rigaN('Tetto variabili','tet','var','− ',colN.some(c=>c.tet!=null)?'quello che ti concedi':'nessun tetto impostato')}
+      <div class="r tot"><span>Resta</span>${colN.map(c=>`<span class="${c.resta!=null&&c.resta<-0.5?'no':'ok'}">${c.resta==null?'—':e0(c.resta)}</span>`).join('')}<b class="q ${totC('resta')<-0.5?'neg':''}">${e0(totC('resta'))}</b></div>
+      <div class="r c-att tas"><span><i class="tb-sw"></i>Tasse e Inarcassa<em>dal Revolut, non dallo stipendio</em></span>${colN.map(c=>`<span>${c.tas>0.5?e0(c.tas):'—'}</span>`).join('')}<b class="q">${scad.length?e0(totC('tas')):'—'}</b></div>
+      ${scad.length?`<div class="r rev"><span>${scad.map(x=>`${dataIt(x.data).slice(0,5)} ${esc(nomeCat(x.cat))}${x.det?' · '+esc(x.det.toLowerCase().replace(nomeCat(x.cat).toLowerCase(),'').trim()):''} ${e0(x.eur)}${x.ok?' ✓':''}`).join(' · ')}</span><span class="${mancaR>0.5?'no':'ok'}">${mancaR>0.5?`sul Revolut ci saranno ${e0(rev)}: mancano ${e0(mancaR)}`:`sul Revolut ci saranno ${e0(rev)}: bastano`}</span></div>`:`<div class="r rev"><span>Non sono previste tasse né Inarcassa nel ${nomeN}.</span><span class="ok">sul Revolut ci saranno ${e0(rev)}</span></div>`}
+    </div></section>`;
   const titDx=chiuso?`Cosa fare adesso<small>per chiudere il ${B.nome} e partire col ${nomeN}</small>`:`Cosa fare a fine trimestre<small>con i numeri di oggi</small>`;
   $('#main').innerHTML=`<div class="tq tb">${testa}
     <div class="tb-due">
-      <div class="tb-meta"><div class="tq-meta-t"><span class="n">1</span>Il bilancio del ${B.nome}<small>in verde e rosso la differenza</small></div>
+      <div class="tb-meta"><div class="tq-meta-t"><span class="n">1</span>Il bilancio del ${B.nome}<small>${P?`▲ meglio · = uguale · ▼ peggio del ${nomeP}`:'il trimestre prima non è nell\'app'}</small></div>
+        ${pagella}
         <section class="tq-p">${tab}</section>
-        <section class="tq-p"><h3>${ico('variabili')} Le spese cambiate di più<small>rispetto al ${nomeP} · clic per i movimenti</small></h3>${camb}</section></div>
+        <section class="tq-p"><h3>${ico('variabili')} ${P?'Le spese che sono cambiate':'Le spese più pesanti'}<small>clic per i movimenti</small></h3>${camb}</section></div>
       <div class="tb-meta dx"><div class="tq-meta-t"><span class="n">2</span>${titDx}</div>
         <div class="tb-todo">${vAcc}${vRis}${vStip}${vTet}</div>
-        ${scadenze}</div>
+        ${prossimo}</div>
     </div></div>`;
+  pareggiaTrim();
 })}
+function pareggiaTrim(){ // Paolo 13/11: le due metà finiscono alla stessa riga, senza vuoti
+  const due=document.querySelector('.tb-due'); if(!due) return;
+  const [L,R]=due.querySelectorAll('.tb-meta'); if(!L||!R) return;
+  // Paolo 13/11: i due box in basso (spese cambiate | mese per mese) partono e finiscono alla stessa riga
+  const bL=L.querySelector(':scope>section:last-child'), bR=R.querySelector(':scope>section:last-child');
+  if(!bL||!bR) return;
+  bL.style.height=bR.style.height='';
+  due.classList.add('misura');
+  const h=Math.max(bL.offsetHeight,bR.offsetHeight);
+  due.classList.remove('misura');
+  if(getComputedStyle(due).gridTemplateColumns.split(' ').length<2) return;
+  bL.style.height=bR.style.height=h+'px';
+}
 function renderTrimestreInArrivo(){
   const q=+UI.trim||1;
   $('#main').innerHTML=`<h1>${ROMANI[q-1]} trimestre ${S.anno}</h1><div class="presto-box"><p><b>Pagina in arrivo.</b></p><p>Le pagine dei trimestri si stanno reimpostando da capo.</p><button class="btn" data-pag="home">Torna alla Home</button></div>`;
@@ -3678,8 +3791,8 @@ function misuraTesta(){
   const av=$('#avviso');if(av) r.setProperty('--avviso-h',av.offsetHeight+'px');
   if(te) r.setProperty('--testa-h',te.getBoundingClientRect().height+'px');
 }
-let tRes;window.addEventListener('resize',()=>{misuraTesta();clearTimeout(tRes);tRes=setTimeout(()=>{if(UI.pagina==='trimestre')renderTrimestre();if(UI.pagina==='home')renderHome();adattaTesti();piediConti()},150)});
-if(document.fonts)document.fonts.ready.then(()=>{misuraTesta();if(UI.pagina==='trimestre')renderTrimestre();if(UI.pagina==='home')renderHome();adattaTesti();piediConti()});
+let tRes;window.addEventListener('resize',()=>{misuraTesta();clearTimeout(tRes);tRes=setTimeout(()=>{if(UI.pagina==='trimestre')renderTrimestreB();if(UI.pagina==='home')renderHome();adattaTesti();piediConti()},150)});
+if(document.fonts)document.fonts.ready.then(()=>{misuraTesta();if(UI.pagina==='trimestre')renderTrimestreB();if(UI.pagina==='home')renderHome();adattaTesti();piediConti()});
 /* Selezione di più righe: somma come nei fogli di calcolo */
 const SEL=new Set(); let ultimoSel=null;
 const chiaveRiga=tr=>tr.dataset.id?+tr.dataset.id:'c'+tr.dataset.coiId;
