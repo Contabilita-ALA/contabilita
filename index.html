@@ -2276,6 +2276,132 @@ button.h3-allarme:hover,.h3-allarme.clic:hover{box-shadow:2px 2px 0 var(--inchio
 .qf-r{padding:6px 0}
 .qf-c{padding:5px 2px}
 .qf-c.big{padding:6px 12px;margin-top:4px}
+
+/* Obiettivi di risparmio (13/11) */
+.ob .tb-due{flex:none;grid-template-rows:auto;align-items:stretch}
+.ob .tb-meta{overflow:visible;min-height:auto;gap:8px}
+.ob .tq-kpi{grid-template-columns:repeat(4,minmax(0,1fr))}
+.ob .tq-k-v small{font:500 12px var(--font)}
+.ob .tq-k[data-tb-tet]{cursor:pointer}
+.ob .tb-meta>section.ob-lista,.ob .tb-meta>section.ob-quando{flex:1 1 auto!important}
+.ob .tb-meta>section.ob-ritmo{flex:0 0 auto!important}
+/* obiettivi: una griglia sola, la barra finisce col menu "entro" */
+.ob-lista{display:flex;flex-direction:column;gap:7px;padding:8px 12px 10px}
+.ob-hd,.ob-c{display:grid;grid-template-columns:30px minmax(0,1fr) 104px 108px 78px;column-gap:8px;align-items:center}
+.ob-hd{font:700 10px var(--font);text-transform:uppercase;letter-spacing:.3px;color:#7d7870;padding:0 11px}
+.ob-c{row-gap:5px;border:1.5px solid var(--inchiostro);border-radius:12px;padding:7px 10px;background:var(--carta)}
+.ob-c>.ic-ico{grid-row:span 2}
+.ob-c.fatto{background:#eef6ef}
+.ob-nm{display:flex;align-items:center;gap:5px;min-width:0}
+.ob-nome{flex:1;min-width:0;font:700 14.5px var(--font-titoli);border:1px solid transparent;border-radius:6px;padding:2px 5px;background:transparent}
+.ob-nome:hover,.ob-nome:focus{border-color:#d8d1c3;background:#fff}
+.ob-num{font:700 11px var(--font);color:#7d7870}
+.ob-in{display:flex;align-items:center;gap:3px;font-weight:700}
+.ob-in input{width:100%;min-width:0;text-align:right;font:700 14px var(--font-titoli);padding:3px 7px;border:1px solid #d8d1c3;border-radius:7px;background:#faf8f3}
+.ob-en select{width:100%;font:600 12.5px var(--font);padding:4px 4px;border:1px solid #d8d1c3;border-radius:7px;background:#faf8f3}
+.ob-az{display:flex;gap:3px;justify-content:flex-end}
+.ob-az button{width:23px;height:23px;border:1.5px solid var(--inchiostro);border-radius:6px;background:#fff;font:700 9.5px var(--font);cursor:pointer;padding:0}
+.ob-az button:hover:not(:disabled){background:var(--pesca)}.ob-az button:disabled{opacity:.3;cursor:default}
+.ob-bar{grid-column:2/5;position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;height:26px;border:1.5px solid var(--inchiostro);border-radius:7px;background:#fff;overflow:hidden;padding:0 4px 0 8px}
+.ob-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--oc)}
+.ob-bar b{position:relative;font:700 13px var(--font);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ob-bar b small{font-weight:500;color:#3d3a35}
+.ob-bar .tq-d{position:relative;white-space:nowrap}
+.ob-ris{text-align:right;font-size:12px;line-height:1.1}.ob-ris b{font:700 15px var(--font-titoli);white-space:nowrap}.ob-ris small{display:block;font-size:10.5px;color:#55524c}
+.ob-vuoto{font-size:13px;color:#3d3a35;margin:6px 2px}
+.ob-add{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:auto;padding-top:6px;border-top:1px dashed #cfc8ba;font-size:12px;font-weight:600}
+.ob-add button{display:inline-flex;align-items:center;gap:5px;border:1.5px solid var(--inchiostro);border-radius:999px;background:#fff;padding:2px 10px;font:600 12px var(--font);cursor:pointer}
+.ob-add button:hover{background:var(--pesca)}.ob-add i{width:9px;height:9px;border-radius:50%;border:1px solid rgba(0,0,0,.4)}
+/* ce la fai */
+.ob-ritmo{padding:8px 12px 10px}
+.ob-conf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ob-conf>div{border:1.5px solid var(--inchiostro);border-radius:10px;padding:6px 10px;background:#fff}
+.ob-conf>div.ok{background:#d3e9d6}.ob-conf>div.no{background:#f6d4cb}
+.ob-conf small{display:block;font-size:11px;color:#55524c}.ob-conf b{font:700 19px var(--font-titoli)}.ob-conf em{display:block;font-style:normal;font-size:10.5px;color:#55524c}
+.ob-tet{border:1.5px solid var(--inchiostro);border-radius:999px;background:#fff;font:600 11.5px var(--font);padding:1px 9px;cursor:pointer;margin-left:4px}
+.ob-tet:hover{background:var(--pesca)}
+.ob-quando{display:flex;flex-direction:column}
+.ob-quando h3 small i{margin-left:8px}
+.ob-lg{display:inline-block;width:14px;height:8px;border:1px solid var(--inchiostro);border-radius:2px;background:#c4ebdc;vertical-align:middle;margin-right:3px}
+.ob-lg.s{width:3px;background:var(--rosso);border:0;height:12px}
+.ob-g{display:grid;grid-template-columns:150px minmax(0,1fr) 80px;gap:10px;align-items:center;min-height:34px;border-bottom:1px solid var(--linea);font-size:12.5px}
+.ob-g-n{display:flex;align-items:center;gap:6px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ob-g-n i{flex:none;width:10px;height:10px;border-radius:50%;border:1px solid rgba(0,0,0,.4)}
+.ob-g-b{position:relative;height:16px}
+.ob-g-b u{position:absolute;top:-8px;bottom:-8px;border-left:1px dashed #cfc8ba}
+.ob-g-b>i{position:absolute;top:0;bottom:0;border:1.5px solid var(--inchiostro);border-radius:5px}
+.ob-g-b>i.tardi{box-shadow:inset 0 0 0 2px var(--rosso)}
+.ob-g-b>i.mai{background:repeating-linear-gradient(-45deg,#fff 0 3px,#e7e3da 3px 6px)!important;border-style:dashed}
+.ob-g-b>s{position:absolute;top:-5px;bottom:-5px;width:3px;margin-left:-1.5px;background:var(--rosso);border-radius:2px}
+.ob-g-b>em.ok{position:absolute;top:-2px;font:700 14px var(--font);font-style:normal;color:var(--verde)}
+.ob-g-v{text-align:right;font-weight:700}
+.ob-g.asse{border:0;min-height:18px}.ob-g.asse em{position:absolute;transform:translateX(-50%);font:600 10.5px var(--font);font-style:normal;color:#7d7870}
+.ob-g.asse em:first-child{transform:none}
+/* striscia mese per mese: testata comune */
+.ob-str{flex:none;padding:8px 12px 8px}
+.ob-str h3{display:flex;align-items:baseline;gap:8px}
+.ob-str h3 small .no{color:var(--rosso)}
+.ob-str-t{margin-left:auto;font:600 12px var(--font);white-space:nowrap}.ob-str-t b{font:700 17px var(--font-titoli)}
+.ob-str-t .ok{color:var(--verde)}.ob-str-t .no{color:var(--rosso)}
+.ob-pil{display:inline-flex;border:1.5px solid var(--inchiostro);border-radius:999px;overflow:hidden;margin-left:4px;align-self:center}
+.ob-pil button{border:0;background:#fff;font:600 11.5px var(--font);padding:1px 10px;cursor:pointer;white-space:nowrap}
+.ob-pil button+button{border-left:1.5px solid var(--inchiostro)}
+.ob-pil button.on{background:var(--inchiostro);color:#fff}
+.ob-str em{display:block;font:600 9.5px var(--font);font-style:normal;border:1px solid var(--inchiostro);border-radius:999px;padding:0 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.ob-leg{display:flex;flex-wrap:wrap;gap:14px;justify-content:flex-end;font-size:11px;color:#55524c;margin-top:4px}
+.ob-leg i{display:inline-block;width:12px;height:8px;border:1px solid var(--inchiostro);border-radius:2px;margin-right:4px;vertical-align:middle}
+.ob-leg i.pos{background:#9fd3ad}.ob-leg i.neg{background:#f2b8ab}.ob-leg i.fut{background:repeating-linear-gradient(-45deg,#fff 0 2px,#9fd3ad 2px 4px)}
+.ob-leg i.cum{height:0;border:0;border-top:2.5px solid var(--inchiostro);width:16px}
+.ob-leg i.f{background:#c6def2}.ob-leg i.v{background:#e6e0f7}.ob-leg i.st{height:0;border:0;border-top:3px solid var(--inchiostro);width:16px}
+.ob-leg i.tr{height:0;border:0;border-top:2px dashed #c9a227;width:16px}
+/* A e C: grafico svg + riga dei mesi sotto */
+.ob-a{position:relative}
+.ob-a-svg{display:block;width:100%;height:120px}
+.ob-a-svg .z{stroke:#9a958c;stroke-width:1}
+.ob-a-svg rect{stroke:var(--inchiostro);stroke-width:1.2;vector-effect:non-scaling-stroke}
+.ob-a-svg rect.pos{fill:#9fd3ad}.ob-a-svg rect.neg{fill:#f2b8ab}
+.ob-a-svg rect.fut{fill-opacity:.45;stroke-dasharray:4 3}
+.ob-a-svg polyline.cum,.ob-a-svg path.cum{fill:none;stroke:var(--inchiostro);stroke-width:2.5;vector-effect:non-scaling-stroke}
+.ob-a-svg circle.cum{fill:#fff;stroke:var(--inchiostro);stroke-width:2;vector-effect:non-scaling-stroke}
+.ob-a-svg path.area{fill:#d3e9d6;stroke:none}
+.ob-a-svg line.tr{stroke-width:2.5;stroke-dasharray:6 4;vector-effect:non-scaling-stroke}
+.ob-a-m{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));border-top:1.5px solid var(--inchiostro)}
+.ob-a-m>div{text-align:center;padding:3px 3px 0;border-left:1px solid var(--linea);min-width:0}
+.ob-a-m>div:first-child{border-left:0}
+.ob-a-m>div.ora{background:#fff4e5}
+.ob-a-m>div.fut{color:#7d7870}
+.ob-a-m b{display:block;font:700 13.5px var(--font-titoli);white-space:nowrap}
+.ob-a-m b.ok{color:var(--verde)}.ob-a-m b.no{color:var(--rosso)}
+.ob-a-m span{display:block;font-size:10.5px;font-weight:600}
+.ob-a-m span i{font-style:normal}.ob-a-m span i.ok{color:var(--verde)}.ob-a-m span i.no{color:var(--rosso)}
+.ob-c-tr{position:absolute;left:4px;transform:translateY(-110%);font:700 10px var(--font);background:var(--c);border:1px solid var(--inchiostro);border-radius:999px;padding:0 6px}
+.vC .ob-a-m b{font-size:12.5px}
+/* B: stipendio contro spese */
+.ob-b{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px}
+.ob-b-c{display:flex;flex-direction:column;align-items:stretch;text-align:center;min-width:0;border-radius:8px;padding:2px 2px 3px}
+.ob-b-c.ora{background:#fff4e5}
+.ob-b-g{position:relative;height:110px;margin:0 14%;border-bottom:1.5px solid var(--inchiostro)}
+.ob-b-g i{position:absolute;left:0;right:0;bottom:0;border:1.2px solid var(--inchiostro);border-bottom:0}
+.ob-b-g i.f{background:#c6def2}.ob-b-g i.v{background:#e6e0f7}.ob-b-g i.v.over{background:#f2b8ab}
+.ob-b-g u{position:absolute;left:0;right:0;background:#9fd3ad;border:1.2px solid var(--inchiostro);border-bottom:0;text-decoration:none}
+.ob-b-g s{position:absolute;left:-12%;right:-12%;height:0;border-top:3px solid var(--inchiostro)}
+.ob-b-c.fut .ob-b-g i,.ob-b-c.fut .ob-b-g u{opacity:.55;border-style:dashed}
+.ob-b-c b{font:700 13.5px var(--font-titoli);white-space:nowrap;margin-top:2px}.ob-b-c b.ok{color:var(--verde)}.ob-b-c b.no{color:var(--rosso)}
+.ob-b-c span{font-size:10.5px;font-weight:600}
+/* C: tabella mese per mese */
+.ob-t{display:flex;flex-direction:column;font-variant-numeric:tabular-nums;font-size:12.5px}
+.ob-t-r{display:grid;grid-template-columns:120px repeat(12,minmax(0,1fr));border-bottom:1px solid var(--linea)}
+.ob-t-r>span{padding:3px 6px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ob-t-r>span.ora{background:#fff4e5}.ob-t-r>span.fut{color:#7d7870;background-image:repeating-linear-gradient(-45deg,transparent 0 6px,rgba(0,0,0,.025) 6px 8px)}
+.ob-t-r .ob-t-h{text-align:left;font-weight:600;color:#3d3a35}
+.ob-t-r.mesi{border-bottom:1.5px solid var(--inchiostro)}.ob-t-r.mesi>span{font:700 12.5px var(--font-titoli);text-align:right;color:var(--inchiostro)}
+.ob-t-r.st>span{font-weight:600}
+.ob-t-r.v i{font-style:normal}.ob-t-r.v i.ok{color:var(--verde)}.ob-t-r.v i.att{color:#b7791f;font-weight:700}.ob-t-r.v i.no{color:var(--rosso);font-weight:700}
+.ob-t-r.v small{color:#9a958c;font-size:10px}
+.ob-t-r.av{border-top:1.5px solid var(--inchiostro);border-bottom:1.5px solid var(--inchiostro);background:#f3efe6}.ob-t-r.av b{font:700 14px var(--font-titoli)}.ob-t-r.av b.ok{color:var(--verde)}.ob-t-r.av b.no{color:var(--rosso)}
+.ob-t-r.cum>span{font-size:11.5px;color:#55524c}
+.ob-t-r.obr{border:0}.ob-t-r.obr em{margin:0}
+.ob-leg b{font-weight:700}.ob-leg b.ok{color:var(--verde)}.ob-leg b.att{color:#b7791f}.ob-leg b.no{color:var(--rosso)}
+@media (max-width:1500px){.ob-hd,.ob-c{grid-template-columns:28px minmax(0,1fr) 92px 96px 76px}.ob-nome{font-size:13.5px}.ob-t-r{grid-template-columns:104px repeat(12,minmax(0,1fr))}.ob-t-r>span{padding:3px 4px}}
 </style>
 </head>
 <body>
@@ -2302,10 +2428,10 @@ const noteNomi=()=>S.note.map(n=>n.nome);
 const PAGINE=[
   ['home','Home'],['movimenti','Movimenti'],['fatture','Fatture'],['radames','Radames'],
   ['anno','Anno (totali)'],['calendario','Calendario'],['previsione','Previsione anno prossimo'],['fatturare','Quanto devo fatturare'],
-  ['fiscale','Riepilogo fiscale'],['annuario','Annuario contributi'],['cointestato','Conto cointestato'],['conti','Conti e risparmi'],
+  ['fiscale','Riepilogo fiscale'],['annuario','Annuario contributi'],['cointestato','Conto cointestato'],['conti','Conti e risparmi'],['obiettivi','Obiettivi di risparmio'],
   ['impostazioni','Impostazioni e backup']];
 const SIDE_STACCO=new Set(['anno','fiscale','cointestato','impostazioni']); // una linea sopra queste voci
-const PRONTE=new Set(['fatturare','home','movimenti','impostazioni','fatture','radames','anno','cointestato','fiscale','annuario','previsione','conti','calendario']);
+const PRONTE=new Set(['obiettivi','fatturare','home','movimenti','impostazioni','fatture','radames','anno','cointestato','fiscale','annuario','previsione','conti','calendario']);
 
 /* ====== Utilità ====== */
 const $=s=>document.querySelector(s);
@@ -2681,6 +2807,145 @@ document.addEventListener('change',e=>{const i=e.target.closest('[data-qdf]');if
 document.addEventListener('click',e=>{const b=e.target.closest('[data-qdf-rip]');if(!b)return;
   modifica(()=>{const I=((S.impostazioni.qdf||{})[S.anno])||{};delete I[b.dataset.qdfRip]})});
 
+/* ===== Obiettivi di risparmio (Paolo 13/11/2026) =====
+   Gli obiettivi si pagano con quello che AVANZA DALLO STIPENDIO (stipendio del mese − spese fisse e variabili), non col deposito:
+   il deposito Revolut serve solo a far fruttare i soldi con gli interessi.
+   Ogni mese l'avanzo va al primo obiettivo non ancora pieno, poi al secondo… (dal mese in cui l'obiettivo è stato creato). */
+const OB_TIPI=[['vacanza','Vacanza','calendario','#fbe3ae'],['auto','Auto','carta','#c6def2'],['casa','Casa','cointestato','#f6d4cb'],['pc','Computer o lavoro','fattura','#e6e0f7'],['regali','Regali','salvadanaio','#d3e9d6'],['altro','Altro','salvadanaio','#e8e5df']];
+function obLista(){return (S.impostazioni.obiettivi||[]).filter(o=>!o.auto)}
+function obMeseN(iso){return +iso.slice(0,4)*12+ +iso.slice(5,7)-1}
+function obMeseTxt(n){return MESI3[n%12]+' '+Math.floor(n/12)}
+function obMeseISO(n){return Math.floor(n/12)+'-'+String(n%12+1).padStart(2,'0')}
+function obMesi(a,D){ // anno a: stipendio (netto del trim prima ÷ 3) − fisse − variabili; mesi futuri: previste, media dei mesi chiusi, tetto variabili
+  const o=new Date(), mO=o.getFullYear()===a?o.getMonth()+1:(o.getFullYear()>a?13:0), ch=D.chiusi||[];
+  const med=id=>ch.length?ch.reduce((s,m)=>s+speseUni(a,[m],id).pag,0)/ch.length:0, mF=med('fisse'), mV=med('variabili');
+  const st={};[1,2,3,4].forEach(q=>{const n=nettoTrim(a,q-1);st[q]=n==null?null:n/3});
+  let cum=0;return [1,2,3,4,5,6,7,8,9,10,11,12].map(m=>{const F0=speseUni(a,[m],'fisse'), V0=speseUni(a,[m],'variabili'), fut=m>mO, cor=m===mO, tm=tettoMese(a,m);
+    const F=fut?Math.max(F0.pag+F0.prv,mF):F0.pag+F0.prv, V=fut?(tm??Math.max(V0.pag+V0.prv,mV)):V0.pag+V0.prv, s=st[Math.ceil(m/3)];
+    const r=s==null?null:s-F-V;if(r!=null)cum+=r;return {a,m,fut,cor,st:s,F,V,tm,r,cum}})}
+function obMesiN(a){ // anno dopo, dalla Previsione: stipendio del I trim = netto del IV trim di quest'anno, poi netto dei trimestri dell'anno dopo
+  let PV=null;try{PV=datiPrevisione(a,pvVaX(a+1))}catch(e){}
+  const sm=(v,mm)=>mm.reduce((s,m)=>s+((v||{})[m]||0),0), netQ=k=>{const mm=[k*3-2,k*3-1,k*3], e=sm(PV.totE,mm);return e-e*PV.perc-sm(PV.att,mm)};
+  const st={1:(()=>{const n=conScen(()=>nettoTrim(a,4));return n==null?null:n/3})()};[2,3,4].forEach(q=>{st[q]=PV&&PV.lordo>0.5?netQ(q-1)/3:null});
+  let cum=0;return [1,2,3,4,5,6,7,8,9,10,11,12].map(m=>{const F=PV?sm(PV.fisse,[m]):0, V=PV?sm(PV.vari,[m]):0, s=st[Math.ceil(m/3)], r=s==null||!PV?null:s-F-V;if(r!=null)cum+=r;
+    return {a:a+1,m,fut:1,cor:0,st:s,F,V,tm:tettoMese(a+1,m),r,cum,senzaEnt:!(PV&&PV.lordo>0.5)}})}
+function obDati(){
+  const a=S.anno, D=datiConti(a), oggi=oggiISO(), nOra=obMeseN(oggi), M=obMesi(a,D), MN=obMesiN(a);
+  const mese=n=>{const y=Math.floor(n/12);return y===a?M[n%12]:y===a+1?MN[n%12]:null};
+  // avanzo medio previsto nei prossimi 12 mesi (anche i mesi in rosso contano)
+  const prox=[];for(let n=nOra;n<nOra+12;n++){const x=mese(n);if(x&&x.r!=null)prox.push(x.r)}
+  const A=prox.length?prox.reduce((s,v)=>s+v,0)/prox.length:0;
+  const av=n=>{const x=mese(n);return x&&x.r!=null?x.r:Math.max(0,A)}; // oltre la previsione: l'avanzo medio
+  const L=obLista().map((o,i)=>{const T=OB_TIPI.find(t=>t[0]===o.tipo)||OB_TIPI[5];
+    const fine=o.entro?obMeseN(o.entro+'-01'):null;return {...o,i,ic:T[2],col:T[3],target:+o.target||0,dalN:o.dal?obMeseN(o.dal+'-01'):nOra,fine,hai:0,pronto:null}});
+  // mese per mese: l'avanzo (se positivo) va al primo obiettivo attivo non ancora pieno; i mesi chiusi danno "hai", i futuri dicono quando ci arrivi
+  const rem=L.map(o=>o.target), n0=L.length?Math.min(...L.map(o=>o.dalN)):nOra;
+  for(let n=n0;n<n0+600&&L.some((o,i)=>rem[i]>0.5);n++){let x=Math.max(0,av(n));
+    for(let i=0;i<L.length&&x>0.005;i++){if(rem[i]<0.5||L[i].dalN>n)continue;const p=Math.min(x,rem[i]);rem[i]-=p;x-=p;if(n<nOra)L[i].hai+=p;if(rem[i]<0.5)L[i].pronto=n}}
+  L.forEach(o=>{o.manca=Math.max(0,o.target-o.hai);o.fatto=o.target>0.5&&o.manca<0.5&&o.pronto!=null&&o.pronto<nOra;
+    o.mesi=o.fine==null?null:Math.max(1,o.fine-nOra+1);o.alMese=o.fine==null||o.fatto?null:o.manca/o.mesi;o.inTempo=o.fine==null||o.pronto!=null&&o.pronto<=o.fine;
+    const x=o.pronto!=null&&mese(o.pronto);if(x&&!o.fatto)(x.ob=x.ob||[]).push(o)});
+  const servono=L.reduce((s,o)=>s+(o.alMese||0),0), tm=tettoMese(a,Math.min(12,Math.max(1,(nOra%12)+1)));
+  const ch=D.chiusi||[], mV=ch.length?ch.reduce((s,m)=>s+speseUni(a,[m],'variabili').pag,0)/ch.length:null;
+  return {a,D,M,MN,A,L,nOra,servono,tm,mV,tot:L.reduce((s,o)=>s+o.target,0),manca:L.reduce((s,o)=>s+o.manca,0)};
+}
+/* ---- tre modi di disegnare i risparmi mese per mese (proposte 13/11: UI.obVista A/B/C) ---- */
+function obStriscia(X,e0,n0){
+  const vN=UI.obAnno===X.a+1, MM=vN?X.MN:X.M, aS=vN?X.a+1:X.a, v=UI.obVista||'C';
+  const anno=MM.filter(x=>x.r!=null).reduce((s,x)=>s+x.r,0);
+  const pil=`<span class="ob-pil"><button data-ob-anno="${X.a}" class="${vN?'':'on'}">${X.a}</button><button data-ob-anno="${X.a+1}" class="${vN?'on':''}">${X.a+1} previsto</button></span>`;
+  const sub=vN&&MM[3].senzaEnt?`<b class="no">mancano le entrate ${aS} nella Previsione</b>: c'è solo il I trimestre`:`stipendio del mese − spese fisse e variabili`;
+  const tit=`<h3>${ico('calendario')} Quanto ti avanza ogni mese ${pil}<small>${sub} · ${pvBase()==='prev'?'con le fatture previste':'solo fatture incassate'}</small><span class="ob-str-t">nel ${aS} <b class="${anno<-0.5?'no':'ok'}">${anno<-0.5?'− ':'+ '}${e0(Math.abs(anno)).slice(2)}</b></span></h3>`;
+  const tip=x=>`${MESI[x.m-1]} ${x.a}${x.fut?' (previsto)':''}: stipendio ${x.st==null?'—':e0(x.st)} − fisse ${e0(x.F)} − variabili ${e0(x.V)}${x.tm!=null?' (tetto '+e0(x.tm)+')':''} = ${x.r==null?'—':e0(x.r)}`;
+  const flag=x=>(x.ob||[]).map(o=>`<em style="background:${o.col}" title="Arrivi a ${esc(o.nome)}">✓ ${esc(o.nome)}</em>`).join('');
+  const W=1000,H=150;let corpo='';
+  if(v==='A'){ // colonne dell'avanzo + linea "messo da parte da gennaio"
+    const mx=Math.max(1,...MM.map(x=>Math.abs(x.r||0))), mc=Math.max(1,...MM.map(x=>Math.abs(x.r==null?0:x.cum))), sc=Math.max(mx,mc), z=H/2, Y=val=>z-val/sc*(H/2-12), cw=W/12;
+    const pts=MM.filter(x=>x.r!=null).map(x=>`${(x.m-0.5)*cw},${Y(x.cum)}`).join(' ');
+    corpo=`<div class="ob-a"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="ob-a-svg"><line x1="0" x2="${W}" y1="${z}" y2="${z}" class="z"/>
+      ${MM.map(x=>x.r==null?'':`<rect x="${(x.m-1)*cw+cw*0.2}" width="${cw*0.6}" y="${Math.min(z,Y(x.r))}" height="${Math.abs(Y(x.r)-z)}" class="${x.r<0?'neg':'pos'} ${x.fut?'fut':''}"><title>${tip(x)}</title></rect>`).join('')}
+      <polyline points="${pts}" class="cum"/>${MM.filter(x=>x.r!=null).map(x=>`<circle cx="${(x.m-0.5)*cw}" cy="${Y(x.cum)}" r="4" class="cum"><title>da gennaio ${e0(x.cum)}</title></circle>`).join('')}</svg>
+      <div class="ob-a-m">${MM.map(x=>`<div class="${x.cor?'ora':''} ${x.fut?'fut':''}" title="${tip(x)}"><b class="${x.r==null?'':x.r<-0.5?'no':'ok'}">${x.r==null?'—':(x.r<-0.5?'− ':'+ ')+n0(Math.abs(x.r))}</b><span>${MESI3[x.m-1]}${x.cor?' · ora':''}</span>${flag(x)}</div>`).join('')}</div>
+      <div class="ob-leg"><span><i class="pos"></i>avanza</span><span><i class="neg"></i>manca</span><span><i class="fut"></i>previsto</span><span><i class="cum"></i>messo da parte da gennaio</span></div></div>`;
+  } else if(v==='B'){ // stipendio contro spese: dove si può risparmiare (le variabili)
+    const mx=Math.max(1,...MM.map(x=>Math.max(x.st||0,x.F+x.V)));
+    corpo=`<div class="ob-b">${MM.map(x=>{const h=val=>Math.max(0,val)/mx*100;return `<div class="ob-b-c ${x.cor?'ora':''} ${x.fut?'fut':''}" title="${tip(x)}">
+        <div class="ob-b-g"><i class="f" style="height:${h(x.F)}%"></i><i class="v ${x.tm!=null&&x.V>x.tm+0.5?'over':''}" style="height:${h(x.V)}%;bottom:${h(x.F)}%"></i>${x.r!=null&&x.r>0.5?`<u style="bottom:${h(x.F+x.V)}%;height:${h(x.r)}%"></u>`:''}${x.st!=null?`<s style="bottom:${h(x.st)}%"></s>`:''}</div>
+        <b class="${x.r==null?'':x.r<-0.5?'no':'ok'}">${x.r==null?'—':(x.r<-0.5?'− ':'+ ')+n0(Math.abs(x.r))}</b><span>${MESI3[x.m-1]}</span>${flag(x)}</div>`}).join('')}</div>
+      <div class="ob-leg"><span><i class="f"></i>spese fisse</span><span><i class="v"></i>spese variabili</span><span><i class="st"></i>stipendio del mese</span><span><i class="pos"></i>quello che avanza</span></div>`;
+  } else { // C: tabella come un foglio Excel, una colonna per mese
+    const c=(val,cl)=>`<span class="${cl||''}">${val==null?'—':n0(val)}</span>`;
+    const riga=(tit,f,cls)=>`<div class="ob-t-r ${cls||''}"><span class="ob-t-h">${tit}</span>${MM.map(x=>`<span class="${x.cor?'ora':''} ${x.fut?'fut':''}" title="${tip(x)}">${f(x)}</span>`).join('')}</div>`;
+    corpo=`<div class="ob-t">${riga('',x=>MESI3[x.m-1]+(x.cor?' · ora':x.fut?' · prev.':''),'mesi')}
+      ${riga('Stipendio',x=>x.st==null?'—':n0(x.st),'st')}
+      ${riga('− Spese fisse',x=>n0(x.F),'f')}
+      ${riga('− Spese variabili',x=>`<i class="${x.tm!=null?tettoCl(x.V,x.tm):''}">${n0(x.V)}</i>${x.tm!=null?`<small>/${n0(x.tm)}</small>`:''}`,'v')}
+      ${riga('= Ti avanza',x=>x.r==null?'—':`<b class="${x.r<-0.5?'no':'ok'}">${(x.r<-0.5?'− ':'+ ')+n0(Math.abs(x.r))}</b>`,'av')}
+      ${riga('Da gennaio',x=>x.r==null?'—':(x.cum<-0.5?'− ':'')+n0(Math.abs(x.cum)),'cum')}
+      ${MM.some(x=>x.ob)?riga('Obiettivi',x=>flag(x)||'','obr'):''}</div>
+      <div class="ob-leg"><span>variabili: <b class="ok">sotto il tetto</b> · <b class="att">oltre l'80%</b> · <b class="no">sopra il tetto</b></span></div>`;
+  }
+  return `<section class="tq-p ob-str v${v}">${tit}${corpo}</section>`;
+}
+function renderObiettivi(){
+  const X=obDati(), e0=v=>(v<-0.5?'− ':'')+'€ '+numIt(Math.abs(Math.round(v))).replace(/,00$/,''), n0=v=>numIt(Math.round(v)).replace(/,00$/,'');
+  const kpi=(cls,ic,tit,val,sub,att)=>`<div class="tq-k ${cls}" ${att||''}><div class="tq-k-t"><span>${ico(ic)}${tit}</span></div><div class="tq-k-v">${val}</div><div class="tq-k-s">${sub}</div></div>`;
+  const nF=X.L.filter(o=>o.fatto).length, gap=X.servono<0.5?0:X.servono-X.A, ok=gap<=0.5, qT=`${X.a}-${Math.ceil(((X.nOra%12)+1)/3)}`;
+  const kpis=kpi(X.A<-0.5?'k-s':'k-e','netto','Ti avanza in media',e0(X.A)+'<small> al mese</small>','prossimi 12 mesi: stipendio − fisse − variabili')
+    +kpi('k-vol','salvadanaio','I tuoi obiettivi',e0(X.tot),X.L.length?`${X.L.length} ${X.L.length===1?'obiettivo':'obiettivi'} · ${nF?`raggiunti <b>${nF}</b>`:'nessuno ancora raggiunto'}`:'aggiungine uno qui sotto')
+    +kpi(X.manca>0.5?'k-net':'k-e','calendario','Mancano',e0(X.manca),X.manca>0.5&&X.tot>0.5?`ne hai già messi da parte il <b>${Math.round((X.tot-X.manca)/X.tot*100)}%</b>`:X.L.length?'ci sei per tutti':'—')
+    +kpi(ok?'k-e':'k-s','variabili',ok?'Ci stai dentro':'Da togliere alle variabili',ok?(X.servono>0.5?e0(X.servono)+'<small> al mese</small>':'—'):e0(gap)+'<small> al mese</small>',
+      ok?(X.servono>0.5?'servono per le scadenze: bastano gli avanzi':'nessuna scadenza da rispettare'):gap>=(X.tm??X.mV??0)-0.5?'tagliare le variabili non basta':X.tm!=null?`tetto da ${e0(X.tm)} a <b>${e0(Math.max(0,X.tm-gap))}</b>`:`variabili da ${e0(X.mV||0)} a <b>${e0(Math.max(0,(X.mV||0)-gap))}</b> al mese`,`data-tb-tet="${qT}" title="Clicca per cambiare il tetto delle variabili"`);
+  const selMese=o=>{const y0=Math.floor(X.nOra/12);let h=`<option value="">nessuna</option>`;
+    for(let y=y0;y<=y0+6;y++){h+=`<optgroup label="${y}">`;for(let m=(y===y0?X.nOra%12:0);m<12;m++){const v=`${y}-${String(m+1).padStart(2,'0')}`;h+=`<option value="${v}" ${o.entro===v?'selected':''}>${MESI3[m]} ${y}</option>`}h+='</optgroup>'}
+    if(o.entro&&obMeseN(o.entro+'-01')<X.nOra)h+=`<option value="${o.entro}" selected>${obMeseTxt(obMeseN(o.entro+'-01'))}</option>`;
+    return `<select data-ob="${o.i}" data-ob-k="entro">${h}</select>`};
+  const card=o=>{const pc=o.target>0.5?Math.min(100,o.hai/o.target*100):0;
+    const stato=o.fatto?`<span class="tq-d ok">raggiunto ✓</span>`:o.target<0.5?'<span class="tq-d neutro">scrivi la cifra</span>':o.fine==null?`<span class="tq-d neutro">${o.pronto!=null?'pronto a '+obMeseTxt(o.pronto):'non ci arrivi'}</span>`:o.inTempo?`<span class="tq-d ok">in tempo</span>`:`<span class="tq-d no">${o.pronto!=null?'in ritardo di '+(o.pronto-o.fine)+(o.pronto-o.fine===1?' mese':' mesi'):'non ci arrivi'}</span>`;
+    return `<div class="ob-c ${o.fatto?'fatto':''}" style="--oc:${o.col}">
+      <span class="ic-ico" style="--b:${o.col}">${ico(o.ic)}</span>
+      <span class="ob-nm"><span class="ob-num">${o.i+1}°</span><input class="ob-nome" data-ob="${o.i}" data-ob-k="nome" value="${esc(o.nome)}"></span>
+      <span class="dp-eur ob-in">€<input data-ob="${o.i}" data-ob-k="target" inputmode="decimal" value="${o.target?n0(o.target):''}" placeholder="quanto"></span>
+      <span class="ob-en">${selMese(o)}</span>
+      <span class="ob-az"><button data-ob-su="${o.i}" title="Più importante" ${o.i?'':'disabled'}>▲</button><button data-ob-giu="${o.i}" title="Meno importante" ${o.i<X.L.length-1?'':'disabled'}>▼</button><button data-ob-via="${o.i}" title="Togli l'obiettivo">✕</button></span>
+      <div class="ob-bar"><i style="width:${pc}%"></i><b>${e0(o.hai)} <small>di ${e0(o.target)} · dal ${obMeseTxt(o.dalN)}</small></b>${stato}</div>
+      <span class="ob-ris">${o.fatto?'<small>fatto</small>':o.alMese!=null?`<b>${e0(o.alMese)}</b><small>al mese</small>`:o.pronto!=null?`<b>${obMeseTxt(o.pronto)}</b><small>con gli avanzi</small>`:'<small>—</small>'}</span></div>`};
+  const add=`<div class="ob-add"><span>Aggiungi:</span>${OB_TIPI.map(t=>`<button data-ob-add="${t[0]}"><i style="background:${t[3]}"></i>${t[1]}</button>`).join('')}</div>`;
+  const sx=`<div class="tb-meta"><div class="tq-meta-t"><span class="n">1</span>I tuoi obiettivi<small>in ordine di importanza: quello che avanza va prima al 1°</small></div>
+    <section class="tq-p ob-lista">${X.L.length?`<div class="ob-hd"><span></span><span>obiettivo</span><span>quanto</span><span>entro</span><span></span></div>${X.L.map(card).join('')}`:`<p class="ob-vuoto">Non hai ancora obiettivi. Scegline uno qui sotto, scrivi quanto ti serve ed entro quando: ti dico quanto togliere ogni mese allo stipendio.</p>`}${add}</section></div>`;
+  const fin=Math.max(X.nOra+12,...X.L.map(o=>Math.max(o.fine||0,o.pronto||0)))+1, span=Math.min(fin,X.nOra+60)-X.nOra, P=n=>Math.max(0,Math.min(100,(n-X.nOra)/span*100));
+  const anni=[];for(let n=X.nOra+1;n<X.nOra+span;n++)if(n%12===0)anni.push(n);
+  const gantt=X.L.map(o=>{const pr=o.pronto==null?X.nOra+span:o.pronto;
+    return `<div class="ob-g"><span class="ob-g-n"><i style="background:${o.col}"></i>${esc(o.nome)}</span><span class="ob-g-b">${anni.map(n=>`<u style="left:${P(n)}%"></u>`).join('')}
+      ${o.fatto?`<em class="ok" style="left:0">✓</em>`:`<i class="${o.inTempo?'':'tardi'} ${o.pronto==null?'mai':''}" style="left:0;width:${Math.max(1.5,P(pr+1))}%;background:${o.col}"></i>`}
+      ${o.fine!=null&&!o.fatto?`<s style="left:${P(o.fine+1)}%" title="entro ${obMeseTxt(o.fine)}"></s>`:''}</span>
+      <span class="ob-g-v">${o.fatto?'già fatto':o.pronto==null?'—':obMeseTxt(o.pronto)}</span></div>`}).join('');
+  const asse=`<div class="ob-g asse"><span></span><span class="ob-g-b">${[X.nOra,...anni.filter(n=>P(n)>7)].map(n=>`<em style="left:${P(n)}%">${n===X.nOra?'oggi':Math.floor(n/12)}</em>`).join('')}</span><span></span></div>`;
+  const dx=`<div class="tb-meta dx"><div class="tq-meta-t"><span class="n">2</span>Ce la fai?<small>con quello che ti avanza dallo stipendio</small></div>
+    <section class="tq-p ob-ritmo"><div class="ob-conf"><div><small>Ti servono per le scadenze</small><b>${e0(X.servono)}</b><em>al mese</em></div><div class="${X.A<-0.5?'no':''}"><small>Ti avanza in media</small><b>${e0(X.A)}</b><em>al mese, prossimi 12 mesi</em></div>
+      <div class="${ok?'ok':'no'}"><small>${ok?'Ti restano':'Da togliere alle variabili'}</small><b>${e0(Math.abs(gap))}</b><em>al mese</em></div></div>
+      <p class="qf-nota">${X.servono<0.5?'Quando dai una scadenza a un obiettivo, qui vedi se gli avanzi bastano.':ok?`Con quello che ti avanza <b class="ok">ci stai dentro</b>: non serve tagliare le variabili.`:`Per stare nei tempi devi spendere <b class="no">${e0(gap)} in meno al mese</b>${gap>=(X.tm??X.mV??0)-0.5?`: <b class="no">anche senza spese variabili non basta</b>. Servono più incassi, scadenze più lontane oppure obiettivi più piccoli.`:` sulle variabili: ${X.tm!=null?`abbassa il tetto da ${e0(X.tm)} a ${e0(Math.max(0,X.tm-gap))}`:`da ${e0(X.mV||0)} (la tua media) a ${e0(Math.max(0,(X.mV||0)-gap))}`}.`} <button class="ob-tet" data-tb-tet="${qT}">cambia il tetto →</button>`}</p></section>
+    <section class="tq-p ob-quando"><h3>${ico('calendario')} Quando ci arrivi<small><i class="ob-lg"></i>con gli avanzi previsti <i class="ob-lg s"></i>la tua scadenza</small></h3>${X.L.length?gantt+asse:'<p class="qf-nota">Nessun obiettivo.</p>'}
+      <p class="qf-nota">Ogni mese quello che avanza va al primo obiettivo non ancora pieno, poi al secondo. Dopo la Previsione conto l'avanzo medio. Il deposito Revolut non c'entra: resta per far fruttare i soldi.</p></section></div>`;
+  $('#main').innerHTML=`<div class="tq tb ob"><div class="tq-testa"><h1>Obiettivi di risparmio</h1><span class="tq-mesi">${X.a}</span><span class="tb-scen">si pagano con quello che avanza dallo stipendio</span></div>
+    <div class="tq-kpi">${kpis}</div>${obStriscia(X,e0,n0)}<div class="tb-due">${sx}${dx}</div></div>`;
+}
+function obModifica(fn){modifica(()=>{S.impostazioni.obiettivi=obLista().map(o=>({...o}));fn(S.impostazioni.obiettivi)})}
+document.addEventListener('change',e=>{
+  const i=e.target.closest('[data-ob]');if(!i)return;const n=+i.dataset.ob,k=i.dataset.obK;let v=i.value.trim();
+  if(k==='target'){v=v===''?0:parseNum(v);if(isNaN(v)||v<0){toast('Cifra non valida');return}}
+  if(k==='nome'&&!v){toast('Scrivi un nome');return}
+  obModifica(L=>{L[n][k]=v});
+});
+document.addEventListener('click',e=>{const y=e.target.closest('[data-ob-anno]');if(y){UI.obAnno=+y.dataset.obAnno;render()}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-ob-su],[data-ob-giu],[data-ob-via],[data-ob-add]');if(!b)return;
+  if(b.dataset.obAdd){const T=OB_TIPI.find(t=>t[0]===b.dataset.obAdd);
+    obModifica(L=>L.push({id:'ob'+nuovoId(),tipo:T[0],nome:T[0]==='altro'?'Nuovo obiettivo':T[1],target:0,entro:'',dal:obMeseISO(obMeseN(oggiISO()))}));return}
+  if(b.dataset.obVia!=null){const n=+b.dataset.obVia;obModifica(L=>L.splice(n,1));toast('Obiettivo tolto',true);return}
+  const n=+(b.dataset.obSu??b.dataset.obGiu), m=b.dataset.obSu!=null?n-1:n+1;
+  obModifica(L=>{if(m<0||m>=L.length)return;[L[n],L[m]]=[L[m],L[n]]});
+});
+
 function renderTrimestreB(){conScen(()=>{
   const a=S.anno, q=+UI.trim||1, o=new Date(), e0=v=>(v<-0.5?'− ':'')+'€ '+numIt(Math.abs(Math.round(v))).replace(/,00$/,'');
   const oggiK=o.getFullYear()===a?o.getMonth()+1:(o.getFullYear()>a?13:0);
@@ -2947,6 +3212,7 @@ function renderPagina(){
   if(p==='fiscale') return renderFiscale();
   if(p==='annuario') return renderAnnuario();
   if(p==='previsione') return renderPrevisione();
+  if(p==='obiettivi') return renderObiettivi();
   if(p==='fatturare') return renderFatturare();
   if(p==='calendario') return renderCalendario(); // registro: mostra tutto (fatture attese comprese), come Movimenti
   if(!PAGINE.some(x=>x[0]===p)){UI.pagina='home';return renderHome()}
