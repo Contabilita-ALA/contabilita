@@ -1648,6 +1648,63 @@ table.mov td{overflow:hidden}table.mov td select,table.mov td input{max-width:10
 .griglia-saldi{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
 .griglia-saldi label{display:flex;flex-direction:column;font-size:12px;font-weight:600;gap:4px}
 .griglia-saldi input{border:1px solid var(--cella-bordo);background:var(--cella);border-radius:7px;padding:7px 8px;text-align:right}
+
+/* ---- Calendario (13/11) ---- */
+.cl .tb-due{flex:1 1 0;min-height:0;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+.cl .tb-meta{min-height:0;overflow:hidden}
+.cl .tb-meta>section.tq-p{flex:1 1 0;min-height:0}
+.cl-mese{flex:1 1 auto;padding:8px 10px 6px}
+.cl-g{flex:1 1 auto;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:auto;grid-auto-rows:minmax(0,1fr);gap:4px;min-height:0}
+.cl-gs{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#55524c;text-align:center;padding-bottom:2px}
+.cl-d{container-type:inline-size;border:1px solid var(--linea);border-radius:8px;padding:3px 4px;display:flex;flex-direction:column;gap:2px;min-height:0;overflow:hidden;cursor:pointer;background:#fff}
+.cl-d:hover{border-color:var(--inchiostro)}
+.cl-d.vuoto{border:0;background:transparent;cursor:default}
+.cl-d.we{background:#f7f4ee}.cl-d.passato .cl-n{color:#9a958c}
+.cl-d.oggi{border:2px solid var(--inchiostro);box-shadow:0 0 0 2px #fbe3ae inset}
+.cl-n{display:flex;align-items:center;gap:4px;font:700 12px var(--font);color:#3d3a35}
+.cl-n em{font:600 9.5px var(--font);font-style:normal;text-transform:uppercase;letter-spacing:.3px;padding:0 5px;border-radius:6px;background:var(--inchiostro);color:#fff}
+.cl-n em.fe{background:#f6d4cb;color:#7a2a1d}
+.cl-n .cl-tot{margin-left:auto;font:600 10px var(--font);color:#7d7870}
+.cl-pp{display:flex;flex-direction:column;gap:2px;min-height:0}
+.cl-p{display:flex;align-items:center;gap:3px;font:600 11px/1.25 var(--font);font-variant-numeric:tabular-nums;white-space:nowrap;padding:1px 5px;border-radius:5px;background:color-mix(in srgb,var(--pc) 70%,#fff);border:1px solid color-mix(in srgb,var(--pc) 60%,#000 12%)}
+.cl-p .ico{width:11px;height:11px;flex:none}
+.cl-p span{overflow:hidden;text-overflow:clip;min-width:0;flex:1 1 auto;font-weight:500;color:#3d3a35}
+.cl-p b{font-weight:700;margin-left:auto}
+.cl-p.prev{background:repeating-linear-gradient(-45deg,#fff 0 3px,color-mix(in srgb,var(--pc) 45%,#fff) 3px 6px);border-style:dashed}
+.cl-p.ent b{color:var(--verde)}
+.cl-p.tas{border:1.5px solid var(--inchiostro)}
+.cl-p.acc{--pc:#d9d5cc;border:1.5px solid var(--inchiostro)}
+.cl-p.acc.fatto{border-style:solid;opacity:.75}
+.cl-p[hidden],.cl-r[hidden],.cl-ag-h[hidden],.cl-ag-piu[hidden]{display:none}
+@container (max-width:118px){.cl-p span,.cl-n .cl-tot{display:none}}
+.cl-piu{font:600 10px var(--font);color:#55524c;padding-left:2px}
+.cl-sotto{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:6px;font-size:11.5px;color:#55524c}
+.cl-sotto .cl-p{display:inline-flex}
+.cl-sotto .spazio{flex:1}
+.cl-sotto b.ok{color:var(--verde)}.cl-sotto b.no{color:var(--rosso)}
+.cl-k{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cl-k .tq-k{padding:6px 10px}.cl-k .tq-k-t{letter-spacing:.2px}.cl-k .tq-k-v{font-size:21px}
+.cl-k .tq-k.k-t{background:#efe3d6}
+.cl-ag{flex:1 1 auto;padding:8px 12px 6px}
+.cl-ag-l{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.cl-ag-h{font:700 10.5px var(--font);text-transform:uppercase;letter-spacing:.4px;color:#55524c;padding:6px 0 2px;border-bottom:1.5px solid var(--inchiostro);display:flex;gap:6px}
+.cl-ag-h small{margin-left:auto;font-weight:600;text-transform:none;letter-spacing:0;color:var(--grigio)}
+.cl-ag-h.rit{color:var(--rosso);border-color:var(--rosso)}
+.cl-r{display:grid;grid-template-columns:74px 12px minmax(0,1fr) auto;gap:8px;align-items:center;padding:4px 4px;border-bottom:1px solid var(--linea);font-size:12.5px;cursor:pointer;text-align:left;background:none;border-left:0;border-right:0;border-top:0;width:100%;font-family:inherit;color:inherit}
+.cl-r:hover{background:#faf6ee}
+.cl-r .d{font-weight:600;color:#55524c;white-space:nowrap}
+.cl-r .d small{font-weight:500;color:var(--grigio)}
+.cl-r i.sw{width:11px;height:11px;border-radius:3px;border:1px solid var(--inchiostro);background:var(--pc)}
+.cl-r .t{min-width:0;line-height:1.25}
+.cl-r .t small{display:block;font-size:10.5px;color:var(--grigio)}
+.cl-r>b{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+.cl-r>b.pos{color:var(--verde)}
+.cl-r>b em{display:block;font:600 10px var(--font);font-style:normal;color:var(--grigio)}
+.cl-r.tas{background:#f6eee4}.cl-r.ent{background:#eef6ec}.cl-r.acc{background:#efede8}
+.cl-r.rit .d{color:var(--rosso)}
+.cl-r .az{font:700 10px var(--font);color:#55524c;text-transform:uppercase;letter-spacing:.3px}
+.cl-ag-piu{font-size:11.5px;color:#55524c;padding:5px 2px;margin-top:auto}
+.cl-ag-piu button{all:unset;cursor:pointer;text-decoration:underline}
 .presto-box{background:var(--carta);border:1.5px dashed var(--grigio);border-radius:10px;padding:30px;text-align:center;color:#55524c;max-width:640px}
 
 /* home: tutta in uno schermo */
@@ -2068,7 +2125,7 @@ const PAGINE=[
   ['fiscale','Riepilogo fiscale'],['annuario','Annuario contributi'],['cointestato','Conto cointestato'],['conti','Conti e risparmi'],
   ['impostazioni','Impostazioni e backup']];
 const SIDE_STACCO=new Set(['anno','fiscale','cointestato','impostazioni']); // una linea sopra queste voci
-const PRONTE=new Set(['home','movimenti','impostazioni','fatture','radames','anno','cointestato','fiscale','annuario','previsione','conti']);
+const PRONTE=new Set(['home','movimenti','impostazioni','fatture','radames','anno','cointestato','fiscale','annuario','previsione','conti','calendario']);
 
 /* ====== Utilità ====== */
 const $=s=>document.querySelector(s);
@@ -2477,6 +2534,117 @@ function renderTrimestreB(){conScen(()=>{
     </div></div>`;
   pareggiaTrim();
 })}
+
+/* ---- Calendario (13/11): il mese giorno per giorno + cosa ti aspetta da oggi ---- */
+function calEventi(da,a){ // tutte le voci tra due date (iso), comprese le fatture attese e gli accantonamenti di fine trimestre
+  const L=[];
+  S.movimenti.filter(x=>x.data>=da&&x.data<=a).forEach(x=>{
+    const tas=['inarcassa','tasse stato'].includes(x.cat), ent=x.eur<0&&!x.giro, accG=x.giro&&(S.conti.find(c=>c.id===x.verso)||{}).tipo==='salvadanaio';
+    if(x.giro&&!accG) return;
+    L.push({tipo:tas?'tas':accG?'accG':ent?'ent':'spe',data:x.data,m:x,ok:!!x.ok,eur:Math.abs(x.eur),det:x.det||nomeCat(x.cat),col:accG?'#d9d5cc':coloreCat(x.cat)||'#ddd',
+      sub:(accG?'giroconto → '+nomeConto(x.verso):nomeCat(x.cat))+' · '+nomeConto(x.conto)});
+  });
+  // accantonamento: si sposta a inizio del mese dopo la fine del trimestre
+  const y0=+da.slice(0,4),y1=+a.slice(0,4);
+  for(let y=y0-1;y<=y1;y++)for(let q=1;q<=4;q++){
+    const d=q===4?`${y+1}-01-01`:`${y}-${String(q*3+1).padStart(2,'0')}-01`; if(d<da||d>a) continue;
+    const T=datiTrim(y,q); if(!T||T.accant<0.5) continue;
+    const res=T.accant-T.spostato;
+    L.push({tipo:'acc',data:d,ok:res<0.5,eur:res<0.5?T.spostato:res,a:y,q,det:`Accantonamento ${ROMANI[q-1]} trim${y!==+d.slice(0,4)?' '+y:''}`,col:'#d9d5cc',
+      sub:res<0.5?`fatto: spostati ${euro(T.spostato)} sul Revolut`:`dovuti ${euro(T.accant)}${T.spostato>0.5?', già spostati '+euro(T.spostato):''}: Unicredit → Revolut`});
+  }
+  const ord={tas:0,acc:1,accG:1,ent:2,spe:3};
+  return L.sort((x,y)=>x.data<y.data?-1:x.data>y.data?1:(ord[x.tipo]-ord[y.tipo])||(y.eur-x.eur));
+}
+function renderCalendario(){
+  const oggi=oggiISO(), o=new Date();
+  if(!UI.calM||UI.calAnno!==S.anno){UI.calAnno=S.anno;UI.calM=o.getFullYear()===S.anno?oggi.slice(0,7):`${S.anno}-01`} // cambiando anno nella barra laterale si riparte da lì
+  if(0) UI.calM=o.getFullYear()===S.anno?oggi.slice(0,7):`${S.anno}-01`;
+  const a=+UI.calM.slice(0,4), m=+UI.calM.slice(5,7), mm=String(m).padStart(2,'0');
+  const giorni=new Date(a,m,0).getDate(), primo=(new Date(a,m-1,1).getDay()+6)%7, fest=festivi(a);
+  const e0=v=>'€ '+numIt(Math.round(v)).replace(/,00$/,'');
+  const mPrec=m===1?`${a-1}-12`:`${a}-${String(m-1).padStart(2,'0')}`, mSucc=m===12?`${a+1}-01`:`${a}-${String(m+1).padStart(2,'0')}`;
+  const nomeM=k=>MESI[+k.slice(5,7)-1].slice(0,3);
+  const nav=`<span class="spazio"></span>${UI.calM!==oggi.slice(0,7)?`<button class="btn chiaro piccolo" data-cal-vai="${oggi.slice(0,7)}">oggi</button>`:''}<button class="btn chiaro piccolo" data-cal-vai="${mPrec}">‹ ${nomeM(mPrec)}</button><button class="btn chiaro piccolo" data-cal-vai="${mSucc}">${nomeM(mSucc)} ›</button>`;
+  const stato=UI.calM===oggi.slice(0,7)?['in corso','corso']:UI.calM<oggi.slice(0,7)?['concluso','ok']:['in arrivo','fut'];
+  const testa=`<div class="tq-testa"><h1>Calendario</h1><span class="tq-mesi">${MESI[m-1]} ${a}</span><span class="tq-stato ${stato[1]}">${stato[0]}</span><span class="tb-scen" title="Come in Movimenti, qui vedi tutto: anche le fatture non ancora incassate">tutte le voci, anche le previste</span>${nav}</div>`;
+  // ---- sinistra: il mese ----
+  const E=calEventi(`${a}-${mm}-01`,`${a}-${mm}-${giorni}`);
+  const pill=x=>{const ic=x.tipo==='tas'?ico('fiscali'):x.tipo==='acc'||x.tipo==='accG'?ico('salvadanaio'):x.tipo==='ent'?ico('entrate'):'';
+    const nome=x.tipo==='tas'?(x.m.cat==='inarcassa'?'Inarcassa':'F24'):x.tipo==='acc'||x.tipo==='accG'?'Revolut':x.tipo==='ent'?(x.m.fat?'fattura':'entrata'):'';
+    return `<i class="cl-p ${x.tipo==='accG'?'acc':x.tipo} ${x.ok?'fatto':'prev'}" style="--pc:${x.col}" title="${esc(x.det)} · ${euro(x.eur)}${x.ok?'':' · previsto'}">${ic}${nome?`<span>${nome}</span>`:''}<b>${x.tipo==='ent'?'+ ':''}${x.tipo==='acc'&&x.ok?'✓':e0(x.eur)}</b></i>`};
+  let g=['lun','mar','mer','gio','ven','sab','dom'].map(s=>`<div class="cl-gs">${s}</div>`).join('');
+  for(let i=0;i<primo;i++) g+='<div class="cl-d vuoto"></div>';
+  for(let d=1;d<=giorni;d++){
+    const iso=`${a}-${mm}-${String(d).padStart(2,'0')}`, L=E.filter(x=>x.data===iso), wd=(primo+d-1)%7;
+    const fe=fest.has(iso);
+    const usc=L.filter(x=>x.tipo==='spe'||x.tipo==='tas').reduce((s,x)=>s+x.eur,0);
+    g+=`<div class="cl-d ${wd>4||fe?'we':''} ${iso===oggi?'oggi':''} ${iso<oggi?'passato':''}" data-giorno="${iso}" title="Clicca per vedere le voci del giorno"><div class="cl-n">${d}${iso===oggi?'<em>oggi</em>':''}${fe?'<em class="fe">festa</em>':''}${L.length>1&&usc>0.5?`<span class="cl-tot">− ${e0(usc)}</span>`:''}</div><div class="cl-pp">${L.map(pill).join('')}</div></div>`;
+  }
+  const som=f=>E.filter(f).reduce((s,x)=>s+x.eur,0);
+  const entF=som(x=>x.tipo==='ent'&&x.ok), entP=som(x=>x.tipo==='ent'&&!x.ok), spF=som(x=>x.tipo==='spe'&&x.ok), spP=som(x=>x.tipo==='spe'&&!x.ok), tas=som(x=>x.tipo==='tas');
+  const sotto=`<div class="cl-sotto"><i class="cl-p fatto" style="--pc:#cadcc1"><b>fatta</b></i><i class="cl-p prev" style="--pc:#cadcc1"><b>prevista</b></i><span>colore = categoria</span><span class="spazio"></span>
+    <span>entrate <b class="ok">${e0(entF)}</b>${entP>0.5?` + ${e0(entP)} attese`:''}</span><span>spese <b>${e0(spF)}</b>${spP>0.5?` + ${e0(spP)} previste`:''}</span>${tas>0.5?`<span>tasse e Inarcassa <b>${e0(tas)}</b></span>`:''}</div>`;
+  // ---- destra: da oggi in poi ----
+  const fra=n=>{const d=new Date(o.getFullYear(),o.getMonth(),o.getDate()+n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+  const fine30=fra(30), fineA=fra(62);
+  const rit=calEventi(fra(-60),fra(-1)).filter(x=>!x.ok&&x.tipo!=='acc');
+  const F=calEventi(oggi,fineA).filter(x=>!x.ok||x.data===oggi);
+  const p30=F.filter(x=>x.data<=fine30&&!x.ok);
+  const s30=t=>p30.filter(x=>x.tipo===t).reduce((s,x)=>s+x.eur,0);
+  const rev=saldoContoAl((S.conti.find(c=>c.tipo==='salvadanaio')||{}).id||'REVOLUT',oggi), tas30=s30('tas'), nE=p30.filter(x=>x.tipo==='ent').length;
+  const kpi=(cls,ic,tit,val,sub)=>`<div class="tq-k ${cls}"><div class="tq-k-t"><span>${ico(ic)}${tit}</span></div><div class="tq-k-v">${val}</div><div class="tq-k-s">${sub}</div></div>`;
+  const kp=`<div class="cl-k">${kpi('k-e','entrate','Entrano',e0(s30('ent')),nE?`${nE} ${nE===1?'incasso atteso':'incassi attesi'}`:'nessun incasso atteso')}
+    ${kpi('k-s','variabili','Escono',e0(s30('spe')),`${p30.filter(x=>x.tipo==='spe').length} spese già segnate`)}
+    ${kpi('k-t','fiscali','Tasse, Inarcassa',e0(tas30),tas30>0.5?(rev>=tas30-0.5?`<span class="ok">Revolut ${e0(rev)}: bastano</span>`:`<span class="no">Revolut ${e0(rev)}: mancano ${e0(tas30-rev)}</span>`):`sul Revolut ${e0(rev)}`)}</div>`;
+  const GS=['dom','lun','mar','mer','gio','ven','sab'];
+  const dTxt=iso=>{const d=new Date(+iso.slice(0,4),+iso.slice(5,7)-1,+iso.slice(8,10));return `${GS[d.getDay()]} ${d.getDate()} <small>${MESI3[d.getMonth()]}</small>`};
+  const riga=(x,r)=>{const att=x.tipo==='acc'?`data-tb-acc="${Math.round(x.eur*100)/100}" data-tb-per="${x.a}-${x.q}" title="Clicca per registrare il giroconto Unicredit → Revolut"`:`data-vedi-mov="${x.m.id}" title="Clicca per aprire${x.ok?'':' e segnarla come fatta'}"`;
+    return `<button class="cl-r ${x.tipo==='accG'?'acc':x.tipo}${r?' rit':''}" ${att} style="--pc:${x.col}"><span class="d">${dTxt(x.data)}</span><i class="sw"></i><span class="t">${esc(x.det)}<small>${esc(x.sub)}${x.ok?' · fatta':''}</small></span><b class="${x.tipo==='ent'?'pos':''}">${x.tipo==='ent'?'+ ':''}${euro(x.eur)}${x.tipo==='acc'?'<em class="az">registra →</em>':r?'<em>è passata: fatta?</em>':''}</b></button>`};
+  // gruppi: da confermare, questa settimana, settimana prossima, poi per mese
+  const dow=(o.getDay()+6)%7, finSett=fra(6-dow), finSett2=fra(13-dow);
+  const grp=[];
+  if(rit.length) grp.push({h:'Da confermare',s:'previste con la data passata',cls:'rit',L:rit,r:1});
+  const add=(h,f,s)=>{const L=F.filter(f);if(L.length)grp.push({h,s,L})};
+  add('Questa settimana',x=>x.data<=finSett,`fino a domenica ${+finSett.slice(8)}`);
+  add('La settimana prossima',x=>x.data>finSett&&x.data<=finSett2,'');
+  const visti=new Set();F.filter(x=>x.data>finSett2).forEach(x=>visti.add(x.data.slice(0,7)));
+  [...visti].sort().forEach(k=>add(`${MESI[+k.slice(5,7)-1]}${+k.slice(0,4)!==o.getFullYear()?' '+k.slice(0,4):''}`,x=>x.data>finSett2&&x.data.slice(0,7)===k,''));
+  const lista=grp.map(gp=>`<div class="cl-ag-h ${gp.cls||''}">${gp.h}<small>${gp.s||''}${gp.L.length>1?` · ${gp.L.length} voci`:''}</small></div>${gp.L.map(x=>riga(x,gp.r)).join('')}`).join('')||'<p class="gr">Niente in programma nei prossimi due mesi.</p>';
+  $('#main').innerHTML=`<div class="tq tb cl">${testa}
+    <div class="tb-due">
+      <div class="tb-meta"><div class="tq-meta-t"><span class="n">1</span>${MESI[m-1][0].toUpperCase()+MESI[m-1].slice(1)} giorno per giorno<small>tasse, incassi, accantonamenti e spese</small></div>
+        <section class="tq-p cl-mese"><div class="cl-g">${g}</div>${sotto}</section></div>
+      <div class="tb-meta dx"><div class="tq-meta-t"><span class="n">2</span>Cosa ti aspetta<small>da oggi ai prossimi due mesi · clic per aprire</small></div>
+        <div class="tq-meta-t" style="font-size:12px;margin:-4px 0 -6px"><small style="margin-left:0">nei prossimi 30 giorni</small></div>
+        ${kp}
+        <section class="tq-p cl-ag"><div class="cl-ag-l">${lista}<div class="cl-ag-piu" hidden></div></div></section></div>
+    </div></div>`;
+  requestAnimationFrame(fitCal);setTimeout(fitCal,250);if(document.fonts)document.fonts.ready.then(()=>requestAnimationFrame(fitCal));
+}
+function fitCal(){ // niente barre: nelle caselle e nella lista si vede quello che ci sta, il resto è "+ N"
+  document.querySelectorAll('.cl-d .cl-pp').forEach(pp=>{
+    pp.querySelectorAll('.cl-piu').forEach(e=>e.remove());const P=[...pp.children];P.forEach(e=>e.hidden=false);
+    const lim=pp.parentElement.getBoundingClientRect().bottom-3;
+    if(!P.length||P[P.length-1].getBoundingClientRect().bottom<=lim) return;
+    let k=P.length;while(k>0&&P[k-1].getBoundingClientRect().bottom>lim-13){k--;P[k].hidden=true}
+    for(let i=k;i<P.length;i++)P[i].hidden=true;
+    const s=document.createElement('span');s.className='cl-piu';s.textContent=`+ ${P.length-k} altr${P.length-k===1?'a':'e'}`;pp.appendChild(s);
+  });
+  const box=document.querySelector('.cl-ag-l');if(!box)return;
+  const piu=box.querySelector('.cl-ag-piu'), R=[...box.querySelectorAll('.cl-r,.cl-ag-h')];R.forEach(e=>e.hidden=false);piu.hidden=true;
+  const sec=box.parentElement, lim=Math.min(box.getBoundingClientRect().bottom,sec.getBoundingClientRect().bottom-parseFloat(getComputedStyle(sec).paddingBottom)-2);
+  if(!R.length||R[R.length-1].getBoundingClientRect().bottom<=lim) return;
+  piu.hidden=false;const lim2=lim-piu.getBoundingClientRect().height-2;let n=0;
+  for(let i=R.length-1;i>=0;i--){if(R[i].getBoundingClientRect().bottom>lim2){R[i].hidden=true;if(R[i].classList.contains('cl-r'))n++}else break}
+  // non lasciare un titolo di gruppo da solo in fondo
+  for(let i=R.length-1;i>=0;i--){if(!R[i].hidden){if(R[i].classList.contains('cl-ag-h'))R[i].hidden=true;break}}
+  piu.textContent=`+ altre ${n} voci più avanti: le vedi spostando il calendario sui mesi dopo`;
+}
+document.addEventListener('click',e=>{
+  const v=e.target.closest('[data-cal-vai]');if(v){UI.calM=v.dataset.calVai;salvaUI();renderCalendario();adattaTesti();return}
+});
+window.addEventListener('resize',()=>{if(UI.pagina==='calendario')requestAnimationFrame(fitCal)});
 function apriTettoTrim(a,q){ // Paolo 13/11: il tetto si fissa anche dal Trimestre (stessi dati di Impostazioni)
   const T=((S.impostazioni.tetto||{})[a])||{base:null,m:{}}, ms=[q*3-2,q*3-1,q*3];
   const n=v=>v!=null?numIt(v).replace(/,00$/,''):'';
@@ -2529,6 +2697,7 @@ function renderPagina(){
   if(p==='fiscale') return renderFiscale();
   if(p==='annuario') return renderAnnuario();
   if(p==='previsione') return renderPrevisione();
+  if(p==='calendario') return renderCalendario(); // registro: mostra tutto (fatture attese comprese), come Movimenti
   if(!PAGINE.some(x=>x[0]===p)){UI.pagina='home';return renderHome()}
   const nome=PAGINE.find(x=>x[0]===p)[1];
   $('#main').innerHTML=`<h1>${esc(nome)}</h1><div class="presto-box"><p><b>Pagina in arrivo.</b></p><p>Costruiamo una pagina alla volta: questa arriva dopo che hai approvato <b>Movimenti</b>.</p><button class="btn" data-pag="movimenti">Vai a Movimenti</button></div>`;
