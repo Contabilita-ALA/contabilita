@@ -225,6 +225,10 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .tb .tb-t{grid-template-columns:26px minmax(0,1fr) 150px}
 .tb .tb-t strong{text-align:right}
 .tb .tb-t strong small{display:block;font:500 11px var(--font);color:#55524c;margin-top:1px}
+.tb-meta>section.tq-p:last-child{flex:none}
+.tb-meta:not(.dx)>section.tq-p:nth-last-child(2){flex:1 1 auto}
+.tb-pro .tb-tab.tb-mm{flex:1 1 auto}
+.tb-pro .tb-tab.tb-mm>.r.rev{flex:1 1 auto}
 .tb-tab{display:flex;flex-direction:column;font-size:13px;font-variant-numeric:tabular-nums}
 .tb-tab .r{display:grid;grid-template-columns:minmax(0,1fr) 92px 92px 104px;gap:8px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--linea)}
 .tb-tab .r>*:not(:first-child){text-align:right}
@@ -2462,9 +2466,15 @@ function renderTrimestreB(){conScen(()=>{
 function pareggiaTrim(){ // Paolo 13/11: le due metà finiscono alla stessa riga, senza vuoti
   const due=document.querySelector('.tb-due'); if(!due) return;
   const [L,R]=due.querySelectorAll('.tb-meta'); if(!L||!R) return;
+  // Paolo 13/11: i due box in basso (spese cambiate | mese per mese) partono e finiscono alla stessa riga
+  const bL=L.querySelector(':scope>section:last-child'), bR=R.querySelector(':scope>section:last-child');
+  if(!bL||!bR) return;
+  bL.style.height=bR.style.height='';
   due.classList.add('misura');
-  const righe=[...L.querySelectorAll('.tb-camb .r:not(.h)')];
+  const h=Math.max(bL.offsetHeight,bR.offsetHeight);
   due.classList.remove('misura');
+  if(getComputedStyle(due).gridTemplateColumns.split(' ').length<2) return;
+  bL.style.height=bR.style.height=h+'px';
 }
 function renderTrimestreInArrivo(){
   const q=+UI.trim||1;
