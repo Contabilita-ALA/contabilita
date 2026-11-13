@@ -2072,7 +2072,7 @@ i.p-ent-prev{background:#fff;border:1.5px dashed var(--verde)}.legenda span.p-en
 .tq.cr{height:auto}.cr .cr-due{flex:none;height:calc(100vh - var(--top-h,58px) - var(--avviso-h,0px) - 150px);min-height:480px}
 
 /* 12/11 15:30 tutto in una schermata */
-.tq.cr{height:calc(100vh - var(--top-h,58px) - var(--avviso-h,0px) - 24px);min-height:620px}
+.tq.cr{height:calc((100vh - var(--top-h,58px) - var(--avviso-h,0px) - 24px) / var(--mz,1));min-height:560px}
 .cr .cr-due{flex:1 1 0;height:auto;min-height:auto}
 .cr .cr-tab,.cr .cr-tab>.r{min-height:auto}
 .cr .cr-tab>.r{padding:3px 0}
@@ -6841,6 +6841,14 @@ carica();salva();render();
 <script>/* allinea 13/11: nelle liste che si adattano all'altezza, niente righe tagliate a metà */
 (function(){let q=0;function fit(){q=0;document.querySelectorAll('.hm-cats').forEach(c=>{const r=[...c.children];r.forEach(x=>x.style.display='');for(let i=r.length-1;i>0&&c.scrollHeight>c.clientHeight+1;i--)r[i].style.display='none'})}
 function pianifica(){if(!q)q=requestAnimationFrame(fit)}
+addEventListener('resize',pianifica);addEventListener('DOMContentLoaded',()=>{const m=document.getElementById('main');if(m)new MutationObserver(pianifica).observe(m,{childList:true});pianifica()});
+if(document.fonts)document.fonts.ready.then(pianifica)})();
+</script>
+<script>/* Conti e risparmi 13/11: sugli schermi bassi (Mac 13") la pagina si rimpicciolisce invece di scorrere */
+(function(){let q=0;function fit(){q=0;const e=document.querySelector('#main>.tq.cr');if(!e)return;
+ let z=+e.dataset.zoom||1;
+ for(let i=0;i<20&&e.scrollHeight>e.clientHeight+1&&z>0.76;i++){z=Math.round((z-0.02)*1000)/1000;e.style.zoom=z;e.style.setProperty('--mz',z);e.dataset.zoom=z}}
+function pianifica(){if(!q)q=requestAnimationFrame(()=>requestAnimationFrame(fit))}
 addEventListener('resize',pianifica);addEventListener('DOMContentLoaded',()=>{const m=document.getElementById('main');if(m)new MutationObserver(pianifica).observe(m,{childList:true});pianifica()});
 if(document.fonts)document.fonts.ready.then(pianifica)})();
 </script>
