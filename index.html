@@ -229,6 +229,18 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .tb-meta:not(.dx)>section.tq-p:nth-last-child(2){flex:1 1 auto}
 .tb-pro .tb-tab.tb-mm{flex:1 1 auto}
 .tb-pro .tb-tab.tb-mm>.r.rev{flex:1 1 auto}
+.tb-t.tb-clic{cursor:pointer;transition:box-shadow .12s,transform .12s}
+.tb-t.tb-clic:hover{box-shadow:0 2px 0 var(--inchiostro);transform:translateY(-1px)}
+.tb-t strong em.tb-az{display:block;font:600 11px var(--font);font-style:normal;color:#55524c;margin-top:2px;opacity:.75}
+.tb-t.tb-clic:hover strong em.tb-az{opacity:1;text-decoration:underline}
+.tbt-fin{width:440px}
+.tbt-base{display:flex;align-items:center;justify-content:space-between;font-weight:700;margin:10px 0 12px}
+.tbt-fin .dp-eur{display:inline-flex;align-items:center;gap:4px}
+.tbt-fin input{font:600 14px var(--font);padding:6px 8px;border:1.5px solid #d8d1c3;border-radius:7px;background:#faf8f3;width:100px;text-align:right}
+.tbt-sub{font-size:12.5px;font-weight:600;margin-bottom:6px}.tbt-sub small{font-weight:500;color:#7d7870}
+.tbt-mesi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.tbt-mesi label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:#55524c}
+.tbt-mesi input{width:100%}
 .tb-tab{display:flex;flex-direction:column;font-size:13px;font-variant-numeric:tabular-nums}
 .tb-tab .r{display:grid;grid-template-columns:minmax(0,1fr) 92px 92px 104px;gap:8px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--linea)}
 .tb-tab .r>*:not(:first-child){text-align:right}
@@ -2411,9 +2423,11 @@ function renderTrimestreB(){conScen(()=>{
   const acc=B.d.accant, spo=B.d.spostato, accRes=acc-spo;
   const voce=(st,tit,sub,cifra,cc)=>`<div class="tb-t ${st} c-${cc||''}"><span class="tb-c">${st==='fatto'?'✓':st==='no'?'!':''}</span><span><b>${tit}</b><small>${sub}</small></span><strong>${cifra}</strong></div>`;
   const vAcc=acc<0.5?voce('fatto','Accantonamento sul Revolut','nessuna entrata da accantonare','€ 0','acc')
-    :!chiuso?voce('','Accantonamento sul Revolut',`dovuti finora ${e0(acc)}: si spostano a inizio ${MESI[(q*3)%12].toLowerCase()}`,e0(acc),'acc')
+    :!chiuso?(spo>=0.5?voce(accRes<0.5?'fatto':'','Accantonamento sul Revolut',`già spostati ${e0(spo)} su ${e0(acc)} dovuti finora`,e0(accRes<0.5?spo:accRes),'acc')
+      :voce('','Accantonamento sul Revolut',`dovuti finora ${e0(acc)}: si spostano a inizio ${MESI[(q*3)%12].toLowerCase()}`,e0(acc),'acc'))
     :accRes<0.5?voce('fatto','Accantonamento sul Revolut',`fatto: spostati ${e0(spo)} su ${e0(acc)} dovuti`,e0(spo),'acc')
     :voce('','Sposta l\'accantonamento sul Revolut',`dovuti ${e0(acc)}, già spostati ${e0(spo)}`,e0(accRes),'acc');
+  const vAccC=accRes>=0.5?vAcc.replace('<div class="tb-t',`<div data-tb-acc="${Math.round(accRes*100)/100}" data-tb-per="${a}-${q}" title="Clicca per registrare il giroconto Unicredit → Revolut" class="tb-clic tb-t`).replace(/<\/strong><\/div>$/,'<em class="tb-az">registra →</em></strong></div>'):vAcc;
   const vRis=B.avanzo==null?voce('','Il risparmio del trimestre','manca lo stipendio del trimestre prima (Impostazioni → Dati di partenza)','—')
     :B.avanzo>=-0.5?voce('fatto',`Il risparmio del ${B.nome}${chiuso?'':' (finora)'}`,`stipendio ${e0(B.stip)} − spese ${e0(B.fis+B.vari)}: resta su Unicredit`,e0(B.avanzo),'ris')
     :voce('no',`Nel ${B.nome} hai speso più dello stipendio`,`stipendio ${e0(B.stip)} − spese ${e0(B.fis+B.vari)}`,e0(B.avanzo));
@@ -2425,9 +2439,9 @@ function renderTrimestreB(){conScen(()=>{
   const tetQ=tettoVar(a,B.d.mesi), tetN=tettoVar(N.a,mesiN), tm=tettoMese(N.a,mesiN[0])??tettoMese(a,q*3);
   const varM=B.d.mesi.map(m=>({m,v:B.su(b=>b==='variabili',m),t:tettoMese(a,m)}));
   const fisNs=fisN>0.5?fisN:B.fis, restoN=stipN==null?null:stipN-fisNs-(tetN??0);
-  const vTet=tm==null?voce('','Tetto alle variabili','non l\'hai ancora fissato: Impostazioni → Tetto mensile alle variabili','—')
-    :`<div class="tb-t tet c-var"><span class="tb-c">€</span><span><b>Tetto alle variabili: ${e0(tm)} al mese</b><small>nel ${B.nome} hai speso ${varM.map(x=>`${mAb(x.m)} <i class="${tettoCl(x.v,x.t)}">${e0(x.v)}</i>`).join(' · ')}</small>
-      ${restoN==null?'':`<small>nel ${nomeN}: stipendio ${e0(stipN)} − fisse ${fisN>0.5?'':'≈ '}${e0(fisNs)} − tetto ${e0(tetN??0)} = <i class="${restoN<-0.5?'no':'ok'}">${restoN<-0.5?'mancano':'restano'} ${e0(Math.abs(restoN))}</i></small>`}</span><strong>${e0(varM.reduce((s,x)=>s+x.v,0))}<small> su ${tetQ==null?'—':e0(tetQ)}</small></strong></div>`;
+  const vTet=tm==null?voce('','Tetto alle variabili','non l\'hai ancora fissato: clicca qui per fissarlo','<em class="tb-az">fissa →</em>','var').replace('<div class="tb-t',`<div data-tb-tet="${N.a}-${N.q}" title="Clicca per fissare il tetto" class="tb-clic tb-t`)
+    :`<div class="tb-t tet c-var tb-clic" data-tb-tet="${N.a}-${N.q}" title="Clicca per cambiare il tetto"><span class="tb-c">€</span><span><b>Tetto alle variabili: ${e0(tm)} al mese</b><small>nel ${B.nome} hai speso ${varM.map(x=>`${mAb(x.m)} <i class="${tettoCl(x.v,x.t)}">${e0(x.v)}</i>`).join(' · ')}</small>
+      ${restoN==null?'':`<small>nel ${nomeN}: stipendio ${e0(stipN)} − fisse ${fisN>0.5?'':'≈ '}${e0(fisNs)} − tetto ${e0(tetN??0)} = <i class="${restoN<-0.5?'no':'ok'}">${restoN<-0.5?'mancano':'restano'} ${e0(Math.abs(restoN))}</i></small>`}</span><strong>${e0(varM.reduce((s,x)=>s+x.v,0))}<small> su ${tetQ==null?'—':e0(tetQ)}</small><em class="tb-az">cambia →</em></strong></div>`;
   // scadenze del trimestre dopo
   const scad=movN.filter(x=>['inarcassa','tasse stato'].includes(x.cat)).sort((x,y)=>x.data<y.data?-1:1);
   const totSc=scad.reduce((s,x)=>s+x.eur,0), rev=dispPeriodo(N.a,mesiN).rev, mancaR=totSc-rev;
@@ -2458,11 +2472,32 @@ function renderTrimestreB(){conScen(()=>{
         <section class="tq-p">${tab}</section>
         <section class="tq-p"><h3>${ico('variabili')} ${P?'Le spese che sono cambiate':'Le spese più pesanti'}<small>clic per i movimenti</small></h3>${camb}</section></div>
       <div class="tb-meta dx"><div class="tq-meta-t"><span class="n">2</span>${titDx}</div>
-        <div class="tb-todo">${vAcc}${vRis}${vStip}${vTet}</div>
+        <div class="tb-todo">${vAccC}${vRis}${vStip}${vTet}</div>
         ${prossimo}</div>
     </div></div>`;
   pareggiaTrim();
 })}
+function apriTettoTrim(a,q){ // Paolo 13/11: il tetto si fissa anche dal Trimestre (stessi dati di Impostazioni)
+  const T=((S.impostazioni.tetto||{})[a])||{base:null,m:{}}, ms=[q*3-2,q*3-1,q*3];
+  const n=v=>v!=null?numIt(v).replace(/,00$/,''):'';
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra tbt-fin" role="dialog" aria-modal="true">
+    <h3>Tetto alle variabili</h3>
+    <p class="aiuto">Quanto ti concedi al mese per le spese <b>variabili</b> (le fisse non contano). È lo stesso tetto di Impostazioni: vale per Home, Previsione e "Posso permettermelo?".</p>
+    <label class="tbt-base">Tetto mensile del ${a}<span class="dp-eur">€<input data-tetto="${a}" value="${n(T.base)}" placeholder="nessuno" inputmode="decimal"></span></label>
+    <div class="tbt-sub">Nel ${ROMANI[q-1]} trim ${a} un mese diverso? <small>(vuoto = come sopra)</small></div>
+    <div class="tbt-mesi">${ms.map(m=>`<label>${MESI[m-1]}<span class="dp-eur">€<input data-tetto-m="${a}-${m}" value="${n(T.m&&T.m[m]!=null?T.m[m]:null)}" placeholder="${n(T.base)||'—'}" inputmode="decimal"></span></label>`).join('')}</div>
+    <div class="azioni"><button class="btn" data-act="chiudi">Fatto</button></div>
+  </div></div>`;
+  const i=$('.tbt-fin [data-tetto]');if(i)i.focus();
+}
+document.addEventListener('click',e=>{
+  const ac=e.target.closest('[data-tb-acc]');
+  if(ac){const [pa,pq]=ac.dataset.tbPer.split('-').map(Number);apriMovimento(null,'giro');
+    const rev=(S.conti.find(c=>c.tipo==='salvadanaio')||{}).id||'REVOLUT';
+    Object.assign(bozza,{imp:+ac.dataset.tbAcc,conto:'CONTO',verso:rev,ok:true,det:`ACCANTONAMENTO ${ROMANI[pq-1]} TRIM ${pa}`,per:{a:pa,mesi:[pq*3-2,pq*3-1,pq*3]}});disegnaFinestra();return}
+  const tt=e.target.closest('[data-tb-tet]');
+  if(tt){const [ta,tq]=tt.dataset.tbTet.split('-').map(Number);apriTettoTrim(ta,tq)}
+});
 function pareggiaTrim(){ // Paolo 13/11: le due metà finiscono alla stessa riga, senza vuoti
   const due=document.querySelector('.tb-due'); if(!due) return;
   const [L,R]=due.querySelectorAll('.tb-meta'); if(!L||!R) return;
