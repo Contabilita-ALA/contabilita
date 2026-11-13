@@ -2924,7 +2924,7 @@ function obMesiN(a){ // anno dopo, dalla Previsione: stipendio del I trim = nett
 function obDati(sim){
   sim=+sim||0;
   const a=S.anno, D=datiConti(a), oggi=oggiISO(), nOra=obMeseN(oggi), M=obMesi(a,D), MN=obMesiN(a), I=S.impostazioni, perc=I.obModo==='perc', fatti=I.obMesi||{};
-  const mese=n=>{const y=Math.floor(n/12);return y===a?M[n%12]:y===a+1?MN[n%12]:null};
+  let PM=null;const mese=n=>{const y=Math.floor(n/12);if(y===a-1){if(!PM)PM=obMesi(a-1,datiConti(a-1));return PM[n%12]}return y===a?M[n%12]:y===a+1?MN[n%12]:null}; // anno dopo: i mesi dell'anno prima contano con gli avanzi veri
   // avanzo medio previsto nei prossimi 12 mesi (anche i mesi in rosso contano)
   const prox=[];for(let n=nOra;n<nOra+12;n++){const x=mese(n);if(x&&x.r!=null)prox.push(x.r)}
   const A=prox.length?prox.reduce((s,v)=>s+v,0)/prox.length:0;
