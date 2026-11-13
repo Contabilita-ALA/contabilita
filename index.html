@@ -2402,6 +2402,47 @@ button.h3-allarme:hover,.h3-allarme.clic:hover{box-shadow:2px 2px 0 var(--inchio
 .ob-t-r.obr{border:0}.ob-t-r.obr em{margin:0}
 .ob-leg b{font-weight:700}.ob-leg b.ok{color:var(--verde)}.ob-leg b.att{color:#b7791f}.ob-leg b.no{color:var(--rosso)}
 @media (max-width:1500px){.ob-hd,.ob-c{grid-template-columns:28px minmax(0,1fr) 92px 96px 76px}.ob-nome{font-size:13.5px}.ob-t-r{grid-template-columns:104px repeat(12,minmax(0,1fr))}.ob-t-r>span{padding:3px 4px}}
+/* D: calendario a riquadri */
+.ob-d{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}
+.ob-d-m{border:1.5px solid var(--inchiostro);border-radius:10px;background:#fff;padding:0 8px 6px;display:flex;flex-direction:column;gap:2px;min-width:0;overflow:hidden}
+.ob-d-m.fut{border-style:dashed;background:#faf8f3}.ob-d-m.ora{box-shadow:0 0 0 3px #fbe3ae}
+.ob-d-h{display:flex;justify-content:space-between;align-items:baseline;margin:0 -8px 3px;padding:3px 8px;border-bottom:1.5px solid var(--inchiostro);background:#f3efe6;text-transform:capitalize}
+.ob-d-m.ok .ob-d-h{background:#d3e9d6}.ob-d-m.no .ob-d-h{background:#f6d4cb}
+.ob-d-h b{font:700 13px var(--font-titoli)}.ob-d-h small{font-size:10px;color:#55524c;text-transform:none}
+.ob-d-v{font:700 19px var(--font-titoli);white-space:nowrap}.ob-d-m.ok .ob-d-v{color:var(--verde)}.ob-d-m.no .ob-d-v{color:var(--rosso)}
+.ob-d-s{font-size:10.5px;color:#55524c;margin-top:-3px}
+.ob-d-b{position:relative;display:flex;height:10px;border:1.2px solid var(--inchiostro);border-radius:4px;overflow:hidden;margin-top:3px;background:#fff}
+.ob-d-b i{display:block;height:100%}.ob-d-b i.f{background:#c6def2}.ob-d-b i.v{background:#e6e0f7}.ob-d-b i.a{background:#9fd3ad}
+.ob-d-b s{position:absolute;top:-2px;bottom:-2px;width:3px;margin-left:-1.5px;background:var(--rosso)}
+.ob-d-x{font-size:10.5px;color:#55524c}.ob-d-x b.ok{color:var(--verde)}.ob-d-x b.att{color:#b7791f}.ob-d-x b.no{color:var(--rosso)}
+/* E: nastro con le monete */
+.ob-e{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));align-items:end;padding-top:4px}
+.ob-e-l{position:absolute;left:4%;right:4%;top:calc(18px + 30px);border-top:3px solid var(--inchiostro);border-radius:2px}
+.ob-e-m{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;padding-bottom:2px;border-radius:8px}
+.ob-e-m.ora{background:#fff4e5}
+.ob-e-f{height:18px;display:flex;align-items:flex-end;max-width:100%}.ob-e-f em{margin:0}
+.ob-e-c{height:60px;display:grid;place-items:center;position:relative;z-index:1}
+.ob-e-c i{display:grid;place-items:center;border-radius:50%;border:1.5px solid var(--inchiostro);font:700 11px var(--font-titoli);font-style:normal;white-space:nowrap;box-shadow:inset 0 -3px 0 rgba(0,0,0,.12)}
+.ob-e-c i.ok{background:#9fd3ad}.ob-e-c i.no{background:#f2b8ab}
+.ob-e-m.fut .ob-e-c i{border-style:dashed;background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.6) 0 3px,transparent 3px 6px)}
+.ob-e-c i.vuota{width:12px;height:12px;background:#fff}
+.ob-e-m>b{font:700 12.5px var(--font-titoli)}.ob-e-m>small{font-size:10.5px;color:#55524c;white-space:nowrap}
+.ob-e-m small .ok{color:var(--verde);font-weight:700}.ob-e-m small .no{color:var(--rosso);font-weight:700}
+/* F: dove va lo stipendio */
+.ob-f2{display:grid;grid-template-columns:1fr 1fr;gap:4px 24px}
+.ob-f-r{display:grid;grid-template-columns:52px minmax(0,1fr) 70px;gap:8px;align-items:center;padding:2px 4px;border-radius:6px;position:relative}
+.ob-f-r.ora{background:#fff4e5}
+.ob-f-n{font:700 13px var(--font-titoli)}.ob-f-n small{font:500 9.5px var(--font);color:#7d7870;margin-left:3px}
+.ob-f-b{position:relative;display:flex;height:18px;border:1.2px solid var(--inchiostro);border-radius:5px;overflow:hidden;background:#fff}
+.ob-f-b i{display:flex;align-items:center;justify-content:center;height:100%;border-right:1px solid rgba(0,0,0,.35);font-style:normal}
+.ob-f-b i b{font:600 10px var(--font);color:#3d3a35}
+.ob-f-b i.f{background:#c6def2}.ob-f-b i.v{background:#e6e0f7}.ob-f-b i.v.over{background:#f6d4cb}.ob-f-b i.a{background:#9fd3ad}
+.ob-f-r.fut .ob-f-b i{background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.55) 0 3px,transparent 3px 6px)}
+.ob-f-b s{position:absolute;top:-2px;bottom:-2px;width:3px;margin-left:-1.5px;background:var(--rosso)}
+.ob-f-0{font-size:11px;color:#7d7870;padding-left:6px;font-style:normal;align-self:center}
+.ob-f-v{text-align:right;font:700 14px var(--font-titoli)}.ob-f-v.ok{color:var(--verde)}.ob-f-v.no{color:var(--rosso)}
+.ob-f-o{position:absolute;right:82px;top:-7px}.ob-f-o em{margin:0}
+.ob-d{gap:6px}.ob-d-m{gap:1px;padding-bottom:5px}.ob-d-h{margin-bottom:2px;padding:2px 8px}.ob-d-v{font-size:18px;line-height:1.15}
 </style>
 </head>
 <body>
@@ -2851,7 +2892,7 @@ function obDati(){
 }
 /* ---- tre modi di disegnare i risparmi mese per mese (proposte 13/11: UI.obVista A/B/C) ---- */
 function obStriscia(X,e0,n0){
-  const vN=UI.obAnno===X.a+1, MM=vN?X.MN:X.M, aS=vN?X.a+1:X.a, v=UI.obVista||'C';
+  const vN=UI.obAnno===X.a+1, MM=vN?X.MN:X.M, aS=vN?X.a+1:X.a, v=UI.obVista||'D';
   const anno=MM.filter(x=>x.r!=null).reduce((s,x)=>s+x.r,0);
   const pil=`<span class="ob-pil"><button data-ob-anno="${X.a}" class="${vN?'':'on'}">${X.a}</button><button data-ob-anno="${X.a+1}" class="${vN?'on':''}">${X.a+1} previsto</button></span>`;
   const sub=vN&&MM[3].senzaEnt?`<b class="no">mancano le entrate ${aS} nella Previsione</b>: c'è solo il I trimestre`:`stipendio del mese − spese fisse e variabili`;
@@ -2873,6 +2914,28 @@ function obStriscia(X,e0,n0){
         <div class="ob-b-g"><i class="f" style="height:${h(x.F)}%"></i><i class="v ${x.tm!=null&&x.V>x.tm+0.5?'over':''}" style="height:${h(x.V)}%;bottom:${h(x.F)}%"></i>${x.r!=null&&x.r>0.5?`<u style="bottom:${h(x.F+x.V)}%;height:${h(x.r)}%"></u>`:''}${x.st!=null?`<s style="bottom:${h(x.st)}%"></s>`:''}</div>
         <b class="${x.r==null?'':x.r<-0.5?'no':'ok'}">${x.r==null?'—':(x.r<-0.5?'− ':'+ ')+n0(Math.abs(x.r))}</b><span>${MESI3[x.m-1]}</span>${flag(x)}</div>`}).join('')}</div>
       <div class="ob-leg"><span><i class="f"></i>spese fisse</span><span><i class="v"></i>spese variabili</span><span><i class="st"></i>stipendio del mese</span><span><i class="pos"></i>quello che avanza</span></div>`;
+  } else if(v==='D'){ // D: calendario a riquadri, un foglio per mese
+    corpo=`<div class="ob-d">${MM.map(x=>{const st=x.st||0, tot=Math.max(st,x.F+x.V,1), w=val=>Math.max(0,val)/tot*100, over=x.st!=null&&x.F+x.V>st+0.5;
+      return `<div class="ob-d-m ${x.cor?'ora':''} ${x.fut?'fut':''} ${x.r==null?'':x.r<-0.5?'no':'ok'}" title="${tip(x)}">
+        <div class="ob-d-h"><b>${MESI[x.m-1]}</b><small>${x.cor?'ora':x.fut?'previsto':''}</small></div>
+        <div class="ob-d-v">${x.r==null?'—':(x.r<-0.5?'− ':'+ ')+e0(Math.abs(x.r))}</div>${x.r==null?'<small class="ob-d-s">manca lo stipendio</small>':''}
+        <div class="ob-d-b"><i class="f" style="width:${w(x.F)}%"></i><i class="v" style="width:${w(x.V)}%"></i>${!over&&x.r!=null?`<i class="a" style="width:${w(x.r)}%"></i>`:''}${over?`<s style="left:${w(st)}%"></s>`:''}</div>
+        <small class="ob-d-x">variabili <b class="${x.tm!=null?tettoCl(x.V,x.tm):''}">${n0(x.V)}</b>${x.tm!=null?' / '+n0(x.tm):''}</small>${flag(x)}</div>`}).join('')}</div>
+      <div class="ob-leg"><span>la barra è lo stipendio del mese:</span><span><i class="f"></i>fisse</span><span><i class="v"></i>variabili</span><span><i class="pos"></i>avanza</span><span><i class="st"></i>dove finisce lo stipendio, se le spese lo superano</span></div>`;
+  } else if(v==='E'){ // E: il nastro dei risparmi, una moneta per mese
+    const mx=Math.max(1,...MM.map(x=>Math.abs(x.r||0)));
+    corpo=`<div class="ob-e"><div class="ob-e-l"></div>${MM.map(x=>{const d=x.r==null?0:14+Math.sqrt(Math.abs(x.r)/mx)*42;
+      return `<div class="ob-e-m ${x.cor?'ora':''} ${x.fut?'fut':''}" title="${tip(x)}"><div class="ob-e-f">${flag(x)}</div>
+        <div class="ob-e-c">${x.r==null?'<i class="vuota"></i>':`<i class="${x.r<-0.5?'no':'ok'}" style="width:${d}px;height:${d}px">${(x.r<-0.5?'−':'+')+n0(Math.abs(x.r))}</i>`}</div>
+        <b>${MESI3[x.m-1]}${x.cor?' · ora':''}</b><small>${x.r==null?'—':`da gen <span class="${x.cum<-0.5?'no':'ok'}">${(x.cum<-0.5?'− ':'')+n0(Math.abs(x.cum))}</span>`}</small></div>`}).join('')}</div>
+      <div class="ob-leg"><span><i class="pos" style="border-radius:50%"></i>ti avanza (più è grande, più metti da parte)</span><span><i class="neg" style="border-radius:50%"></i>manca</span><span><i class="fut" style="border-radius:50%"></i>previsto</span></div>`;
+  } else if(v==='F'){ // F: dove va lo stipendio, un mese per riga su due colonne
+    const riga=x=>{const st=x.st||0, tot=Math.max(st,x.F+x.V,1)*1.0, w=val=>Math.max(0,val)/tot*100, over=x.st!=null&&x.F+x.V>st+0.5;
+      return `<div class="ob-f-r ${x.cor?'ora':''} ${x.fut?'fut':''}" title="${tip(x)}"><span class="ob-f-n">${MESI3[x.m-1]}<small>${x.cor?'ora':x.fut?'prev.':''}</small></span>
+        <span class="ob-f-b">${x.st==null?'<em class="ob-f-0">manca lo stipendio</em>':`<i class="f" style="width:${w(x.F)}%"><b>${w(x.F)>14?n0(x.F):''}</b></i><i class="v ${x.tm!=null&&x.V>x.tm+0.5?'over':''}" style="width:${w(x.V)}%"><b>${w(x.V)>14?n0(x.V):''}</b></i>${!over?`<i class="a" style="width:${w(x.r)}%"><b>${w(x.r)>14?n0(x.r):''}</b></i>`:''}${over?`<s style="left:${w(st)}%"></s>`:''}`}</span>
+        <b class="ob-f-v ${x.r==null?'':x.r<-0.5?'no':'ok'}">${x.r==null?'—':(x.r<-0.5?'− ':'+ ')+n0(Math.abs(x.r))}</b>${flag(x)?`<span class="ob-f-o">${flag(x)}</span>`:''}</div>`};
+    corpo=`<div class="ob-f2"><div>${MM.slice(0,6).map(riga).join('')}</div><div>${MM.slice(6).map(riga).join('')}</div></div>
+      <div class="ob-leg"><span>ogni barra è lo stipendio del mese:</span><span><i class="f"></i>fisse</span><span><i class="v"></i>variabili</span><span><i class="pos"></i>avanza</span><span><i class="st"></i>fin dove arriva lo stipendio, se sfori</span></div>`;
   } else { // C: tabella come un foglio Excel, una colonna per mese
     const c=(val,cl)=>`<span class="${cl||''}">${val==null?'—':n0(val)}</span>`;
     const riga=(tit,f,cls)=>`<div class="ob-t-r ${cls||''}"><span class="ob-t-h">${tit}</span>${MM.map(x=>`<span class="${x.cor?'ora':''} ${x.fut?'fut':''}" title="${tip(x)}">${f(x)}</span>`).join('')}</div>`;
