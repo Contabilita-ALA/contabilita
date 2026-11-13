@@ -5121,7 +5121,7 @@ function h3Dati(){ // numeri condivisi dalle tre proposte
   const conti=[];let tuoi=0;
   if(corr){const {mc,reali,prev}=infoOggi(), R=reali[mc], P=prev[12];
     contiVisibili().forEach(c=>{let tit=c.nome, cifra=R[c.id], sub='', all='';
-      if(c.tipo==='carta'){tit='Carte '+(c.addebito==='CONTO'?'Unicredit':c.nome);const pl=c.addebito==='CONTO'?(tettoMese(S.anno,mc)||0):0; // Paolo 13/11: spese delle carte del mese sul limite che si impone (il tetto)
+      if(c.tipo==='carta'){tit='Carte '+(c.addebito==='CONTO'?'Unicredit':c.nome);const pl=0; // Paolo 13/11: il tetto vale solo per le spese variabili → sta nell'avviso in alto, non sulle carte
         if(pl>0){const rr=pl-cifra;sub=`speso a ${MESI[mc-1]} sul limite di ${e0(pl)}`;all=`<span class="${rr<0?'h3-al':'h3-ok'}">${rr<0?'oltre di '+e0(-rr):'restano '+e0(rr)}</span>`}
         else sub=`${MESI3[mc-1]}, esce dal conto a ${MESI[mc%12]}`;
         conti.push({c,tit,cifra,sub,all,carta:1,pl});return}
@@ -5224,13 +5224,13 @@ function h3Saluto(X){const d=new Date(), gs=['domenica','lunedì','martedì','me
     <span class="h3-al-i">!</span><span><b>Il Revolut non basta per il ${dd(A.primo.d)}</b><small>${esc((A.primo.m.det||nomeCat(A.primo.m.cat)).toLowerCase())} € ${numIt(Math.round(A.primo.m.eur)).replace(/,00$/,'')}</small></span>
     <strong>sposta € ${numIt(Math.ceil(A.min)).replace(/,00$/,'')}<em>registra →</em></strong></button>`
     :corr?`<div class="h3-allarme ok"><span class="h3-al-i">✓</span><span><b>Il Revolut basta</b><small>per tasse e Inarcassa dei prossimi 12 mesi</small></span></div>`:'';
-  // Paolo 13/11: sopra la colonna del mese, a colpo d'occhio, se sei dentro con le spese delle carte Unicredit rispetto al limite del mese
+  // Paolo 13/11: sopra la colonna del mese, a colpo d'occhio, le spese VARIABILI del mese sul tetto che ti sei data (senza fisse né spese per l'attività)
   let av='';
-  if(X&&corr){const C=X.conti.find(r=>r.carta&&r.c.addebito==='CONTO'), pl=C&&C.pl, sp=C?C.cifra:0, nm=MESI[X.m-1], e=v=>'€ '+numIt(Math.round(v)).replace(/,00$/,'');
-    if(!pl) av=`<div class="h3-allarme att clic" data-tb-tet="${X.a}-${Math.ceil(X.m/3)}"><span class="h3-al-i">€</span><span><b>Carte Unicredit: ${e(sp)} spesi a ${nm}</b><small>non hai ancora fissato il limite del mese</small></span><strong>fissa →</strong></div>`;
+  if(X&&corr){const sp=X.V.pag, prv=X.V.prv, pl=X.TV, nm=MESI[X.m-1], e=v=>'€ '+numIt(Math.round(v)).replace(/,00$/,''), pv=prv>0.5?` · + ${e(prv)} previste`:'';
+    if(pl==null) av=`<div class="h3-allarme att clic" data-tb-tet="${X.a}-${Math.ceil(X.m/3)}"><span class="h3-al-i">€</span><span><b>Spese variabili: ${e(sp)} a ${nm}</b><small>non hai ancora fissato il tetto del mese${pv}</small></span><strong>fissa →</strong></div>`;
     else{const r=pl-sp, cl=sp>pl+0.5?'':sp>pl*0.8?'att':'ok', perG=X.gRest&&r>0.5?r/X.gRest:null;
-      av=`<div class="h3-allarme ${cl} clic h3-carte" data-conto="${C.c.id}" title="Clicca per vedere le spese delle carte">
-        <span class="h3-al-i">${cl==='ok'?'✓':'!'}</span><span><b>Carte Unicredit: ${cl===''?'limite superato':cl==='att'?'quasi al limite':'sei dentro'}</b>
+      av=`<div class="h3-allarme ${cl} clic h3-carte" data-bolla="variabili" title="Spese variabili fatte a ${nm} (senza fisse e spese per l'attività), sul tetto che ti sei data${prv>0.5?'. Previste ancora '+e(prv):''}. Clicca per vederle.">
+        <span class="h3-al-i">${cl==='ok'?'✓':'!'}</span><span><b>Spese variabili: ${cl===''?'tetto superato':cl==='att'?'quasi al tetto':'sei dentro'}</b>
         <small>${e(sp)} di ${e(pl)} a ${nm}${perG!=null?` · ${e(perG)} al giorno`:''}</small><i class="h3-al-bar"><i style="width:${Math.min(100,sp/pl*100)}%"></i></i></span>
         <strong>${r>=-0.5?'restano '+e(r):'oltre di '+e(-r)}</strong></div>`}}
   return `<header class="saluto h3-sal"><div class="h3-sal-t"><h1>Ciao${nome?' '+esc(nome):''},</h1><p>${corr?`ecco la situazione ad oggi, ${gs[d.getDay()]} ${d.getDate()} ${MESI[d.getMonth()]} ${d.getFullYear()}.`:`stai guardando il ${S.anno}.`}</p></div>${av||'<span></span>'}${al||'<span></span>'}</header>`}
