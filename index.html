@@ -161,7 +161,9 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .pk-l{display:flex;flex-direction:column;gap:5px}
 .tb .tq-testa{margin-bottom:10px}
 .tb-scen{font-size:11.5px;color:#55524c;border:1px dashed #bdb6a8;border-radius:12px;padding:2px 9px;white-space:nowrap}
-.tb-due{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.tb-due{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:stretch}
+.tb-due.misura{align-items:start}
+.tb-meta>section:last-child{flex:1 1 auto}
 .tb-meta{display:flex;flex-direction:column;gap:10px;min-width:0}
 .tb-meta.dx{border-left:1.5px dashed #bdb6a8;padding-left:16px;margin-left:-8px}
 .tb-meta .tq-meta-t{display:flex;align-items:baseline;gap:8px;font:700 16px var(--font-titoli)}
@@ -197,6 +199,7 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .tb-tab .r{display:grid;grid-template-columns:minmax(0,1fr) 92px 92px 104px;gap:8px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--linea)}
 .tb-tab .r>*:not(:first-child){text-align:right}
 .tb-tab .r:last-child{border-bottom:0}
+.tb-tab .r.h>span:first-child{text-transform:none;letter-spacing:0;font-weight:500}
 .tb-tab .r.h{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#7d7870;border-bottom:1.5px solid var(--inchiostro);padding-top:0}
 .tb-tab .r>span:first-child em{display:block;font-style:normal;font-size:10.5px;line-height:1.3;color:#7d7870}
 @media (max-width:1500px){.tb-tab .r>span:first-child em{display:none}}
@@ -2347,8 +2350,10 @@ function renderTrimestreB(){conScen(()=>{
     ${righe.map(([n,f,piu,sp,cc],i)=>{const v=f(B),vp=P?f(P):null,vm=media.length?med(f):null;
       return `<div class="r c-${cc}${i===6?' tot':''}${i===2||i===3?' sep':''}"><span><i class="tb-sw"></i>${n}${sp?`<em>${sp}</em>`:''}</span><b class="q ${i===6&&v!=null&&v<0?'neg':''}">${val(v)}</b><span>${val(vp)}${diff(v,vp,piu)}</span><span>${val(vm)}${diff(v,vm,piu)}</span></div>`}).join('')}</div>`;
   const perC=X=>{const r={};X.d.mov.filter(x=>!x.giro&&daUni(x)&&['fisse','variabili'].includes(bollaDi(x.cat))).forEach(x=>{r[x.cat]=(r[x.cat]||0)+x.eur});return r};
-  const oC=perC(B), pC=P?perC(P):{}, cambi=[...new Set([...Object.keys(oC),...Object.keys(pC)])].map(k=>[k,oC[k]||0,pC[k]||0]).map(x=>[...x,x[1]-x[2]]).filter(x=>Math.abs(x[3])>=1).sort((x,y)=>Math.abs(y[3])-Math.abs(x[3])).slice(0,7);
-  const camb=!P?'<p class="gr">Il trimestre prima non è nell\'app: niente da confrontare.</p>':`<div class="tb-tab tb-camb"><div class="r h"><span></span><span>${B.nome}</span><span>${nomeP}</span><span>differenza</span></div>
+  const oC=perC(B), pC=P?perC(P):{}, cambi=[...new Set([...Object.keys(oC),...Object.keys(pC)])].map(k=>[k,oC[k]||0,pC[k]||0]).map(x=>[...x,x[1]-x[2]]).filter(x=>Math.abs(x[3])>=1).sort((x,y)=>Math.abs(y[3])-Math.abs(x[3])).slice(0,16);
+  const totSp=Object.values(oC).reduce((s,v)=>s+v,0), pesanti=Object.entries(oC).filter(x=>x[1]>0.5).sort((x,y)=>y[1]-x[1]).slice(0,16);
+  const camb=!P?`<div class="tb-tab tb-camb"><div class="r h"><span>il trimestre prima non è nell'app: ecco le più pesanti</span><span>${B.nome}</span><span></span><span>sul totale</span></div>
+    ${pesanti.map(([k,v])=>`<div class="r" data-vedi-cat="${esc(k)}" title="Clicca per vedere i movimenti"><span><i style="background:${coloreCat(k)||'#ddd'}"></i>${esc(nomeCat(k))}</span><b class="q" style="--cc:${coloreCat(k)||'#eee'}">${e0(v)}</b><span></span><span class="gr">${Math.round(v/totSp*100)}%</span></div>`).join('')}</div>`:`<div class="tb-tab tb-camb"><div class="r h"><span></span><span>${B.nome}</span><span>${nomeP}</span><span>differenza</span></div>
     ${cambi.length?cambi.map(([k,v,vp,dd])=>`<div class="r" data-vedi-cat="${esc(k)}" title="Clicca per vedere i movimenti"><span><i style="background:${coloreCat(k)||'#ddd'}"></i>${esc(nomeCat(k))}</span><b class="q" style="--cc:${coloreCat(k)||'#eee'}">${e0(v)}</b><span>${e0(vp)}</span><span class="${dd>0?'no':'ok'}">${dd>=0?'+':'−'} ${e0(Math.abs(dd)).slice(2)}</span></div>`).join(''):'<p class="gr">Niente da confrontare.</p>'}</div>`;
   // ---- destra: cose da fare ----
   const acc=B.d.accant, spo=B.d.spostato, accRes=acc-spo, chiuso=B.d.concluso;
@@ -2398,12 +2403,21 @@ function renderTrimestreB(){conScen(()=>{
     <div class="tb-due">
       <div class="tb-meta"><div class="tq-meta-t"><span class="n">1</span>Il bilancio del ${B.nome}<small>in verde e rosso la differenza</small></div>
         <section class="tq-p">${tab}</section>
-        <section class="tq-p"><h3>${ico('variabili')} Le spese cambiate di più<small>rispetto al ${nomeP} · clic per i movimenti</small></h3>${camb}</section></div>
+        <section class="tq-p"><h3>${ico('variabili')} ${P?'Le spese cambiate di più':'Le spese più pesanti'}<small>${P?'rispetto al '+nomeP+' · ':''}clic per i movimenti</small></h3>${camb}</section></div>
       <div class="tb-meta dx"><div class="tq-meta-t"><span class="n">2</span>${titDx}</div>
         <div class="tb-todo">${vAcc}${vRis}${vStip}${vTet}</div>
         ${prossimo}</div>
     </div></div>`;
+  pareggiaTrim();
 })}
+function pareggiaTrim(){ // Paolo 13/11: le due metà finiscono alla stessa riga, senza vuoti
+  const due=document.querySelector('.tb-due'); if(!due) return;
+  const [L,R]=due.querySelectorAll('.tb-meta'); if(!L||!R) return;
+  due.classList.add('misura');
+  const righe=[...L.querySelectorAll('.tb-camb .r:not(.h)')];
+  while(righe.length>4&&L.offsetHeight>R.offsetHeight+1){righe.pop().remove()}
+  due.classList.remove('misura');
+}
 function renderTrimestreInArrivo(){
   const q=+UI.trim||1;
   $('#main').innerHTML=`<h1>${ROMANI[q-1]} trimestre ${S.anno}</h1><div class="presto-box"><p><b>Pagina in arrivo.</b></p><p>Le pagine dei trimestri si stanno reimpostando da capo.</p><button class="btn" data-pag="home">Torna alla Home</button></div>`;
@@ -3719,8 +3733,8 @@ function misuraTesta(){
   const av=$('#avviso');if(av) r.setProperty('--avviso-h',av.offsetHeight+'px');
   if(te) r.setProperty('--testa-h',te.getBoundingClientRect().height+'px');
 }
-let tRes;window.addEventListener('resize',()=>{misuraTesta();clearTimeout(tRes);tRes=setTimeout(()=>{if(UI.pagina==='trimestre')renderTrimestre();if(UI.pagina==='home')renderHome();adattaTesti();piediConti()},150)});
-if(document.fonts)document.fonts.ready.then(()=>{misuraTesta();if(UI.pagina==='trimestre')renderTrimestre();if(UI.pagina==='home')renderHome();adattaTesti();piediConti()});
+let tRes;window.addEventListener('resize',()=>{misuraTesta();clearTimeout(tRes);tRes=setTimeout(()=>{if(UI.pagina==='trimestre')renderTrimestreB();if(UI.pagina==='home')renderHome();adattaTesti();piediConti()},150)});
+if(document.fonts)document.fonts.ready.then(()=>{misuraTesta();if(UI.pagina==='trimestre')renderTrimestreB();if(UI.pagina==='home')renderHome();adattaTesti();piediConti()});
 /* Selezione di più righe: somma come nei fogli di calcolo */
 const SEL=new Set(); let ultimoSel=null;
 const chiaveRiga=tr=>tr.dataset.id?+tr.dataset.id:'c'+tr.dataset.coiId;
