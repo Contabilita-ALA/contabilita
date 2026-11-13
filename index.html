@@ -2098,6 +2098,7 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .dp-tab .pos{color:#2e7a45}.dp-tab .neg{color:#b5452f}
 
 /* Home B (13/11) */
+.h3 .cl-ag-piu{display:none!important}
 .h3 .h3-col3{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .h3 .h3-c{display:flex;flex-direction:column;gap:8px;min-height:0;min-width:0}
 .h3 .h3-c>section{flex:1 1 auto;min-height:0;overflow:hidden}
@@ -2183,6 +2184,33 @@ i.p-ent-prev{background:#fff;border:1.5px dashed #3c9a62}.legenda span.p-ent-pre
 .h3 .h3-al{color:var(--rosso);font-weight:600;white-space:nowrap}
 .h3 .cl-r.rit .d{color:var(--rosso)}
 .h3 .cl-r>b em{display:block;font:500 10px var(--font);font-style:normal;color:var(--rosso)}
+.h3 .h3-ok{color:var(--verde);font-weight:600;white-space:nowrap}
+.h3-pl{height:8px;border:1.5px solid var(--inchiostro);border-radius:4px;background:#fff;margin:3px 0 1px;overflow:hidden}
+.h3-pl i{display:block;height:100%;background:var(--b)}
+.h3-pl.att i{background:#f3c26b}
+.h3-pl.no i{background:#e8826f}
+/* colonna centrale: righe equidistanti (Paolo 13/11) */
+.h3 .h3-mid>section.tq-p{flex:var(--nr) 1 0;display:flex;flex-direction:column}
+.h3 .h3-mid .hm-voci{flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+.h3 .h3-mid .hm-voci>.hm-v{flex:1 1 0;display:flex;align-items:center;padding-top:0;padding-bottom:0}
+.h3 .h3-mid .hm-v-c{flex:1 1 auto;min-width:0}
+/* Home B: griglia comune (Paolo 13/11) */
+.h3B .h3-g{grid-template-rows:auto auto auto minmax(0,1.15fr) minmax(0,1fr);row-gap:8px}
+.h3B .h3-g .h3-c1{grid-column:1;grid-row:1}.h3B .h3-g .h3-c2{grid-column:2}.h3B .h3-g .h3-cA{grid-column:3}
+.h3B .h3-g .h3-pil{grid-row:1}
+.h3B .h3-sx{grid-column:1;grid-row:2/-1}
+.h3B .h3-r2{grid-row:2}.h3B .h3-r3{grid-row:3}.h3B .h3-r4{grid-row:4}.h3B .h3-r5{grid-row:5}
+.h3B .h3-conti{grid-row:3/5}
+.h3B .h3-g>section{min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.h3B .h3-g>section .hm-voci{flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+.h3B .h3-g>section .hm-voci>.hm-v{flex:1 1 0;display:flex;align-items:center;padding-top:0;padding-bottom:0}
+.h3B .h3-g .hm-v-c{flex:1 1 auto;min-width:0}
+.h3B .h3-g>section .h3-q{flex:1 1 0}
+.h3B .h3-cats .hm-cats{min-height:0;overflow:hidden}
+.h3B .h3-cats .hm-cr{min-height:21px;padding-top:0;padding-bottom:0;align-items:center}
+@media (max-width:1100px){.h3B .h3-ag{max-height:330px}.h3B .h3-calp{min-height:300px}}
+.h3B .h3-g .h3-q{min-height:0;padding:2px 0}
+.h3B .h3-g>section .hm-voci>.hm-v{min-height:0}
 
 .h3-qh>span{white-space:nowrap}
 </style>
@@ -4959,7 +4987,10 @@ function h3Dati(){ // numeri condivisi dalle tre proposte
   const conti=[];let tuoi=0;
   if(corr){const {mc,reali,prev}=infoOggi(), R=reali[mc], P=prev[12];
     contiVisibili().forEach(c=>{let tit=c.nome, cifra=R[c.id], sub='', all='';
-      if(c.tipo==='carta'){tit='Carte '+(c.addebito==='CONTO'?'Unicredit':c.nome);sub=`${MESI3[mc-1]}, esce dal conto a ${MESI[mc%12]}`;conti.push({c,tit,cifra,sub,all,carta:1});return}
+      if(c.tipo==='carta'){tit='Carte '+(c.addebito==='CONTO'?'Unicredit':c.nome);const pl=c.addebito==='CONTO'?(tettoMese(S.anno,mc)||0):0; // Paolo 13/11: spese delle carte del mese sul limite che si impone (il tetto)
+        if(pl>0){const rr=pl-cifra;sub=`speso a ${MESI[mc-1]} sul limite di ${e0(pl)}`;all=`<span class="${rr<0?'h3-al':'h3-ok'}">${rr<0?'oltre di '+e0(-rr):'restano '+e0(rr)}</span>`}
+        else sub=`${MESI3[mc-1]}, esce dal conto a ${MESI[mc%12]}`;
+        conti.push({c,tit,cifra,sub,all,carta:1,pl});return}
       if(c.tipo==='cointestato'){const q=c.quota??1;tit='Cointestato · tua quota';cifra=R[c.id]*q;sub=`saldo conto ${euro(R[c.id])}`}
       else{const carta=c.tipo==='conto'?S.conti.find(x=>x.tipo==='carta'&&x.addebito===c.id):null;
         if(carta){tit=(c.id==='CONTO'?'Unicredit':c.nome)+' · disponibile';cifra=R[c.id]-R[carta.id];sub=`sul conto ${euro(R[c.id])} − carte ${euro(R[carta.id])}`}
@@ -4989,7 +5020,7 @@ function h3Dati(){ // numeri condivisi dalle tre proposte
 function h3Fare(X,max){return X.fare.slice(0,max||9).map(v=>`<div class="h3-t ${v.st} ${v.att?'clic':''}" ${v.att||''}><span class="tb-c">${v.ic||(v.st==='fatto'?'✓':v.st==='no'?'!':'')}</span><span class="h3-t-c"><b>${v.tit}</b><small>${v.sub}</small></span><strong>${v.cifra}${v.az?`<em>${v.az}</em>`:''}</strong></div>`).join('')
   ||'<div class="h3-t fatto"><span class="tb-c">✓</span><span class="h3-t-c"><b>Tutto in ordine</b><small>niente da sistemare oggi</small></span><strong></strong></div>'}
 function h3Conti(X,cls){return X.conti.map(r=>`<div class="hm-v hm-c ${cls||''}" style="--b:${r.c.colore}" data-conto="${r.c.id}" title="Clicca per vedere i movimenti di questo conto">
-  <span class="ic-ico">${ico(r.c.tipo)}</span><div class="hm-v-c"><div class="hm-v-t"><span>${esc(r.tit)}</span><b>${euroH(r.cifra)}</b></div><div class="hm-v-s"><span>${r.sub}</span>${r.all}</div></div></div>`).join('')}
+  <span class="ic-ico">${ico(r.c.tipo)}</span><div class="hm-v-c"><div class="hm-v-t"><span>${esc(r.tit)}</span><b>${euroH(r.cifra)}</b></div><div class="hm-v-s"><span>${r.sub}</span>${r.all}</div>${r.pl?`<div class="h3-pl ${r.cifra>r.pl?'no':r.cifra>r.pl*0.8?'att':''}"><i style="width:${Math.min(100,r.cifra/r.pl*100)}%"></i></div>`:''}</div></div>`).join('')}
 function h3Agenda(X,n){
   const GS=['dom','lun','mar','mer','gio','ven','sab'];
   const dT=iso=>{const d=new Date(+iso.slice(0,4),+iso.slice(5,7)-1,+iso.slice(8,10));return iso===X.oggi?'<b>oggi</b>':`${GS[d.getDay()]} ${d.getDate()} <small>${MESI3[d.getMonth()]}</small>`};
@@ -5051,24 +5082,26 @@ function renderHomeB(){
   const X=h3Dati(), {e0,m,a,resta,D,lim,B}=X, Y=h3Anno(X), nM=MESI[m-1];
   const pil=(t,c)=>`<div class="h3-pil ${c}"><span>${t}</span></div>`;
   const k3=`<div class="h3-k3">${h3K('k-e','entrate','Entrate',e0(B.entrate.pag),B.entrate.prv>0.5?`+ ${e0(B.entrate.prv)} attese`:'incassate')}${h3K('k-s','variabili','Spese',e0(X.tF+X.tV),'fisse + variabili')}${D.completo?h3K('k-nero','salvadanaio',resta>=-0.5?'Restano':'Sfori di',e0(Math.abs(resta)),`di ${e0(lim)} stipendio`,`data-perche="${m}"`):h3K('k-a','netto','Stipendio','—','manca il trim. prima')}</div>`;
-  const kA=`<div class="h3-k2">${h3K('k-vol','fattura','Fatturato',e0(Y.vol),Y.sTxt)}${h3K('k-net','netto','Netto',e0(Y.netto),'tolto accantonamento')}
-    ${h3K('k-a','salvadanaio','Accantonato',e0(Y.spo),`<span class="tq-d ${Y.spo>=Y.acc-0.5?'ok':'no'}">${Y.acc?Math.round(Y.spo/Y.acc*100):100}%</span> di ${e0(Y.acc)}`)}${h3K(Y.ris<-0.5?'k-s':'k-r2','oggi','Risparmio dell\'anno',e0(Y.ris),'stipendio − spese, finora')}</div>`;
+  const kA1=`<div class="h3-k2 h3-r2 h3-cA">${h3K('k-vol','fattura','Fatturato',e0(Y.vol),Y.sTxt)}${h3K('k-net','netto','Netto',e0(Y.netto),'tolto accantonamento')}</div>`;
+  const kA2=`<div class="h3-k2 h3-r3 h3-cA">${h3K('k-a','salvadanaio','Accantonato',e0(Y.spo),`<span class="tq-d ${Y.spo>=Y.acc-0.5?'ok':'no'}">${Y.acc?Math.round(Y.spo/Y.acc*100):100}%</span> di ${e0(Y.acc)}`)}${h3K(Y.ris<-0.5?'k-s':'k-r2','oggi','Risparmio dell\'anno',e0(Y.ris),'stipendio − spese, finora')}</div>`;
+  // Paolo 13/11: colonna del mese e colonna dell'anno su una griglia comune, i bordi dei box coincidono
   $('#main').innerHTML=`<div class="tq hm2 h3 h3B">${h3Saluto()}
-    <div class="h3-col3">
-      <div class="h3-c">${pil('Oggi','oggi')}
-        <section class="tq-p hm-vocip hm-contip"><h3>${ico('conto')} I tuoi conti<small>${e0(X.tuoi)} in tutto</small></h3><div class="hm-voci">${h3Conti(X)}</div></section>
-        <section class="tq-p cl-ag h3-ag">${h3Tit(`${ico('calendario')} Cosa ti aspetta`,'calendario','Calendario')}${h3Agenda(X,45)}</section></div>
-      <div class="h3-c">${pil(nM[0].toUpperCase()+nM.slice(1),'mese')}${k3}
+    <div class="h3-col3 h3-g">
+      ${pil('Giorno per giorno','oggi h3-c1')}${pil(nM[0].toUpperCase()+nM.slice(1),'mese h3-c2')}${pil('Il '+a,'anno h3-cA')}
+      <div class="h3-c h3-sx">
         <section class="tq-p h3-calp">${h3Tit(`${ico('calendario')} Calendario di ${nM}`,'calendario','Calendario')}${h3MiniCal(X)}</section>
-        <section class="tq-p hm-vocip">${h3Tit(`${ico('variabili')} Voce per voce`,'movimenti','Movimenti')}${h3Voci(X,false)}</section></div>
-      <div class="h3-c">${pil('Il '+a,'anno')}${kA}
-        <section class="tq-p">${h3Tit(`${ico('anno')} Trimestre per trimestre`,'trimestre','Trimestre')}<div class="h3-qh"><span></span><span>stipendio <i class="st"></i> spese <i class="sp"></i></span><span></span><span>risparmio</span></div>${h3Trim(X)}</section>
-        <section class="tq-p h3-cats">${h3Tit(`${ico('variabili')} Dove vanno i soldi`,'anno','Anno')}<div class="hm-cats">${h3Cats(X,6)}</div></section></div>
+        <section class="tq-p cl-ag h3-ag">${h3Tit(`${ico('calendario')} Cosa ti aspetta`,'calendario','Calendario')}${h3Agenda(X,45)}</section></div>
+      <div class="h3-k3 h3-r2 h3-c2">${k3.slice(k3.indexOf('>')+1,-6)}</div>
+      <section class="tq-p hm-vocip hm-contip h3-c2 h3-conti"><h3>${ico('conto')} I tuoi conti oggi<small>${e0(X.tuoi)} in tutto</small></h3><div class="hm-voci">${h3Conti(X)}</div></section>
+      <section class="tq-p hm-vocip h3-c2 h3-r5">${h3Tit(`${ico('variabili')} Voce per voce`,'movimenti','Movimenti')}${h3Voci(X,false)}</section>
+      ${kA1}${kA2}
+      <section class="tq-p h3-cA h3-r4">${h3Tit(`${ico('anno')} Trimestre per trimestre`,'trimestre','Trimestre')}<div class="h3-qh"><span></span><span>stipendio <i class="st"></i> spese <i class="sp"></i></span><span></span><span>risparmio</span></div>${h3Trim(X)}</section>
+      <section class="tq-p h3-cats h3-cA h3-r5">${h3Tit(`${ico('variabili')} Dove vanno i soldi`,'anno','Anno')}<div class="hm-cats">${h3Cats(X,6)}</div></section>
     </div></div>`;
   h3Fit();
 }
 function h3Fit(){requestAnimationFrame(()=>{fitCal();h3FitAg()});setTimeout(()=>{fitCal();h3FitAg()},250)}
-function h3FitAg(){document.querySelectorAll('.h3 .tq-p').forEach(p=>{const L=[...p.querySelectorAll('.cl-r,.h3-t')];L.forEach(e=>e.hidden=false);
+function h3FitAg(){document.querySelectorAll('.h3 .tq-p').forEach(p=>{const L=[...p.querySelectorAll('.cl-r,.h3-t,.hm-cr')];L.forEach(e=>e.hidden=false);
   const lim=p.getBoundingClientRect().bottom-parseFloat(getComputedStyle(p).paddingBottom)-1;
   for(let i=L.length-1;i>=0&&L[i].getBoundingClientRect().bottom>lim;i--)L[i].hidden=true})}
 window.addEventListener('resize',()=>{if(UI.pagina==='home'&&window.HOME_V3!=='vecchia')h3Fit()});
