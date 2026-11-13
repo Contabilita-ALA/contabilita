@@ -191,8 +191,12 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .tb-sca.c-att{background:var(--ct)}
 .tb-sca.c-att .tb-tab .r{border-color:rgba(0,0,0,.08)}
 .tb-tab.tb-mm .r{grid-template-columns:minmax(0,1fr) 84px 84px 84px 96px}
-.tb-pro .tb-tab.tb-mm{flex:1 1 auto}
-.tb-pro .tb-tab.tb-mm>.r:not(.h):not(.rev){flex:1 1 auto;height:auto;min-height:40px}
+.tb-pro .tb-tab.tb-mm>.r:not(.h):not(.rev){height:46px;padding-top:0;padding-bottom:0}
+.tb-pro .tb-tab.tb-mm>.r.rev{height:42px;overflow:hidden;align-items:center;padding-top:0}
+.tb-pro .tb-tab.tb-mm>.r.rev>span:first-child{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tb-meta.dx>section.tb-pro{flex:none}
+.tb-meta.dx .tb-todo{flex:1 1 auto}
+.tb-meta.dx .tb-todo>.tb-t{flex:1 1 auto}
 .tb-mm .r.rev{display:flex;justify-content:space-between;gap:12px;font-size:11.5px;color:#6b5a48;padding-top:3px}
 .tb-mm .r.rev>span:last-child{font-weight:700;white-space:nowrap}
 .tb-mm .r.tas{color:#6b5a48;border-top:1px dashed #bdb6a8}
@@ -2437,10 +2441,10 @@ function renderTrimestreB(){conScen(()=>{
     <div class="tb-tab tb-mm"><div class="r h"><span></span>${mesiN.map(m=>`<span>${MESI[m-1]}</span>`).join('')}<span>trimestre</span></div>
       ${rigaN('Stipendio','sti','sti','','il netto del '+B.nome+' ÷ 3')}
       ${rigaN('Fisse','fis','fis','− ',colN.some(c=>c.stima)?'≈ stimate come nel '+B.nome:'già segnate')}
-      ${colN.some(c=>c.tet!=null)?rigaN('Tetto variabili','tet','var','− ','quello che ti concedi'):''}
+      ${rigaN('Tetto variabili','tet','var','− ',colN.some(c=>c.tet!=null)?'quello che ti concedi':'nessun tetto impostato')}
       <div class="r tot"><span>Resta</span>${colN.map(c=>`<span class="${c.resta!=null&&c.resta<-0.5?'no':'ok'}">${c.resta==null?'—':e0(c.resta)}</span>`).join('')}<b class="q ${totC('resta')<-0.5?'neg':''}">${e0(totC('resta'))}</b></div>
-      ${scad.length?`<div class="r c-att tas"><span><i class="tb-sw"></i>Tasse e Inarcassa<em>dal Revolut, non dallo stipendio</em></span>${colN.map(c=>`<span>${c.tas>0.5?e0(c.tas):'—'}</span>`).join('')}<b class="q">${e0(totC('tas'))}</b></div>
-      <div class="r rev"><span>${scad.map(x=>`${dataIt(x.data).slice(0,5)} ${esc(nomeCat(x.cat))}${x.det?' · '+esc(x.det.toLowerCase().replace(nomeCat(x.cat).toLowerCase(),'').trim()):''} ${e0(x.eur)}${x.ok?' ✓':''}`).join(' · ')}</span><span class="${mancaR>0.5?'no':'ok'}">${mancaR>0.5?`sul Revolut ci saranno ${e0(rev)}: mancano ${e0(mancaR)}`:`sul Revolut ci saranno ${e0(rev)}: bastano`}</span></div>`:`<div class="r rev"><span>Nessuna tassa o Inarcassa segnata nel ${nomeN}.</span><span></span></div>`}
+      <div class="r c-att tas"><span><i class="tb-sw"></i>Tasse e Inarcassa<em>dal Revolut, non dallo stipendio</em></span>${colN.map(c=>`<span>${c.tas>0.5?e0(c.tas):'—'}</span>`).join('')}<b class="q">${scad.length?e0(totC('tas')):'—'}</b></div>
+      ${scad.length?`<div class="r rev"><span>${scad.map(x=>`${dataIt(x.data).slice(0,5)} ${esc(nomeCat(x.cat))}${x.det?' · '+esc(x.det.toLowerCase().replace(nomeCat(x.cat).toLowerCase(),'').trim()):''} ${e0(x.eur)}${x.ok?' ✓':''}`).join(' · ')}</span><span class="${mancaR>0.5?'no':'ok'}">${mancaR>0.5?`sul Revolut ci saranno ${e0(rev)}: mancano ${e0(mancaR)}`:`sul Revolut ci saranno ${e0(rev)}: bastano`}</span></div>`:`<div class="r rev"><span>Non sono previste tasse né Inarcassa nel ${nomeN}.</span><span class="ok">sul Revolut ci saranno ${e0(rev)}</span></div>`}
     </div></section>`;
   const titDx=chiuso?`Cosa fare adesso<small>per chiudere il ${B.nome} e partire col ${nomeN}</small>`:`Cosa fare a fine trimestre<small>con i numeri di oggi</small>`;
   $('#main').innerHTML=`<div class="tq tb">${testa}
