@@ -2907,7 +2907,7 @@ function renderAvviso(){
 function trimB(a,q){ // numeri di un trimestre, solo movimenti di Unicredit (si vive con Unicredit)
   if(q<1){a--;q=4}
   const d=datiTrim(a,q); if(!d||d.a!==a||d.q!==q) return null;
-  const su=(f,m)=>d.mov.filter(x=>!x.giro&&daUni(x)&&(m==null||meseDi(x.data)===m)&&f(bollaDi(x.cat))).reduce((s,x)=>s+x.eur,0);
+  const su=(f,m)=>d.mov.filter(x=>!x.giro&&daUni(x)&&(m==null||meseDi(x.data)===m)&&f(bollaDi(x.cat),x)).reduce((s,x)=>s+x.eur,0);
   const r={a,q,d,su,nome:ROMANI[q-1]+' trim'+(a!==S.anno?' '+a:''),inc:-su(b=>b==='entrate'),att:su(b=>b==='fiscali'),
     netto:nettoTrim(a,q),stip:nettoTrim(a,q-1),fis:su(b=>b==='fisse'),vari:su(b=>b==='variabili')};
   r.avanzo=r.stip==null?null:r.stip-r.fis-r.vari;
@@ -2923,7 +2923,7 @@ function qdfDati(){
   const media=id=>{const x=speseUni(a,rif,id);return (x.pag+x.prv)/rif.length};
   const I=(S.impostazioni.qdf||{})[a]||{};
   const tetto=tettoMese(a,Math.min(12,Math.max(1,mOggi)));
-  const auto={fis:media('fisse'),var:tetto!=null?tetto:media('variabili'),att:media('fiscali'),ris:200};
+  const cop=coppiaMedia(a), auto={fis:media('fisse'),var:tetto!=null?tetto+cop:media('variabili'),att:media('fiscali'),ris:200};
   const v=k=>I[k]!=null&&I[k]!==''?+I[k]:auto[k];
   const perc=S.impostazioni.accantonamento[a]??0.25;
   const c=calcFattura({prest:1000,data:`${a}-06-30`}), kL=c.lordo/1000; // da prestazione a incasso lordo (bollo e 4%)
@@ -2937,7 +2937,7 @@ function qdfDati(){
     return {q,stato:a<o.getFullYear()||q<oq?'concluso':q===oq&&a===o.getFullYear()?'in corso':'da venire',inc:incF,attese,prest:fat.reduce((s,x)=>s+x.c.conBollo,0),nFat:fat.length,netto:T?T.netto:null}});
   const chiusi=Q.filter(x=>x.stato==='concluso'&&x.inc>0.5), incMedio=chiusi.length?chiusi.reduce((s,x)=>s+x.inc,0)/chiusi.length:null;
   const stipMedio=incMedio==null?null:(incMedio*(1-perc)-A*3)/3;
-  return {a,F,V,A,R,auto,I,tetto,perc,kL,stip,nettoQ,lordoQ,prestQ,Q,incMedio,stipMedio,rif};
+  return {a,F,V,A,R,auto,I,tetto,cop,perc,kL,stip,nettoQ,lordoQ,prestQ,Q,incMedio,stipMedio,rif};
 }
 function renderFatturare(){
   const X=qdfDati(), e0=v=>(v<-0.5?'− ':'')+'€ '+numIt(Math.abs(Math.round(v))).replace(/,00$/,'');
@@ -2948,7 +2948,7 @@ function renderFatturare(){
   const sx=`<div class="tb-meta"><div class="tq-meta-t"><span class="n">1</span>Quanto ti serve<small>scrivi le cifre che vuoi, le altre si aggiornano</small></div>
     <section class="tq-p qf-in-p">
       ${campo('fis','Spese fisse','da Unicredit, '+nRif,'fis','fisse')}
-      ${campo('var','Spese variabili',X.tetto!=null&&(X.I.var==null||X.I.var==='')?'il tuo tetto del mese':'da Unicredit, '+nRif,'var','variabili')}
+      ${campo('var','Spese variabili',X.tetto!=null&&(X.I.var==null||X.I.var==='')?(X.cop>0.5?'tetto + spese di coppia ≈ '+euro(Math.round(X.cop)).replace(/,00$/,''):'il tuo tetto del mese'):'da Unicredit, '+nRif,'var','variabili')}
       ${campo('ris','Risparmio che vuoi mettere da parte','scegli tu: è quello che deve avanzare ogni mese','ris','salvadanaio')}
       <div class="qf-tot"><span>Stipendio che ti serve</span><b>${e0(X.stip)}<small> al mese</small></b></div>
       ${campo('att','Spese per l\'attività','pagate da Unicredit, '+nRif,'att','fiscali')}
@@ -2994,17 +2994,17 @@ function obMeseTxt(n){return MESI3[n%12]+' '+Math.floor(n/12)}
 function obMeseISO(n){return Math.floor(n/12)+'-'+String(n%12+1).padStart(2,'0')}
 function obMesi(a,D){ // anno a: stipendio (netto del trim prima ÷ 3) − fisse − variabili; mesi futuri: previste, media dei mesi chiusi, tetto variabili
   const o=new Date(), mO=o.getFullYear()===a?o.getMonth()+1:(o.getFullYear()>a?13:0), ch=D.chiusi||[];
-  const med=id=>ch.length?ch.reduce((s,m)=>s+speseUni(a,[m],id).pag,0)/ch.length:0, mF=med('fisse'), mV=med('variabili');
+  const med=id=>ch.length?ch.reduce((s,m)=>s+speseUni(a,[m],id).pag,0)/ch.length:0, mF=med('fisse'), mV=med('variabili'), mC=coppiaMedia(a);
   const st={};[1,2,3,4].forEach(q=>{const n=nettoTrim(a,q-1);st[q]=n==null?null:n/3});
-  let cum=0;return [1,2,3,4,5,6,7,8,9,10,11,12].map(m=>{const F0=speseUni(a,[m],'fisse'), V0=speseUni(a,[m],'variabili'), fut=m>mO, cor=m===mO, tm=tettoMese(a,m);
-    const F=fut?Math.max(F0.pag+F0.prv,mF):F0.pag+F0.prv, V=fut?(tm??Math.max(V0.pag+V0.prv,mV)):V0.pag+V0.prv, s=st[Math.ceil(m/3)];
-    const r=s==null?null:s-F-V;if(r!=null)cum+=r;return {a,m,fut,cor,st:s,F,V,tm,r,cum}})}
+  let cum=0;return [1,2,3,4,5,6,7,8,9,10,11,12].map(m=>{const F0=speseUni(a,[m],'fisse'), V0=speseUni(a,[m],'variabili'), T0=speseUni(a,[m],'tetto'), fut=m>mO, cor=m===mO, tm=tettoMese(a,m);
+    const F=fut?Math.max(F0.pag+F0.prv,mF):F0.pag+F0.prv, V=fut?(tm!=null?tm+mC:Math.max(V0.pag+V0.prv,mV)):V0.pag+V0.prv, Vt=fut?(tm??V):T0.pag+T0.prv, s=st[Math.ceil(m/3)];
+    const r=s==null?null:s-F-V;if(r!=null)cum+=r;return {a,m,fut,cor,st:s,F,V,Vt,tm,r,cum}})}
 function obMesiN(a){ // anno dopo, dalla Previsione: stipendio del I trim = netto del IV trim di quest'anno, poi netto dei trimestri dell'anno dopo
   let PV=null;try{PV=datiPrevisione(a,pvVaX(a+1))}catch(e){}
   const sm=(v,mm)=>mm.reduce((s,m)=>s+((v||{})[m]||0),0), netQ=k=>{const mm=[k*3-2,k*3-1,k*3], e=sm(PV.totE,mm);return e-e*PV.perc-sm(PV.att,mm)};
   const st={1:(()=>{const n=conScen(()=>nettoTrim(a,4));return n==null?null:n/3})()};[2,3,4].forEach(q=>{st[q]=PV&&PV.lordo>0.5?netQ(q-1)/3:null});
   let cum=0;return [1,2,3,4,5,6,7,8,9,10,11,12].map(m=>{const F=PV?sm(PV.fisse,[m]):0, V=PV?sm(PV.vari,[m]):0, s=st[Math.ceil(m/3)], r=s==null||!PV?null:s-F-V;if(r!=null)cum+=r;
-    return {a:a+1,m,fut:1,cor:0,st:s,F,V,tm:tettoMese(a+1,m),r,cum,senzaEnt:!(PV&&PV.lordo>0.5)}})}
+    return {a:a+1,m,fut:1,cor:0,st:s,F,V,Vt:tettoMese(a+1,m)??V,tm:tettoMese(a+1,m),r,cum,senzaEnt:!(PV&&PV.lordo>0.5)}})}
 function obDati(sim){
   sim=+sim||0;
   const a=S.anno, D=datiConti(a), oggi=oggiISO(), nOra=obMeseN(oggi), M=obMesi(a,D), MN=obMesiN(a), I=S.impostazioni, perc=I.obModo==='perc', fatti=I.obMesi||{};
@@ -3053,7 +3053,7 @@ function obStriscia(X,e0,n0){
   const pil=`<span class="ob-pil"><button data-ob-anno="${X.a}" class="${vN?'':'on'}">${X.a}</button><button data-ob-anno="${X.a+1}" class="${vN?'on':''}">${X.a+1} previsto</button></span>`;
   const sub=(vN||v==='D'&&X.a+1===MM[MM.length-1].a&&MM[MM.length-1].r==null)&&X.MN[0].senzaEnt?`<b class="no">mancano le entrate ${aS} nella Previsione</b>: c'è solo il I trimestre`:`stipendio del mese − spese fisse e variabili`;
   const tit=`<h3>${ico('calendario')} Quanto ti avanza ogni mese ${v==='D'?'':pil}<small>${sub} · ${pvBase()==='prev'?'con le fatture previste':'solo fatture incassate'}</small><span class="ob-str-t">nel ${aS} <b class="${anno<-0.5?'no':'ok'}">${anno<-0.5?'− ':'+ '}${e0(Math.abs(anno)).slice(2)}</b>${dopo!=null?` · gen–mar ${X.a+1} <b class="${dopo<-0.5?'no':'ok'}">${dopo<-0.5?'− ':'+ '}${e0(Math.abs(dopo)).slice(2)}</b>`:''}</span></h3>`;
-  const tip=x=>`${MESI[x.m-1]} ${x.a}${x.fut?' (previsto)':''}: stipendio ${x.st==null?'—':e0(x.st)} − fisse ${e0(x.F)} − variabili ${e0(x.V)}${x.tm!=null?' (tetto '+e0(x.tm)+')':''} = ${x.r==null?'—':e0(x.r)}`;
+  const tip=x=>`${MESI[x.m-1]} ${x.a}${x.fut?' (previsto)':''}: stipendio ${x.st==null?'—':e0(x.st)} − fisse ${e0(x.F)} − variabili ${e0(x.V)}${x.tm!=null?' (tetto '+e0(x.tm)+(x.V-x.Vt>0.5?', più '+e0(x.V-x.Vt)+' di coppia fuori dal tetto':'')+')':''} = ${x.r==null?'—':e0(x.r)}`;
   const flag=x=>(x.ob||[]).map(o=>`<em style="background:${o.col}" title="Arrivi a ${esc(o.nome)}">✓ ${esc(o.nome)}</em>`).join('');
   const W=1000,H=150;let corpo='';
   if(v==='A'){ // colonne dell'avanzo + linea "messo da parte da gennaio"
@@ -3067,7 +3067,7 @@ function obStriscia(X,e0,n0){
   } else if(v==='B'){ // stipendio contro spese: dove si può risparmiare (le variabili)
     const mx=Math.max(1,...MM.map(x=>Math.max(x.st||0,x.F+x.V)));
     corpo=`<div class="ob-b">${MM.map(x=>{const h=val=>Math.max(0,val)/mx*100;return `<div class="ob-b-c ${x.cor?'ora':''} ${x.fut?'fut':''}" title="${tip(x)}">
-        <div class="ob-b-g"><i class="f" style="height:${h(x.F)}%"></i><i class="v ${x.tm!=null&&x.V>x.tm+0.5?'over':''}" style="height:${h(x.V)}%;bottom:${h(x.F)}%"></i>${x.r!=null&&x.r>0.5?`<u style="bottom:${h(x.F+x.V)}%;height:${h(x.r)}%"></u>`:''}${x.st!=null?`<s style="bottom:${h(x.st)}%"></s>`:''}</div>
+        <div class="ob-b-g"><i class="f" style="height:${h(x.F)}%"></i><i class="v ${x.tm!=null&&x.Vt>x.tm+0.5?'over':''}" style="height:${h(x.V)}%;bottom:${h(x.F)}%"></i>${x.r!=null&&x.r>0.5?`<u style="bottom:${h(x.F+x.V)}%;height:${h(x.r)}%"></u>`:''}${x.st!=null?`<s style="bottom:${h(x.st)}%"></s>`:''}</div>
         <b class="${x.r==null?'':x.r<-0.5?'no':'ok'}">${x.r==null?'—':(x.r<-0.5?'− ':'+ ')+n0(Math.abs(x.r))}</b><span>${MESI3[x.m-1]}</span>${flag(x)}</div>`}).join('')}</div>
       <div class="ob-leg"><span><i class="f"></i>spese fisse</span><span><i class="v"></i>spese variabili</span><span><i class="st"></i>stipendio del mese</span><span><i class="pos"></i>quello che avanza</span></div>`;
   } else if(v==='D'){ // D: calendario a riquadri, un foglio per mese
@@ -3076,7 +3076,7 @@ function obStriscia(X,e0,n0){
         <div class="ob-d-h ${x.a!==X.a?'dopo':''}"><b>${MESI[x.m-1]}${x.a!==X.a?' '+x.a:''}</b><small>${x.cor?'ora':x.fut?'previsto':''}</small></div>
         <div class="ob-d-v">${x.r==null?'—':(x.r<-0.5?'− ':'+ ')+e0(Math.abs(x.r))}</div>${x.r==null?'<small class="ob-d-s">manca lo stipendio</small>':''}
         <div class="ob-d-b"><i class="f" style="width:${w(x.F)}%"></i><i class="v" style="width:${w(x.V)}%"></i>${!over&&x.r!=null?`<i class="a" style="width:${w(x.r)}%"></i>`:''}${over?`<s style="left:${w(st)}%"></s>`:''}</div>
-        <small class="ob-d-x">variabili <b class="${x.tm!=null?tettoCl(x.V,x.tm):''}">${n0(x.V)}</b>${x.tm!=null?' / '+n0(x.tm):''}</small>${x.ob?`<em class="ob-d-ob" title="Arrivi a: ${esc(x.ob.map(o=>o.nome).join(', '))}">✓ ${esc(x.ob.map(o=>o.nome).join(', '))}</em>`:''}</div>`}).join('')}${(()=>{const tt=MM.filter(x=>x.r!=null).reduce((s,x)=>s+x.r,0);return `<div class="ob-d-m ob-d-tot ${tt<-0.5?'no':'ok'}"><div class="ob-d-h"><b>In tutto</b><small>15 mesi</small></div><div class="ob-d-v">${(tt<-0.5?'− ':'+ ')+e0(Math.abs(tt))}</div><small class="ob-d-x">da gen ${X.a} a mar ${X.a+1}</small></div>`})()}</div>
+        <small class="ob-d-x">variabili <b class="${x.tm!=null?tettoCl(x.Vt,x.tm):''}">${n0(x.tm!=null?x.Vt:x.V)}</b>${x.tm!=null?' / '+n0(x.tm):''}</small>${x.ob?`<em class="ob-d-ob" title="Arrivi a: ${esc(x.ob.map(o=>o.nome).join(', '))}">✓ ${esc(x.ob.map(o=>o.nome).join(', '))}</em>`:''}</div>`}).join('')}${(()=>{const tt=MM.filter(x=>x.r!=null).reduce((s,x)=>s+x.r,0);return `<div class="ob-d-m ob-d-tot ${tt<-0.5?'no':'ok'}"><div class="ob-d-h"><b>In tutto</b><small>15 mesi</small></div><div class="ob-d-v">${(tt<-0.5?'− ':'+ ')+e0(Math.abs(tt))}</div><small class="ob-d-x">da gen ${X.a} a mar ${X.a+1}</small></div>`})()}</div>
       <div class="ob-leg"><span>la barra è lo stipendio del mese:</span><span><i class="f"></i>fisse</span><span><i class="v"></i>variabili</span><span><i class="pos"></i>avanza</span><span><i class="st"></i>dove finisce lo stipendio, se le spese lo superano</span></div>`;
   } else if(v==='E'){ // E: il nastro dei risparmi, una moneta per mese
     const mx=Math.max(1,...MM.map(x=>Math.abs(x.r||0)));
@@ -3088,7 +3088,7 @@ function obStriscia(X,e0,n0){
   } else if(v==='F'){ // F: dove va lo stipendio, un mese per riga su due colonne
     const riga=x=>{const st=x.st||0, tot=Math.max(st,x.F+x.V,1)*1.0, w=val=>Math.max(0,val)/tot*100, over=x.st!=null&&x.F+x.V>st+0.5;
       return `<div class="ob-f-r ${x.cor?'ora':''} ${x.fut?'fut':''}" title="${tip(x)}"><span class="ob-f-n">${MESI3[x.m-1]}<small>${x.cor?'ora':x.fut?'prev.':''}</small></span>
-        <span class="ob-f-b">${x.st==null?'<em class="ob-f-0">manca lo stipendio</em>':`<i class="f" style="width:${w(x.F)}%"><b>${w(x.F)>14?n0(x.F):''}</b></i><i class="v ${x.tm!=null&&x.V>x.tm+0.5?'over':''}" style="width:${w(x.V)}%"><b>${w(x.V)>14?n0(x.V):''}</b></i>${!over?`<i class="a" style="width:${w(x.r)}%"><b>${w(x.r)>14?n0(x.r):''}</b></i>`:''}${over?`<s style="left:${w(st)}%"></s>`:''}`}</span>
+        <span class="ob-f-b">${x.st==null?'<em class="ob-f-0">manca lo stipendio</em>':`<i class="f" style="width:${w(x.F)}%"><b>${w(x.F)>14?n0(x.F):''}</b></i><i class="v ${x.tm!=null&&x.Vt>x.tm+0.5?'over':''}" style="width:${w(x.V)}%"><b>${w(x.V)>14?n0(x.V):''}</b></i>${!over?`<i class="a" style="width:${w(x.r)}%"><b>${w(x.r)>14?n0(x.r):''}</b></i>`:''}${over?`<s style="left:${w(st)}%"></s>`:''}`}</span>
         <b class="ob-f-v ${x.r==null?'':x.r<-0.5?'no':'ok'}">${x.r==null?'—':(x.r<-0.5?'− ':'+ ')+n0(Math.abs(x.r))}</b>${flag(x)?`<span class="ob-f-o">${flag(x)}</span>`:''}</div>`};
     corpo=`<div class="ob-f2"><div>${MM.slice(0,6).map(riga).join('')}</div><div>${MM.slice(6).map(riga).join('')}</div></div>
       <div class="ob-leg"><span>ogni barra è lo stipendio del mese:</span><span><i class="f"></i>fisse</span><span><i class="v"></i>variabili</span><span><i class="pos"></i>avanza</span><span><i class="st"></i>fin dove arriva lo stipendio, se sfori</span></div>`;
@@ -3098,7 +3098,7 @@ function obStriscia(X,e0,n0){
     corpo=`<div class="ob-t">${riga('',x=>MESI3[x.m-1]+(x.cor?' · ora':x.fut?' · prev.':''),'mesi')}
       ${riga('Stipendio',x=>x.st==null?'—':n0(x.st),'st')}
       ${riga('− Spese fisse',x=>n0(x.F),'f')}
-      ${riga('− Spese variabili',x=>`<i class="${x.tm!=null?tettoCl(x.V,x.tm):''}">${n0(x.V)}</i>${x.tm!=null?`<small>/${n0(x.tm)}</small>`:''}`,'v')}
+      ${riga('− Spese variabili',x=>`<i class="${x.tm!=null?tettoCl(x.Vt,x.tm):''}">${n0(x.V)}</i>${x.tm!=null?`<small>/${n0(x.tm)}</small>`:''}`,'v')}
       ${riga('= Ti avanza',x=>x.r==null?'—':`<b class="${x.r<-0.5?'no':'ok'}">${(x.r<-0.5?'− ':'+ ')+n0(Math.abs(x.r))}</b>`,'av')}
       ${riga('Da gennaio',x=>x.r==null?'—':(x.cum<-0.5?'− ':'')+n0(Math.abs(x.cum)),'cum')}
       ${MM.some(x=>x.ob)?riga('Obiettivi',x=>flag(x)||'','obr'):''}</div>
@@ -3285,11 +3285,11 @@ function renderTrimestreB(){conScen(()=>{
     :voce(chiuso?'fatto':'',`Il tuo stipendio da ${MESI[mesiN[0]-1].toLowerCase()}`,`netto del ${B.nome} ${e0(stipN)} ÷ 3${chiuso?'':' · cambia finché il trimestre non è chiuso'}`,e0(stipN/3)+'<small>/mese</small>','sti');
   // tetto variabili
   const tetQ=tettoVar(a,B.d.mesi), tetN=tettoVar(N.a,mesiN), tm=tettoMese(N.a,mesiN[0])??tettoMese(a,q*3);
-  const varM=B.d.mesi.map(m=>({m,v:B.su(b=>b==='variabili',m),t:tettoMese(a,m)}));
-  const fisNs=fisN>0.5?fisN:B.fis, restoN=stipN==null?null:stipN-fisNs-(tetN??0);
+  const varM=B.d.mesi.map(m=>({m,v:B.su((b,x)=>b==='variabili'&&!diCoppia(x),m),t:tettoMese(a,m)})); // senza le spese di coppia (DA DIVIDERE)
+  const copN=tetN!=null?coppiaMedia(N.a)*3:0, fisNs=fisN>0.5?fisN:B.fis, restoN=stipN==null?null:stipN-fisNs-(tetN??0)-copN;
   const vTet=tm==null?voce('','Tetto alle variabili','non l\'hai ancora fissato: clicca qui per fissarlo','<em class="tb-az">fissa →</em>','var').replace('<div class="tb-t',`<div data-tb-tet="${N.a}-${N.q}" title="Clicca per fissare il tetto" class="tb-clic tb-t`)
     :`<div class="tb-t tet c-var tb-clic" data-tb-tet="${N.a}-${N.q}" title="Clicca per cambiare il tetto"><span class="tb-c">€</span><span><b>Tetto alle variabili: ${e0(tm)} al mese</b><small>nel ${B.nome} hai speso ${varM.map(x=>`${mAb(x.m)} <i class="${tettoCl(x.v,x.t)}">${e0(x.v)}</i>`).join(' · ')}</small>
-      ${restoN==null?'':`<small>nel ${nomeN}: stipendio ${e0(stipN)} − fisse ${fisN>0.5?'':'≈ '}${e0(fisNs)} − tetto ${e0(tetN??0)} = <i class="${restoN<-0.5?'no':'ok'}">${restoN<-0.5?'mancano':'restano'} ${e0(Math.abs(restoN))}</i></small>`}</span><strong>${e0(varM.reduce((s,x)=>s+x.v,0))}<small> su ${tetQ==null?'—':e0(tetQ)}</small><em class="tb-az">cambia →</em></strong></div>`;
+      ${restoN==null?'':`<small>nel ${nomeN}: stipendio ${e0(stipN)} − fisse ${fisN>0.5?'':'≈ '}${e0(fisNs)} − tetto ${e0(tetN??0)}${copN>0.5?` − coppia ≈ ${e0(copN)}`:''} = <i class="${restoN<-0.5?'no':'ok'}">${restoN<-0.5?'mancano':'restano'} ${e0(Math.abs(restoN))}</i></small>`}</span><strong>${e0(varM.reduce((s,x)=>s+x.v,0))}<small> su ${tetQ==null?'—':e0(tetQ)}</small><em class="tb-az">cambia →</em></strong></div>`;
   // scadenze del trimestre dopo
   const scad=movN.filter(x=>['inarcassa','tasse stato'].includes(x.cat)).sort((x,y)=>x.data<y.data?-1:1);
   const totSc=scad.reduce((s,x)=>s+x.eur,0), rev=dispPeriodo(N.a,mesiN).rev, mancaR=totSc-rev;
@@ -3300,7 +3300,7 @@ function renderTrimestreB(){conScen(()=>{
   const fisM=m=>movN.filter(x=>daUni(x)&&meseDi(x.data)===m&&bollaDi(x.cat)==='fisse').reduce((s,x)=>s+x.eur,0);
   const scM=m=>scad.filter(x=>meseDi(x.data)===m).reduce((s,x)=>s+x.eur,0);
   const colN=mesiN.map(m=>{const f=fisM(m),st=f<0.5;return {m,sti:stipN==null?null:stipN/3,fis:st?B.fis/3:f,stima:st,tet:tettoMese(N.a,m),tas:scM(m)}});
-  colN.forEach(c=>{c.resta=c.sti==null?null:c.sti-c.fis-(c.tet||0)});
+  colN.forEach(c=>{c.cop=c.tet!=null?copN/3:0;c.resta=c.sti==null?null:c.sti-c.fis-(c.tet||0)-c.cop});
   const totC=k=>colN.reduce((s,c)=>s+(c[k]||0),0);
   const rigaN=(n,k,cc,segno,nota)=>`<div class="r c-${cc}"><span><i class="tb-sw"></i>${n}${nota?`<em>${nota}</em>`:''}</span>${colN.map(c=>`<span>${c[k]==null?'—':(segno||'')+(k==='fis'&&c.stima?'≈ ':'')+e0(c[k])}</span>`).join('')}<b class="q">${(segno||'')+e0(totC(k))}</b></div>`;
   const prossimo=`<section class="tq-p tb-pro"><h3>${ico('calendario')} Il ${nomeN} mese per mese<small>${stipN==null?'manca lo stipendio':chiuso?'con lo stipendio nuovo':'stipendio con i numeri di oggi'}</small></h3>
@@ -3308,6 +3308,7 @@ function renderTrimestreB(){conScen(()=>{
       ${rigaN('Stipendio','sti','sti','','il netto del '+B.nome+' ÷ 3')}
       ${rigaN('Fisse','fis','fis','− ',colN.some(c=>c.stima)?'≈ stimate come nel '+B.nome:'già segnate')}
       ${rigaN('Tetto variabili','tet','var','− ',colN.some(c=>c.tet!=null)?'quello che ti concedi':'nessun tetto impostato')}
+      ${copN>0.5?rigaN('Spese di coppia','cop','var','− ','≈ media, fuori dal tetto').replace(/<span>− /g,'<span>− ≈ ').replace('<b class="q">− ','<b class="q">− ≈ '):''}
       <div class="r tot"><span>Resta</span>${colN.map(c=>`<span class="${c.resta!=null&&c.resta<-0.5?'no':'ok'}">${c.resta==null?'—':e0(c.resta)}</span>`).join('')}<b class="q ${totC('resta')<-0.5?'neg':''}">${e0(totC('resta'))}</b></div>
       <div class="r c-att tas"><span><i class="tb-sw"></i>Tasse e Inarcassa<em>dal Revolut, non dallo stipendio</em></span>${colN.map(c=>`<span>${c.tas>0.5?e0(c.tas):'—'}</span>`).join('')}<b class="q">${scad.length?e0(totC('tas')):'—'}</b></div>
       ${scad.length?`<div class="r rev"><span>${scad.map(x=>`${dataIt(x.data).slice(0,5)} ${esc(nomeCat(x.cat))}${x.det?' · '+esc(x.det.toLowerCase().replace(nomeCat(x.cat).toLowerCase(),'').trim()):''} ${e0(x.eur)}${x.ok?' ✓':''}`).join(' · ')}</span><span class="${mancaR>0.5?'no':'ok'}">${mancaR>0.5?`sul Revolut ci saranno ${e0(rev)}: mancano ${e0(mancaR)}`:`sul Revolut ci saranno ${e0(rev)}: bastano`}</span></div>`:`<div class="r rev"><span>Non sono previste tasse né Inarcassa nel ${nomeN}.</span><span class="ok">sul Revolut ci saranno ${e0(rev)}</span></div>`}
@@ -3441,7 +3442,7 @@ function apriTettoTrim(a,q){ // Paolo 13/11: il tetto si fissa anche dal Trimest
   const n=v=>v!=null?numIt(v).replace(/,00$/,''):'';
   $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra tbt-fin" role="dialog" aria-modal="true">
     <h3>Tetto alle variabili</h3>
-    <p class="aiuto">Quanto ti concedi al mese per le spese <b>variabili</b> (le fisse non contano). È lo stesso tetto di Impostazioni: vale per Home, Previsione e "Posso permettermelo?".</p>
+    <p class="aiuto">Quanto ti concedi al mese per le spese <b>variabili</b> (le fisse non contano, e nemmeno le spese di coppia con la nota DA DIVIDERE). È lo stesso tetto di Impostazioni: vale per Home, Previsione e "Posso permettermelo?".</p>
     <label class="tbt-base">Tetto mensile del ${a}<span class="dp-eur">€<input data-tetto="${a}" value="${n(T.base)}" placeholder="nessuno" inputmode="decimal"></span></label>
     <div class="tbt-sub">Nel ${ROMANI[q-1]} trim ${a} un mese diverso? <small>(vuoto = come sopra)</small></div>
     <div class="tbt-mesi">${ms.map(m=>`<label>${MESI[m-1]}<span class="dp-eur">€<input data-tetto-m="${a}-${m}" value="${n(T.m&&T.m[m]!=null?T.m[m]:null)}" placeholder="${n(T.base)||'—'}" inputmode="decimal"></span></label>`).join('')}</div>
@@ -3787,7 +3788,7 @@ function ppCalcola(imp,m0,nr){ // m0 = mese della (prima) spesa, nr = rate mensi
   const o=new Date(), a=o.getFullYear(), mOra=o.getMonth()+1, gOggi=o.getDate(), gMese=new Date(a,mOra,0).getDate();
   const rata=imp/nr, mesiR=[];for(let i=0;i<nr;i++)mesiR.push(m0+i);
   const dentro=mesiR.filter(m=>m<=12);
-  const spM=m=>{const F=speseUni(a,[m],'fisse'),V=speseUni(a,[m],'variabili');return {f:F.pag+F.prv,v:V.pag+V.prv,t:F.pag+F.prv+V.pag+V.prv}};
+  const spM=m=>{const F=speseUni(a,[m],'fisse'),V=speseUni(a,[m],'variabili'),T=speseUni(a,[m],'tetto');return {f:F.pag+F.prv,v:V.pag+V.prv,vt:T.pag+T.prv,t:F.pag+F.prv+V.pag+V.prv}};
   const limM=m=>{const n=nettoTrim(a,Math.ceil(m/3)-1);return n==null?null:n/3};
   const q=Math.ceil(m0/3), msQ=[q*3-2,q*3-1,q*3], stQ=nettoTrim(a,q-1);
   const spQ=msQ.reduce((s,m)=>s+spM(m).t,0), rateQ=dentro.filter(m=>msQ.includes(m)).length*rata;
@@ -3806,7 +3807,7 @@ function ppCalcola(imp,m0,nr){ // m0 = mese della (prima) spesa, nr = rate mensi
   if((minU!=null&&minU<-0.5)||(mNo&&qNo)) esito='no';
   else if(mNo||qNo||(stQ&&dopoQ!=null&&dopoQ<stQ*0.1)) esito='forse';
   const ppCat=($('#pp-cat')||{}).value, TV=ppCat&&bollaDi(ppCat)==='variabili'?tettoMese(a,m0):null;
-  if(TV!=null&&sm.v+rata>TV+0.5&&esito==='si') esito='forse';
+  if(TV!=null&&sm.vt+rata>TV+0.5&&esito==='si') esito='forse';
   return {TV,dentroImp:dentro.length*rata,qGia,a,mOra,m0,q,msQ,nr,rata,imp,lim,sm,restaM,dopoM,stQ,spQ,restaQ,dopoQ,minU,minK,mediaV,risp,giorniRest,stDopo,esito,fuori:mesiR.length-dentro.length};
 }
 function ppTesto(R){
@@ -3817,7 +3818,7 @@ function ppTesto(R){
   L.push(riga('calendario','Mese',`${M3(R.m0)} · stipendio ${e0(R.lim)}`,sg(R.restaM),sg(R.dopoM),st(R.dopoM),R.dopoM<-0.5?'sfori':'resta'));
   if(R.dopoQ!=null) L.push(riga('anno','Trimestre',`${ROMANI[R.q-1]} · stipendio ${e0(R.stQ)}`,sg(R.restaQ),sg(R.dopoQ),R.dopoQ<-0.5?'no':R.stQ&&R.dopoQ<R.stQ*0.1?'forse':'ok',R.qGia?'già in rosso':R.dopoQ<-0.5?'sfori':'resta'));
   if(R.m0===R.mOra&&R.dopoM>0.5&&R.giorniRest>1) L.push(riga('oggi','Al giorno',`fino a fine ${M3(R.m0)}`,sg(R.restaM/R.giorniRest),sg(R.dopoM/R.giorniRest),'ok',R.giorniRest+' giorni'));
-  if(R.TV!=null){const d=R.sm.v+R.rata;L.push(riga('variabili','Variabili',`tetto ${e0(R.TV)}/mese`,e0(R.sm.v),e0(d),d>R.TV+0.5?'no':d>R.TV*0.8?'forse':'ok',d>R.TV+0.5?'sopra il tetto':'sotto il tetto'))}
+  if(R.TV!=null){const d=R.sm.vt+R.rata;L.push(riga('variabili','Variabili',`tetto ${e0(R.TV)}/mese`,e0(R.sm.vt),e0(d),d>R.TV+0.5?'no':d>R.TV*0.8?'forse':'ok',d>R.TV+0.5?'sopra il tetto':'sotto il tetto'))}
   else if(R.mediaV!=null&&R.sm.v+R.rata>R.mediaV*1.25) L.push(riga('variabili','Variabili',`media ${e0(R.mediaV)}/mese`,e0(R.sm.v),e0(R.sm.v+R.rata),'forse','sopra la media'));
   if(R.minU!=null) L.push(riga('conto','Unicredit',`punto più basso · fine ${M3(R.minK)}`,sg(R.minU+R.dentroImp),sg(R.minU),st(R.minU),R.minU<-0.5?'sotto zero':'ok'));
   if(R.fuori) L.push(riga('rate','Rate',`${R.fuori} nel ${R.a+1}`,null,'non contate','forse',''));
@@ -4357,8 +4358,8 @@ function datiPrevisione(a,vaX){
     if(c.b==='fisse'){c.come=c.nRip?'rip':'stima';c.media=0;c.mesi=M.reduce((o,m)=>(o[m]=c.rip[m]+(c.nRip?0:c.tutto[m]),o),r())}
     else{c.come='media';c.media=altri/12;c.mesi=M.reduce((o,m)=>(o[m]=c.rip[m]+c.media,o),r())}
   }
-  {const TV=[0,1,2,3,4,5,6,7,8,9,10,11,12].map(m=>m?tettoMese(N,m):null), CV=Object.values(cats).filter(c=>c.b==='variabili');
-   if(TV.some(v=>v!=null))M.forEach(m=>{if(TV[m]==null)return;const rip=CV.reduce((s,c)=>s+c.rip[m],0), med=CV.reduce((s,c)=>s+c.media,0), f=med>0.005?Math.max(0,TV[m]-rip)/med:0;
+  {const TV=[0,1,2,3,4,5,6,7,8,9,10,11,12].map(m=>m?tettoMese(N,m):null), CV=Object.values(cats).filter(c=>c.b==='variabili'), copM=coppiaMedia(a);
+   if(TV.some(v=>v!=null))M.forEach(m=>{if(TV[m]==null)return;const rip=CV.reduce((s,c)=>s+c.rip[m],0), med=CV.reduce((s,c)=>s+c.media,0), f=med>0.005?Math.max(0,TV[m]+copM-rip)/med:0; // tetto + spese di coppia (fuori dal tetto, Paolo 15/11)
      CV.forEach(c=>{c.tetto=true;c.mesi[m]=c.rip[m]+c.media*f})})}
   const OV=((S.previsione||{})[N])||{}, applica=c=>{c.stima=c.mesi.slice();c.ov=r().map(()=>false);const o=OV[c.id]||{};for(const m in o){if(m[0]==='r'||m[0]==='x')continue;c.mesi[+m]=+o[m];c.ov[+m]=true}c.tot=c.mesi.reduce((s,v)=>s+v,0)};
   Object.values(cats).forEach(applica);
@@ -5354,7 +5355,15 @@ function dispPeriodo(a,ms){ // quanto puoi davvero spendere nel periodo
   const revVers=S.movimenti.filter(x=>sel(x)&&x.giro&&x.verso==='REVOLUT').reduce((s,x)=>s+x.eur,0);
   return {bud,mesiB,completo:mesiB.length===mesi.length,fisseU,revIni,revVers,rev:revIni+revVers};
 }
-function speseUni(a,mesi,id){const r={pag:0,prv:0};for(const x of S.movimenti)if(annoDi(x.data)===a&&mesi.includes(meseDi(x.data))&&!x.giro&&daUni(x)&&bollaDi(x.cat)===id)r[x.ok?'pag':'prv']+=x.eur;return r}
+// Paolo 15/11/2026: le spese con nota DA DIVIDERE (di coppia, conto a parte su Splitwise) restano nel saldo ma stanno FUORI dal tetto delle variabili,
+// come le spese per l'attività pagate da Unicredit. id 'tetto' = variabili senza quelle di coppia; 'coppia' = le variabili di coppia (le fisse di coppia, es. bollette, restano fisse)
+const NOTA_COPPIA='DA DIVIDERE';
+function diCoppia(x){return String((x&&x.nota)||'').trim().toUpperCase()===NOTA_COPPIA}
+function speseUni(a,mesi,id){const r={pag:0,prv:0};for(const x of S.movimenti){if(annoDi(x.data)!==a||!mesi.includes(meseDi(x.data))||x.giro||!daUni(x))continue;const b=bollaDi(x.cat);
+  if(id==='tetto'?b==='variabili'&&!diCoppia(x):id==='coppia'?b==='variabili'&&diCoppia(x):b===id)r[x.ok?'pag':'prv']+=x.eur}return r}
+function coppiaMedia(a){ // variabili di coppia al mese, media dei mesi chiusi (per le stime dei mesi futuri: tetto + coppia)
+  const o=new Date(), oa=o.getFullYear(), fino=a<oa?12:a===oa?o.getMonth():0, aa=fino?a:a-1, n=fino||12;
+  let s=0;for(let k=1;k<=n;k++)s+=speseUni(aa,[k],'coppia').pag;return Math.max(0,s/n)}
 function stipendioHome(a,m,giornoOggi,giorniMese){ // riquadro Home: stipendio del mese, speso, rimane
   const D=dispPeriodo(a,m); if(!D.completo) return null;
   const F=speseUni(a,[m],'fisse'), V=speseUni(a,[m],'variabili'), bF=BOLLE.find(b=>b.id==='fisse'), bV=BOLLE.find(b=>b.id==='variabili');
@@ -5417,7 +5426,8 @@ function infoMese(){
       scala=Math.max(t,ob?ob.v:0,1)*1.08; pp=Math.max(0,x.pag)/scala*100; pv=Math.max(0,x.prv)/scala*100;
       if(ob){const d=ob.v-t;stato=d>=0?`<span class="im-st ok">▼ ${euro(d)}</span>`:`<span class="im-st no">▲ ${euro(-d)}</span>`;over=`<em style="left:${ob.v/scala*100}%"></em>`;sotto=`<span>media ${euro(ob.v)}</span>`}
     }
-    const avviso=lim!=null&&ob&&t>ob.v+0.5?`<span class="im-avv" title="${ob.tipo==='tetto'?'Il tuo tetto':ob.tipo==='obiettivo'?'Obiettivo del Piano budget':'Media dei mesi conclusi'}: ${euro(ob.v)}. Questo periodo sei ${euro(t-ob.v)} sopra.">↑ ${euro(t-ob.v)} sopra la ${ob.tipo==='tetto'?'tetto':ob.tipo==='obiettivo'?'obiettivo':'media'}</span>`:'';
+    const tO=ob&&ob.tipo==='tetto'?(z=>z.pag+z.prv)(speseUni(a,m||[1,2,3,4,5,6,7,8,9,10,11,12],'tetto')):t; // sul tetto: senza le spese di coppia
+    const avviso=lim!=null&&ob&&tO>ob.v+0.5?`<span class="im-avv" title="${ob.tipo==='tetto'?'Il tuo tetto (spese di coppia escluse)':ob.tipo==='obiettivo'?'Obiettivo del Piano budget':'Media dei mesi conclusi'}: ${euro(ob.v)}. Questo periodo sei ${euro(tO-ob.v)} sopra.">↑ ${euro(tO-ob.v)} sopra la ${ob.tipo==='tetto'?'tetto':ob.tipo==='obiettivo'?'obiettivo':'media'}</span>`:'';
     return `<div class="im-g ${b.id==='fiscali'?'im-g-fisc':''} ${UI.cat==='b:'+b.id?'sel':''}" style="--b:${b.colore}" data-bolla-mov="${b.id}" title="${esc(b.spiega)}. Clicca per vedere solo questi movimenti.">
       <div class="im-g-testa"><span class="ic-ico">${ico(b.ico)}</span><span>${esc(b.nome)}</span>${avviso}</div>
       <div class="im-g-cifra" title="Pagato ad oggi / totale del periodo (pagato + ancora da pagare)">${euro(x.pag)}<span class="im-g-tot"> / ${euro(t)}</span></div>
@@ -5427,8 +5437,8 @@ function infoMese(){
   const barre=window.STILE_BARRE||'misto';
   const mesiP=m||[1,2,3,4,5,6,7,8,9,10,11,12];
   const uni=id=>{const r={pag:0,prv:0};for(const x of S.movimenti)if(annoDi(x.data)===a&&mesiP.includes(meseDi(x.data))&&!x.giro&&daUni(x)&&bollaDi(x.cat)===id)r[x.ok?'pag':'prv']+=x.eur;return r};
-  const FU=uni('fisse'), VU=uni('variabili');
-  const avvMedia=(b,t)=>{const ob=obiettivo(a,m,b.id);return ob&&t>ob.v+0.5?`<span class="im-avv" title="${ob.tipo==='tetto'?'Il tuo tetto':ob.tipo==='obiettivo'?'Obiettivo del Piano budget':'Media dei mesi conclusi'}: ${euro(ob.v)}">${b.id==='fisse'?'fisse':'variabili'} ↑ ${euro(t-ob.v)} sopra la media</span>`:''};
+  const FU=uni('fisse'), VU=uni('variabili'), VT=speseUni(a,mesiP,'tetto'), VTt=VT.pag+VT.prv, CPv=tV0=>tV0-VTt; // VT: variabili sul tetto, senza le spese di coppia
+  const avvMedia=(b,t)=>{const ob=obiettivo(a,m,b.id);if(ob&&ob.tipo==='tetto')t=VTt;return ob&&t>ob.v+0.5?`<span class="im-avv" title="${ob.tipo==='tetto'?'Il tuo tetto':ob.tipo==='obiettivo'?'Obiettivo del Piano budget':'Media dei mesi conclusi'}: ${euro(ob.v)}">${b.id==='fisse'?'fisse':'variabili'} ↑ ${euro(t-ob.v)} sopra la media</span>`:''};
   // Versione 1: fisse + variabili sulla stessa barra, il totale è lo stipendio
   const gaugeUnito=()=>{
     const F=FU, V=VU, bF=SP[0], bV=SP[1], tF=F.pag+F.prv, tV=V.pag+V.prv, tt=tF+tV, lim=D.bud, scala=Math.max(lim,tt,1), d=lim-tt;
@@ -5515,13 +5525,13 @@ function infoMese(){
         num:`${euro(tt)}<span class="tg-di">di ${euro(lim)}</span>`,
         bar:`<div class="tg-bar lim"><i class="p" style="--b:${bF.colore};width:${w(F.pag)}%"></i><i class="v" style="--b:${bF.colore};width:${w(F.prv)}%"></i><i class="p" style="--b:${bV.colore};width:${w(V.pag)}%"></i><i class="v" style="--b:${bV.colore};width:${w(V.prv)}%"></i>${over}</div>`,
         fl:voce(bF,F,tF,tF,F.prv>0.5?pill('att','da pagare '+eu(F.prv)):pill('ok','tutte pagate'),`Spese fisse da Unicredit: pagate ${eu(F.pag)}, da pagare ${eu(F.prv)}. Clicca per vederle.`),
-        fr:(()=>{const TVm=tettoVar(a,mesiP);return TVm!=null?voce(bV,V,tV,TVm,tV<=TVm+0.5?pill(tettoCl(tV,TVm)==='att'?'att':'ok','tetto: restano '+eu(TVm-tV)):pill('no','sopra il tetto di '+eu(tV-TVm)),`Variabili da Unicredit: ${eu(tV)} sul tetto di ${eu(TVm)} che ti sei dato. Clicca per vederle.`)
+        fr:(()=>{const TVm=tettoVar(a,mesiP), cp=CPv(tV);return TVm!=null?voce(bV,V,VTt,TVm,VTt<=TVm+0.5?pill(tettoCl(VTt,TVm)==='att'?'att':'ok','tetto: restano '+eu(TVm-VTt)):pill('no','sopra il tetto di '+eu(VTt-TVm)),`Variabili da Unicredit: ${eu(VTt)} sul tetto di ${eu(TVm)} che ti sei dato${cp>0.5?` (più ${eu(cp)} di spese di coppia, DA DIVIDERE, che stanno fuori dal tetto)`:''}. Clicca per vederle.`)
           :voce(bV,V,tV,puoi,d>=-0.5?pill('ok','restano '+eu(Math.max(0,d))):pill('no','sfori '+eu(-d)),`Variabili da Unicredit: ${eu(tV)} su ${eu(puoi)} che puoi spendere (stipendio − fisse). Clicca per vederle.`)})()});
     } else { // manca lo stipendio: fisse e variabili confrontate con la media
       cMid=SP.slice(0,2).map(b=>{const x=B[b.id],tt=x.pag+x.prv,ob=obiettivo(a,m,b.id),sc=Math.max(tt,ob?ob.v:0,1)*1.08;
         return card({cls:'tg-g',col:b.colore,tinta:`color-mix(in srgb,${b.colore} 35%,#fff)`,label:esc(b.nome),bolla:b.id,sel:UI.cat==='b:'+b.id,tip:esc(b.spiega),
           num:euro(tt),bar:`<div class="tg-bar"><i class="p" style="--b:${b.colore};width:${Math.max(0,x.pag)/sc*100}%"></i><i class="v" style="--b:${b.colore};width:${Math.max(0,x.prv)/sc*100}%"></i>${ob?`<em style="left:${ob.v/sc*100}%"></em>`:''}</div>`,
-          fl:ob?`<span>media ${eu(ob.v)}</span>`:'<span></span>',fr:ob?(tt<=ob.v?pill('ok','▼ '+eu(ob.v-tt)):pill('no','▲ '+eu(tt-ob.v))):''})}).join('');
+          fl:ob?`<span>${ob.tipo==='tetto'?'tetto':'media'} ${eu(ob.v)}</span>`:'<span></span>',fr:ob?(tc=>tc<=ob.v?pill('ok','▼ '+eu(ob.v-tc)):pill('no','▲ '+eu(tc-ob.v)))(ob.tipo==='tetto'?VTt:tt):''})}).join(''); // sul tetto: senza le spese di coppia
     }
     const x=B.fiscali, tA=x.pag+x.prv, fu=speseUni(a,mesiP,'fiscali'), uF=fu.pag+fu.prv, limA=D.rev+uF, scA=Math.max(limA,tA,1), dA=limA-tA, soloUni=uF>0.5&&D.rev<0.5;
     const cF=card({cls:'tg-att',col:bA.colore,tinta:'#efe4d6',label:'Spese per attività',bolla:'fiscali',sel:UI.cat==='b:fiscali',
@@ -5656,8 +5666,10 @@ function h3Dati(){ // numeri condivisi dalle tre proposte
   const a=S.anno, corr=annoDi(oggi)===a, m=corr?meseDi(oggi):(annoDi(oggi)>a?12:1);
   const giorniMese=new Date(a,m,0).getDate(), gOggi=corr?+oggi.slice(8,10):null, gRest=gOggi?giorniMese-gOggi+1:null;
   const e0=v=>(v<-0.5?'− ':'')+'€ '+numIt(Math.abs(Math.round(v))).replace(/,00$/,'');
-  const B=sommeBolle(a,m), D=dispPeriodo(a,m), F=speseUni(a,[m],'fisse'), V=speseUni(a,[m],'variabili');
-  const tF=F.pag+F.prv, tV=V.pag+V.prv, lim=D.bud, resta=lim-tF-tV, TV=tettoMese(a,m);
+  const B=sommeBolle(a,m), D=dispPeriodo(a,m), F=speseUni(a,[m],'fisse'), V=speseUni(a,[m],'variabili'), VT=speseUni(a,[m],'tetto');
+  const tF=F.pag+F.prv, tV=V.pag+V.prv, tVt=VT.pag+VT.prv, lim=D.bud, resta=lim-tF-tV, TV=tettoMese(a,m);
+  // Paolo 15/11: spese di coppia (variabili con nota DA DIVIDERE, da tutti i conti): una riga a sé, fuori dal tetto
+  const CP={pag:0,prv:0};for(const x of S.movimenti)if(annoDi(x.data)===a&&meseDi(x.data)===m&&!x.giro&&bollaDi(x.cat)==='variabili'&&diCoppia(x))CP[x.ok?'pag':'prv']+=x.eur;
   const fra=n=>{const d=new Date(o.getFullYear(),o.getMonth(),o.getDate()+n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
   // conti di oggi
   const conti=[];let tuoi=0;
@@ -5688,10 +5700,10 @@ function h3Dati(){ // numeri condivisi dalle tre proposte
   const t30=calEventi(oggi,fra(30)).filter(x=>!x.ok&&x.tipo==='tas'), tas=t30.reduce((s,x)=>s+x.eur,0);
   const rev=saldoContoAl((S.conti.find(c=>c.tipo==='salvadanaio')||{}).id||'REVOLUT',oggi);
   if(tas>0.5) fare.push({st:rev>=tas-0.5?'fatto':'no',tit:`Tasse e Inarcassa entro 30 giorni`,sub:t30.map(x=>`${+x.data.slice(8)} ${MESI3[meseDi(x.data)-1]} ${esc(x.m.cat==='inarcassa'?'Inarcassa':'F24')}`).join(' · ')+` · Revolut ${e0(rev)}: ${rev>=tas-0.5?'bastano':'mancano '+e0(tas-rev)}`,cifra:e0(tas),att:'data-pag="calendario"'});
-  if(TV!=null){const cl=tettoCl(tV,TV);fare.push({st:cl==='no'?'no':cl==='ok'?'fatto':'',ic:'€',tit:`Variabili di ${MESI[m-1]}: ${e0(tV)} di ${e0(TV)}`,sub:tV>TV+0.5?`hai superato il tetto di ${e0(tV-TV)}`:gRest?`restano ${e0(TV-tV)}: ${e0((TV-tV)/gRest)} al giorno fino a fine mese`:`restano ${e0(TV-tV)}`,cifra:'',att:`data-tb-tet="${a}-${Math.ceil(m/3)}"`,az:'tetto →'})}
+  if(TV!=null){const tV=tVt, cl=tettoCl(tV,TV);fare.push({st:cl==='no'?'no':cl==='ok'?'fatto':'',ic:'€',tit:`Variabili di ${MESI[m-1]}: ${e0(tV)} di ${e0(TV)}`,sub:tV>TV+0.5?`hai superato il tetto di ${e0(tV-TV)}`:gRest?`restano ${e0(TV-tV)}: ${e0((TV-tV)/gRest)} al giorno fino a fine mese`:`restano ${e0(TV-tV)}`,cifra:'',att:`data-tb-tet="${a}-${Math.ceil(m/3)}"`,az:'tetto →'})}
   // prossimi giorni
   const ag=n=>calEventi(oggi,fra(n)).filter(x=>!x.ok||x.data===oggi);
-  return {a,m,corr,oggi,gOggi,gRest,giorniMese,e0,B,D,F,V,tF,tV,lim,resta,TV,conti,tuoi,fare,ag,rev,fra};
+  return {a,m,corr,oggi,gOggi,gRest,giorniMese,e0,B,D,F,V,VT,tVt,CP,tF,tV,lim,resta,TV,conti,tuoi,fare,ag,rev,fra};
 }
 function h3Fare(X,max){return X.fare.slice(0,max||9).map(v=>`<div class="h3-t ${v.st} ${v.att?'clic':''}" ${v.att||''}><span class="tb-c">${v.ic||(v.st==='fatto'?'✓':v.st==='no'?'!':'')}</span><span class="h3-t-c"><b>${v.tit}</b><small>${v.sub}</small></span><strong>${v.cifra}${v.az?`<em>${v.az}</em>`:''}</strong></div>`).join('')
   ||'<div class="h3-t fatto"><span class="tb-c">✓</span><span class="h3-t-c"><b>Tutto in ordine</b><small>niente da sistemare oggi</small></span><strong></strong></div>'}
@@ -5704,16 +5716,19 @@ function h3Agenda(X,n){
   return `<div class="cl-ag-l">${L.map(x=>{const att=x.tipo==='acc'?`data-tb-acc="${Math.round(x.eur*100)/100}" data-tb-per="${x.a}-${x.q}"`:`data-vedi-mov="${x.m.id}"`;
     return `<button class="cl-r ${x.tipo==='accG'?'acc':x.tipo}${x.rit?' rit':''}" ${att} style="--pc:${x.col}"><span class="d">${dT(x.data)}</span><i class="sw"></i><span class="t">${esc(x.det)}<small>${esc(x.sub)}</small></span><b class="${x.tipo==='ent'?'pos':''}">${x.tipo==='ent'?'+ ':''}${euro(x.eur)}${x.rit?'<em>è passata: fatta?</em>':''}</b></button>`}).join('')||'<p class="gr">Niente in programma.</p>'}<div class="cl-ag-piu" hidden></div></div>`}
 function h3Voci(X,conBarra){
-  const {B,D,F,V,tF,tV,lim,resta,TV,e0}=X, bF=BOLLE.find(b=>b.id==='fisse'), bV=BOLLE.find(b=>b.id==='variabili');
+  const {B,D,F,V,tF,tV,tVt,CP,lim,resta,TV,e0}=X, bF=BOLLE.find(b=>b.id==='fisse'), bV=BOLLE.find(b=>b.id==='variabili');
   let barra='';
   if(conBarra&&D.completo){const tt=tF+tV,sc=Math.max(lim,tt,TV!=null?tF+TV:0,1),w=v=>Math.max(0,v)/sc*100;
     const over=tt>lim+0.5?`<b class="over" style="left:${lim/sc*100}%;width:${100-lim/sc*100}%"></b><em style="left:${lim/sc*100}%"></em>`:'';
     barra=`<div class="hm-stip"><div class="hm-stip-t"><span>Stipendio ${euro(lim)}</span><span class="tq-d ${resta>=-0.5?'ok':'no'}">${resta>=-0.5?'restano '+euro(resta):'sfori '+euro(-resta)}</span></div>
       <div class="im-g-bar lim im-u-bar"><i class="p" style="--b:${bF.colore};width:${w(F.pag)}%"></i><i class="v" style="--b:${bF.colore};width:${w(F.prv)}%"></i><i class="p" style="--b:${bV.colore};width:${w(V.pag)}%"></i><i class="v" style="--b:${bV.colore};width:${w(V.prv)}%"></i>${over}<em class="im-m-tacca" style="left:${Math.min(tF,sc)/sc*100}%"></em>${TV!=null?`<em class="hm-tetto" style="left:${(tF+TV)/sc*100}%"></em>`:''}</div>
       <div class="hm-stip-s">${TV!=null?`tetto variabili <b>${euro(TV)}</b> · risparmio programmato <b>${euro(lim-tF-TV)}</b>`:`per le variabili puoi spendere <b>${euro(Math.max(0,lim-tF))}</b>`}</div></div>`}
-  const riga=(b,sub,dx)=>{const x=B[b.id];return `<div class="hm-v" style="--b:${b.colore}" data-bolla="${b.id}" title="Clicca per vedere i movimenti"><span class="ic-ico">${ico(b.ico)}</span><div class="hm-v-c"><div class="hm-v-t"><span>${esc(b.nome)}</span><b class="${b.entrata?'pos':''}">${euro(x.pag)}</b></div><div class="hm-v-s"><span>${sub}</span>${dx||''}</div></div></div>`};
+  const riga=(b,sub,dx,xx,o={})=>{const x=xx||B[b.id];return `<div class="hm-v ${o.cls||''}" style="--b:${o.col||b.colore}" ${o.att||`data-bolla="${b.id}"`} title="${o.tip||'Clicca per vedere i movimenti'}"><span class="ic-ico">${ico(o.ico||b.ico)}</span><div class="hm-v-c"><div class="hm-v-t"><span>${esc(o.nome||b.nome)}</span><b class="${b.entrata?'pos':''}">${euro(x.pag)}</b></div><div class="hm-v-s"><span>${sub}</span>${dx||''}</div></div></div>`};
   const prv=(x,ent)=>x.prv>0.5?`+ ${euro(x.prv)} ${ent?'da incassare':'previste'}`:(ent?'incassate':'tutte pagate');
-  return barra+'<div class="hm-voci">'+riga(bV,prv(B.variabili),TV!=null?`<span class="hm-v-dx tt-${tettoCl(tV,TV)}">di ${euro(TV)}</span>`:'')+riga(bF,prv(B.fisse))+riga(BOLLE.find(b=>b.id==='fiscali'),prv(B.fiscali))+riga(BOLLE.find(b=>b.id==='entrate'),prv(B.entrate,true),`<span class="hm-v-dx">accant. ${euro(B.accant)}</span>`)+'</div>';
+  // Paolo 15/11: le variabili di coppia (DA DIVIDERE) escono dalla riga delle variabili e vanno in una riga a sé, fuori dal tetto
+  const cop=CP.pag+CP.prv>0.5, xV=cop?{pag:B.variabili.pag-CP.pag,prv:B.variabili.prv-CP.prv}:B.variabili;
+  const rigaC=cop?riga(bV,prv(CP),'<span class="hm-v-dx">fuori dal tetto</span>',CP,{nome:'Spese di coppia',cls:'hm-cop',col:(notaDi(NOTA_COPPIA)||{}).colore||'#f9d9e1',att:'data-coppia="1"',tip:'Spese con la nota DA DIVIDERE (il conto con il tuo compagno lo tenete su Splitwise): escono dal saldo ma non contano nel tetto delle variabili. Clicca per vederle.'}):'';
+  return barra+'<div class="hm-voci">'+riga(bV,prv(xV),TV!=null?`<span class="hm-v-dx tt-${tettoCl(tVt,TV)}">di ${euro(TV)}</span>`:'',xV)+rigaC+riga(bF,prv(B.fisse))+riga(BOLLE.find(b=>b.id==='fiscali'),prv(B.fiscali))+riga(BOLLE.find(b=>b.id==='entrate'),prv(B.entrate,true),`<span class="hm-v-dx">accant. ${euro(B.accant)}</span>`)+'</div>';
 }
 function h3Trim(X){ // i 4 trimestri dell'anno: stipendio, spese, risparmio (Unicredit)
   const {a,e0}=X;
@@ -5768,10 +5783,10 @@ function h3Saluto(X){const d=new Date(), gs=['domenica','lunedì','martedì','me
     :corr?`<div class="h3-allarme ok"><span class="h3-al-i">✓</span><span><b>Il Revolut basta</b><small>per tasse e Inarcassa dei prossimi 12 mesi</small></span></div>`:'';
   // Paolo 13/11: sopra la colonna del mese, a colpo d'occhio, le spese VARIABILI del mese sul tetto che ti sei data (senza fisse né spese per l'attività)
   let av='';
-  if(X&&corr){const sp=X.V.pag, prv=X.V.prv, pl=X.TV, nm=MESI[X.m-1], e=v=>'€ '+numIt(Math.round(v)).replace(/,00$/,''), pv=prv>0.5?` · + ${e(prv)} previste`:'';
+  if(X&&corr){const sp=X.VT.pag, prv=X.VT.prv, pl=X.TV, cpT=X.CP.pag+X.CP.prv, nm=MESI[X.m-1], e=v=>'€ '+numIt(Math.round(v)).replace(/,00$/,''), pv=prv>0.5?` · + ${e(prv)} previste`:'';
     if(pl==null) av=`<div class="h3-allarme att clic" data-tb-tet="${X.a}-${Math.ceil(X.m/3)}"><span class="h3-al-i">€</span><span><b>Spese variabili: ${e(sp)} a ${nm}</b><small>non hai ancora fissato il tetto del mese${pv}</small></span><strong>fissa →</strong></div>`;
     else{const r=pl-sp, cl=sp>pl+0.5?'':sp>pl*0.8?'att':'ok', perG=X.gRest&&r>0.5?r/X.gRest:null;
-      av=`<div class="h3-allarme ${cl} clic h3-carte" data-bolla="variabili" title="Spese variabili fatte a ${nm} (senza fisse e spese per l'attività), sul tetto che ti sei data${prv>0.5?'. Previste ancora '+e(prv):''}. Clicca per vederle.">
+      av=`<div class="h3-allarme ${cl} clic h3-carte" data-bolla="variabili" title="Spese variabili fatte a ${nm} (senza fisse, spese per l'attività e spese di coppia), sul tetto che ti sei data${prv>0.5?'. Previste ancora '+e(prv):''}${cpT>0.5?'. Spese di coppia (DA DIVIDERE) fuori dal tetto: '+e(cpT):''}. Clicca per vederle.">
         <span class="h3-al-i">${cl==='ok'?'✓':'!'}</span><span><b>Spese variabili: ${cl===''?'tetto superato':cl==='att'?'quasi al tetto':'sei dentro'}</b>
         <small>${e(sp)} di ${e(pl)} a ${nm}${perG!=null?` · ${e(perG)} al giorno`:''}</small><i class="h3-al-bar"><i style="width:${Math.min(100,sp/pl*100)}%"></i></i></span>
         <strong>${r>=-0.5?'restano '+e(r):'oltre di '+e(-r)}</strong></div>`}}
@@ -5892,7 +5907,7 @@ function renderHome2b(){ // Home in due metà: mese (con calendario) | anno
     const e=-movA.filter(x=>meseDi(x.data)===k&&ent(x)).reduce((s,x)=>s+x.eur,0);
     const sp=f.pag+f.prv+v.pag+v.prv, b=st.completo?st.bud:null, r=b!=null?b-sp:null; if(b!=null){sB+=b;sS+=sp}
     const fut=mOggi&&k>mOggi;
-    return {k,n,e,sp,b,r,fut,f:f.pag+f.prv,v:v.pag+v.prv,tt:tettoMese(a,k)}});
+    const vt=speseUni(a,[k],'tetto');return {k,n,e,sp,b,r,fut,f:f.pag+f.prv,v:v.pag+v.prv,vt:vt.pag+vt.prv,tt:tettoMese(a,k)}});
   const eu0=v=>euro(Math.round(v)).replace(/,00$/,'');
   const maxV=Math.max(1,...righe.map(r=>Math.max(r.sp,r.b||0)));
   const n0=v=>eu0(v).replace('€ ','');
@@ -5900,7 +5915,7 @@ function renderHome2b(){ // Home in due metà: mese (con calendario) | anno
   const rigaQ=q=>{const fq=fatQ(q),v=fq.reduce((s,c)=>s+c.conBollo,0),futQ=mOggi&&q*3-2>mOggi;
     return `<div class="r qh ${futQ?'fut':''}" data-trim-home="${q}" title="Fatture emesse nel ${ROMANI[q-1]} trimestre ${a}: ${fq.length} per ${euro(v)}. Clicca per il riassunto del trimestre."><span class="qh-t"><b>${ROMANI[q-1]} trim</b> · fatturato <b>${v>0.5?eu0(v):'—'}</b>${fq.length?` <small>(${fq.length} fatture)</small>`:''}</span></div>`};
   const tab=righe.map(r=>(r.k%3===1?rigaQ((r.k+2)/3):'')+`<div class="r ${r.k===mOggi?'ora':''} ${r.fut?'fut':''}" data-mese-home="${r.k}" title="${MESI[r.k-1]}: clicca per vedere i movimenti">
-      <span class="mn">${r.n}</span><span class="n e">${r.e>0.5?n0(r.e):'—'}</span><span class="n">${r.b!=null?n0(r.b):'—'}</span><span class="n">${n0(r.f)}</span><span class="n ${r.tt!=null&&!r.fut?'tt-'+tettoCl(r.v,r.tt):''}" ${r.tt!=null?`title="Tetto ${euro(r.tt)}"`:''}>${n0(r.v)}</span>
+      <span class="mn">${r.n}</span><span class="n e">${r.e>0.5?n0(r.e):'—'}</span><span class="n">${r.b!=null?n0(r.b):'—'}</span><span class="n">${n0(r.f)}</span><span class="n ${r.tt!=null&&!r.fut?'tt-'+tettoCl(r.vt,r.tt):''}" ${r.tt!=null?`title="Tetto ${euro(r.tt)}: sul tetto ${euro(r.vt)}${r.v-r.vt>0.5?', più '+euro(r.v-r.vt)+' di spese di coppia fuori dal tetto':''}"`:''}>${n0(r.v)}</span>
       <span class="n">${r.r==null?'<span class="hm-na">—</span>':`<span class="tq-d ${r.r>=-0.5?'ok':'no'} perche" data-perche="${r.k}" title="Perché? Clicca per la spiegazione">${(r.r>=-0.5?'+ ':'− ')+eu0(Math.abs(r.r)).replace('€ ','')}</span>`}</span></div>`).join('');
   // dove sono andati i soldi (anno, pagate)
   const perCat={};movA.filter(x=>x.ok&&['fisse','variabili','fiscali'].includes(bollaDi(x.cat))).forEach(x=>perCat[x.cat]=(perCat[x.cat]||0)+x.eur);
@@ -6416,7 +6431,7 @@ function schedaTetto(a){
     <label class="tt-base"><span>€ al mese</span><span class="tt-in"><input data-tetto="${y}" value="${T.base!=null?numIt(T.base).replace(/,00$/,''):''}" placeholder="nessuno" inputmode="decimal"></span></label>
     <div class="tt-mesi">${MESI3.map((n,i)=>{const v=T.m&&T.m[i+1]!=null?T.m[i+1]:null;return `<label class="${v!=null?'div':''}"><span>${n}</span><input data-tetto-m="${y}-${i+1}" value="${v!=null?numIt(v).replace(/,00$/,''):''}" placeholder="${T.base!=null?numIt(T.base).replace(/,00$/,''):''}" inputmode="decimal" title="Solo se ${MESI[i]} vuoi un tetto diverso"></label>`}).join('')}</div></div>`};
   return `<div class="imp-sez imp-tetto"><h4>${ico('variabili')} Tetto delle spese variabili</h4>
-    <p>Quanto ti imposti di spendere al mese di variabili (le fisse no: sono obbligatorie). Se un mese vuoi un tetto diverso, scrivilo sotto il mese. Vuoto = nessun tetto.</p>
+    <p>Quanto ti imposti di spendere al mese di variabili (le fisse no: sono obbligatorie; le spese di coppia con la nota DA DIVIDERE nemmeno: le tenete a parte su Splitwise). Se un mese vuoi un tetto diverso, scrivilo sotto il mese. Vuoto = nessun tetto.</p>
     ${riga(a)}${riga(a+1)}</div>`;
 }
 function renderImpostazioni(){
@@ -6686,6 +6701,7 @@ document.addEventListener('click',e=>{
   if(cella){UI.mese=cella.dataset.m;UI.conto=cella.dataset.c&&cella.dataset.c!=='COINTESTATO'?cella.dataset.c:'';UI.stato='';UI.cat=cella.dataset.v==='entrate'?'b:entrate':'';salvaUI();renderSide();renderMovimenti();$('.tabwrap').scrollIntoView({behavior:'smooth'});return}
   const bm=e.target.closest('[data-bolla-mov]');
   if(bm){const v='b:'+bm.dataset.bollaMov;UI.cat=UI.cat===v?'':v;salvaUI();renderMovimenti();return}
+  if(e.target.closest('[data-coppia]')){Object.assign(UI,{pagina:'movimenti',mese:String(HM.m),cat:'b:variabili',conto:'',stato:'',nota:NOTA_COPPIA,q:''});if(S.anno!==HM.a)S.anno=HM.a;salvaUI();render();window.scrollTo(0,0);return}
   const bolla=e.target.closest('[data-bolla]');
   if(bolla){Object.assign(UI,{pagina:'movimenti',mese:String(HM.m),cat:'b:'+bolla.dataset.bolla,conto:'',stato:'',nota:'',q:''});if(S.anno!==HM.a)S.anno=HM.a;salvaUI();render();window.scrollTo(0,0);return}
   const pq=e.target.closest('[data-perche]');if(pq){apriPerche(UI.pagina==='home'&&HM?HM.a:S.anno,pq.dataset.perche.split(',').map(Number));return}
