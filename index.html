@@ -2598,23 +2598,22 @@ h1,.tq-k-v{letter-spacing:-.4px}
 .h3-q-b i.st{background:var(--salvia)}
 .h3-allarme{border-color:transparent!important}
 .h3-q-b i.sp{background:var(--lavanda)}
-/* barre: il contorno segue la barra. Dove c'è il retino il bordo è del suo colore, un po' più scuro;
-   dove la barra è vuota il bordo è beige chiaro. Niente bianco. */
-:root{--retino:#f6f0e7;--bordo-barra:#ddd3c6}
+/* barre (disegno di Paolo 15/11): la parte colorata ha il bordo del suo colore un po' più scuro,
+   il retino è chiuso da un rettangolo dello stesso colore scuro, la parte vuota ha il bordo grigio-beige. Niente bianco. */
+:root{--retino:#f6f0e7;--bordo-barra:#cfc5b6}
 .im-g-bar,.tg-bar,.h3-q-b i,.qf-q-b{box-shadow:inset 0 0 0 1px var(--bordo-barra)}
-.im-g-bar.lim i.p:has(+ i.v),.tg-bar i:has(+ i.v),.im-g-bar.lim i:has(+ b.over),.tg-bar i:has(+ b.over){border-right:0}
-.im-g-bar i.v,.tg-bar i.v{border:0;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--b) 82%,#000),inset 0 -1px 0 color-mix(in srgb,var(--b) 82%,#000),inset -1px 0 0 color-mix(in srgb,var(--b) 82%,#000)}
-.rq-f.hat{box-shadow:inset 0 1px 0 color-mix(in srgb,var(--azzurro-ch) 82%,#000),inset 0 -1px 0 color-mix(in srgb,var(--azzurro-ch) 82%,#000),inset -1px 0 0 color-mix(in srgb,var(--azzurro-ch) 82%,#000)} .rq-v.hat,.tq-vm-b i.prv{box-shadow:inset 0 1px 0 color-mix(in srgb,var(--lavanda) 82%,#000),inset 0 -1px 0 color-mix(in srgb,var(--lavanda) 82%,#000),inset -1px 0 0 color-mix(in srgb,var(--lavanda) 82%,#000)}
-.rq-tr span.prev i,.qf-q-b i.att{border-color:transparent;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--salvia) 82%,#000),inset 0 -1px 0 color-mix(in srgb,var(--salvia) 82%,#000),inset -1px 0 0 color-mix(in srgb,var(--salvia) 82%,#000)}
-.rq-tr span.prev i.neg{box-shadow:inset 0 1px 0 color-mix(in srgb,var(--corallo) 82%,#000),inset 0 -1px 0 color-mix(in srgb,var(--corallo) 82%,#000),inset -1px 0 0 color-mix(in srgb,var(--corallo) 82%,#000)} .tq-sm-b i.stima{box-shadow:inset 0 1px 0 color-mix(in srgb,var(--corallo-ch) 82%,#000),inset 1px 0 0 color-mix(in srgb,var(--corallo-ch) 82%,#000),inset -1px 0 0 color-mix(in srgb,var(--corallo-ch) 82%,#000)}
-.ya-bar i.prv{border-color:transparent;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--salvia) 82%,#000),inset 1px 0 0 color-mix(in srgb,var(--salvia) 82%,#000),inset -1px 0 0 color-mix(in srgb,var(--salvia) 82%,#000)}
-.tq-st-c.sp.stima,.tq-bm-v{box-shadow:inset 0 1px 0 color-mix(in srgb,var(--rosa) 82%,#000),inset 1px 0 0 color-mix(in srgb,var(--rosa) 82%,#000),inset -1px 0 0 color-mix(in srgb,var(--rosa) 82%,#000)}
-.ya-leg-i i.prv{border-color:transparent;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--salvia) 82%,#000)} .tq-as-leg i.stima{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--corallo-ch) 82%,#000)}
-.cl-p.prev{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--pc) 82%,#000)}
-.im-g-bar b.over,.tg-bar b.over,.fi-bar em,.hm-mr-b b.over,.ps-c-b b,.rq-bar u{border-left:0;box-shadow:inset 0 1px 0 rgba(170,0,0,.55),inset 0 -1px 0 rgba(170,0,0,.55),inset -1px 0 0 rgba(170,0,0,.55)}
-.rq-sf{box-shadow:inset 0 0 0 1px rgba(170,0,0,.55)}
+.im-g-bar.lim i,.tg-bar i{border-right:0!important}
+.im-g-bar i.p,.tg-bar i{border:0;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--b) 75%,#000),inset 0 -1px 0 color-mix(in srgb,var(--b) 75%,#000)}
+.im-g-bar i.p:first-child,.tg-bar i:first-child{box-shadow:inset 0 1px 0 color-mix(in srgb,var(--b) 75%,#000),inset 0 -1px 0 color-mix(in srgb,var(--b) 75%,#000),inset 1px 0 0 color-mix(in srgb,var(--b) 75%,#000)}
+.im-g-bar i[style*="width:0%"],.tg-bar i[style*="width:0%"]{box-shadow:none}
+.im-g-bar i.v,.tg-bar i.v{border:0;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--b) 75%,#000)}
+.rq-f.hat{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--azzurro-ch) 75%,#000)} .rq-v.hat,.tq-vm-b i.prv{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--lavanda) 75%,#000)}
+.rq-tr span.prev i,.qf-q-b i.att,.ya-bar i.prv,.ya-leg-i i.prv{border-color:transparent;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--salvia) 75%,#000)}
+.rq-tr span.prev i.neg{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--corallo) 75%,#000)} .tq-sm-b i.stima,.tq-as-leg i.stima{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--corallo-ch) 75%,#000)}
+.tq-st-c.sp.stima,.tq-bm-v{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rosa) 75%,#000)}
+.cl-p.prev{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--pc) 75%,#000)}
+.im-g-bar b.over,.tg-bar b.over,.fi-bar em,.hm-mr-b b.over,.ps-c-b b,.rq-bar u,.rq-sf{border-left:0;box-shadow:inset 0 0 0 1px rgba(170,0,0,.6)}
 .im-g-bar em.im-m-tacca{background:var(--grigino)}
-.im-g-bar i.v:has(+ b.over),.tg-bar i.v:has(+ b.over){box-shadow:inset 0 1px 0 color-mix(in srgb,var(--b) 82%,#000),inset 0 -1px 0 color-mix(in srgb,var(--b) 82%,#000)}
 </style>
 </head>
 <body>
