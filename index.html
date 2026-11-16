@@ -2259,7 +2259,8 @@ i.p-ent-prev{background:#fff;border:1.5px dashed var(--verde)}.legenda span.p-en
 @media (max-width:1700px){.h3B .h3-g>section.h3-bb.h3-r5 .hm-voci:has(>.hm-v:nth-child(4)) .ic-ico{display:none}.h3B .h3-g>section.h3-bb.h3-r5 .hm-voci:has(>.hm-v:nth-child(4)) .hm-v-t>span{grid-column:1/-1}}
 .h3 .h3-k3 .tq-k-s{white-space:normal;flex-wrap:wrap;row-gap:0;column-gap:4px;overflow:visible}
 .h3-tet{display:block;flex:1 0 100%;margin-top:3px;cursor:pointer;color:#e9e3d8;font-size:var(--f-piccolo)}
-.h3-tet b{color:var(--giallo)}
+.h3-tet b{color:var(--giallo);white-space:nowrap}
+@media (max-width:1499px){.h3-tet{font-size:var(--f-mini)}}
 .h3-tet .h3-al-bar{border:0;background:rgba(255,255,255,.18);height:5px;margin-top:2px}
 .h3-tet.att .h3-al-bar i{background:var(--giallo)}.h3-tet.no .h3-al-bar i{background:var(--corallo)}.h3-tet.ok .h3-al-bar i{background:var(--salvia)}
 .h3-tet:hover{text-decoration:underline}
@@ -5884,7 +5885,7 @@ function h3Saluto(X){const d=new Date(), gs=['domenica','lunedì','martedì','me
 function h3Tetto(X){if(!X.corr)return '';const sp=X.VT.pag, pl=X.TV, q=`${X.a}-${Math.ceil(X.m/3)}`, e=v=>'€ '+numIt(Math.round(v)).replace(/,00$/,'');
   if(pl==null) return `<span class="h3-tet att" data-tb-tet="${q}" title="Fissa quanto vuoi spendere al mese per le spese variabili">tetto variabili: <b>fissa →</b></span>`;
   const r=pl-sp, cl=sp>pl+0.5?'no':sp>pl*0.8?'att':'ok', perG=X.gRest&&r>0.5?r/X.gRest:null;
-  return `<span class="h3-tet ${cl}" data-tb-tet="${q}" title="Spese variabili ${e(sp)} sul tetto di ${e(pl)}. Clicca per cambiare il tetto"><b>${r>=-0.5?'ancora '+e(r)+' del tetto':e(-r)+' oltre il tetto'} di ${e(pl)}</b><i class="h3-al-bar"><i style="width:${Math.min(100,sp/pl*100)}%"></i></i></span>`}
+  return `<span class="h3-tet ${cl}" data-tb-tet="${q}" title="Spese variabili ${e(sp)} sul tetto di ${e(pl)}. Clicca per cambiare il tetto"><b>${r>=-0.5?'ancora '+e(r)+' di '+e(pl):e(-r)+' oltre i '+e(pl)}</b><i class="h3-al-bar"><i style="width:${Math.min(100,sp/pl*100)}%"></i></i></span>`}
 const h3K=(cls,ic,tit,val,sub,att)=>`<div class="tq-k ${cls}" ${att||''}><div class="tq-k-t"><span>${ico(ic)}${tit}</span></div><div class="tq-k-v">${val}</div><div class="tq-k-s">${sub}</div></div>`;
 
 /* ---- B: oggi · questo mese · quest'anno ---- */
