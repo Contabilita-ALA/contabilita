@@ -2221,6 +2221,33 @@ i.p-ent-prev{background:#fff;border:1.5px dashed var(--verde)}.legenda span.p-en
 @media (max-width:1100px){.h3B .h3-ag{max-height:330px}.h3B .h3-calp{min-height:300px}}
 .h3B .h3-g .h3-q{min-height:0;padding:2px 0}
 .h3B .h3-g>section .hm-voci>.hm-v{min-height:0}
+
+/* Home: conti e voci a bubble (Paolo 16/11) */
+.h3B .h3-g>section.h3-bb{background:transparent;border:0;padding:0;overflow:visible}
+.h3B .h3-bb>h3{padding:2px 4px 0;margin-bottom:6px}
+.h3B .h3-g>section.h3-bb .hm-voci{display:grid;gap:8px;grid-auto-rows:minmax(0,1fr);container-type:inline-size;flex:1 1 auto;min-height:0}
+.h3B .h3-g>section.h3-bb .hm-voci>.hm-v{background:color-mix(in srgb,var(--b) 45%,var(--panna));border:0;border-radius:18px;padding:8px 12px;min-height:0;overflow:hidden;transition:transform .12s}
+.h3B .h3-bb .hm-v[data-conto]:hover,.h3B .h3-bb .hm-v[data-bolla]:hover,.h3B .h3-bb .hm-v[data-coppia]:hover{transform:translateY(-2px)}
+.h3B .h3-bb .hm-v .ic-ico{background:rgba(255,255,255,.75);box-shadow:none;border:0}
+.h3B .h3-bb .hm-v-s{color:color-mix(in srgb,var(--inchiostro) 62%,transparent)}
+.h3B .h3-bb .hm-v-t b.pos{color:var(--inchiostro)}
+.h3B .h3-g>section.h3-bb .hm-voci>.hm-v.hm-tot{background:var(--inchiostro);color:#fff;cursor:default}
+.h3B .h3-bb .hm-tot .hm-v-t b{color:var(--salvia)}.h3B .h3-bb .hm-tot .hm-v-s{color:#cfc7bb}
+.h3B .h3-bb .hm-tot .ic-ico{background:rgba(255,255,255,.14);color:#fff}
+.h3B .h3-bb .h3-pl{background:rgba(255,255,255,.7);border:0}
+/* niente testi tagliati con i puntini (farebbero rimpicciolire la pagina): vanno a capo e si fermano a una riga */
+.h3B .h3-bb .hm-v-s>span:first-child,.h3B .h3-bb .hm-v-t>span{white-space:normal;text-overflow:clip;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+
+.h3B .h3-g>section.h3-bb .hm-voci{grid-template-columns:repeat(3,minmax(0,1fr))}
+.h3B .h3-g>section.h3-bb .hm-voci>.hm-v{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"i n" "a a" "s s" "x x";align-content:center;column-gap:7px;row-gap:1px}
+.h3B .h3-bb .hm-v .ic-ico{grid-area:i;width:24px;height:24px}
+.h3B .h3-bb .hm-v-c,.h3B .h3-bb .hm-v-t,.h3B .h3-bb .hm-v-s{display:contents}
+.h3B .h3-bb .hm-v-t>span{grid-area:n;white-space:normal;line-height:1.15;font-size:var(--f-piccolo);font-weight:700;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2!important;-webkit-box-orient:vertical}
+.h3B .h3-bb .hm-v-t>b{grid-area:a;font-size:min(var(--f-cifra),4.6cqw);line-height:1.2;margin-top:4px;white-space:nowrap}
+.h3B .h3-bb .hm-v-s>span:first-child{grid-area:s;font-size:var(--f-piccolo);line-height:1.25;-webkit-line-clamp:2!important}
+.h3B .h3-bb .hm-v-s>:nth-child(2){grid-area:x;font-size:var(--f-piccolo);justify-self:start}
+.h3B .h3-bb .hm-v .h3-pl{grid-column:1/-1}
+.h3B .h3-g>section.h3-bb .hm-voci>.hm-tot:nth-child(3n+2){grid-column:span 2}
 /* avvisi in Home (13/11): stessa griglia delle tre colonne */
 .h3 .h3-sal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch;margin-bottom:0}
 .h3 .h3-sal-t{display:flex;flex-direction:column;justify-content:center;min-width:0}
@@ -5772,6 +5799,10 @@ function h3Voci(X,conBarra){
   const rigaC=cop?riga(bV,prv(CP),'<span class="hm-v-dx">fuori dal tetto</span>',CP,{nome:'Spese di coppia',cls:'hm-cop',col:(notaDi(NOTA_COPPIA)||{}).colore||'#f9d9e1',att:'data-coppia="1"',tip:'Spese con la nota DA DIVIDERE (il conto con il tuo compagno lo tenete su Splitwise): escono dal saldo ma non contano nel tetto delle variabili. Clicca per vederle.'}):'';
   return barra+'<div class="hm-voci">'+riga(bV,prv(xV),TV!=null?`<span class="hm-v-dx tt-${tettoCl(tVt,TV)}">di ${euro(TV)}</span>`:'',xV)+rigaC+riga(bF,prv(B.fisse))+riga(BOLLE.find(b=>b.id==='fiscali'),prv(B.fiscali))+riga(BOLLE.find(b=>b.id==='entrate'),prv(B.entrate,true),`<span class="hm-v-dx">accant. ${euro(B.accant)}</span>`)+'</div>';
 }
+// Paolo 16/11: in fondo a conti e voci una bubble scura con il totale
+const h3Bub=(ic,tit,val,sub)=>`<div class="hm-v hm-tot"><span class="ic-ico">${ico(ic)}</span><div class="hm-v-c"><div class="hm-v-t"><span>${tit}</span><b>${val}</b></div><div class="hm-v-s"><span>${sub}</span></div></div></div>`;
+function h3Usc(X){const B=X.B, k=['variabili','fisse','fiscali'], p=k.reduce((s,b)=>s+B[b].pag,0), v=k.reduce((s,b)=>s+B[b].prv,0);
+  return h3Bub('variabili','Uscite del mese',euro(p),v>0.5?`+ ${euro(v)} previste`:'tutte pagate')}
 function h3Trim(X){ // i 4 trimestri dell'anno: stipendio, spese, risparmio (Unicredit)
   const {a,e0}=X;
   return [1,2,3,4].map(q=>{const T=trimB(a,q);const oggiQ=X.corr?Math.ceil(X.m/3):5;
@@ -5850,8 +5881,8 @@ function renderHomeB(){
         <section class="tq-p h3-calp">${h3Tit(`${ico('calendario')} Calendario di ${nM}`,'calendario','Calendario')}${h3MiniCal(X)}</section>
         <section class="tq-p cl-ag h3-ag">${h3Tit(`${ico('calendario')} Cosa ti aspetta`,'calendario','Calendario')}${h3Agenda(X,45)}</section></div>
       <div class="h3-k3 h3-r2 h3-c2">${k3.slice(k3.indexOf('>')+1,-6)}</div>
-      <section class="tq-p hm-vocip hm-contip h3-c2 h3-conti"><h3>${ico('conto')} I tuoi conti oggi<small>${e0(X.tuoi)} in tutto</small></h3><div class="hm-voci">${h3Conti(X)}</div></section>
-      <section class="tq-p hm-vocip h3-c2 h3-r5">${h3Tit(`${ico('variabili')} Voce per voce`,'movimenti','Movimenti')}${h3Voci(X,false)}</section>
+      <section class="tq-p hm-vocip hm-contip h3-c2 h3-conti h3-bb bb-A"><h3>${ico('conto')} I tuoi conti oggi</h3><div class="hm-voci">${h3Conti(X)}${h3Bub('salvadanaio','In tutto',euroH(X.tuoi),`${X.conti.length} conti`)}</div></section>
+      <section class="tq-p hm-vocip h3-c2 h3-r5 h3-bb bb-A">${h3Tit(`${ico('variabili')} Voce per voce`,'movimenti','Movimenti')}${h3Voci(X,false).replace(/<\/div>$/,'')}${h3Usc(X)}</div></section>
       ${kA1}${kA2}
       <section class="tq-p h3-cA h3-r4">${h3Tit(`${ico('anno')} Trimestre per trimestre`,'trimestre','Trimestre')}<div class="h3-qh"><span></span><span>stipendio <i class="st"></i> spese <i class="sp"></i></span><span></span><span>risparmio</span></div>${h3Trim(X)}</section>
       <section class="tq-p h3-cats h3-cA h3-r5">${h3Tit(`${ico('variabili')} Dove vanno i soldi`,'anno','Anno')}<div class="hm-cats">${h3Cats(X,6)}</div></section>
