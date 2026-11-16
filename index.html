@@ -16,8 +16,8 @@
 :root{
   /* ===== Colori: 6 neutri + 8 colori (pieno e chiaro) + 4 per i significati ===== */
   --inchiostro:#22403b; --grigio:#66706a; --grigio-chiaro:#d6d0c2; --grigino:#e9e2d4; --panna:#f3ebdd; --carta:#fffcf6;
-  --giallo:#b8d8c4; --salvia:#8fb78f; --azzurro:#b4cccf; --lavanda:#c4916b; --cappuccino:#f3a5bc; --menta:#cbe6c7; --rosa:#f3a5bc; --corallo:#f3b2ab;
-  --giallo-ch:#dcece2; --salvia-ch:#c7dbc7; --azzurro-ch:#dae6e7; --lavanda-ch:#e2c8b5; --cappuccino-ch:#f9d2de; --menta-ch:#e5f2e3; --rosa-ch:#f9d2de; --corallo-ch:#f9d8d5;
+  --giallo:#b8d8c4; --salvia:#8fb78f; --azzurro:#b4cccf; --lavanda:#c4916b; --cappuccino:#f7d58a; --menta:#cbe6c7; --rosa:#d9a7cf; --corallo:#f3b2ab;
+  --giallo-ch:#dcece2; --salvia-ch:#c7dbc7; --azzurro-ch:#dae6e7; --lavanda-ch:#e2c8b5; --cappuccino-ch:#fbeac5; --menta-ch:#e5f2e3; --rosa-ch:#ecd3e7; --corallo-ch:#f9d8d5;
   --verde:#3a8a68; --rosso:#c8524a; --blu:#28536b; --ambra:#a86f46;
   /* nomi di prima, tenuti per compatibilità */
   --pesca:var(--giallo); --testo-2:var(--grigio); --linea:var(--grigio-chiaro); --scuro-2:var(--grigio); --cella:var(--carta); --cella-bordo:var(--grigio-chiaro); --calcolato:var(--grigino);
@@ -2757,7 +2757,7 @@ function strutturaBase(){
   const gruppi=[
     {id:'generiche',nome:'Spese generiche',colore:'#b8d8c4',tipo:'spesa'},
     {id:'varie',nome:'Spese varie',colore:'#c4916b',tipo:'spesa'},
-    {id:'attivita',nome:'Spese per attività',colore:'#f3a5bc',tipo:'fiscale'},
+    {id:'attivita',nome:'Spese per attività',colore:'#f7d58a',tipo:'fiscale'},
     {id:'bollette',nome:'Bollette casa',colore:'#b4cccf',tipo:'spesa'},
     {id:'abbonamenti',nome:'Abbonamenti',colore:'#cbe6c7',tipo:'spesa'},
     {id:'entrate',ico:'entrate',nome:'Entrate',colore:'#8fb78f',tipo:'entrata'}];
@@ -2802,9 +2802,9 @@ function annoLocale(){
   try{if(anniDisponibili().includes(y))S.anno=y}catch(e){}
 }
 function migra(){annoLocale();
-  const MAPPA_TEMA={"#ffe599": "#b8d8c4", "#b6d7a8": "#8fb78f", "#a4c2f4": "#b4cccf", "#b4a7d6": "#c4916b", "#f9cb9c": "#f3a5bc", "#a2c4c9": "#cbe6c7", "#d5a6bd": "#f3a5bc", "#ea9999": "#f3b2ab", "#f2b8b0": "#f5c1bc", "#e7e3da": "#e2dccd", "#fff2cc": "#dcece2", "#d9ead3": "#c7dbc7", "#c9daf8": "#dae6e7", "#d9d2e9": "#e2c8b5", "#fce5cd": "#f9d2de", "#d0e0e3": "#e5f2e3", "#ead1dc": "#f9d2de", "#f4cccc": "#f9d8d5"};const _mt=o=>{if(o&&typeof o.colore==='string'){const k=o.colore.toLowerCase();if(MAPPA_TEMA[k])o.colore=MAPPA_TEMA[k]}};[S.categorie,S.gruppi,S.note,S.conti].forEach(a=>(a||[]).forEach(_mt));const CONTI_MENTA={"COINTESTATO": ["#f6da66", "#f3b2ab"], "CARTE": ["#c6beda", "#8fc4a6"], "CONTANTI": ["#f6da66", "#b8d8c4"], "REVOLUT": ["#f3c9a2", "#e6d6bd"], "DEPOSITO": ["#b3d3cc", "#d2bc9c"]};const CONTI_MENTA2={"REVOLUT":["#b4cccf","#e6d6bd"],"DEPOSITO":["#8fb1b6","#d2bc9c"]};(S.conti||[]).forEach(c=>{const x=CONTI_MENTA2[c.id];if(x&&typeof c.colore==="string"&&c.colore.toLowerCase()===x[0])c.colore=x[1]});(S.conti||[]).forEach(c=>{const x=CONTI_MENTA[c.id];if(x&&typeof c.colore==='string'&&c.colore.toLowerCase()===x[0])c.colore=x[1]});const MAPPA_MENTA={"#f6da66": "#b8d8c4", "#c3cf8f": "#8fb78f", "#b6caea": "#b4cccf", "#c6beda": "#c4916b", "#f3c9a2": "#f3a5bc", "#b3d3cc": "#cbe6c7", "#f6bade": "#f3a5bc", "#f2a29a": "#f3b2ab", "#fbedb3": "#dcece2", "#e3e8c8": "#c7dbc7", "#dbe5f5": "#dae6e7", "#e3dfed": "#e2c8b5", "#f9e4d1": "#f9d2de", "#d9e9e6": "#e5f2e3", "#fbdcee": "#f9d2de", "#f9d1cd": "#f9d8d5", "#f7f1e8": "#f5f0e7", "#f6f0e7": "#f5f0e7", "#fffcf0": "#f5f0e7", "#e6ddd1": "#ded7c9", "#e3e0d8": "#ded7c9", "#efe4d6": "#e9e2d4", "#d9d4ca": "#ded7c9", "#d9d5cc": "#ded7c9", "#d8d1c3": "#ded7c9", "#cfc5b6": "#bab8ac", "#cfc7bb": "#bab8ac", "#bdb7ab": "#bab8ac", "#a99ad8": "#8fc4a6", "#e4ddf6": "#d8eae0", "#f4b4a8": "#f5c1bc", "#e8e0d4": "#e2dccd", "#cfe6d3": "#cbe6c7", "#fcf4e4": "#f3ebdd", "#efe7dd": "#e9e2d4"};[S.categorie,S.gruppi,S.note,S.conti].forEach(a=>(a||[]).forEach(o=>{if(o&&typeof o.colore==='string'){const k=o.colore.toLowerCase();if(MAPPA_MENTA[k])o.colore=MAPPA_MENTA[k]}}));
+  const MAPPA_TEMA={"#ffe599": "#b8d8c4", "#b6d7a8": "#8fb78f", "#a4c2f4": "#b4cccf", "#b4a7d6": "#c4916b", "#f9cb9c": "#f7d58a", "#a2c4c9": "#cbe6c7", "#d5a6bd": "#d9a7cf", "#ea9999": "#f3b2ab", "#f2b8b0": "#f5c1bc", "#e7e3da": "#e2dccd", "#fff2cc": "#dcece2", "#d9ead3": "#c7dbc7", "#c9daf8": "#dae6e7", "#d9d2e9": "#e2c8b5", "#fce5cd": "#fbeac5", "#d0e0e3": "#e5f2e3", "#ead1dc": "#ecd3e7", "#f4cccc": "#f9d8d5"};const _mt=o=>{if(o&&typeof o.colore==='string'){const k=o.colore.toLowerCase();if(MAPPA_TEMA[k])o.colore=MAPPA_TEMA[k]}};[S.categorie,S.gruppi,S.note,S.conti].forEach(a=>(a||[]).forEach(_mt));const CONTI_MENTA={"COINTESTATO": ["#f6da66", "#f3b2ab"], "CARTE": ["#c6beda", "#8fc4a6"], "CONTANTI": ["#f6da66", "#b8d8c4"], "REVOLUT": ["#f3c9a2", "#e6d6bd"], "DEPOSITO": ["#b3d3cc", "#d2bc9c"]};const CONTI_MENTA2={"REVOLUT":["#b4cccf","#e6d6bd"],"DEPOSITO":["#8fb1b6","#d2bc9c"]};(S.conti||[]).forEach(c=>{const x=CONTI_MENTA2[c.id];if(x&&typeof c.colore==="string"&&c.colore.toLowerCase()===x[0])c.colore=x[1]});(S.conti||[]).forEach(c=>{const x=CONTI_MENTA[c.id];if(x&&typeof c.colore==='string'&&c.colore.toLowerCase()===x[0])c.colore=x[1]});const MAPPA_MENTA3={"#f3a5bc":"#f7d58a","#f9d2de":"#fbeac5"};[S.categorie,S.gruppi,S.note,S.conti].forEach(a=>(a||[]).forEach(o=>{if(o&&typeof o.colore==="string"){const k=o.colore.toLowerCase();if(MAPPA_MENTA3[k])o.colore=MAPPA_MENTA3[k]}}));const MAPPA_MENTA={"#f6da66": "#b8d8c4", "#c3cf8f": "#8fb78f", "#b6caea": "#b4cccf", "#c6beda": "#c4916b", "#f3c9a2": "#f7d58a", "#b3d3cc": "#cbe6c7", "#f6bade": "#d9a7cf", "#f2a29a": "#f3b2ab", "#fbedb3": "#dcece2", "#e3e8c8": "#c7dbc7", "#dbe5f5": "#dae6e7", "#e3dfed": "#e2c8b5", "#f9e4d1": "#fbeac5", "#d9e9e6": "#e5f2e3", "#fbdcee": "#ecd3e7", "#f9d1cd": "#f9d8d5", "#f7f1e8": "#f5f0e7", "#f6f0e7": "#f5f0e7", "#fffcf0": "#f5f0e7", "#e6ddd1": "#ded7c9", "#e3e0d8": "#ded7c9", "#efe4d6": "#e9e2d4", "#d9d4ca": "#ded7c9", "#d9d5cc": "#ded7c9", "#d8d1c3": "#ded7c9", "#cfc5b6": "#bab8ac", "#cfc7bb": "#bab8ac", "#bdb7ab": "#bab8ac", "#a99ad8": "#8fc4a6", "#e4ddf6": "#d8eae0", "#f4b4a8": "#f5c1bc", "#e8e0d4": "#e2dccd", "#cfe6d3": "#cbe6c7", "#fcf4e4": "#f3ebdd", "#efe7dd": "#e9e2d4"};[S.categorie,S.gruppi,S.note,S.conti].forEach(a=>(a||[]).forEach(o=>{if(o&&typeof o.colore==='string'){const k=o.colore.toLowerCase();if(MAPPA_MENTA[k])o.colore=MAPPA_MENTA[k]}}));
 
-  S.conti.forEach(c=>{if(c.tipo==='cointestato'&&c.colore==='#f3a5bc')c.colore='#b8d8c4'}); // 11/11: il cointestato non è più rosa (si confondeva con DA DIVIDERE)
+  S.conti.forEach(c=>{if(c.tipo==='cointestato'&&c.colore==='#f7d58a')c.colore='#b8d8c4'}); // 11/11: il cointestato non è più rosa (si confondeva con DA DIVIDERE)
   if(!S.note) S.note=NOTE_BASE.map(n=>({...n}));
   for(const c of S.categorie){
     if(!c.colore){const g=S.gruppi.find(g=>g.id===c.gruppo);c.colore=g?g.colore:'#e2dccd'}
@@ -3131,7 +3131,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-qdf-rip]')
    Gli obiettivi si pagano con quello che AVANZA DALLO STIPENDIO (stipendio del mese − spese fisse e variabili), non col deposito:
    il deposito Revolut serve solo a far fruttare i soldi con gli interessi.
    Ogni mese l'avanzo va al primo obiettivo non ancora pieno, poi al secondo… (dal mese in cui l'obiettivo è stato creato). */
-const OB_TIPI=[['vacanza','Vacanza','calendario','#b8d8c4'],['auto','Auto','carta','#b4cccf'],['casa','Casa','cointestato','#f3b2ab'],['pc','Computer o lavoro','fattura','#e2c8b5'],['regali','Regali','salvadanaio','#8fb78f'],['annuali','Bollo e assicurazione','rate','#f3a5bc'],['altro','Altro','salvadanaio','#ded7c9']];
+const OB_TIPI=[['vacanza','Vacanza','calendario','#b8d8c4'],['auto','Auto','carta','#b4cccf'],['casa','Casa','cointestato','#f3b2ab'],['pc','Computer o lavoro','fattura','#e2c8b5'],['regali','Regali','salvadanaio','#8fb78f'],['annuali','Bollo e assicurazione','rate','#f7d58a'],['altro','Altro','salvadanaio','#ded7c9']];
 function obLista(){return (S.impostazioni.obiettivi||[]).filter(o=>!o.auto)}
 function obMeseN(iso){return +iso.slice(0,4)*12+ +iso.slice(5,7)-1}
 function obMeseTxt(n){return MESI3[n%12]+' '+Math.floor(n/12)}
@@ -3644,7 +3644,7 @@ function renderPagina(){
 
 /* ---- Fatture ---- */
 document.addEventListener('change',e=>{if(e.target.id==='f-tipo'&&bozzaF)bozzaF.tipo=e.target.value});
-const TIPI_COL={APE:'#bfe3c8',PRATICHE:'#f7c8a8',RADAMES:'#cfc7e8'}, TIPI_NOM={APE:'APE',PRATICHE:'Pratiche',RADAMES:'Radames'}, TIPI_ALT=['#b8d8c4','#b4cccf','#f3a5bc','#f5c1bc','#f3a5bc','#cbe6c7'];
+const TIPI_COL={APE:'#bfe3c8',PRATICHE:'#f7c8a8',RADAMES:'#cfc7e8'}, TIPI_NOM={APE:'APE',PRATICHE:'Pratiche',RADAMES:'Radames'}, TIPI_ALT=['#b8d8c4','#b4cccf','#f7d58a','#f5c1bc','#f7d58a','#cbe6c7'];
 function tipiFat(){let i=0;const L=catFatturabili().map(c=>{const k=codiceTipo(c);return [k,TIPI_NOM[k]||c.nome.replace(/^./,x=>x.toUpperCase()),TIPI_COL[k]||TIPI_ALT[i++%TIPI_ALT.length]]});
   S.fatture.forEach(f=>{if(f.tipo&&!L.some(x=>x[0]===f.tipo))L.push([f.tipo,f.tipo,'#e2dccd'])});return L}
 const coloreTipo=t=>(tipiFat().find(x=>x[0]===t)||[0,0,'#e2dccd'])[2];
@@ -4281,7 +4281,7 @@ function aggiornaAutoFisc(){ // allinea gli importi dei pagamenti automatici non
   if(cambiato) salva();
 }
 function ricordaTolti(L){for(const m of L)if(m&&m.auto){const d=S.fiscale[annoDi(m.data)];if(d){d.autoTolti=[...new Set([...(d.autoTolti||[]),m.auto])]}}}
-const FIS_COL={sogg:'#b4cccf',integr:'#cbe6c7',mat:'#f3a5bc',imposta:'#b8d8c4',saldo:'#f5c1bc',acconti:'#b8d8c4'};
+const FIS_COL={sogg:'#b4cccf',integr:'#cbe6c7',mat:'#f7d58a',imposta:'#b8d8c4',saldo:'#f5c1bc',acconti:'#b8d8c4'};
 const FIS_NOME={sogg:'Inarcassa soggettivo',integr:'Inarcassa integrativo',mat:'Inarcassa maternità',imposta:'Imposta sostitutiva',saldo:'Saldo imposta',acconti:'Acconti imposta'};
 const fq=k=>`<i class="fi-q" style="--c:${FIS_COL[k]}" title="${FIS_NOME[k]}"></i>`;
 function crescitaMinimi(fino){ // media degli aumenti dei minimi (soggettivo + integrativo) tra anni con la stessa aliquota
@@ -4560,7 +4560,7 @@ function renderPrevisione(){
   GRv.forEach(g=>{const col=g.colore||'#e2dccd',cs=D.L.filter(x=>(S.categorie.find(c=>c.id===x.id)||{}).gruppo===g.id&&x.tot>0.5).sort((x,y)=>y.tot-x.tot);
     voci+=rg('pd-g',esc(g.nome),totG[g.id],{p:pcT(totG[g.id]),bar:totG[g.id]/mxR,bc:col,st:`--gc:color-mix(in srgb,${col} 40%,#fff)`,at:` data-pv-vai="${g.id}" title="Apri il gruppo nella tabella"`});
     if(!(cs.length===1&&nomeCat(cs[0].id).toLowerCase()===g.nome.toLowerCase()))cs.forEach(x=>voci+=rg('pd-c',`<i class="pd-dot" style="background:${coloreCat(x.id)||col}"></i>${esc(nomeCat(x.id))}`,x.tot))});
-  const colF='#f3a5bc';
+  const colF='#f7d58a';
   voci+=rg('pd-g pd-fis','Spese per attività, Inarcassa e F24',tFA,{p:pcT(tFA),bar:tFA/mxR,bc:colF,st:`--gc:color-mix(in srgb,${colF} 45%,#fff)`,at:` data-pag="fiscale" title="Calcolati sul fatturato ${a} ${pvBase()==='prev'?'previsto':'incassato'} · apri il Riepilogo fiscale"`});
   D.L.filter(x=>(S.categorie.find(c=>c.id===x.id)||{}).gruppo==='attivita'&&x.tot>0.5).sort((x,y)=>y.tot-x.tot).forEach(x=>voci+=rg('pd-c',`<i class="pd-dot" style="background:${coloreCat(x.id)||colF}"></i>${esc(nomeCat(x.id))}`,x.tot));
   D.pag.slice().sort((x,y)=>x.data<y.data?-1:1).forEach(x=>voci+=rg('pd-c',`<span class="pd-d">${dataIt(x.data).slice(0,5)}</span>${NOMI[x.k]}`,x.eur,{m:false}));
@@ -6461,7 +6461,7 @@ const usoConto=id=>S.movimenti.filter(m=>m.conto===id||m.verso===id).length;
 const usoNota=n=>S.movimenti.filter(m=>m.nota===n).length+S.cointestato.filter(c=>c.nota===n).length;
 const nMov=n=>n?`${n} mov.`:'non usata';
 const opz=(lista,v)=>lista.map(([k,n])=>`<option value="${esc(k)}" ${k===v?'selected':''}>${esc(n)}</option>`).join('');
-const PASTELLI=[["#b8d8c4","menta"],["#cbe6c7","pistacchio"],["#8fb78f","matcha"],["#b4cccf","azzurro"],["#c4916b","indigo"],["#f3a5bc","orchidea"],["#f3b2ab","rosso"],["#f3a5bc","caramello"],["#f5c1bc","rossochiaro"],["#e2dccd","grigio"]];
+const PASTELLI=[["#b8d8c4","menta"],["#cbe6c7","pistacchio"],["#8fb78f","matcha"],["#b4cccf","azzurro"],["#c4916b","caramello"],["#d9a7cf","malva"],["#f3b2ab","rosso"],["#f7d58a","zafferano"],["#f5c1bc","rosso chiaro"],["#e2dccd","grigio"]];
 const pickCol=(attr,v)=>`<span class="col-pick"><button type="button" class="col-btn" data-col-apri style="--c:${v}" title="Cambia colore"></button><input type="color" class="col-nat" ${attr} value="${v}" tabindex="-1" aria-label="Colore"></span>`;
 function apriColori(btn){
   chiudiColori();const inp=btn.parentNode.querySelector('.col-nat'), v=(inp.value||'').toLowerCase();
@@ -6568,7 +6568,7 @@ function schedaTrimPrec(a){ // serve solo se il IV trimestre dell'anno prima non
   const d=datiTrim(a-1,4); if(d&&d.a===a-1&&d.q===4) return '';
   const tp=(S.impostazioni.trimPrec||{})[a]||{}, perc=S.impostazioni.accantonamento[a]??0.25;
   const inc=tp.inc||0, acc=tp.acc??inc*perc, att=tp.att||0, netto=inc-acc-att;
-  const COL={inc:['#cbe6c7','entrate'],acc:['#ded7c9','salvadanaio'],att:[coloreCat('spese per attività')||'#f3a5bc','fiscali']};
+  const COL={inc:['#cbe6c7','entrate'],acc:['#ded7c9','salvadanaio'],att:[coloreCat('spese per attività')||'#f7d58a','fiscali']};
   const campo=(k,nome,v,aiuto,ph)=>`<label class="campo col" style="--c:${COL[k][0]}"><span class="c-nome"><i class="c-dot">${ico(COL[k][1])}</i>${nome}</span><span class="c-input"><input data-trimprec="${k}" value="${v==null?'':numIt(v)}" placeholder="${ph||''}" inputmode="decimal"><i>€</i></span><small>${aiuto}</small></label>`;
   return `<div class="tp-box"><h4>IV trimestre ${a-1} · per lo stipendio di gennaio – marzo ${a}</h4>
     <p>L'app parte dal 1° gennaio ${a}, quindi non conosce ottobre – dicembre ${a-1}. Scrivi questi tre numeri e il I trimestre avrà il suo stipendio come gli altri.</p>
