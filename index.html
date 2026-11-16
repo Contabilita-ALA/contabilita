@@ -5812,6 +5812,7 @@ function h3Voci(X,conBarra){
   // Paolo 15/11: le variabili di coppia (DA DIVIDERE) escono dalla riga delle variabili e vanno in una riga a sé, fuori dal tetto
   const cop=CP.pag+CP.prv>0.5, xV=cop?{pag:B.variabili.pag-CP.pag,prv:B.variabili.prv-CP.prv}:B.variabili;
   const rigaC=cop?riga(bV,prv(CP),'<span class="hm-v-dx">fuori dal tetto</span>',CP,{nome:'Spese di coppia',cls:'hm-cop',col:(notaDi(NOTA_COPPIA)||{}).colore||'#f9d9e1',att:'data-coppia="1"',tip:'Spese con la nota DA DIVIDERE (il conto con il tuo compagno lo tenete su Splitwise): escono dal saldo ma non contano nel tetto delle variabili. Clicca per vederle.'}):'';
+  if(conBarra==='spese') return '<div class="hm-voci">'+riga(bF,prv(B.fisse))+riga(bV,prv(xV),'',xV)+riga(BOLLE.find(b=>b.id==='fiscali'),prv(B.fiscali))+rigaC+'</div>';
   return barra+'<div class="hm-voci">'+riga(bV,prv(xV),TV!=null&&conBarra!=='spese'?`<span class="hm-v-dx tt-${tettoCl(tVt,TV)}">di ${euro(TV)}</span>`:'',xV)+rigaC+riga(bF,prv(B.fisse))+riga(BOLLE.find(b=>b.id==='fiscali'),prv(B.fiscali))+(conBarra==='spese'?'':riga(BOLLE.find(b=>b.id==='entrate'),prv(B.entrate,true),`<span class="hm-v-dx">accant. ${euro(B.accant)}</span>`))+'</div>';
 }
 // Paolo 16/11: in fondo a conti e voci una bubble scura con il totale
