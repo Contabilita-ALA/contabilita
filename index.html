@@ -2248,6 +2248,21 @@ i.p-ent-prev{background:#fff;border:1.5px dashed var(--verde)}.legenda span.p-en
 .h3B .h3-bb .hm-v-s>:nth-child(2){grid-area:x;font-size:var(--f-piccolo);justify-self:start}
 .h3B .h3-bb .hm-v .h3-pl{grid-column:1/-1}
 .h3B .h3-g>section.h3-bb .hm-voci>.hm-tot:nth-child(3n+2){grid-column:span 2}
+
+/* Home 16/11: niente doppioni */
+.h3B .h3-g>section.h3-bb.h3-r5{grid-row:3}
+.h3B .h3-g>section.h3-conti{grid-row:4/6}
+.h3 .h3-sal .h3-sal-t{grid-column:span 2}
+.h3B .h3-g>section.h3-bb.h3-r5 .hm-voci:has(>.hm-v:nth-child(4)){grid-template-columns:repeat(4,minmax(0,1fr))}
+.h3B .h3-g>section.h3-bb.h3-r5 .hm-voci:has(>.hm-v:nth-child(4)) .hm-v-t>b{font-size:min(var(--f-cifra),3.7cqw)}
+.h3B .h3-g>section.h3-bb.h3-r5 .hm-voci:has(>.hm-v:nth-child(4))>.hm-v{padding:8px 10px}
+@media (max-width:1700px){.h3B .h3-g>section.h3-bb.h3-r5 .hm-voci:has(>.hm-v:nth-child(4)) .ic-ico{display:none}.h3B .h3-g>section.h3-bb.h3-r5 .hm-voci:has(>.hm-v:nth-child(4)) .hm-v-t>span{grid-column:1/-1}}
+.h3 .h3-k3 .tq-k-s{white-space:normal;flex-wrap:wrap;row-gap:0;column-gap:4px;overflow:visible}
+.h3-tet{display:block;flex:1 0 100%;margin-top:3px;cursor:pointer;color:#e9e3d8;font-size:var(--f-piccolo)}
+.h3-tet b{color:var(--giallo)}
+.h3-tet .h3-al-bar{border:0;background:rgba(255,255,255,.18);height:5px;margin-top:2px}
+.h3-tet.att .h3-al-bar i{background:var(--giallo)}.h3-tet.no .h3-al-bar i{background:var(--corallo)}.h3-tet.ok .h3-al-bar i{background:var(--salvia)}
+.h3-tet:hover{text-decoration:underline}
 /* avvisi in Home (13/11): stessa griglia delle tre colonne */
 .h3 .h3-sal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch;margin-bottom:0}
 .h3 .h3-sal-t{display:flex;flex-direction:column;justify-content:center;min-width:0}
@@ -5776,7 +5791,7 @@ function h3Dati(){ // numeri condivisi dalle tre proposte
 }
 function h3Fare(X,max){return X.fare.slice(0,max||9).map(v=>`<div class="h3-t ${v.st} ${v.att?'clic':''}" ${v.att||''}><span class="tb-c">${v.ic||(v.st==='fatto'?'✓':v.st==='no'?'!':'')}</span><span class="h3-t-c"><b>${v.tit}</b><small>${v.sub}</small></span><strong>${v.cifra}${v.az?`<em>${v.az}</em>`:''}</strong></div>`).join('')
   ||'<div class="h3-t fatto"><span class="tb-c">✓</span><span class="h3-t-c"><b>Tutto in ordine</b><small>niente da sistemare oggi</small></span><strong></strong></div>'}
-function h3Conti(X,cls){return X.conti.map(r=>`<div class="hm-v hm-c ${cls||''}" style="--b:${r.c.colore}" data-conto="${r.c.id}" title="Clicca per vedere i movimenti di questo conto">
+function h3Conti(X,cls){const ord={conto:0,carta:1,cointestato:2};return [...X.conti].sort((p,q)=>(ord[p.c.tipo]??3)-(ord[q.c.tipo]??3)).map(r=>`<div class="hm-v hm-c ${cls||''}" style="--b:${r.c.colore}" data-conto="${r.c.id}" title="Clicca per vedere i movimenti di questo conto">
   <span class="ic-ico">${ico(r.c.tipo)}</span><div class="hm-v-c"><div class="hm-v-t"><span>${esc(r.tit)}</span><b>${euroH(r.cifra)}</b></div><div class="hm-v-s"><span>${r.sub}</span>${r.all}</div>${r.pl?`<div class="h3-pl ${r.cifra>r.pl?'no':r.cifra>r.pl*0.8?'att':''}"><i style="width:${Math.min(100,r.cifra/r.pl*100)}%"></i></div>`:''}</div></div>`).join('')}
 function h3Agenda(X,n){
   const GS=['dom','lun','mar','mer','gio','ven','sab'];
@@ -5787,7 +5802,7 @@ function h3Agenda(X,n){
 function h3Voci(X,conBarra){
   const {B,D,F,V,tF,tV,tVt,CP,lim,resta,TV,e0}=X, bF=BOLLE.find(b=>b.id==='fisse'), bV=BOLLE.find(b=>b.id==='variabili');
   let barra='';
-  if(conBarra&&D.completo){const tt=tF+tV,sc=Math.max(lim,tt,TV!=null?tF+TV:0,1),w=v=>Math.max(0,v)/sc*100;
+  if(conBarra===true&&D.completo){const tt=tF+tV,sc=Math.max(lim,tt,TV!=null?tF+TV:0,1),w=v=>Math.max(0,v)/sc*100;
     const over=tt>lim+0.5?`<b class="over" style="left:${lim/sc*100}%;width:${100-lim/sc*100}%"></b><em style="left:${lim/sc*100}%"></em>`:'';
     barra=`<div class="hm-stip"><div class="hm-stip-t"><span>Stipendio ${euro(lim)}</span><span class="tq-d ${resta>=-0.5?'ok':'no'}">${resta>=-0.5?'restano '+euro(resta):'sfori '+euro(-resta)}</span></div>
       <div class="im-g-bar lim im-u-bar"><i class="p" style="--b:${bF.colore};width:${w(F.pag)}%"></i><i class="v" style="--b:${bF.colore};width:${w(F.prv)}%"></i><i class="p" style="--b:${bV.colore};width:${w(V.pag)}%"></i><i class="v" style="--b:${bV.colore};width:${w(V.prv)}%"></i>${over}<em class="im-m-tacca" style="left:${Math.min(tF,sc)/sc*100}%"></em>${TV!=null?`<em class="hm-tetto" style="left:${(tF+TV)/sc*100}%"></em>`:''}</div>
@@ -5797,7 +5812,7 @@ function h3Voci(X,conBarra){
   // Paolo 15/11: le variabili di coppia (DA DIVIDERE) escono dalla riga delle variabili e vanno in una riga a sé, fuori dal tetto
   const cop=CP.pag+CP.prv>0.5, xV=cop?{pag:B.variabili.pag-CP.pag,prv:B.variabili.prv-CP.prv}:B.variabili;
   const rigaC=cop?riga(bV,prv(CP),'<span class="hm-v-dx">fuori dal tetto</span>',CP,{nome:'Spese di coppia',cls:'hm-cop',col:(notaDi(NOTA_COPPIA)||{}).colore||'#f9d9e1',att:'data-coppia="1"',tip:'Spese con la nota DA DIVIDERE (il conto con il tuo compagno lo tenete su Splitwise): escono dal saldo ma non contano nel tetto delle variabili. Clicca per vederle.'}):'';
-  return barra+'<div class="hm-voci">'+riga(bV,prv(xV),TV!=null?`<span class="hm-v-dx tt-${tettoCl(tVt,TV)}">di ${euro(TV)}</span>`:'',xV)+rigaC+riga(bF,prv(B.fisse))+riga(BOLLE.find(b=>b.id==='fiscali'),prv(B.fiscali))+riga(BOLLE.find(b=>b.id==='entrate'),prv(B.entrate,true),`<span class="hm-v-dx">accant. ${euro(B.accant)}</span>`)+'</div>';
+  return barra+'<div class="hm-voci">'+riga(bV,prv(xV),TV!=null&&conBarra!=='spese'?`<span class="hm-v-dx tt-${tettoCl(tVt,TV)}">di ${euro(TV)}</span>`:'',xV)+rigaC+riga(bF,prv(B.fisse))+riga(BOLLE.find(b=>b.id==='fiscali'),prv(B.fiscali))+(conBarra==='spese'?'':riga(BOLLE.find(b=>b.id==='entrate'),prv(B.entrate,true),`<span class="hm-v-dx">accant. ${euro(B.accant)}</span>`))+'</div>';
 }
 // Paolo 16/11: in fondo a conti e voci una bubble scura con il totale
 const h3Bub=(ic,tit,val,sub)=>`<div class="hm-v hm-tot"><span class="ic-ico">${ico(ic)}</span><div class="hm-v-c"><div class="hm-v-t"><span>${tit}</span><b>${val}</b></div><div class="hm-v-s"><span>${sub}</span></div></div></div>`;
@@ -5863,14 +5878,19 @@ function h3Saluto(X){const d=new Date(), gs=['domenica','lunedì','martedì','me
         <span class="h3-al-i">${cl==='ok'?'✓':'!'}</span><span><b>Spese variabili: ${cl===''?'tetto superato':cl==='att'?'quasi al tetto':'sei dentro'}</b>
         <small>${e(sp)} di ${e(pl)} a ${nm}${perG!=null?` · ${e(perG)} al giorno`:''}</small><i class="h3-al-bar"><i style="width:${Math.min(100,sp/pl*100)}%"></i></i></span>
         <strong>${r>=-0.5?'restano '+e(r):'oltre di '+e(-r)}</strong></div>`}}
-  return `<header class="saluto h3-sal"><div class="h3-sal-t"><h1>Ciao${nome?' '+esc(nome):''},</h1><p>${corr?`ecco la situazione ad oggi, ${gs[d.getDay()]} ${d.getDate()} ${MESI[d.getMonth()]} ${d.getFullYear()}.`:`stai guardando il ${S.anno}.`}</p></div>${av||'<span></span>'}${al||'<span></span>'}</header>`}
+  return `<header class="saluto h3-sal"><div class="h3-sal-t"><h1>Ciao${nome?' '+esc(nome):''},</h1><p>${corr?`ecco la situazione ad oggi, ${gs[d.getDay()]} ${d.getDate()} ${MESI[d.getMonth()]} ${d.getFullYear()}.`:`stai guardando il ${S.anno}.`}</p></div>${al||'<span></span>'}</header>`}
+// Paolo 16/11: il tetto delle variabili sta nel riquadro Restano (niente più avviso sopra la colonna)
+function h3Tetto(X){if(!X.corr)return '';const sp=X.VT.pag, pl=X.TV, q=`${X.a}-${Math.ceil(X.m/3)}`, e=v=>'€ '+numIt(Math.round(v)).replace(/,00$/,'');
+  if(pl==null) return `<span class="h3-tet att" data-tb-tet="${q}" title="Fissa quanto vuoi spendere al mese per le spese variabili">tetto variabili: <b>fissa →</b></span>`;
+  const r=pl-sp, cl=sp>pl+0.5?'no':sp>pl*0.8?'att':'ok', perG=X.gRest&&r>0.5?r/X.gRest:null;
+  return `<span class="h3-tet ${cl}" data-tb-tet="${q}" title="Spese variabili ${e(sp)} sul tetto di ${e(pl)}. Clicca per cambiare il tetto"><b>tetto ${e(pl)} · ${r>=-0.5?'ancora '+e(r):'oltre di '+e(-r)}</b><i class="h3-al-bar"><i style="width:${Math.min(100,sp/pl*100)}%"></i></i></span>`}
 const h3K=(cls,ic,tit,val,sub,att)=>`<div class="tq-k ${cls}" ${att||''}><div class="tq-k-t"><span>${ico(ic)}${tit}</span></div><div class="tq-k-v">${val}</div><div class="tq-k-s">${sub}</div></div>`;
 
 /* ---- B: oggi · questo mese · quest'anno ---- */
 function renderHomeB(){
   const X=h3Dati(), {e0,m,a,resta,D,lim,B}=X, Y=h3Anno(X), nM=MESI[m-1];
   const pil=(t,c)=>`<div class="h3-pil ${c}"><span>${t}</span></div>`;
-  const k3=`<div class="h3-k3">${h3K('k-e','entrate','Entrate',e0(B.entrate.pag),B.entrate.prv>0.5?`+ ${e0(B.entrate.prv)} attese`:'incassate')}${h3K('k-s','variabili','Spese',e0(X.tF+X.tV),'fisse + variabili')}${D.completo?h3K('k-nero','salvadanaio',resta>=-0.5?'Restano':'Sfori di',e0(Math.abs(resta)),`di ${e0(lim)} stipendio`,`data-perche="${m}"`):h3K('k-a','netto','Stipendio','—','manca il trim. prima')}</div>`;
+  const k3=`<div class="h3-k3">${h3K('k-e','entrate','Entrate',e0(B.entrate.pag),B.accant>0.5?`accant. ${e0(B.accant)}`+(B.entrate.prv>0.5?` · + ${e0(B.entrate.prv)} attese`:''):B.entrate.prv>0.5?`+ ${e0(B.entrate.prv)} attese`:'incassate')}${h3K('k-s','variabili','Spese',e0(X.tF+X.tV),'fisse + variabili')}${D.completo?h3K('k-nero','salvadanaio',resta>=-0.5?'Restano':'Sfori di',e0(Math.abs(resta)),`di ${e0(lim)} stipendio`+h3Tetto(X),`data-perche="${m}"`):h3K('k-a','netto','Stipendio','—','manca il trim. prima')}</div>`;
   const kA1=`<div class="h3-k2 h3-r2 h3-cA">${h3K('k-vol','fattura','Fatturato',e0(Y.vol),Y.sTxt)}${h3K('k-net','netto','Netto',e0(Y.netto),'tolto accantonamento')}</div>`;
   const kA2=`<div class="h3-k2 h3-r3 h3-cA">${h3K('k-a','salvadanaio','Accantonato',e0(Y.spo),`<span class="tq-d ${Y.spo>=Y.acc-0.5?'ok':'no'}">${Y.acc?Math.round(Y.spo/Y.acc*100):100}%</span> di ${e0(Y.acc)}`)}${h3K(Y.ris<-0.5?'k-s':'k-r2','oggi','Risparmio dell\'anno',e0(Y.ris),'stipendio − spese, finora')}</div>`;
   // Paolo 13/11: colonna del mese e colonna dell'anno su una griglia comune, i bordi dei box coincidono
@@ -5882,7 +5902,7 @@ function renderHomeB(){
         <section class="tq-p cl-ag h3-ag">${h3Tit(`${ico('calendario')} Cosa ti aspetta`,'calendario','Calendario')}${h3Agenda(X,45)}</section></div>
       <div class="h3-k3 h3-r2 h3-c2">${k3.slice(k3.indexOf('>')+1,-6)}</div>
       <section class="tq-p hm-vocip hm-contip h3-c2 h3-conti h3-bb bb-A"><h3>${ico('conto')} I tuoi conti oggi</h3><div class="hm-voci">${h3Conti(X)}${h3Bub('salvadanaio','In tutto',euroH(X.tuoi),`${X.conti.length} conti`)}</div></section>
-      <section class="tq-p hm-vocip h3-c2 h3-r5 h3-bb bb-A">${h3Tit(`${ico('variabili')} Voce per voce`,'movimenti','Movimenti')}${h3Voci(X,false).replace(/<\/div>$/,'')}${h3Usc(X)}</div></section>
+      <section class="tq-p hm-vocip h3-c2 h3-r5 h3-bb bb-A">${h3Tit(`${ico('variabili')} Voce per voce`,'movimenti','Movimenti')}${h3Voci(X,'spese').replace(/<span>Spese (variabili|fisse|per attività|di coppia)<\/span>/g,(s,x)=>`<span>${x==='per attività'?'Attività':x[0].toUpperCase()+x.slice(1)}</span>`)}</section>
       ${kA1}${kA2}
       <section class="tq-p h3-cA h3-r4">${h3Tit(`${ico('anno')} Trimestre per trimestre`,'trimestre','Trimestre')}<div class="h3-qh"><span></span><span>stipendio <i class="st"></i> spese <i class="sp"></i></span><span></span><span>risparmio</span></div>${h3Trim(X)}</section>
       <section class="tq-p h3-cats h3-cA h3-r5">${h3Tit(`${ico('variabili')} Dove vanno i soldi`,'anno','Anno')}<div class="hm-cats">${h3Cats(X,6)}</div></section>
@@ -6777,7 +6797,7 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-coppia]')){Object.assign(UI,{pagina:'movimenti',mese:String(HM.m),cat:'b:variabili',conto:'',stato:'',nota:NOTA_COPPIA,q:''});if(S.anno!==HM.a)S.anno=HM.a;salvaUI();render();window.scrollTo(0,0);return}
   const bolla=e.target.closest('[data-bolla]');
   if(bolla){Object.assign(UI,{pagina:'movimenti',mese:String(HM.m),cat:'b:'+bolla.dataset.bolla,conto:'',stato:'',nota:'',q:''});if(S.anno!==HM.a)S.anno=HM.a;salvaUI();render();window.scrollTo(0,0);return}
-  const pq=e.target.closest('[data-perche]');if(pq){apriPerche(UI.pagina==='home'&&HM?HM.a:S.anno,pq.dataset.perche.split(',').map(Number));return}
+  const pq=e.target.closest('[data-perche]');if(pq&&!e.target.closest('[data-tb-tet]')){apriPerche(UI.pagina==='home'&&HM?HM.a:S.anno,pq.dataset.perche.split(',').map(Number));return}
   const cp=e.target.closest('[data-cat-perche]');if(cp){chiudi();Object.assign(UI,{pagina:'movimenti',mese:cp.dataset.mesi.includes(',')?'q'+Math.ceil(+cp.dataset.mesi.split(',')[0]/3):cp.dataset.mesi,cat:cp.dataset.catPerche,conto:'',stato:'',nota:'',q:''});salvaUI();render();return}
   const tqh=e.target.closest('[data-trim-home]');if(tqh){Object.assign(UI,{pagina:'trimestre',trim:tqh.dataset.trimHome});salvaUI();render();window.scrollTo(0,0);return}
   const mh=e.target.closest('[data-mese-home]');if(mh){Object.assign(UI,{pagina:'movimenti',mese:mh.dataset.meseHome,cat:'',conto:'',stato:'',nota:'',q:''});salvaUI();render();window.scrollTo(0,0);return}
