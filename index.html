@@ -1349,7 +1349,7 @@ button.rd-g{cursor:pointer}button.rd-g:hover{border-color:var(--inchiostro)}
 .fc-g span{color:var(--grigio);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fc-g b{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:400;color:var(--inchiostro)}
 .fc-g .t{border-top:1px solid var(--linea);padding-top:2px;font-weight:700;color:var(--inchiostro)}
 .fc-g .fc-p.fc-p{font-weight:700;color:var(--inchiostro)}.fc-g .c-l.c-l{color:var(--verde)}.fc-g .c-a.c-a{color:var(--grigio)}.fc-g .c-n.c-n{color:var(--ambra)}
-.fc-g .fc-on{background:var(--giallo);font-weight:700;color:var(--inchiostro)}.fc-g span.fc-on{border-radius:4px 0 0 4px;padding-left:4px}.fc-g b.fc-on{border-radius:0 4px 4px 0;padding-right:4px}
+.fc-g .fc-on{background:#f9c977;font-weight:700;color:var(--inchiostro)}.fc-g span.fc-on{border-radius:4px 0 0 4px;padding-left:4px}.fc-g b.fc-on{border-radius:0 4px 4px 0;padding-right:4px}
 .fc-az{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;font-size:var(--f-piccolo);color:var(--grigio);margin-top:2px}
 .fc-vuoto{grid-column:1/-1;margin:0;font-size:var(--f-piccolo);color:var(--grigio)}
 .ft-calc #fc-out{flex:1;grid-template-rows:1fr auto;padding-top:2px}
@@ -2621,6 +2621,113 @@ button.h3-allarme:hover,.h3-allarme.clic:hover{box-shadow:2px 2px 0 var(--inchio
 
 /* titoli di pagina in MAIUSCOLO (Paolo 13/11) */
 #main h1{font-variant-caps:normal;text-transform:uppercase;letter-spacing:.04em}#main h1 *{text-transform:none;letter-spacing:normal}
+/* ===== Fatturare e risparmiare (18/11): card colorate, barre a pillola, una schermata ===== */
+.pn{display:flex;flex-direction:column;gap:10px}
+.pn-kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pn-k{border-radius:var(--r-card);padding:10px 14px 12px;min-width:0;display:flex;flex-direction:column;gap:2px;position:relative}
+.pn-k[data-trim-home],.pn-k[data-ob-mese]{cursor:pointer}
+.pn-k.c-menta{background:var(--giallo)}.pn-k.c-salvia{background:var(--salvia)}.pn-k.c-rosso{background:var(--corallo)}.pn-k.c-beige{background:var(--lavanda-ch)}.pn-k.c-giallo{background:var(--cappuccino)}
+.pn-k-t{display:flex;align-items:center;gap:7px;font:700 var(--f-piccolo) var(--font);color:var(--inchiostro)}
+.pn-k-i{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.7);display:grid;place-items:center;flex:none}.pn-k-i .ico{width:14px;height:14px}
+.pn-k-v{font:800 calc(var(--f-cifra)*1.15)/1.15 var(--font-titoli);letter-spacing:-.5px;white-space:nowrap;margin-top:4px}.pn-k-v small{font-size:var(--f-piccolo);font-weight:600;letter-spacing:0}
+.pn-k-s{font-size:var(--f-piccolo);color:var(--inchiostro);opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pn-kb{display:block;height:8px;border-radius:999px;background:rgba(255,255,255,.55);margin-top:6px;overflow:hidden}.pn-kb i{display:block;height:100%;border-radius:999px;background:var(--inchiostro)}
+.pn-kb.w i{background:var(--verde)}
+.pn-g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr) minmax(0,1.1fr);gap:12px;min-height:0}
+.pn-p{padding:12px 16px;gap:0}
+.pn-p h3 .ob-pil{margin-left:6px}
+.pn-ico{width:30px;height:30px;border-radius:50%;background:var(--b,#fff);display:grid;place-items:center;flex:none}.pn-ico .ico{width:15px;height:15px}
+/* colonna 1 */
+.pn-serve{justify-content:space-between}
+.pn-r{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:5px 0}
+.pn-r-t{display:flex;flex-direction:column;min-width:0}.pn-r-t b{font-size:var(--f-testo)}.pn-r-t small{font-size:var(--f-mini);color:var(--grigio);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pn-in{gap:4px}.pn-in input{width:84px;text-align:right;font:700 var(--f-medio) var(--font-titoli);background:var(--panna);border:0;border-radius:999px;padding:5px 12px}
+.pn-in.man input{background:var(--cappuccino-ch);box-shadow:inset 0 0 0 1.5px var(--cappuccino)}
+.pn-stip{display:flex;justify-content:space-between;align-items:baseline;background:var(--inchiostro);color:#fff;border-radius:999px;padding:7px 16px;margin:4px 0}
+.pn-stip span{font-weight:700;font-size:var(--f-testo)}.pn-stip b{font:800 var(--f-cifra) var(--font-titoli);color:var(--giallo)}.pn-stip small{font-size:var(--f-piccolo);color:#fff;font-weight:500}
+.pn-casc{background:var(--panna);border-radius:var(--r-mid);padding:9px 12px;margin-top:6px}
+.pn-casc-t,.pn-fat{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pn-casc-t span,.pn-fat span{display:flex;flex-direction:column;font-weight:700;font-size:var(--f-testo)}.pn-casc-t small,.pn-fat small{font-size:var(--f-mini);font-weight:500;color:var(--grigio)}
+.pn-casc-t b{font:800 var(--f-cifra) var(--font-titoli)}
+.pn-stack{display:flex;gap:3px;height:14px;margin:7px 0 5px}.pn-stack i{border-radius:999px;min-width:6px}
+.pn-leg{display:flex;flex-wrap:wrap;gap:2px 12px;font-size:var(--f-mini);color:var(--grigio)}.pn-leg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:-1px}.pn-leg b{color:var(--inchiostro)}
+.pn-fat{background:var(--giallo);border-radius:var(--r-mid);padding:10px 14px;margin-top:8px}.pn-fat b{font:800 calc(var(--f-cifra)*1.1) var(--font-titoli)}.pn-fat small{color:var(--inchiostro);opacity:.8}
+/* colonna 2 */
+.pn-trim{gap:0}
+.pn-lg{display:inline-block;width:10px;height:10px;border-radius:50%;margin-left:6px}.pn-lg.inc{background:var(--salvia)}.pn-lg.att{background:repeating-linear-gradient(45deg,var(--salvia) 0 2px,var(--menta-ch) 2px 4px)}.pn-lg.tg{width:14px;height:0;border-top:2px dashed var(--inchiostro);border-radius:0}
+.pn-qs{flex:1;min-height:120px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:4px;margin-top:4px}
+.pn-q4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;position:relative}
+.pn-qv{text-align:center;display:flex;flex-direction:column;line-height:1.15}.pn-qv b{font:800 var(--f-medio) var(--font-titoli)}.pn-qv small{font-size:var(--f-mini);color:var(--grigio)}
+.pn-qb{position:relative;background:var(--grigino);border-radius:999px;overflow:hidden;cursor:pointer;width:min(100%,64px);justify-self:center}
+.pn-qb i{position:absolute;left:0;right:0;bottom:0}.pn-qb .inc{background:var(--salvia);border-radius:999px}.pn-qb .att{background:repeating-linear-gradient(45deg,var(--salvia) 0 3px,var(--menta-ch) 3px 7px);border-radius:999px}
+.pn-qb.pieno .inc{background:var(--verde)}.pn-qb.ora{box-shadow:0 0 0 2.5px var(--inchiostro)}.pn-qb.fut{background:repeating-linear-gradient(45deg,var(--grigino) 0 4px,var(--panna) 4px 8px)}
+.pn-tg{position:absolute;left:-4px;right:-4px;bottom:var(--tg);border-top:2px dashed var(--inchiostro);pointer-events:none}
+.pn-tg span{position:absolute;left:0;top:-19px;font:700 var(--f-mini) var(--font);background:var(--inchiostro);color:#fff;border-radius:999px;padding:1px 7px}
+.pn-ql{text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px}.pn-ql b{font-size:var(--f-piccolo)}.pn-ql small{font-size:var(--f-mini);color:var(--grigio)}
+.pn-ql.ora b,.pn-qv.ora b{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.pn-nota{margin:6px 0 0;font-size:var(--f-piccolo);color:var(--grigio)}.pn-nota .ok{color:var(--verde)}.pn-nota .no{color:var(--rosso)}
+.pn-mh{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid var(--grigino)}
+.pn-mh span{display:flex;align-items:center;gap:6px;font:700 var(--f-piccolo) var(--font)}.pn-mh .ico{width:14px;height:14px}.pn-mh small{font-size:var(--f-mini);color:var(--grigio)}.pn-mh .ok{color:var(--verde)}.pn-mh .no{color:var(--rosso)}
+.pn-m{display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:4px;height:clamp(70px,13vh,120px);margin-top:4px}
+.pn-mc{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:0}.pn-mc small{font-size:var(--f-mini);color:var(--grigio);line-height:1}
+.pn-mt{position:relative;flex:1;width:100%;max-width:20px}.pn-mt::after{content:'';position:absolute;left:-3px;right:-3px;top:var(--z);border-top:1px solid var(--grigio-chiaro)}
+.pn-mt i{position:absolute;left:0;right:0;border-radius:999px;min-height:4px}.pn-mt i.ok{background:var(--salvia)}.pn-mt i.no{background:var(--corallo)}
+.pn-mc.fut .pn-mt i.ok{background:repeating-linear-gradient(45deg,var(--salvia) 0 3px,var(--menta-ch) 3px 6px)}.pn-mc.fut .pn-mt i.no{background:repeating-linear-gradient(45deg,var(--corallo) 0 3px,var(--corallo-ch) 3px 6px)}
+.pn-mc.ora small{color:var(--inchiostro);font-weight:800}.pn-mc.ora .pn-mt i{box-shadow:0 0 0 2px var(--inchiostro)}
+.pn-mc.dopo small{color:var(--ambra)}
+/* colonna 3 */
+.pn-obs{gap:0}
+.pn-obl{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px;padding-right:2px}
+.pn-ob{background:color-mix(in srgb,var(--oc) 55%,var(--carta));border-radius:var(--r-mid);padding:9px 12px;display:flex;flex-direction:column;gap:5px;flex:none}
+.pn-ob.fatto{background:color-mix(in srgb,var(--salvia) 45%,var(--carta))}
+.pn-ob-h{display:flex;align-items:center;gap:8px}.pn-ob-h .pn-ico{width:26px;height:26px;background:rgba(255,255,255,.75)}
+.pn-ob-h .ob-nome{flex:1;min-width:0;font:700 var(--f-testo) var(--font);background:transparent;border:0;padding:2px 0}
+.pn-ob-h .ob-az{display:flex;gap:2px}.pn-ob-h .ob-az button{border:0;background:rgba(255,255,255,.55);border-radius:50%;width:22px;height:22px;font-size:10px;cursor:pointer;color:var(--inchiostro)}.pn-ob-h .ob-az button:disabled{opacity:.3;cursor:default}
+.pn-ob-v{display:flex;align-items:baseline;gap:6px;font-size:var(--f-piccolo)}.pn-ob-v>b{font:800 var(--f-cifra) var(--font-titoli)}.pn-ob-v em{margin-left:auto;font:700 var(--f-piccolo) var(--font);font-style:normal}
+.pn-ob-v .pn-in input{width:76px;font-size:var(--f-testo);background:rgba(255,255,255,.7);padding:2px 10px}
+.pn-ob-bar{height:10px;border-radius:999px;background:rgba(255,255,255,.6);overflow:hidden}.pn-ob-bar i{display:block;height:100%;border-radius:999px;background:var(--inchiostro)}
+.pn-ob-f{display:flex;align-items:center;gap:8px;font-size:var(--f-piccolo)}
+.pn-ob-f .ob-en{display:flex;align-items:center;gap:4px;color:var(--grigio)}.pn-ob-f select{font:600 var(--f-piccolo) var(--font);background:rgba(255,255,255,.7);border:0;border-radius:999px;padding:2px 6px}
+.pn-ob-f .ob-ogni{border:0;background:rgba(255,255,255,.55);border-radius:50%;width:22px;height:22px;cursor:pointer}.pn-ob-f .ob-ogni.on{background:var(--inchiostro);color:#fff}
+.pn-ob-m{margin-left:auto;white-space:nowrap}.pn-ob-m b{font-weight:800}.pn-ob-f .tq-d{flex:none}.pn-ob-f .ob-arch{margin-left:auto}
+.pn-ob-f .tq-d.neutro{background:rgba(255,255,255,.6)}
+.pn-vuoto{margin:4px 0;font-size:var(--f-testo);color:var(--grigio)}
+.pn-piede{display:flex;justify-content:space-between;align-items:center;gap:8px;border-radius:999px;padding:7px 14px;margin-top:8px;font-size:var(--f-piccolo);cursor:pointer;flex:none}
+.pn-piede.ok{background:var(--menta-ch)}.pn-piede.no{background:var(--corallo-ch)}.pn-piede em{font-style:normal;font-weight:700;white-space:nowrap}
+.pn-addt{font:700 var(--f-mini) var(--font);color:var(--grigio);text-transform:uppercase;letter-spacing:.4px;margin:10px 0 4px;flex:none}
+.pn-add{display:flex;flex-wrap:wrap;gap:5px;flex:none}
+.pn-add button{border:0;background:var(--panna);border-radius:999px;padding:4px 10px;font:600 var(--f-piccolo) var(--font);cursor:pointer;display:flex;align-items:center;gap:5px}.pn-add button:hover{background:var(--grigino)}
+.pn-add i{width:10px;height:10px;border-radius:50%}
+@media (max-height:820px){.pn-r{padding:3px 0}.pn-ico{width:26px;height:26px}.pn-casc{padding:6px 10px}.pn-fat{padding:7px 12px}.pn-k{padding:8px 12px 10px}}
+@media (max-width:1250px){.pn-kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.pn-g{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.pn-obs{grid-column:1/-1}}
+@media (max-width:1500px){.pn-p h3 small{display:none}}
+/* Home 18/11: conti a torta */
+.h3-torta{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
+.h3-tt{position:relative;width:min(100%,clamp(96px,calc(100vh - 640px),210px));aspect-ratio:1;margin:0 auto;flex:none}
+.h3-tt svg{width:100%;height:100%;display:block}.h3-tt svg [data-conto]{cursor:pointer}
+.h3-tt-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.h3-tt-c b{font:800 var(--f-cifra) var(--font-titoli);letter-spacing:-.5px}.h3-tt-c b.neg{color:var(--rosso)}.h3-tt-c small{font-size:var(--f-mini);color:var(--grigio)}
+.h3-tl-l{flex:1;min-height:0;display:grid;grid-template-columns:12px minmax(0,1fr) auto auto;align-content:space-evenly;column-gap:10px;row-gap:2px}
+.h3-tl{display:contents;cursor:pointer}.h3-tl>*{cursor:pointer;align-self:center}
+.h3-tl:hover .h3-tl-n{text-decoration:underline}
+.h3-tl>i{width:12px;height:12px;border-radius:50%;background:var(--b)}
+.h3-tl.carta>i{background:none;box-shadow:inset 0 0 0 2.5px var(--b)}
+.h3-tl-n{display:flex;flex-direction:column;min-width:0;font:700 var(--f-piccolo) var(--font);line-height:1.2}
+.h3-tl-n small{font-weight:500;font-size:var(--f-mini);color:var(--grigio);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h3-tl-v{text-align:right;font:800 var(--f-testo) var(--font-titoli);white-space:nowrap;font-variant-numeric:tabular-nums}.h3-tl-p{text-align:right;white-space:nowrap}
+.h3-tl-p em{font:700 var(--f-mini) var(--font);font-style:normal;background:var(--panna);border-radius:999px;padding:1px 7px}
+.h3-tl.rosso .h3-tl-p em{background:var(--corallo-ch);color:var(--rosso)}
+.h3-tl.carta .h3-tl-v{font-weight:600;color:var(--grigio)}
+.h3-tl-n .h3-al{font-size:var(--f-mini)}
+.h3B .h3-g>section.h3-conti{min-height:0;overflow:hidden}
+
+/* 18/11 spunti dagli esempi per tutta l'app: barre a pillola, icone in un cerchio bianco sulle card colorate */
+.tq-eq-bar,.im-g-bar,.fi-bar,.tg-bar,.h3-al-bar,.rq-bar,.ob-bar{border-radius:999px}
+.im-g-bar>i:first-child,.tg-bar>i:first-child,.fi-bar>i:first-child{border-radius:999px 0 0 999px}
+.h3-q-b i{height:10px}.h3-q-b i.st,.h3-q-b i.sp{box-shadow:none}
+.tq-k-t .ico{box-sizing:content-box;width:12px;height:12px;padding:5px;border-radius:50%;background:rgba(255,255,255,.72);flex:none}
+.tq-k.k-r .tq-k-t .ico,.tq-k.k-nero .tq-k-t .ico{background:rgba(255,255,255,.16)}
+.tq-p>h3>.ico:first-child{box-sizing:content-box;width:13px;height:13px;padding:5px;border-radius:50%;background:var(--panna)}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -2721,7 +2828,7 @@ const NOTE_BASE=[{nome:'OBBLIGATORIO',colore:'#e2dccd',evidenzia:false},{nome:'I
 const noteNomi=()=>S.note.map(n=>n.nome);
 const PAGINE=[
   ['home','Home'],['movimenti','Movimenti'],['fatture','Fatture'],['radames','Radames'],
-  ['anno','Anno (totali)'],['calendario','Calendario'],['previsione','Previsione anno prossimo'],['fatturare','Quanto devo fatturare'],
+  ['anno','Anno (totali)'],['calendario','Calendario'],['previsione','Previsione anno prossimo'],['fatturare','Fatturare e risparmiare'],
   ['fiscale','Riepilogo fiscale'],['annuario','Annuario contributi'],['cointestato','Conto cointestato'],['conti','Conti e risparmi'],['obiettivi','Obiettivi di risparmio'],
   ['impostazioni','Impostazioni e backup']];
 const SIDE_STACCO=new Set(['anno','fiscale','cointestato','impostazioni']); // una linea sopra queste voci
@@ -3009,7 +3116,7 @@ const SIDE_ICO={
  conti:'<path d="M4 7.5a2 2 0 0 1 2-2h11.5v3"/><rect x="4" y="8.5" width="16" height="11" rx="2.5"/><path d="M15.5 13.5h2"/>',
  obiettivi:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/>',
  impostazioni:'<circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/>'};
-const SIDE_GRUPPI=[['Generale',['home','calendario']],['Registri',['fatture','radames','cointestato']],['Analisi',['anno','previsione','fatturare']],['Fisco',['fiscale','annuario']],['Risparmi',['conti','obiettivi']]];
+const SIDE_GRUPPI=[['Generale',['home','calendario']],['Registri',['fatture','radames','cointestato']],['Analisi',['anno','previsione']],['Fisco',['fiscale','annuario']],['Risparmi',['conti','fatturare']]];
 const SIDE_NOMI={previsione:()=>'Previsione '+(S.anno+1),anno:()=>'Anno (totali)',impostazioni:()=>'Impostazioni'};
 function voceSide(id){
   const p=PAGINE.find(x=>x[0]===id); if(!p)return '';
@@ -3068,7 +3175,7 @@ function qdfDati(){
   const media=id=>{const x=speseUni(a,rif,id);return (x.pag+x.prv)/rif.length};
   const I=(S.impostazioni.qdf||{})[a]||{};
   const tetto=tettoMese(a,Math.min(12,Math.max(1,mOggi)));
-  const cop=coppiaMedia(a), auto={fis:media('fisse'),var:tetto!=null?tetto+cop:media('variabili'),att:media('fiscali'),ris:200};
+  const cop=coppiaMedia(a), auto={fis:media('fisse'),var:tetto!=null?tetto+cop:media('variabili'),att:media('fiscali'),ris:(()=>{try{const s=obDati().servono;return s>0.5?Math.round(s):200}catch(e){return 200}})()};
   const v=k=>I[k]!=null&&I[k]!==''?+I[k]:auto[k];
   const perc=S.impostazioni.accantonamento[a]??0.25;
   const c=calcFattura({prest:1000,data:`${a}-06-30`}), kL=c.lordo/1000; // da prestazione a incasso lordo (bollo e 4%)
@@ -3367,6 +3474,85 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-ob-su],[da
 });
 window.addEventListener('resize',()=>{if(UI.pagina==='obiettivi')requestAnimationFrame(obFit)});
 
+/* ===== Fatturare e risparmiare (Paolo 18/11/2026) =====
+   "Quanto devo fatturare" e "Obiettivi di risparmio" in una schermata sola. I conti sono quelli di prima:
+   - il risparmio che ti serve parte da quello che chiedono i tuoi obiettivi (se non scrivi tu una cifra);
+   - gli obiettivi si pagano con quello che avanza dallo stipendio, mai col deposito Revolut. */
+function pnSelMese(o,O){const y0=Math.floor(O.nOra/12);let h=`<option value="">senza scadenza</option>`;
+  for(let y=y0;y<=y0+6;y++){h+=`<optgroup label="${y}">`;for(let m=(y===y0?O.nOra%12:0);m<12;m++){const v=`${y}-${String(m+1).padStart(2,'0')}`;h+=`<option value="${v}" ${o.entro===v?'selected':''}>${MESI3[m]} ${y}</option>`}h+='</optgroup>'}
+  if(o.entro&&obMeseN(o.entro+'-01')<O.nOra&&!o.ogni)h+=`<option value="${o.entro}" selected>${obMeseTxt(obMeseN(o.entro+'-01'))}</option>`;
+  if(o.ogni&&o.fine!=null&&!(o.entro||'').startsWith(String(Math.floor(o.fine/12))))h=h.replace(`value="${obMeseISO(o.fine)}"`,`value="${obMeseISO(o.fine)}" selected`);
+  return `<select data-ob="${o.i}" data-ob-k="entro">${h}</select>`}
+function renderPiano(){
+  const X=qdfDati(), O=obDati(), e0=v=>(v<-0.5?'− ':'')+'€ '+numIt(Math.abs(Math.round(v))).replace(/,00$/,''), n0=v=>numIt(Math.round(v)).replace(/,00$/,'');
+  const nmO=MESI[O.nOra%12], qT=`${O.a}-${Math.ceil(((O.nOra%12)+1)/3)}`;
+  const ora=X.Q.find(q=>q.stato==='in corso'), manca=ora?X.lordoQ-ora.inc-ora.attese:null;
+  const barK=(pc,cl)=>`<span class="pn-kb ${cl||''}"><i style="width:${Math.max(0,Math.min(100,pc))}%"></i></span>`;
+  const kpi=(cls,ic,tit,val,sub,extra,att)=>`<div class="pn-k ${cls}" ${att||''}><div class="pn-k-t"><span class="pn-k-i">${ico(ic)}</span>${tit}</div><div class="pn-k-v">${val}</div><div class="pn-k-s">${sub}</div>${extra||''}</div>`;
+  const gap=O.servono<0.5?0:O.servono-O.A, ok=gap<=0.5, mett=O.quota>0.5||O.fattoOra;
+  const kpis=kpi('c-menta','fattura','Da fatturare a trimestre',e0(X.prestQ),`cioè ${e0(X.prestQ/3)} al mese di prestazioni`)
+    +kpi(manca!=null&&manca>0.5?'c-rosso':'c-salvia','calendario',ora?`${ROMANI[ora.q-1]} trimestre: ${manca>0.5?'mancano':'ci sei'}`:'Trimestre in corso',manca==null?'—':e0(Math.abs(manca)),ora?`incassati ${e0(ora.inc)}${ora.attese>0.5?' + '+e0(ora.attese)+' attesi':''} su ${e0(X.lordoQ)}`:'nessun trimestre in corso',ora?barK((ora.inc+ora.attese)/X.lordoQ*100):'',ora?`data-trim-home="${ora.q}" title="Clicca per il trimestre"`:'')
+    +kpi(O.A<-0.5?'c-rosso':'c-beige','netto','Ti avanza in media',e0(O.A)+'<small> al mese</small>','nei prossimi 12 mesi: stipendio − fisse − variabili')
+    +kpi(O.fattoOra?'c-salvia':'c-giallo','salvadanaio',`Da mettere da parte a ${nmO}`,e0(O.quota),!mett?'nessun obiettivo da riempire':O.fattoOra?'<b>fatto ✓</b> · clicca per annullare':'per gli obiettivi · clicca quando è fatto',mett?barK(O.fattoOra?100:0,'w'):'',mett?`data-ob-mese="${O.meseOra}" title="Segna se li hai messi da parte questo mese"`:'');
+  // 1 · quanto ti serve
+  const nRif=X.rif.length===12?'tutto l\'anno':`media ${MESI[X.rif[0]-1].slice(0,3)}–${MESI[X.rif[X.rif.length-1]-1].slice(0,3)}`;
+  const campo=(k,tit,sub,col,ic)=>{const man=X.I[k]!=null&&X.I[k]!=='', val=k==='fis'?X.F:k==='var'?X.V:k==='att'?X.A:X.R;
+    return `<div class="pn-r"><span class="pn-ico" style="--b:${col}">${ico(ic)}</span><span class="pn-r-t"><b>${tit}</b><small>${sub}${man?` · <button class="qf-rip" data-qdf-rip="${k}">↺ ${e0(X.auto[k])}</button>`:''}</small></span><span class="dp-eur pn-in ${man?'man':''}">€<input data-qdf="${k}" inputmode="decimal" value="${n0(val)}"></span></div>`};
+  const pct=Math.round(X.perc*100)+'%';
+  const seg=[[X.nettoQ,'var(--giallo)','stipendio × 3'],[X.A*3,'var(--cappuccino)','attività'],[X.lordoQ*X.perc,'var(--lavanda-ch)','accant. '+pct]];
+  const sVar=X.tetto!=null&&(X.I.var==null||X.I.var==='')?(X.cop>0.5?'tetto + spese di coppia':'il tuo tetto del mese'):'da Unicredit, '+nRif;
+  const c1=`<section class="tq-p pn-p pn-serve"><h3>${ico('variabili')} Quanto ti serve al mese<small>scrivi le cifre, il resto si aggiorna</small></h3>
+    ${campo('fis','Spese fisse','da Unicredit, '+nRif,'var(--azzurro)','fisse')}
+    ${campo('var','Spese variabili',sVar,'var(--lavanda-ch)','variabili')}
+    ${campo('ris','Risparmio',O.servono>0.5?'quello che chiedono i tuoi obiettivi':'scegli tu: deve avanzare ogni mese','var(--cappuccino)','salvadanaio')}
+    <div class="pn-stip"><span>Stipendio che ti serve</span><b>${e0(X.stip)}<small> al mese</small></b></div>
+    ${campo('att','Spese per l\'attività','pagate da Unicredit, '+nRif,'var(--rosa-ch)','fiscali')}
+    <div class="pn-casc"><div class="pn-casc-t"><span>Da incassare ogni trimestre<small>lordo, con il 4% e il bollo</small></span><b>${e0(X.lordoQ)}</b></div>
+      <div class="pn-stack">${seg.map(s=>`<i style="flex:${Math.max(0.0001,s[0])};background:${s[1]}" title="${s[2]}: ${e0(s[0])}"></i>`).join('')}</div>
+      <div class="pn-leg">${seg.map(s=>`<span><i style="background:${s[1]}"></i>${s[2]} <b>${n0(s[0])}</b></span>`).join('')}</div></div>
+    <div class="pn-fat"><span>Da fatturare ogni trimestre<small>prestazione: ${e0(X.prestQ/3)} al mese</small></span><b>${e0(X.prestQ)}</b></div></section>`;
+  // 2 · trimestri (colonne a pillola) e mesi (avanzo, sopra/sotto lo zero)
+  const mx=Math.max(X.lordoQ,...X.Q.map(q=>q.inc+q.attese),1)*1.06, tg=X.lordoQ/mx*100;
+  const qv=X.Q.map(q=>{const t=q.inc+q.attese,d=t-X.lordoQ;return `<div class="pn-qv ${q.stato==='in corso'?'ora':''}"><b>${q.stato==='da venire'&&t<0.5?'—':e0(q.inc)}</b>${q.attese>0.5?`<small>+ ${n0(q.attese)} attesi</small>`:`<small>${q.nFat} fatture</small>`}</div>`}).join('');
+  const qb=X.Q.map(q=>`<div class="pn-qb ${q.stato==='in corso'?'ora':q.stato==='da venire'?'fut':''} ${q.inc+q.attese>=X.lordoQ-0.5?'pieno':''}" data-trim-home="${q.q}" title="${ROMANI[q.q-1]} trimestre (${q.stato}): incassati ${e0(q.inc)}${q.attese>0.5?', attesi '+e0(q.attese):''}. Clicca per il trimestre"><i class="inc" style="height:${q.inc/mx*100}%"></i><i class="att" style="height:${q.attese/mx*100}%;bottom:${q.inc/mx*100}%"></i></div>`).join('');
+  const ql=X.Q.map(q=>{const t=q.inc+q.attese,d=t-X.lordoQ;return `<div class="pn-ql ${q.stato==='in corso'?'ora':''}"><b>${ROMANI[q.q-1]} trim</b>${q.stato==='da venire'&&t<0.5?`<small>da venire</small>`:`<span class="tq-d ${d>=-0.5?'ok':'no'}">${d>=-0.5?'+ '+n0(d):'− '+n0(-d)}</span>`}</div>`}).join('');
+  const MM=O.M.concat(O.MN.slice(0,3)), mP=Math.max(1,...MM.map(x=>x.r||0)), mN=Math.max(0,...MM.map(x=>-(x.r||0))), z=mP/(mP+mN)*100;
+  const tip=x=>`${MESI[x.m-1]} ${x.a}${x.fut?' (previsto)':''}: stipendio ${x.st==null?'—':e0(x.st)} − fisse ${e0(x.F)} − variabili ${e0(x.V)} = ${x.r==null?'—':e0(x.r)}`;
+  const anno=MM.filter(x=>x.r!=null&&x.a===O.a).reduce((s,x)=>s+x.r,0);
+  const mesi=`<div class="pn-m" style="--z:${z}%">${MM.map(x=>{const h=x.r==null?0:Math.abs(x.r)/(mP+mN)*100;return `<div class="pn-mc ${x.cor?'ora':''} ${x.fut?'fut':''} ${x.a!==O.a?'dopo':''}" title="${tip(x)}"><span class="pn-mt">${x.r==null?'<i class="vuoto"></i>':`<i class="${x.r<-0.5?'no':'ok'}" style="height:${h}%;${x.r<-0.5?'top:var(--z)':'bottom:calc(100% - var(--z))'}"></i>`}</span><small>${MESI3[x.m-1].slice(0,1)}</small></div>`}).join('')}</div>`;
+  const c2=`<section class="tq-p pn-p pn-trim"><h3>${ico('anno')} Come stai andando nel ${X.a}<small><i class="pn-lg inc"></i>incassato <i class="pn-lg att"></i>atteso <i class="pn-lg tg"></i>ti serve</small></h3>
+    <div class="pn-qs"><div class="pn-q4">${qv}</div><div class="pn-q4 pn-qg" style="--tg:${tg}%">${qb}<em class="pn-tg"><span>${e0(X.lordoQ)}</span></em></div><div class="pn-q4">${ql}</div></div>
+    ${X.stipMedio!=null?`<p class="pn-nota">Con quanto incassi di solito ${X.stipMedio>=X.stip-0.5?`<b class="ok">ci stai dentro</b>: avanzano ${e0(X.stipMedio-X.stip)} al mese.`:`<b class="no">mancano ${e0(X.stip-X.stipMedio)} al mese</b> di stipendio.`}</p>`:''}
+    <div class="pn-mh"><span>${ico('calendario')} Ti avanza ogni mese</span><small>gen ${O.a} – mar ${O.a+1} · nel ${O.a} <b class="${anno<-0.5?'no':'ok'}">${anno<-0.5?'− ':'+ '}${n0(Math.abs(anno))}</b></small></div>${mesi}</section>`;
+  // 3 · obiettivi a schede colorate
+  const card=(o,j)=>{const pc=o.target>0.5?Math.min(100,o.hai/o.target*100):0;
+    const st=o.fatto?['ok','raggiunto ✓']:o.target<0.5?['neutro','scrivi la cifra']:o.fine==null?['neutro',o.pronto!=null?'pronto a '+obMeseTxt(o.pronto):'non ci arrivi']:o.inTempo?['ok','in tempo']:['no',o.pronto!=null?'in ritardo di '+(o.pronto-o.fine)+(o.pronto-o.fine===1?' mese':' mesi'):'non ci arrivi'];
+    return `<div class="pn-ob ${o.fatto?'fatto':''}" style="--oc:${o.col}">
+      <div class="pn-ob-h"><span class="pn-ico">${ico(o.ic)}</span><input class="ob-nome" data-ob="${o.i}" data-ob-k="nome" value="${esc(o.nome)}">${O.perc?`<span class="ob-pc"><input data-ob="${o.i}" data-ob-k="perc" inputmode="numeric" value="${o.pc||''}" placeholder="—">%</span>`:''}
+        <span class="ob-az"><button data-ob-su="${o.i}" title="Più importante" ${j?'':'disabled'}>▲</button><button data-ob-giu="${o.i}" title="Meno importante" ${j<O.L.length-1?'':'disabled'}>▼</button><button data-ob-via="${o.i}" title="Togli l'obiettivo">✕</button></span></div>
+      <div class="pn-ob-v"><b>${e0(o.hai)}</b><span>di</span><span class="dp-eur pn-in">€<input data-ob="${o.i}" data-ob-k="target" inputmode="decimal" value="${o.target?n0(o.target):''}" placeholder="quanto"></span><em>${Math.round(pc)}%</em></div>
+      <div class="pn-ob-bar"><i style="width:${pc}%"></i></div>
+      <div class="pn-ob-f"><span class="ob-en">entro ${pnSelMese(o,O)}<button class="ob-ogni ${o.ogni?'on':''}" data-ob-ogni="${o.i}" title="${o.ogni?'Si ripete ogni anno: clicca per toglierlo':'Spesa che torna ogni anno (bollo, assicurazione, regali): clicca per ripeterla'}">↻</button></span>
+        ${o.fatto?`<button class="ob-arch" data-ob-arch="${o.i}" title="Segna quanto hai speso e spostalo tra i raggiunti">archivia ✓</button>`:o.alMese!=null?`<span class="pn-ob-m"><b>${e0(o.alMese)}</b> al mese</span>`:''}<span class="tq-d ${st[0]}">${st[1]}</span></div></div>`};
+  const arch=O.arch.length?`<details class="ob-ar" ${UI.obArch?'open':''}><summary>Raggiunti e archiviati <b>${O.arch.length}</b></summary>${O.arch.map(o=>`<div class="ob-ar-r"><i style="background:${o.col}"></i><span>${esc(o.nome)}<small>${o.archivio?obMeseTxt(obMeseN(o.archivio+'-01')):''} · obiettivo ${e0(o.target)}</small></span>
+      <label>speso <span class="dp-eur ob-in">€<input data-ob="${o.i}" data-ob-k="speso" inputmode="decimal" value="${o.speso!=null?n0(o.speso):''}"></span></label><button class="ob-ripr" data-ob-ripr="${o.i}" title="Rimettilo tra gli obiettivi">↺</button></div>`).join('')}</details>`:'';
+  const add=`<div class="pn-add">${OB_TIPI.map(t=>`<button data-ob-add="${t[0]}" title="Aggiungi un obiettivo: ${t[1]}"><i style="background:${t[3]}"></i>${t[1]}</button>`).join('')}</div>`;
+  const modo=`<span class="ob-pil ob-modo"><button data-ob-modo="ordine" class="${O.perc?'':'on'}">uno dopo l'altro</button><button data-ob-modo="perc" class="${O.perc?'on':''}">in %</button></span>`;
+  const piede=O.L.some(o=>!o.fatto&&o.target>0.5)?`<div class="pn-piede ${ok?'ok':'no'}" data-tb-tet="${qT}" title="Clicca per cambiare il tetto delle variabili"><span>${ok?(O.servono>0.5?`Per le scadenze servono ${e0(O.servono)} al mese: <b>bastano gli avanzi</b>`:'Nessuna scadenza da rispettare'):`Per le scadenze togli <b>${e0(gap)} al mese</b> alle variabili${O.tm!=null?` (tetto da ${n0(O.tm)} a ${n0(Math.max(0,O.tm-gap))})`:''}`}</span><em>tetto →</em></div>`:'';
+  const c3=`<section class="tq-p pn-p pn-obs"><h3>${ico('salvadanaio')} I tuoi obiettivi ${modo}<small>${O.perc?'l\'avanzo si divide in %':'l\'avanzo va prima al 1°'}</small></h3>
+    <div class="pn-obl">${O.L.length?O.L.map(card).join(''):`<p class="pn-vuoto">Non hai ancora obiettivi. Scegline uno qui sotto, scrivi quanto ti serve ed entro quando: ti dico quanto mettere da parte ogni mese.</p>`}${arch}</div>
+    ${piede}<div class="pn-addt">Aggiungi un obiettivo</div>${add}</section>`;
+  $('#main').innerHTML=`<div class="tq pn"><div class="tq-testa"><h1>Fatturare e risparmiare</h1><span class="tq-mesi">${X.a}</span><span class="tb-scen">le cifre che scrivi restano salvate per il ${X.a} · gli obiettivi si pagano con quello che avanza dallo stipendio</span></div>
+    <div class="pn-kpi">${kpis}</div><div class="pn-g">${c1}${c2}${c3}</div></div>`;
+  pnFit();requestAnimationFrame(pnFit);if(document.fonts&&document.fonts.status!=='loaded')document.fonts.ready.then(pnFit);
+}
+// una schermata sola: la griglia prende l'altezza che resta, l'elenco degli obiettivi scorre al suo interno
+function pnFit(){const g=document.querySelector('.tq.pn .pn-g');if(!g)return;g.style.height='';
+  const se=document.scrollingElement, z=parseFloat(getComputedStyle(g.closest('[data-zoom]')||g).zoom)||1;
+  const h=(innerHeight/z)-(g.getBoundingClientRect().top/z)-14;g.style.height=Math.max(430,h)+'px';
+  if(se.scrollHeight>se.clientHeight+1)g.style.height=Math.max(430,g.offsetHeight-(se.scrollHeight-se.clientHeight)-2)+'px'}
+window.addEventListener('resize',()=>{if(UI.pagina==='fatturare')requestAnimationFrame(pnFit)});
+
 function renderTrimestreB(){conScen(()=>{
   const a=S.anno, q=+UI.trim||1, o=new Date(), e0=v=>(v<-0.5?'− ':'')+'€ '+numIt(Math.abs(Math.round(v))).replace(/,00$/,'');
   const oggiK=o.getFullYear()===a?o.getMonth()+1:(o.getFullYear()>a?13:0);
@@ -3634,8 +3820,8 @@ function renderPagina(){
   if(p==='fiscale') return renderFiscale();
   if(p==='annuario') return renderAnnuario();
   if(p==='previsione') return renderPrevisione();
-  if(p==='obiettivi') return renderObiettivi();
-  if(p==='fatturare') return renderFatturare();
+  if(p==='obiettivi'){UI.pagina='fatturare';return renderPiano()} // Paolo 18/11: Obiettivi è dentro Fatturare e risparmiare
+  if(p==='fatturare') return renderPiano();
   if(p==='calendario') return renderCalendario(); // registro: mostra tutto (fatture attese comprese), come Movimenti
   if(!PAGINE.some(x=>x[0]===p)){UI.pagina='home';return renderHome()}
   const nome=PAGINE.find(x=>x[0]===p)[1];
@@ -5854,6 +6040,23 @@ function h3Fare(X,max){return X.fare.slice(0,max||9).map(v=>`<div class="h3-t ${
   ||'<div class="h3-t fatto"><span class="tb-c">✓</span><span class="h3-t-c"><b>Tutto in ordine</b><small>niente da sistemare oggi</small></span><strong></strong></div>'}
 function h3Conti(X,cls){const ord={conto:0,carta:1,cointestato:2};return [...X.conti].sort((p,q)=>(ord[p.c.tipo]??3)-(ord[q.c.tipo]??3)).map(r=>`<div class="hm-v hm-c ${cls||''}" style="--b:${r.c.colore}" data-conto="${r.c.id}" title="Clicca per vedere i movimenti di questo conto">
   <span class="ic-ico">${ico(r.c.tipo)}</span><div class="hm-v-c"><div class="hm-v-t"><span>${esc(r.tit)}</span><b>${euroH(r.cifra)}</b></div><div class="hm-v-s"><span>${r.sub}</span>${r.all}</div>${r.pl?`<div class="h3-pl ${r.cifra>r.pl?'no':r.cifra>r.pl*0.8?'att':''}"><i style="width:${Math.min(100,r.cifra/r.pl*100)}%"></i></div>`:''}</div></div>`).join('')}
+// Paolo 18/11: i conti della Home in un grafico a torta (anello). Nella torta solo i saldi positivi;
+// le carte sono già tolte da Unicredit (stanno nell'elenco, non nella torta), un conto in rosso resta nell'elenco in rosso.
+function h3Torta(X){
+  if(!X.conti.length) return `<div class="hm-voci">${h3Bub('salvadanaio','In tutto',euroH(X.tuoi),'conti di oggi')}</div>`;
+  const ord={conto:0,carta:1,cointestato:2}, L=[...X.conti].sort((p,q)=>(ord[p.c.tipo]??3)-(ord[q.c.tipo]??3));
+  const P=L.filter(r=>!r.carta&&r.cifra>0.5), tot=P.reduce((s,r)=>s+r.cifra,0);
+  const R=80, SW=24, C=2*Math.PI*R, gap=4;let pos=0;
+  const arc=P.length===1?`<circle r="${R}" cx="100" cy="100" fill="none" stroke="${P[0].c.colore}" stroke-width="${SW}"><title>${esc(P[0].tit)}</title></circle>`
+    :P.map(r=>{const f=r.cifra/tot, s=pos*C+gap/2+SW/2, len=Math.max(0.1,f*C-gap-SW);pos+=f;
+      return `<circle r="${R}" cx="100" cy="100" fill="none" stroke="${r.c.colore}" stroke-width="${SW}" stroke-linecap="round" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-s}" transform="rotate(-90 100 100)" data-conto="${r.c.id}"><title>${esc(r.tit)}: ${euro(r.cifra)} (${Math.round(f*100)}%)</title></circle>`}).join('');
+  const riga=r=>{const pc=!r.carta&&r.cifra>0.5&&tot>0?Math.round(r.cifra/tot*100):null;
+    const ev=r.carta?'già tolte da Unicredit':r.sub;
+    return `<div class="h3-tl ${r.carta?'carta':''} ${r.cifra<-0.5?'rosso':''}" data-conto="${r.c.id}" title="Clicca per vedere i movimenti di questo conto"><i style="--b:${r.c.colore}"></i><span class="h3-tl-n">${esc(r.tit)}<small>${ev}${r.all?' · '+r.all:''}</small></span><span class="h3-tl-v">${euroH(r.cifra)}</span><span class="h3-tl-p">${pc!=null?`<em>${pc}%</em>`:r.cifra<-0.5?'<em>in rosso</em>':''}</span></div>`};
+  return `<div class="h3-torta"><div class="h3-tt"><svg viewBox="0 0 200 200"><circle r="${R}" cx="100" cy="100" fill="none" stroke="var(--grigino)" stroke-width="${SW}"/>${tot>0.5?arc:''}</svg>
+    <div class="h3-tt-c"><small>In tutto</small><b class="${X.tuoi<-0.5?'neg':''}">${euro(Math.round(X.tuoi)).replace(/,00$/,'')}</b><small>${P.length} ${P.length===1?'conto':'conti'} in positivo</small></div></div>
+    <div class="h3-tl-l">${L.map(riga).join('')}</div></div>`;
+}
 function h3Agenda(X,n){
   const GS=['dom','lun','mar','mer','gio','ven','sab'];
   const dT=iso=>{const d=new Date(+iso.slice(0,4),+iso.slice(5,7)-1,+iso.slice(8,10));return iso===X.oggi?'<b>oggi</b>':`${GS[d.getDay()]} ${d.getDate()} <small>${MESI3[d.getMonth()]}</small>`};
@@ -5963,7 +6166,7 @@ function renderHomeB(){
         <section class="tq-p h3-calp">${h3Tit(`${ico('calendario')} Calendario di ${nM}`,'calendario','Calendario')}${h3MiniCal(X)}</section>
         <section class="tq-p cl-ag h3-ag">${h3Tit(`${ico('calendario')} Cosa ti aspetta`,'calendario','Calendario')}${h3Agenda(X,45)}</section></div>
       <div class="h3-k3 h3-r2 h3-c2">${k3.slice(k3.indexOf('>')+1,-6)}</div>
-      <section class="tq-p hm-vocip hm-contip h3-c2 h3-conti h3-bb bb-A"><h3>${ico('conto')} I tuoi conti oggi</h3><div class="hm-voci">${h3Conti(X)}${h3Bub('salvadanaio','In tutto',euroH(X.tuoi),`${X.conti.length} conti`)}</div></section>
+      <section class="tq-p h3-c2 h3-conti"><h3>${ico('conto')} I tuoi conti oggi</h3>${h3Torta(X)}</section>
       <section class="tq-p hm-vocip h3-c2 h3-r5 h3-bb bb-A">${h3Tit(`${ico('variabili')} Voce per voce`,'movimenti','Movimenti')}${h3Voci(X,'spese').replace(/<span>Spese (variabili|fisse|per attività|di coppia)<\/span>/g,(s,x)=>`<span>${x==='per attività'?'Attività':x[0].toUpperCase()+x.slice(1)}</span>`)}</section>
       ${kA1}${kA2}
       <section class="tq-p h3-cA h3-r4">${h3Tit(`${ico('anno')} Trimestre per trimestre`,'trimestre','Trimestre')}<div class="h3-qh"><span></span><span>stipendio <i class="st"></i> spese <i class="sp"></i></span><span></span><span>risparmio</span></div>${h3Trim(X)}</section>
@@ -5973,7 +6176,7 @@ function renderHomeB(){
 }
 function h3Fit(){requestAnimationFrame(()=>{fitCal();h3FitAg()});setTimeout(()=>{fitCal();h3FitAg()},250)}
 function h3FitAg(){document.querySelectorAll('.h3 .tq-p').forEach(p=>{const L=[...p.querySelectorAll('.cl-r,.h3-t,.hm-cr')];L.forEach(e=>e.hidden=false);
-  const lim=p.getBoundingClientRect().bottom-parseFloat(getComputedStyle(p).paddingBottom)-1;
+  const lim=p.getBoundingClientRect().bottom-parseFloat(getComputedStyle(p).paddingBottom)+1.5; // 18/11: senza tolleranza le righe che si allargano sparivano tutte
   for(let i=L.length-1;i>=0&&L[i].getBoundingClientRect().bottom>lim;i--)L[i].hidden=true})}
 window.addEventListener('resize',()=>{if(UI.pagina==='home'&&window.HOME_V3!=='vecchia')h3Fit()});
 
@@ -6340,20 +6543,19 @@ function disegnaFattura(){
     <div class="importo"><span>€</span><input id="f-prest" inputmode="decimal" placeholder="prestazione" value="${b.prest===''?'':numIt(b.prest)}"></div>
     <div class="campi f-3">
       <label>N.<input id="f-n" inputmode="numeric" value="${b.n}"></label>
-      <label>Data fattura<input type="date" id="f-data" value="${b.data}"></label>
+      <label>Data di incasso<input type="date" id="f-dinc" value="${b.dataInc}" title="Anche prevista: la fattura prende questa data"></label>
       <label>Cliente / riferimento<input id="f-rif" value="${esc(b.rif)}"></label>
     </div>
     <div class="campi f-3b">
       <label title="Spese anticipate per il cliente: diritti, visure, Sister…">Spese non imponibili<input id="f-nonimp" inputmode="decimal" placeholder="0,00" value="${b.nonImp?numIt(b.nonImp):''}"></label>
       <label>Incasso sul conto<select id="f-conto">${contiMov().filter(c=>c.tipo!=='carta').map(c=>`<option value="${c.id}" ${c.id===b.conto?'selected':''}>${esc(c.nome)}</option>`).join('')}</select></label>
-      <label title="Anche prevista">Data incasso<input type="date" id="f-dinc" value="${b.dataInc}"></label>
     </div>
     <div class="campi f-sp">
       <label class="spunta"><input type="checkbox" id="f-inc" ${b.incassata?'checked':''}> Incassata</label>
       <label class="spunta"><input type="checkbox" id="f-rip" ${b.rip?'checked':''}> Si ripete ogni anno</label>
     </div>
     <div class="calcoli f-calc2" id="f-calc"></div>
-    <p style="font-size:var(--f-piccolo);color:var(--grigio);margin:6px 0 0">L'incasso compare in Movimenti alla data di incasso, grigio finché non spunti "Incassata".</p>
+    <p style="font-size:var(--f-piccolo);color:var(--grigio);margin:6px 0 0">La fattura e l'incasso prendono la data di incasso: in Movimenti resta grigio finché non spunti "Incassata".</p>
     <div class="azioni">
       ${b.id?'<button class="btn chiaro" data-act="f-elimina" style="margin-right:auto">Elimina fattura</button>':''}
       <button class="btn chiaro" data-act="chiudi">Annulla</button>
@@ -6363,7 +6565,7 @@ function disegnaFattura(){
   setTimeout(()=>$('#f-prest')&&$('#f-prest').focus(),20);
 }
 function calcoliFattura(){
-  const p=parseNum($('#f-prest').value), data=$('#f-data').value||oggiISO();
+  const p=parseNum($('#f-prest').value), data=$('#f-dinc').value||oggiISO();
   if(!(p>0)){$('#f-calc').innerHTML='<span>Scrivi l\'importo della prestazione per vedere i calcoli.</span><b></b>';return}
   const c=calcFattura({prest:p,data}), ni=parseNum($('#f-nonimp').value)||0;
   $('#f-calc').innerHTML=`<span>Bollo (oltre € 77,47)</span><b>${euro(c.bollo)}</b>
@@ -6377,11 +6579,11 @@ function calcoliFattura(){
 }
 function salvaFattura(){
   const b=bozzaF;
-  b.tipo=$('#f-tipo')?$('#f-tipo').value:b.tipo;b.prest=parseNum($('#f-prest').value);b.n=parseInt($('#f-n').value)||b.n;b.data=$('#f-data').value;b.rif=$('#f-rif').value.trim();
+  b.tipo=$('#f-tipo')?$('#f-tipo').value:b.tipo;b.prest=parseNum($('#f-prest').value);b.n=parseInt($('#f-n').value)||b.n;const d0=b.data,i0=b.dataInc;b.rif=$('#f-rif').value.trim();
   b.nonImp=parseNum($('#f-nonimp').value)||0;if(b.nonImp<0){toast('Le spese non imponibili devono essere positive');return}
-  b.incassata=$('#f-inc').checked;b.dataInc=$('#f-dinc').value||b.data;b.conto=$('#f-conto').value;b.rip=$('#f-rip').checked;
+  b.incassata=$('#f-inc').checked;b.dataInc=$('#f-dinc').value;b.data=!b.id||d0===i0||!d0?b.dataInc:d0; // Paolo 18/11: basta la data di incasso (le fatture vecchie con date diverse tengono la loro)b.conto=$('#f-conto').value;b.rip=$('#f-rip').checked;
   if(!(b.prest>0)){toast('Scrivi l\'importo della prestazione');return}
-  if(!b.data){toast('Manca la data della fattura');return}
+  if(!b.dataInc){toast('Manca la data di incasso');return}
   modifica(()=>{
     const rec={n:b.n,data:b.data,tipo:b.tipo,rif:b.rif,prest:r2(b.prest),nonImp:r2(b.nonImp),rip:b.rip};
     let f;
@@ -6986,7 +7188,7 @@ document.addEventListener('change',e=>{
   if(id==='in-bkdrive'){modifica(()=>{S.impostazioni.backupDrive=el.checked},{ridisegna:false});renderAvviso();misuraTesta();return}
   if(id==='in-backup'&&el.files[0]){leggiFile(el.files[0],t=>{try{const d=JSON.parse(t);if(!d.movimenti||!d.impostazioni)throw 0;modifica(()=>{S=d;migra()});toast('Backup ripristinato',true)}catch(x){toast('Questo file non è un backup valido')}});el.value='';return}
   if(el.dataset.csv&&el.files[0]){const tipo=el.dataset.csv;leggiFile(el.files[0],t=>importaCSV(tipo,t));el.value='';return}
-  if(el.id==='f-data'&&bozzaF)calcoliFattura();
+  if((el.id==='f-data'||el.id==='f-dinc')&&bozzaF)calcoliFattura();
 });
 document.addEventListener('input',e=>{
   if(e.target.id==='f-q'){UI.q=e.target.value;salvaUI();renderTabella()}
