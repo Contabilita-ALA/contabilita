@@ -4319,7 +4319,7 @@ function renderContiRisparmi(){
     const dep=infoDeposito(D.dep||{id:'x'},a);return {k,st,sp,av:st==null?null:st-sp,coi:P27.annuo*D.q/4,int:D.dep?D.fine.dep*(dep.t||0)/100/4:0}});
   const conEnt27=PV&&PV.lordo>0.5;
   const tabT=`<div class="cr-tdue">${tabRisp(t26,`${a} <small>con previste</small>`,`Risparmiato = avanzo dello stipendio + metà cointestato + interessi. Clic su un trimestre per aprirlo.`)}
-    ${tabRisp(t27,`${N} <small>dalla Previsione</small>`,conEnt27?`Stipendio del I trim = netto del IV trim ${a}; poi netto dei trimestri ${N} (entrate − ${Math.round(PV.perc*100)}% − spese per attività). Cointestato e interessi come oggi.`:`<b>Mancano le entrate ${N}</b>: scrivile nella pagina Previsione anno prossimo, altrimenti lo stipendio da aprile risulta zero.`)}</div>`;
+    ${tabRisp(t27,`${N} <small>dalla Previsione</small>`,conEnt27?`Stipendio del I trim = netto del IV trim ${a}; poi netto dei trimestri ${N} (entrate − ${Math.round(PV.perc*100)}%; le spese per attività le paga il Revolut). Cointestato e interessi come oggi.`:`<b>Mancano le entrate ${N}</b>: scrivile nella pagina Previsione anno prossimo, altrimenti lo stipendio da aprile risulta zero.`)}</div>`;
   const switchB='';
   // grafico: soldi tuoi a fine mese, a strati per conto
   const keys=['uni','rev','dep','coi'], cols=D.serie;
