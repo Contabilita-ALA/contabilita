@@ -4240,7 +4240,7 @@ function datiConti(a){
     const qq=ROMANI.indexOf(mm[1])+1;let aa=mm[2]?+mm[2]:annoDi(x.data);if(!mm[2]&&qq*3-2>meseDi(x.data))aa--;return {a:aa,q:qq}};
   const giriDep=S.movimenti.filter(x=>x.giro&&x.verso===depId&&x.ok&&(annoDi(x.data)===a||annoDi(x.data)===a+1));
   const trim=[1,2,3,4].map(k=>{const ms=[k*3-2,k*3-1,k*3], fu=k>qOra, cor=k===qOra;
-    const st=nettoTrim(a,k-1), sp=fu?null:speseMesi(ms,!cor||pvBase()==='eff'), av=st==null||fu?null:st-sp;
+    const st=nettoTrim(a,k-1), sp=fu?null:speseMesi(ms,!cor) /* Paolo 19/11: il trimestre in corso sempre intero (spese pagate + previste), con incassato e con previsto */, av=st==null||fu?null:st-sp;
     const messo=giriDep.filter(x=>{const t=trimDi(x);return t&&t.a===a&&t.q===k}).reduce((s,x)=>s+x.eur,0);
     const coi=(DC.mesi[k*3].saldo-(k===1?DC.ini:DC.mesi[k*3-3].saldo))*q;
     const int=S.movimenti.filter(x=>annoDi(x.data)===a&&ms.includes(meseDi(x.data))&&x.ok&&!x.giro&&x.cat==='interessi').reduce((s,x)=>s-x.eur,0);
@@ -4318,7 +4318,7 @@ function renderContiRisparmi(){
     const st=k===1?conScen(()=>nettoTrim(a,4)):PV.lordo>0.5?netQ(k-1):null, sp=sm(PV.fisse,ms)+sm(PV.vari,ms);
     const dep=infoDeposito(D.dep||{id:'x'},a);return {k,st,sp,av:st==null?null:st-sp,coi:P27.annuo*D.q/4,int:D.dep?D.fine.dep*(dep.t||0)/100/4:0}});
   const conEnt27=PV&&PV.lordo>0.5;
-  const tabT=`<div class="cr-tdue">${tabRisp(t26,`${a} <small>${pvBase()==='eff'?'spese fatte':'con previste'}</small>`,`Risparmiato = avanzo dello stipendio + metà cointestato + interessi. Clic su un trimestre per aprirlo.`)}
+  const tabT=`<div class="cr-tdue">${tabRisp(t26,`${a} <small>con previste</small>`,`Risparmiato = avanzo dello stipendio + metà cointestato + interessi. Clic su un trimestre per aprirlo.`)}
     ${tabRisp(t27,`${N} <small>dalla Previsione</small>`,conEnt27?`Stipendio del I trim = netto del IV trim ${a}; poi netto dei trimestri ${N} (entrate − ${Math.round(PV.perc*100)}% − spese per attività). Cointestato e interessi come oggi.`:`<b>Mancano le entrate ${N}</b>: scrivile nella pagina Previsione anno prossimo, altrimenti lo stipendio da aprile risulta zero.`)}</div>`;
   const switchB='';
   // grafico: soldi tuoi a fine mese, a strati per conto
