@@ -3253,7 +3253,7 @@ function obMesi(a,D){ // anno a: stipendio (netto del trim prima ÷ 3) − fisse
     const r=s==null?null:s-F-V;if(r!=null)cum+=r;return {a,m,fut,cor,st:s,F,V,Vt,tm,r,cum}})}
 function obMesiN(a){ // anno dopo, dalla Previsione: stipendio del I trim = netto del IV trim di quest'anno, poi netto dei trimestri dell'anno dopo
   let PV=null;try{PV=datiPrevisione(a,pvVaX(a+1))}catch(e){}
-  const sm=(v,mm)=>mm.reduce((s,m)=>s+((v||{})[m]||0),0), netQ=k=>{const mm=[k*3-2,k*3-1,k*3], e=sm(PV.totE,mm);return e-e*PV.perc-sm(PV.att,mm)};
+  const sm=(v,mm)=>mm.reduce((s,m)=>s+((v||{})[m]||0),0), netQ=k=>{const mm=[k*3-2,k*3-1,k*3], e=sm(PV.totE,mm);return e-e*PV.perc};
   const st={1:(()=>{const n=conScen(()=>nettoTrim(a,4));return n==null?null:n/3})()};[2,3,4].forEach(q=>{st[q]=PV&&PV.lordo>0.5?netQ(q-1)/3:null});
   let cum=0;return [1,2,3,4,5,6,7,8,9,10,11,12].map(m=>{const F=PV?sm(PV.fisse,[m]):0, V=PV?sm(PV.vari,[m]):0, s=st[Math.ceil(m/3)], r=s==null||!PV?null:s-F-V;if(r!=null)cum+=r;
     return {a:a+1,m,fut:1,cor:0,st:s,F,V,Vt:tettoMese(a+1,m)??V,tm:tettoMese(a+1,m),r,cum,senzaEnt:!(PV&&PV.lordo>0.5)}})}
@@ -4279,9 +4279,9 @@ function renderContiRisparmi(){
   const P27=(()=>{const N=a+1, o={t:{}};let PV=null;try{PV=datiPrevisione(a,pvVaX(N))}catch(e){}
     const vaF=vaFatture(a), acc26=vaF?vaF.acc:0, spost=S.movimenti.filter(x=>annoDi(x.data)===a&&x.giro&&D.rev&&x.verso===D.rev.id).reduce((s,x)=>s+x.eur,0), daRev=Math.max(0,acc26-spost);
     const conEnt=PV&&PV.lordo>0.5;
-    if(conEnt){const sT=v=>v.reduce((s,x)=>s+x,0), sp=sT(PV.fisse)+sT(PV.vari)+PV.tAtt;
+    if(conEnt){const sT=v=>v.reduce((s,x)=>s+x,0), sp=sT(PV.fisse)+sT(PV.vari);
       o.uni=D.fine.uni-daRev+PV.netto-sp;o.t.uni=`fine ${a} − accantonamento ${a} ancora da spostare ${e0(daRev)} + netto ${N} ${e0(PV.netto)} − spese ${N} ${e0(sp)} (dalla Previsione)`;
-      o.rev=PV.acc26+PV.acc-PV.tFis;o.t.rev=`fine ${a} ${e0(PV.acc26)} (${revPartenzaTesto(PV.R0,a)}) + accantonamento ${N} ${e0(PV.acc)} − Inarcassa e tasse ${N} ${e0(PV.tFis)}`}
+      o.rev=PV.acc26+PV.acc-PV.tFis-PV.tAtt;o.t.rev=`fine ${a} ${e0(PV.acc26)} (${revPartenzaTesto(PV.R0,a)}) + accantonamento ${N} ${e0(PV.acc)} − Inarcassa e tasse ${N} ${e0(PV.tFis)} − spese per attività ${N} ${e0(PV.tAtt)}`}
     else{o.uni=null;o.rev=null}
     if(D.dep){const I=infoDeposito(D.dep,a), t=I.t||0;o.dep=D.fine.dep*(1+t/100);o.t.dep=`fine ${a} + interessi al ${String(t).replace('.',',')}% per un anno, senza nuovi versamenti`}else o.dep=0;
     const L=D.DC.L, ult=re=>{const l=L.filter(c=>re.test((c.cat+' '+c.ogg).toUpperCase()));return l.length?l[l.length-1]:null};
@@ -4312,9 +4312,9 @@ function renderContiRisparmi(){
       return `<div class="r ${t.fu?'fut':''} ${t.cor?'ora':''}" ${t.vai?`data-trim-side="${t.k}" title="Apri il ${ROMANI[t.k-1]} trimestre"`:''}><span>${ROMANI[t.k-1]} trim${t.cor?'<small>in corso</small>':''}</span><span class="n">${t.st==null?'—':n0(t.st)}</span><span class="n">${t.sp==null?'—':n0(t.sp)}</span><span class="n ${cls(t.av)}">${segn(t.av)}</span><span class="n ${cls(t.coi)}">${t.fu&&t.av==null?'—':segn(t.coi)}</span><span class="n ${cls(t.int)}">${t.fu&&t.av==null?'—':Math.abs(t.int)<0.005?'–':(t.int<0?'− ':'+ ')+numIt(Math.abs(t.int))}</span><span class="n"><b class="${cls(r)}">${segn(r)}</b>${pc!=null?`<em class="tq-d ${pc<0?'no':'ok'}">${pc}%</em>`:''}</span></div>`}).join('')}
     <div class="r tot"><span>Totale</span><span class="n">${n0(stT)}</span><span class="n">${n0(S2(t=>t.sp))}</span><span class="n ${cls(S2(t=>t.av))}">${segn(S2(t=>t.av))}</span><span class="n">${segn(S2(t=>t.coi))}</span><span class="n">${Math.abs(S2(t=>t.int))<0.005?'–':'+ '+numIt(S2(t=>t.int))}</span><span class="n"><b class="${cls(tot)}">${segn(tot)}</b>${stT>0.5?`<em class="tq-d ${tot<0?'no':'ok'}">${Math.round(tot/stT*100)}%</em>`:''}</span></div></div><p class="cr-nota">${sotto}</p></div>`};
   const t26=D.trim.map(t=>({...t,vai:1}));
-  // 2027 dalla Previsione: stipendio = netto del trimestre prima (entrate − accantonamento − spese per attività), spese = fisse + variabili
+  // 2027 dalla Previsione: stipendio = netto del trimestre prima (entrate − accantonamento; Paolo 19/11: le spese per attività le paga il Revolut), spese = fisse + variabili
   const PV=P27.PV, N=a+1, t27=[1,2,3,4].map(k=>{const ms=[k*3-2,k*3-1,k*3];if(!PV)return {k,st:null,sp:null,av:null,coi:0,int:0,fu:1};
-    const sm=(v,mm)=>mm.reduce((s,m)=>s+(v[m]||0),0), netQ=kk=>{const mm=[kk*3-2,kk*3-1,kk*3], e=sm(PV.totE,mm);return e-e*PV.perc-sm(PV.att,mm)};
+    const sm=(v,mm)=>mm.reduce((s,m)=>s+(v[m]||0),0), netQ=kk=>{const mm=[kk*3-2,kk*3-1,kk*3], e=sm(PV.totE,mm);return e-e*PV.perc};
     const st=k===1?conScen(()=>nettoTrim(a,4)):PV.lordo>0.5?netQ(k-1):null, sp=sm(PV.fisse,ms)+sm(PV.vari,ms);
     const dep=infoDeposito(D.dep||{id:'x'},a);return {k,st,sp,av:st==null?null:st-sp,coi:P27.annuo*D.q/4,int:D.dep?D.fine.dep*(dep.t||0)/100/4:0}});
   const conEnt27=PV&&PV.lordo>0.5;
@@ -4735,11 +4735,11 @@ function renderPrevisione(){
   if((UI.prevVista||'tabella')==='tabella') return renderPrevisioneTab(D,vista);
   const n0=v=>numIt(Math.round(v)).replace(/,00$/,''), pc=v=>Math.round(v*100)+'%';
   const kpi=(cls,ic,tit,val,sub,dl)=>`<div class="tq-k ${cls}"><div class="tq-k-t"><span>${ico(ic)}${tit}</span>${dl||''}</div><div class="tq-k-v">${val}</div><div class="tq-k-s">${sub}</div></div>`;
-  const revFine=D.acc26+D.acc-D.tFis;
+  const revFine=D.acc26+D.acc-D.tFis-D.tAtt;
   const kpis=kpi('k-vol','entrate',`Entrate ${N}`,euro(D.lordo),D.lordo>0.5?'le tue ipotesi, mese per mese':'ancora nessuna: aggiungile nella Tabella')
     +kpi('k-net','netto','Netto previsto',euro(D.netto),`entrate − ${pc(D.perc)} di accantonamento`,`<span class="tq-d neutro">${euro(D.netto/12)} al mese</span>`)
     +kpi('k-s','variabili','Spese di tutti i giorni',euro(D.giorni),`fisse e variabili · ${euro(D.giorni/12)} al mese`)
-    +kpi('k-r '+(revFine<-0.5?'neg':''),'salvadanaio',`Revolut a fine ${N}`,(revFine<-0.5?'− ':'')+euro(Math.abs(revFine)),`<span title="${esc(revPartenzaTesto(D.R0,a))}">${D.R0.reale?'Revolut a fine '+a:'accantonato '+a} ${n0(D.acc26)}</span> + accant. ${N} ${n0(D.acc)} − tasse ${n0(D.tFis)}`);
+    +kpi('k-r '+(revFine<-0.5?'neg':''),'salvadanaio',`Revolut a fine ${N}`,(revFine<-0.5?'− ':'')+euro(Math.abs(revFine)),`<span title="${esc(revPartenzaTesto(D.R0,a))}">${D.R0.reale?'Revolut a fine '+a:'accantonato '+a} ${n0(D.acc26)}</span> + accant. ${N} ${n0(D.acc)} − tasse ${n0(D.tFis)} − attività ${n0(D.tAtt)}`);
   const M=[1,2,3,4,5,6,7,8,9,10,11,12], tot=m=>D.fisse[m]+D.vari[m]+D.att[m]+D.fis[m];
   const c=(v,cls)=>`<span class="n ${cls||''} ${Math.abs(v)<0.5?'z':''}">${Math.abs(v)<0.5?'–':n0(v)}</span>`;
   const sT=v=>v.slice(1).reduce((s,x)=>s+x,0);
@@ -4867,9 +4867,9 @@ function renderPrevisioneTab(D,vista){
   const acc=accQ, net=M.reduce((o,m)=>(o[m]=totE[m]-acc[m],o),Array(13).fill(0));
   h+=`<tr class="an-sez"><th colspan="15">In sintesi <span>le entrate sono le tue ipotesi: clicca un mese di una voce per aggiungerle</span></th></tr>`;
   h+=riga('Entrate',totE,{c:'pos'})+riga(`− accantonamento ${Math.round(D.perc*100)}%`,acc.map(v=>-v),{c:'neg',tit:`Il ${Math.round(D.perc*100)}% delle entrate di ogni trimestre si sposta sul Revolut ad aprile, luglio, ottobre e dicembre`})+riga('= netto',net,{r:'tot',c:'pos',tit:'Quello che resta delle entrate dopo l\'accantonamento'});
-  const rev=Array(13).fill(0);let sr=D.acc26;M.forEach(m=>{sr+=acc[m]-D.fis[m];rev[m]=sr});
-  h+=`<tr class="an-sez"><th colspan="15">Il Revolut nel ${N} <span>${revPartenzaTesto(D.R0,a)}${D.R0.reale?'':` ${pvBase()==='prev'?'previsto':'incassato'} (${euro(D.va26)})`}; riceve l'accantonamento del ${N} e paga Inarcassa e tasse</span></th></tr>`;
-  h+=riga(`+ accantonamento ${N}`,acc,{c:'pos',tit:'Spostato dal conto al Revolut a fine trimestre: aprile, luglio, ottobre, dicembre'})+riga('− Inarcassa e tasse',D.fis.map(v=>-v),{c:'neg'});
+  const rev=Array(13).fill(0);let sr=D.acc26;M.forEach(m=>{sr+=acc[m]-D.fis[m]-D.att[m];rev[m]=sr}); // Paolo 19/11: anche le spese per attività escono dal Revolut
+  h+=`<tr class="an-sez"><th colspan="15">Il Revolut nel ${N} <span>${revPartenzaTesto(D.R0,a)}${D.R0.reale?'':` ${pvBase()==='prev'?'previsto':'incassato'} (${euro(D.va26)})`}; riceve l'accantonamento del ${N} e paga Inarcassa, tasse e spese per attività</span></th></tr>`;
+  h+=riga(`+ accantonamento ${N}`,acc,{c:'pos',tit:'Spostato dal conto al Revolut a fine trimestre: aprile, luglio, ottobre, dicembre'})+riga('− Inarcassa e tasse',D.fis.map(v=>-v),{c:'neg'})+riga('− spese per attività',D.att.map(v=>-v),{c:'neg',tit:'Termolog, Ordine, assicurazione, abbonamenti di lavoro: dalla voce Spese per attività qui sopra'});
   h+=`<tr class="tot"><th class="${rev[12]<0?'neg':'pos'}" title="Saldo stimato del Revolut a fine mese">= Revolut a fine mese</th>${M.map(m=>`<td class="${rev[m]<-0.5?'neg':'pos'}">${n0(rev[m])}</td>`).join('')}<td class="tot ${rev[12]<0?'neg':'pos'}">${n0(rev[12])}</td><td class="med"></td></tr>`;
   const testa=`<tr><th class="an-v">${N}</th>${M.map(m=>`<th>${MESI[m-1].slice(0,3)}</th>`).join('')}<th class="tot">totale<small>${N}</small></th><th class="med">media<small>al mese</small></th></tr>`;
   $('#main').innerHTML=`<div class="tq an pv2">
