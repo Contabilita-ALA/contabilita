@@ -4679,7 +4679,8 @@ function revPartenza(a,acc26){
   const usc=prev.filter(x=>!x.giro&&x.conto===rev.id).reduce((s,x)=>s+x.eur,0);
   const vers=prev.filter(x=>x.giro&&x.verso===rev.id).reduce((s,x)=>s+x.eur,0)-prev.filter(x=>x.giro&&x.conto===rev.id).reduce((s,x)=>s+x.eur,0);
   const spost=S.movimenti.filter(x=>annoDi(x.data)===a&&x.giro&&x.verso===rev.id).reduce((s,x)=>s+x.eur,0), daSp=Math.max(0,acc26-spost);
-  return {v:fine+daSp,reale:true,oggi,fine,usc,vers,spost,daSp,acc26,nome:rev.nome||'Revolut'};
+  const uscL=[...new Set(prev.filter(x=>!x.giro&&x.conto===rev.id).map(x=>(x.det||'').trim().toLowerCase()).filter(Boolean))];
+  return {v:fine+daSp,reale:true,oggi,fine,usc,vers,spost,daSp,acc26,uscL,mOra,nome:rev.nome||'Revolut'};
 }
 function revPartenzaTesto(R,a){const e=v=>euro(Math.abs(v));
   if(!R.reale)return `parte da ${euro(R.v)} accantonati sul fatturato ${a}`;
@@ -4868,7 +4869,14 @@ function renderPrevisioneTab(D,vista){
   h+=`<tr class="an-sez"><th colspan="15">In sintesi <span>le entrate sono le tue ipotesi: clicca un mese di una voce per aggiungerle</span></th></tr>`;
   h+=riga('Entrate',totE,{c:'pos'})+riga(`− accantonamento ${Math.round(D.perc*100)}%`,acc.map(v=>-v),{c:'neg',tit:`Il ${Math.round(D.perc*100)}% delle entrate di ogni trimestre si sposta sul Revolut ad aprile, luglio, ottobre e dicembre`})+riga('= netto',net,{r:'tot',c:'pos',tit:'Quello che resta delle entrate dopo l\'accantonamento'});
   const rev=Array(13).fill(0);let sr=D.acc26;M.forEach(m=>{sr+=acc[m]-D.fis[m]-D.att[m];rev[m]=sr}); // Paolo 19/11: anche le spese per attività escono dal Revolut
-  h+=`<tr class="an-sez"><th colspan="15">Il Revolut nel ${N} <span>${revPartenzaTesto(D.R0,a)}${D.R0.reale?'':` ${pvBase()==='prev'?'previsto':'incassato'} (${euro(D.va26)})`}; riceve l'accantonamento del ${N} e paga Inarcassa, tasse e spese per attività</span></th></tr>`;
+  const R0=D.R0, e2=v=>euro(Math.abs(v));
+  // Paolo 20/11: come nella pagina Anno, prima riga = saldo del Revolut a inizio mese (gennaio = saldo previsto al 31/12), "fine anno" = saldo al 31/12
+  const nota=R0.reale?`saldo a inizio mese come nella pagina Anno: gennaio è il saldo previsto al 31/12/${a} (oggi ${euro(R0.oggi)}${R0.usc>0.5?`, − ${e2(R0.usc)} di uscite previste entro dicembre`:R0.usc<-0.5?`, + ${e2(R0.usc)} di entrate previste entro dicembre`:''}${Math.abs(R0.vers)>0.5?`, ${R0.vers>0?'+':'−'} ${e2(R0.vers)} di giroconti previsti`:''})`
+    :revPartenzaTesto(R0,a)+` ${pvBase()==='prev'?'previsto':'incassato'} (${euro(D.va26)})`;
+  h+=`<tr class="an-sez"><th colspan="15">Il Revolut nel ${N} <span>${nota}</span></th></tr>`;
+  const ini0=R0.reale?R0.fine:D.acc26, ini=M.map(m=>m===1?ini0:rev[m-1]);ini.unshift(0);
+  h+=`<tr class="pv-rp-oggi"><th title="Saldo del Revolut il 1° di ogni mese; in fondo il saldo al 31/12/${N}">${esc(R0.nome||'Revolut')}</th>${M.map(m=>`<td class="${ini[m]<-0.5?'neg':''}">${n0(ini[m])}</td>`).join('')}<td class="tot ${rev[12]<-0.5?'neg':''}" title="Saldo al 31/12/${N}">${n0(rev[12])}</td><td class="med"></td></tr>`;
+  if(R0.reale&&R0.daSp>0.5){const v=Array(13).fill(0);v[1]=R0.daSp;h+=riga(`+ accantonamento ${a}`,v,{c:'pos',tit:`Accantonamento sul fatturato ${a} ${pvBase()==='prev'?'previsto':'incassato'} ${euro(R0.acc26)}${R0.spost>0.5?` − ${euro(R0.spost)} già spostati`:''}: da spostare sul Revolut`});}
   h+=riga(`+ accantonamento ${N}`,acc,{c:'pos',tit:'Spostato dal conto al Revolut a fine trimestre: aprile, luglio, ottobre, dicembre'})+riga('− Inarcassa e tasse',D.fis.map(v=>-v),{c:'neg'})+riga('− spese per attività',D.att.map(v=>-v),{c:'neg',tit:'Termolog, Ordine, assicurazione, abbonamenti di lavoro: dalla voce Spese per attività qui sopra'});
   h+=`<tr class="tot"><th class="${rev[12]<0?'neg':'pos'}" title="Saldo stimato del Revolut a fine mese">= Revolut a fine mese</th>${M.map(m=>`<td class="${rev[m]<-0.5?'neg':'pos'}">${n0(rev[m])}</td>`).join('')}<td class="tot ${rev[12]<0?'neg':'pos'}">${n0(rev[12])}</td><td class="med"></td></tr>`;
   const testa=`<tr><th class="an-v">${N}</th>${M.map(m=>`<th>${MESI[m-1].slice(0,3)}</th>`).join('')}<th class="tot">totale<small>${N}</small></th><th class="med">media<small>al mese</small></th></tr>`;
