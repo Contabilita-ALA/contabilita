@@ -1637,6 +1637,7 @@ table.mov td{overflow:hidden}table.mov td select,table.mov td input{max-width:10
 .campi.f-3{grid-template-columns:64px 150px minmax(0,1fr)}.campi.f-3b{grid-template-columns:minmax(0,.8fr) minmax(0,1fr) 150px;margin-top:10px}.campi.f-sp{margin-top:8px}
 .campi.f-3 label,.campi.f-3b label{min-width:0}.campi.f-3 input,.campi.f-3b input,.campi.f-3b select{min-width:0;width:100%}
 .calcoli.f-calc2>*{white-space:nowrap}.calcoli.f-calc2>:nth-child(3),.calcoli.f-calc2>:nth-child(4){border-top:0;padding-top:0}.calcoli.f-calc2{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto;column-gap:12px}.calcoli.f-calc2>span:nth-child(4n+3){padding-left:12px;border-left:1px solid rgba(0,0,0,0.15)}
+.calcoli.f-calc2>.f-tot{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px;padding:8px 12px;border-radius:10px;background:var(--verde);color:#fff;white-space:normal}.f-tot span{font-weight:700;display:flex;flex-direction:column}.f-tot small{font-weight:400;font-size:var(--f-piccolo);opacity:.9}.f-tot b{font-size:1.25em;font-weight:800;white-space:nowrap}
 @media (max-height:720px){.velo{padding-top:16px;padding-bottom:16px}}
 .calcoli b.c-l{color:var(--verde)}.calcoli b.c-a{color:var(--grigio)}.calcoli b.c-n{color:var(--ambra)}
 .azioni{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
@@ -6617,8 +6618,7 @@ function calcoliFattura(){
     <span>Accantoni ${Math.round(c.perc*100)}%</span><b class="c-a">${euro(c.accant)}</b>
     <span>Integrativo 4%</span><b>${euro(c.integr)}</b>
     <span class="t">Netto</span><b class="t c-n">${euro(c.netto)}</b>${ni>0?`
-    <span>+ Spese non imponibili</span><b>${euro(ni)}</b>
-    <span class="t">Totale da incassare</span><b class="t">${euro(c.lordo+ni)}</b>`:''}`;
+    <div class="f-tot"><span>Totale da incassare<small>fattura lorda ${euro(c.lordo)} + spese non imponibili ${euro(ni)}</small></span><b>${euro(c.lordo+ni)}</b></div>`:''}`;
 }
 function salvaFattura(){
   const b=bozzaF;
@@ -7236,7 +7236,7 @@ document.addEventListener('change',e=>{
 });
 document.addEventListener('input',e=>{
   if(e.target.id==='f-q'){UI.q=e.target.value;salvaUI();renderTabella()}
-  if(e.target.id==='f-prest')calcoliFattura();
+  if(e.target.id==='f-prest'||e.target.id==='f-nonimp')calcoliFattura();
   if(e.target.id==='fc-x'){UI.fcX=e.target.value;salvaUI();renderCalcFat()}
 });
 document.addEventListener('keydown',e=>{
