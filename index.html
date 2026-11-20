@@ -4899,12 +4899,54 @@ function renderPrevisioneTab(D,vista){
   if(R0.reale&&R0.daSp>0.5){const v=Array(13).fill(0);v[1]=R0.daSp;h+=riga(`+ accantonamento ${a}`,v,{c:'pos',tit:`Accantonamento sul fatturato ${a} ${pvBase()==='prev'?'previsto':'incassato'} ${euro(R0.acc26)}${R0.spost>0.5?` − ${euro(R0.spost)} già spostati`:''}: da spostare sul Revolut`});}
   h+=riga(`+ accantonamento ${N}`,acc,{c:'pos',tit:'Spostato dal conto al Revolut a fine trimestre: aprile, luglio, ottobre, dicembre'})+riga('− Inarcassa e tasse',D.fis.map(v=>-v),{c:'neg'})+riga('− spese per attività',D.att.map(v=>-v),{c:'neg',tit:'Termolog, Ordine, assicurazione, abbonamenti di lavoro: dalla voce Spese per attività qui sopra'});
   h+=`<tr class="tot"><th class="${rev[12]<0?'neg':'pos'}" title="Saldo stimato del Revolut a fine mese">= Revolut a fine mese</th>${M.map(m=>`<td class="${rev[m]<-0.5?'neg':'pos'}">${n0(rev[m])}</td>`).join('')}<td class="tot ${rev[12]<0?'neg':'pos'}">${n0(rev[12])}</td><td class="med"></td></tr>`;
-  const testa=`<tr><th class="an-v">${N}</th>${M.map(m=>`<th>${MESI[m-1].slice(0,3)}</th>`).join('')}<th class="tot">totale<small>${N}</small></th><th class="med">media<small>al mese</small></th></tr>`;
+  h=pvConti(D,acc,rev,totE,n0)+h; // Paolo 20/11: in alto i conti a inizio mese, come nella pagina Anno
+  const testa=`<tr><th class="an-v">${N}</th>${M.map(m=>`<th>${MESI[m-1].slice(0,3)}</th>`).join('')}<th class="tot">fine anno<small>/ totale</small></th><th class="med">media<small>al mese</small></th></tr>`;
   $('#main').innerHTML=`<div class="tq an pv2">
     <div class="tq-testa"><h1 title="Si aggiorna da sola con i movimenti del ${a}">Previsione ${N}</h1>
       ${pvSwitch(D)}
       <span class="spazio"></span><button class="btn piccolo" data-pv-tutti="${Object.values(chiusi).some(Boolean)?'apri':'chiudi'}">${Object.values(chiusi).some(Boolean)?'Apri tutti i gruppi':'Chiudi i gruppi'}</button>${vista}</div>
     <div class="an-wrap"><table class="an-t"><thead>${testa}</thead><tbody>${h}</tbody></table></div></div>`;
+}
+// Paolo 20/11: Previsione come la pagina Anno: in alto i conti a inizio mese stimati per l'anno prossimo.
+// Partono dai saldi previsti al 31/12 (come "fine anno" della pagina Anno). Unicredit: + entrate − accantonamento
+// − spese di casa pagate dal conto − carte del mese prima (ogni categoria si divide tra conto e carte come nell'anno in corso).
+// Revolut: la stessa riga della sezione "Il Revolut" (accantonamenti, − Inarcassa e tasse, − spese per attività).
+// Deposito fermo; cointestato (tua metà) cresce della media mensile dell'anno in corso.
+function pvConti(D,acc,rev,totE,n0){
+  const a=D.a, N=D.N, M=[1,2,3,4,5,6,7,8,9,10,11,12], sm=saldiMensili(a,false), si=S.impostazioni.saldiIniziali[a]||{};
+  const conto=id=>S.conti.find(c=>c.id===id)||{}, tipo=id=>conto(id).tipo;
+  const uniId=(S.conti.find(c=>c.tipo==='conto')||{}).id||'CONTO', revC=S.conti.find(c=>c.tipo==='salvadanaio');
+  const coi=S.conti.find(c=>c.tipo==='cointestato'), q=coi?(coi.quota??1):1, dep=S.conti.find(c=>c.id==='DEPOSITO');
+  // come si è pagata ogni categoria nell'anno in corso: quota carte e quota "fuori dal conto" (cointestato, contanti)
+  const quote={};S.movimenti.filter(x=>annoDi(x.data)===a&&!x.giro&&x.eur>0).forEach(x=>{const o=quote[x.cat]||(quote[x.cat]={t:0,carta:0,fuori:0}),t=tipo(x.conto);o.t+=x.eur;if(t==='carta')o.carta+=x.eur;else if(t==='cointestato'||t==='contanti')o.fuori+=x.eur});
+  const qC=id=>{const o=quote[id];return o&&o.t>0.5?{carta:o.carta/o.t,fuori:o.fuori/o.t}:{carta:0,fuori:0}};
+  const dir=Array(13).fill(0), car=Array(13).fill(0);
+  D.L.filter(c=>c.b!=='fiscali').forEach(c=>{const k=qC(c.id);M.forEach(m=>{dir[m]+=c.mesi[m]*(1-k.carta-k.fuori);car[m]+=c.mesi[m]*k.carta})});
+  const carDic=sm[12].carte||0, add=M.map(m=>m===1?carDic:car[m-1]);add.unshift(0);
+  const R0=D.R0, daSp=R0.reale?R0.daSp||0:0, accM=acc.slice();accM[1]+=daSp;
+  const uni=Array(13).fill(0);let u=sm[12][uniId]||0;M.forEach(m=>{u+=totE[m]-accM[m]-dir[m]-add[m];uni[m]=u});
+  const ini=(v,v0)=>{const o=M.map(m=>m===1?v0:v[m-1]);o.unshift(0);return o};
+  const uI=ini(uni,sm[12][uniId]||0), disp=M.map(m=>uI[m]-add[m]);disp.unshift(0);
+  const r0=R0.reale?R0.fine:D.acc26, rI=ini(rev,r0);
+  // Paolo 20/11: il deposito cresce con il tasso di interesse (quello scritto in "Aggiorna saldo"), interessi ogni mese
+  const dT=dep?(tassoAl(dep,`${N}-01-01`)||0):0, d0=dep?(sm[12][dep.id]||0):0, dF=Array(13).fill(0);{let d=d0;M.forEach(m=>{d*=1+dT/100/12;dF[m]=d})}
+  const dI=ini(dF,d0);
+  const c0=coi?(sm[12][coi.id]||0)*q:0, cA=coi?(+si[coi.id]||0)*q:0, cMed=(c0-cA)/12, cF=Array(13).fill(0);M.forEach(m=>cF[m]=c0+cMed*m);
+  const cI=ini(cF,c0), carFin=car[12], tot=M.map(m=>disp[m]+rI[m]+dI[m]+cI[m]);tot.unshift(0);
+  const totFin=uni[12]-carFin+rev[12]+dF[12]+cF[12];
+  const cella=(v,o={})=>{const z=Math.abs(v)<0.5;return `<td class="${o.c||''} ${o.segno&&v<-0.5?'neg':''} ${z?'zero':''}">${z?'–':n0(v)}</td>`};
+  const riga=(nome,v,o={})=>`<tr class="${o.r||''}"><th class="${o.c||''}"${o.tit?` title="${esc(o.tit)}"`:''}>${nome}</th>${M.map(m=>cella(v[m],o)).join('')}<td class="tot ${o.c||''} ${o.segno&&o.tot<-0.5?'neg':''}"${o.titTot?` title="${esc(o.titTot)}"`:''}>${o.tot==null?'':n0(o.tot)}</td><td class="med ${o.c||''}">${o.med==null?'':n0(o.med)}</td></tr>`;
+  const sT=v=>M.reduce((s,m)=>s+(v[m]||0),0);
+  let h=`<tr class="an-sez"><th colspan="15">I conti a inizio mese <span>stima: gennaio parte dai saldi previsti al 31/12/${a} della pagina Anno · poi entrate e spese di questa tabella · "fine anno" è il saldo al 31/12/${N}</span></th></tr>`;
+  h+=riga(esc(conto(uniId).nome||'Unicredit conto'),uI,{segno:1,tot:uni[12],tit:`Saldo del conto il 1° del mese: + entrate − accantonamento − spese pagate dal conto − carte del mese prima (le spese per attività e le tasse escono dal Revolut)`,titTot:`Saldo al 31/12/${N}`});
+  h+=riga('− carte del mese prima',add.map(v=>-v),{c:'neg',tot:-carFin,med:-sT(add)/12,tit:`Le spese con le carte del mese prima, addebitate in questo mese. Ogni categoria si paga con le carte nella stessa parte del ${a}; gennaio = carte di dicembre ${a}`,titTot:`Carte di dicembre ${N}, addebitate a gennaio ${N+1}`});
+  h+=riga('= soldi per il mese',disp,{segno:1,r:'sub',tot:uni[12]-carFin,tit:'Unicredit meno le carte da addebitare: quello che resta per il mese'});
+  h+=riga(esc(revC?revC.nome:'Revolut'),rI,{r:'an-div',segno:1,tot:rev[12],tit:`Saldo del Revolut il 1° del mese: è la stessa riga della sezione "Il Revolut nel ${N}" qui sotto`,titTot:`Saldo al 31/12/${N}`});
+  if(sT(accM)>0.5)h+=riga('+ accantonati nel mese',accM,{r:'an-acc',c:'acc',tot:sT(accM),med:sT(accM)/12,tit:`Giroconti di accantonamento dal conto al Revolut: aprile, luglio, ottobre, dicembre${daSp>0.5?` (gennaio: accantonamento ${a} ancora da spostare)`:''}`});
+  if(dep)h+=riga(esc(dep.nome)+(dT?` <small>${String(dT).replace('.',',')}%</small>`:''),dI,{segno:1,tot:dF[12],tit:dT?`Saldo il 1° del mese: cresce con gli interessi al ${String(dT).replace('.',',')}% annuo (${euro(dF[12]-d0)} nel ${N}), tasso da "Aggiorna saldo" in Conti e risparmi. Nessun versamento previsto`:'Il deposito resta fermo: scrivi il tasso in Conti e risparmi (Aggiorna saldo) per vedere gli interessi',titTot:`Saldo al 31/12/${N}, interessi compresi`});
+  if(coi)h+=riga(`${esc(coi.nome)} <small>tua metà</small>`,cI,{r:'an-div',segno:1,tot:cF[12],tit:`La tua metà del cointestato: cresce di ${euro(cMed)} al mese, la media del ${a}`});
+  h+=riga('Totale soldi tuoi',tot,{segno:1,r:'tot',tot:totFin,tit:'Unicredit + Revolut + deposito + tua quota del cointestato, meno le carte da addebitare'});
+  return h;
 }
 /* ---- Anno (totali) ---- */
 let AN_POP=null;
