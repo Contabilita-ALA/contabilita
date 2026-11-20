@@ -412,8 +412,6 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .pv-voci h3{display:flex;align-items:baseline;gap:8px}.pv-voci h3 .pv-gh{margin-left:auto;font:400 var(--f-piccolo) var(--font);color:var(--grigio)}.pv-voci h3 .pv-gh b{font:700 var(--f-testo) var(--font-titoli);color:var(--inchiostro)}
 .pv-fis .pv-lst .r{padding:2px 0}
 .pv-gtt{display:grid;grid-template-columns:minmax(0,1fr) 96px 118px;gap:8px;align-items:baseline;border-top:1.5px solid var(--div);margin-top:auto;padding:6px 9px 0 13px;font-weight:700;font-size:var(--f-testo)}.pv-gtt small{font-weight:400;color:var(--grigio);font-size:var(--f-piccolo)}
-.pv2 .an-t tr.pv-rp td.pv-rp-n{text-align:right;color:var(--grigio);font-size:var(--f-mini)}
-.pv2 .an-t tr.pv-rp-fine th,.pv2 .an-t tr.pv-rp-fine td{border-bottom:1.5px solid var(--div)}
 .pv2 .an-t th[data-pv-nome]{cursor:pointer}.pv2 .an-t th[data-pv-nome]:hover{text-decoration:underline}
 .pm-fin{max-width:560px}.pm-ug{display:flex;align-items:center;gap:8px;margin:2px 4px 10px;padding:8px 10px;background:var(--grigino);border-radius:12px}.pm-ug label{font-size:var(--f-testo);color:var(--grigio)}.pm-ug .pv-ri{width:100px}
 .pm-g{display:grid;grid-template-columns:repeat(4,1fr);gap:6px 10px;margin:0 4px}.pm-m{display:flex;flex-direction:column;gap:2px;font-size:var(--f-piccolo);color:var(--grigio)}.pm-m .pv-ri{width:100%;box-sizing:border-box}
@@ -4871,16 +4869,14 @@ function renderPrevisioneTab(D,vista){
   h+=`<tr class="an-sez"><th colspan="15">In sintesi <span>le entrate sono le tue ipotesi: clicca un mese di una voce per aggiungerle</span></th></tr>`;
   h+=riga('Entrate',totE,{c:'pos'})+riga(`− accantonamento ${Math.round(D.perc*100)}%`,acc.map(v=>-v),{c:'neg',tit:`Il ${Math.round(D.perc*100)}% delle entrate di ogni trimestre si sposta sul Revolut ad aprile, luglio, ottobre e dicembre`})+riga('= netto',net,{r:'tot',c:'pos',tit:'Quello che resta delle entrate dopo l\'accantonamento'});
   const rev=Array(13).fill(0);let sr=D.acc26;M.forEach(m=>{sr+=acc[m]-D.fis[m]-D.att[m];rev[m]=sr}); // Paolo 19/11: anche le spese per attività escono dal Revolut
-  const R0=D.R0;
-  h+=`<tr class="an-sez"><th colspan="15">Il Revolut nel ${N} <span>${R0.reale?`parte da quello che c'è oggi sul ${esc(R0.nome)}`:revPartenzaTesto(R0,a)+` ${pvBase()==='prev'?'previsto':'incassato'} (${euro(D.va26)})`}; riceve l'accantonamento del ${N} e paga Inarcassa, tasse e spese per attività</span></th></tr>`;
-  // Paolo 20/11: come prima riga il saldo vero del Revolut, poi i passaggi fino alla partenza del 1° gennaio
-  if(R0.reale){const oggiD=new Date(), quando=R0.mOra===oggiD.getMonth()+1&&a===oggiD.getFullYear()?`al ${oggiD.getDate()} ${MESI[R0.mOra-1].toLowerCase()} ${a}`:`a fine ${MESI[R0.mOra-1].toLowerCase()} ${a}`;
-    const pr=(nome,nota,v,c,r)=>`<tr class="pv-rp ${r||''}"><th class="${c}">${nome}</th><td colspan="12" class="pv-rp-n">${nota}</td><td class="tot ${c}">${v<-0.5?'−':''}${n0(Math.abs(v))}</td><td class="med"></td></tr>`;
-    h+=pr(`oggi sul ${esc(R0.nome)}`,`saldo dei movimenti fatti ${quando}`,R0.oggi,'pos','pv-rp-oggi');
-    if(Math.abs(R0.usc)>0.5)h+=pr(`${R0.usc>0?'−':'+'} ${R0.usc>0?'uscite':'entrate'} previste entro dicembre`,esc(R0.uscL.join(', ')),-R0.usc,R0.usc>0?'neg':'pos');
-    if(Math.abs(R0.vers)>0.5)h+=pr(`${R0.vers>0?'+':'−'} giroconti previsti`,'giroconti da fare entro dicembre',R0.vers,R0.vers>0?'pos':'neg');
-    if(R0.daSp>0.5)h+=pr(`+ accantonamento ${a}`,`ancora da spostare: accantonamento sul fatturato ${a} ${pvBase()==='prev'?'previsto':'incassato'} ${euro(R0.acc26)}${R0.spost>0.5?` − ${euro(R0.spost)} già spostati`:''}`,R0.daSp,'pos');
-    h+=pr(`= partenza 1° gennaio ${N}`,'',R0.v,R0.v<-0.5?'neg':'pos','tot pv-rp-fine');}
+  const R0=D.R0, e2=v=>euro(Math.abs(v));
+  // Paolo 20/11: come nella pagina Anno, prima riga = saldo del Revolut a inizio mese (gennaio = saldo previsto al 31/12), "fine anno" = saldo al 31/12
+  const nota=R0.reale?`saldo a inizio mese come nella pagina Anno: gennaio è il saldo previsto al 31/12/${a} (oggi ${euro(R0.oggi)}${R0.usc>0.5?`, − ${e2(R0.usc)} di uscite previste entro dicembre`:R0.usc<-0.5?`, + ${e2(R0.usc)} di entrate previste entro dicembre`:''}${Math.abs(R0.vers)>0.5?`, ${R0.vers>0?'+':'−'} ${e2(R0.vers)} di giroconti previsti`:''})`
+    :revPartenzaTesto(R0,a)+` ${pvBase()==='prev'?'previsto':'incassato'} (${euro(D.va26)})`;
+  h+=`<tr class="an-sez"><th colspan="15">Il Revolut nel ${N} <span>${nota}</span></th></tr>`;
+  const ini0=R0.reale?R0.fine:D.acc26, ini=M.map(m=>m===1?ini0:rev[m-1]);ini.unshift(0);
+  h+=`<tr class="pv-rp-oggi"><th title="Saldo del Revolut il 1° di ogni mese; in fondo il saldo al 31/12/${N}">${esc(R0.nome||'Revolut')}</th>${M.map(m=>`<td class="${ini[m]<-0.5?'neg':''}">${n0(ini[m])}</td>`).join('')}<td class="tot ${rev[12]<-0.5?'neg':''}" title="Saldo al 31/12/${N}">${n0(rev[12])}</td><td class="med"></td></tr>`;
+  if(R0.reale&&R0.daSp>0.5){const v=Array(13).fill(0);v[1]=R0.daSp;h+=riga(`+ accantonamento ${a}`,v,{c:'pos',tit:`Accantonamento sul fatturato ${a} ${pvBase()==='prev'?'previsto':'incassato'} ${euro(R0.acc26)}${R0.spost>0.5?` − ${euro(R0.spost)} già spostati`:''}: da spostare sul Revolut`});}
   h+=riga(`+ accantonamento ${N}`,acc,{c:'pos',tit:'Spostato dal conto al Revolut a fine trimestre: aprile, luglio, ottobre, dicembre'})+riga('− Inarcassa e tasse',D.fis.map(v=>-v),{c:'neg'})+riga('− spese per attività',D.att.map(v=>-v),{c:'neg',tit:'Termolog, Ordine, assicurazione, abbonamenti di lavoro: dalla voce Spese per attività qui sopra'});
   h+=`<tr class="tot"><th class="${rev[12]<0?'neg':'pos'}" title="Saldo stimato del Revolut a fine mese">= Revolut a fine mese</th>${M.map(m=>`<td class="${rev[m]<-0.5?'neg':'pos'}">${n0(rev[m])}</td>`).join('')}<td class="tot ${rev[12]<0?'neg':'pos'}">${n0(rev[12])}</td><td class="med"></td></tr>`;
   const testa=`<tr><th class="an-v">${N}</th>${M.map(m=>`<th>${MESI[m-1].slice(0,3)}</th>`).join('')}<th class="tot">totale<small>${N}</small></th><th class="med">media<small>al mese</small></th></tr>`;
