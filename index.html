@@ -2921,6 +2921,7 @@ function migra(){annoLocale();
     if(c.bolla===''&&!NON_FATT.has(c.id)&&(S.gruppi.find(g=>g.id===c.gruppo)||{}).tipo==='entrata') c.bolla='entrate'; // 12/11: nuove entrate (es. catasto) nel totale Entrate
     if(c.id==='rata mutuo'&&c.nome==='rata mutuo') c.nome='mutuo+risparmi';
   }
+  if(!S.coloriTipi) fissaColoriTipi();
   // (versione online: i passaggi 3-10 servivano solo a importare il foglio; i dati arrivano dal backup)
   if(!S.fiscale)S.fiscale={};if(!S.radames)S.radames={};S.impostazioni.trimPrec=S.impostazioni.trimPrec||{};
   if((S.versione||0)<11){ if(S.fiscale&&S.fiscale[2023]&&S.fiscale[2023].rate==null){S.fiscale[2023].rate=3;S.fiscale[2023].rateInt=0.01} }
@@ -2939,6 +2940,24 @@ function catId(nome){
 }
 const TIPO_CAT={APE:'ape',PRATICHE:'pratiche',RADAMES:'radames'};
 const NON_FATT=new Set(['bonifici a mio favore','interessi']); // entrate che non sono fatture
+// 20/11 Paolo: ogni tipo di fattura ha un colore diverso dagli altri (Catasto era verde come APE)
+// ordine pensato per tinte ben diverse: verde, pesca, lilla, zafferano, orchidea, caramello, cielo, rosso, matcha, malva, azzurro, grigio
+const TIPI_TAV=['#bfe3c8','#f7c8a8','#cfc7e8','#f7d58a','#f3a5bc','#c4916b','#9fc3ea','#f3b2ab','#8fb78f','#d9a7cf','#b4cccf','#e2dccd'];
+function labCol(h){const n=parseInt(String(h||'').slice(1),16);if(isNaN(n))return [0,0,0];
+  const l=[n>>16,(n>>8)&255,n&255].map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4}),
+    t=v=>v>.008856?Math.cbrt(v):7.787*v+16/116,
+    X=t((l[0]*.4124+l[1]*.3576+l[2]*.1805)/.95047),Y=t(l[0]*.2126+l[1]*.7152+l[2]*.0722),Z=t((l[0]*.0193+l[1]*.1192+l[2]*.9505)/1.08883);
+  return [116*Y-16,500*(X-Y),200*(Y-Z)]}
+function distCol(a,b){const x=labCol(a),y=labCol(b);return Math.hypot(x[0]-y[0],x[1]-y[1],x[2]-y[2])} // differenza "a occhio" (CIE Lab)
+function coloreLiberoTipo(escludi){const usati=catFatturabili().filter(c=>c!==escludi).map(c=>c.colore).filter(Boolean),
+    lontano=t=>Math.min(999,...usati.map(u=>distCol(t,u)));
+  return TIPI_TAV.find(t=>lontano(t)>=20)||TIPI_TAV.reduce((b,t)=>lontano(t)>lontano(b)?t:b)}
+function fissaColoriTipi(){const g=S.gruppi.find(x=>x.tipo==='entrata')||{},fatti=[];
+  for(const c of catFatturabili()){const k=codiceTipo(c);
+    if(TIPI_COL[k]&&!S.coloriTipi) c.colore=TIPI_COL[k];
+    else if(!c.colore||c.colore===g.colore||fatti.some(u=>distCol(u,c.colore)<20)){c.colore=null;c.colore=coloreLiberoTipo(c)}
+    fatti.push(c.colore)}
+  S.coloriTipi=1}
 function catFatturabili(){return S.categorie.filter(c=>(S.gruppi.find(g=>g.id===c.gruppo)||{}).tipo==='entrata'&&!NON_FATT.has(c.id))}
 function codiceTipo(c){return Object.keys(TIPO_CAT).find(k=>TIPO_CAT[k]===c.id)||c.id.toUpperCase()}
 function catTipo(t){return TIPO_CAT[t]||(catFatturabili().find(c=>codiceTipo(c)===t)||{}).id||'ape'}
@@ -3832,8 +3851,8 @@ function renderPagina(){
 
 /* ---- Fatture ---- */
 document.addEventListener('change',e=>{if(e.target.id==='f-tipo'&&bozzaF)bozzaF.tipo=e.target.value});
-const TIPI_COL={APE:'#bfe3c8',PRATICHE:'#f7c8a8',RADAMES:'#cfc7e8'}, TIPI_NOM={APE:'APE',PRATICHE:'Pratiche',RADAMES:'Radames'}, TIPI_ALT=['#b8d8c4','#b4cccf','#f7d58a','#f5c1bc','#f7d58a','#cbe6c7'];
-function tipiFat(){let i=0;const L=catFatturabili().map(c=>{const k=codiceTipo(c);return [k,TIPI_NOM[k]||c.nome.replace(/^./,x=>x.toUpperCase()),TIPI_COL[k]||TIPI_ALT[i++%TIPI_ALT.length]]});
+const TIPI_COL={APE:'#bfe3c8',PRATICHE:'#f7c8a8',RADAMES:'#cfc7e8'}, TIPI_NOM={APE:'APE',PRATICHE:'Pratiche',RADAMES:'Radames'};
+function tipiFat(){const L=catFatturabili().map(c=>{const k=codiceTipo(c);return [k,TIPI_NOM[k]||c.nome.replace(/^./,x=>x.toUpperCase()),c.colore||TIPI_COL[k]||'#e2dccd']});
   S.fatture.forEach(f=>{if(f.tipo&&!L.some(x=>x[0]===f.tipo))L.push([f.tipo,f.tipo,'#e2dccd'])});return L}
 const coloreTipo=t=>(tipiFat().find(x=>x[0]===t)||[0,0,'#e2dccd'])[2];
 const nomeTipo=t=>(tipiFat().find(x=>x[0]===t)||[0,t])[1];
@@ -7127,7 +7146,7 @@ document.addEventListener('click',e=>{
     case 'cal-succ':HM.m++;if(HM.m>12){HM.m=1;HM.a++}renderHome();break;
     case 'cal-oggi':HM=null;renderHome();break;
     case 'giorno-nuova':{const d=a.dataset.data;chiudi();apriMovimento(null,'uscita');bozza.data=d;disegnaFinestra();break}
-    case 'cat-nuova':{const g=a.dataset.gr;let nid;modifica(()=>{nid='c'+nuovoId();const gg=S.gruppi.find(x=>x.id===g)||{};S.categorie.push({id:nid,nome:nomeLibero('nuova categoria',S.categorie.map(c=>c.nome.toLowerCase())),gruppo:g,colore:gg.tipo==='entrata'?(gg.colore||'#8fb78f'):'#e2dccd',bolla:gg.tipo==='entrata'?'entrate':''})});focusUltimo(`[data-cat="${nid}"] [data-cat-campo=nome]`);break}
+    case 'cat-nuova':{const g=a.dataset.gr;let nid;modifica(()=>{nid='c'+nuovoId();const gg=S.gruppi.find(x=>x.id===g)||{};S.categorie.push({id:nid,nome:nomeLibero('nuova categoria',S.categorie.map(c=>c.nome.toLowerCase())),gruppo:g,colore:gg.tipo==='entrata'?coloreLiberoTipo():'#e2dccd',bolla:gg.tipo==='entrata'?'entrate':''})});focusUltimo(`[data-cat="${nid}"] [data-cat-campo=nome]`);break}
     case 'gr-nuovo':modifica(()=>S.gruppi.push({id:'g'+nuovoId(),nome:nomeLibero('Nuovo gruppo',S.gruppi.map(g=>g.nome.toLowerCase())),colore:'#e2dccd',tipo:'spesa'}));focusUltimo('[data-gr-nome]');break;
     case 'gr-elimina':{const g=a.dataset.gr;modifica(()=>S.gruppi=S.gruppi.filter(x=>x.id!==g));toast('Gruppo eliminato',true);break}
     case 'cat-elimina':{const id=a.closest('[data-cat]').dataset.cat;if(usoCat(id))apriSposta('cat',id);else eliminaCon('cat',id,'');break}
@@ -7179,7 +7198,8 @@ document.addEventListener('change',e=>{
   const vc=el.closest('[data-cat]'),vk=el.closest('[data-cid]'),vn=el.closest('[data-nid]');
   if(el.dataset.catCampo&&vc){const c=S.categorie.find(x=>x.id===vc.dataset.cat),f=el.dataset.catCampo;let v=el.value;
     if(f==='nome'){v=v.trim();if(!v||S.categorie.some(x=>x!==c&&x.nome.toLowerCase()===v.toLowerCase())){toast(v?'Esiste già una categoria con questo nome':'Il nome non può essere vuoto');el.value=c.nome;return}}
-    modifica(()=>c[f]=v,{ridisegna:f==='gruppo'});toast('Categoria aggiornata',true);return}
+    modifica(()=>{c[f]=v;if(f==='gruppo'&&catFatturabili().includes(c)&&catFatturabili().some(x=>x!==c&&distCol(x.colore,c.colore)<20))c.colore=coloreLiberoTipo(c)},{ridisegna:f==='gruppo'});
+    const sim=f==='colore'&&catFatturabili().includes(c)&&catFatturabili().find(x=>x!==c&&distCol(x.colore,v)<20);toast(sim?`Attenzione: nelle Fatture questo colore si confonde con ${nomeTipo(codiceTipo(sim))}`:'Categoria aggiornata',!sim);return}
   if(el.dataset.fis){const d=S.fiscale[S.anno],k=el.dataset.fis;if(k==='vaPrev'&&!el.value.trim()){modifica(()=>delete d.vaPrev);return}let v=parseNum(el.value);if(isNaN(v)||v<0){toast('Valore non valido');renderFiscale();return}if(el.dataset.pc)v=v/100;modifica(()=>{d[k]=v;if(k!=='vaPrev')delete d.daAgg});return}
   if(el.dataset.grCol){const g=S.gruppi.find(x=>x.id===el.dataset.grCol);if(g){const v=el.value,old=g.colore;modifica(()=>{g.colore=v;S.categorie.forEach(c=>{if(c.gruppo===g.id&&c.colore===old)c.colore=v})})}toast('Colore del gruppo aggiornato (anche nelle sue categorie con lo stesso colore)',true);return}
   if(el.dataset.grNome){const g=S.gruppi.find(x=>x.id===el.dataset.grNome),v=el.value.trim();if(!v){el.value=g.nome;return}
