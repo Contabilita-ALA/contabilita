@@ -1179,9 +1179,6 @@ button.ap-r{cursor:pointer}button.ap-r:hover{background:var(--panna)}
 .ap-r b{font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}.ap-r b.pos{color:var(--verde)}.ap-r b.neg{color:var(--rosso)}
 .ap-tot{display:flex;justify-content:space-between;padding:8px 4px 2px;font-size:var(--f-testo)}.ap-tot b{font:700 var(--f-medio) var(--font-titoli)}
 .ap-nota{font-size:var(--f-piccolo);color:var(--grigio);margin:6px 4px 0;line-height:1.4}
-.pv2 .an-t td[data-pv-spu]{cursor:pointer}.pv2 .an-t td[data-pv-spu]:hover{outline:1.5px solid var(--inchiostro);outline-offset:-2px;border-radius:3px}
-.spu-fin{max-width:780px;width:96vw}.spu-g{display:grid;gap:0;font-size:13px;font-variant-numeric:tabular-nums}.spu-g>span{padding:4px 8px;border-bottom:1px solid #e6e0d2}.spu-g .h{font-size:11px;color:#7a7568;text-align:right;align-self:end}.spu-g .h:first-child{text-align:left}.spu-g .n{text-align:right}.spu-g .n.zero{color:#bbb}
-.spu-som{display:grid;grid-template-columns:1fr auto;gap:4px 16px;margin:12px 0 4px;max-width:420px;margin-left:auto}.spu-som b{text-align:right;font-variant-numeric:tabular-nums}.spu-som .tot{font-weight:700;border-top:1.5px solid var(--inchiostro);padding-top:4px}
 .an-t td[data-an-pop]{cursor:pointer}.an-t td[data-an-pop]:hover{outline:1.5px solid var(--inchiostro);outline-offset:-2px;border-radius:3px}
 .an-filt{display:inline-flex;gap:2px;background:var(--grigino);border-radius:999px;padding:2px}
 .an-filt button{border:0;background:none;border-radius:999px;padding:4px 11px;font:700 var(--f-piccolo) var(--font-testo,inherit);color:var(--grigio);cursor:pointer;white-space:nowrap}
@@ -4910,25 +4907,6 @@ function renderPrevisioneTab(D,vista){
       <span class="spazio"></span><button class="btn piccolo" data-pv-tutti="${Object.values(chiusi).some(Boolean)?'apri':'chiudi'}">${Object.values(chiusi).some(Boolean)?'Apri tutti i gruppi':'Chiudi i gruppi'}</button>${vista}</div>
     <div class="an-wrap"><table class="an-t"><thead>${testa}</thead><tbody>${h}</tbody></table></div></div>`;
 }
-let PV_SPU=null;
-// Paolo 20/11: dettaglio di "− spese da Unicredit" di un mese: pagate dal conto ora + carte del mese prima
-function apriPopSpu(m){const P=PV_SPU;if(!P)return;const n0=v=>numIt(Math.round(v)).replace(/,00$/,''), mp=m>1?MESI[m-2]:'dicembre';
-  const L=P.det.filter(o=>Math.abs(o.v[m])>=0.5||(m>1&&Math.abs(o.v[m-1])>=0.5));let dirT=0,carT=0,fuoriT=0,carOra=0;
-  const righe=L.map(o=>{const v=o.v[m],d=v*(1-o.k.carta-o.k.fuori),c=v*o.k.carta,f=v*o.k.fuori,cp=m>1?o.v[m-1]*o.k.carta:0;dirT+=d;carT+=cp;fuoriT+=f;carOra+=c;
-    return {nome:nomeCat(o.id),v,d,c,f,cp}}).filter(r=>Math.abs(r.d)>=0.5||Math.abs(r.cp)>=0.5||Math.abs(r.c)>=0.5||Math.abs(r.f)>=0.5);
-  if(m===1)carT=P.carDic;
-  const nc=3+(fuoriT>0.5?1:0)+(m>1?1:0), td=v=>`<span class="n ${Math.abs(v)<0.5?'zero':''}">${Math.abs(v)<0.5?'–':n0(v)}</span>`;
-  const tab=`<div class="spu-g" style="grid-template-columns:minmax(150px,1fr) repeat(${nc},minmax(78px,auto))"><span class="h">categoria</span><span class="h" title="Spesa prevista nel mese">spesa di ${MESI[m-1].slice(0,3)}</span><span class="h" title="Parte pagata dal conto o in contanti: esce subito">dal conto ora</span><span class="h" title="Parte pagata con le carte: esce dal conto il mese dopo">con le carte, esce a ${m<12?MESI[m].slice(0,3):'gen'}</span>${fuoriT>0.5?'<span class="h" title="Parte pagata dal cointestato: non esce dall\'Unicredit">dal cointestato</span>':''}${m>1?`<span class="h" title="Carte del mese prima che escono dal conto in questo mese">carte di ${mp.slice(0,3)}, escono ora</span>`:''}`
-    +righe.map(r=>`<span class="c">${esc(r.nome)}</span>${td(r.v)}${td(r.d)}${td(r.c)}${fuoriT>0.5?td(r.f):''}${m>1?td(r.cp):''}`).join('')+`</div>`;
-  const att=P.att[m]||0, fis=P.fis[m]||0;
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra ap-fin spu-fin" role="dialog" aria-modal="true">
-    <h3>Spese da Unicredit <span class="ap-per">${MESI[m-1]} ${P.N}</span></h3>
-    <div class="ap-lista">${tab}</div>
-    <div class="spu-som"><span>Pagate dal conto a ${MESI[m-1]}</span><b>${euro(dirT)}</b><span>+ carte di ${mp} ${m===1?P.a:P.N}${m===1?' (dai Movimenti '+P.a+')':''}</span><b>${euro(carT)}</b><span class="tot">= spese da Unicredit</span><b class="tot">${euro(dirT+carT)}</b></div>
-    <p class="ap-nota">Le spese con le carte di ${MESI[m-1]} (${euro(carOra)}) escono dal conto a ${m<12?MESI[m]:'gennaio '+(P.N+1)}. Ogni categoria si divide tra ${fuoriT>0.5?'conto, carte e cointestato':'conto e carte'} come l'hai pagata nel ${P.a}.${fuoriT>0.5?` ${euro(fuoriT)} li paga il cointestato.`:''}${att+fis>0.5?` Spese per attività e tasse (${euro(att+fis)}) escono dal Revolut.`:''}</p>
-    <div class="azioni"><button class="btn chiaro" data-act="chiudi">Chiudi</button></div>
-  </div></div>`;
-}
 // Paolo 20/11: Previsione come la pagina Anno: in alto i conti a inizio mese stimati per l'anno prossimo.
 // Partono dai saldi previsti al 31/12 (come "fine anno" della pagina Anno). Unicredit: + entrate − accantonamento
 // − spese di casa pagate dal conto − carte del mese prima (ogni categoria si divide tra conto e carte come nell'anno in corso).
@@ -4939,18 +4917,15 @@ function pvConti(D,acc,rev,totE,n0){
   const conto=id=>S.conti.find(c=>c.id===id)||{}, tipo=id=>conto(id).tipo;
   const uniId=(S.conti.find(c=>c.tipo==='conto')||{}).id||'CONTO', revC=S.conti.find(c=>c.tipo==='salvadanaio');
   const coi=S.conti.find(c=>c.tipo==='cointestato'), q=coi?(coi.quota??1):1, dep=S.conti.find(c=>c.id==='DEPOSITO');
-  // come si è pagata ogni categoria nell'anno in corso: quota carte e quota "fuori dal conto" (cointestato).
-  // Paolo 20/11: i contanti contano come conto (si prelevano dall'Unicredit), altrimenti quelle spese sparivano
-  const quote={};S.movimenti.filter(x=>annoDi(x.data)===a&&!x.giro&&x.eur>0).forEach(x=>{const o=quote[x.cat]||(quote[x.cat]={t:0,carta:0,fuori:0}),t=tipo(x.conto);o.t+=x.eur;if(t==='carta')o.carta+=x.eur;else if(t==='cointestato')o.fuori+=x.eur});
-  const qC=id=>{const o=quote[id];return o&&o.t>0.5?{carta:o.carta/o.t,fuori:o.fuori/o.t}:{carta:0,fuori:0}};
-  const dir=Array(13).fill(0), car=Array(13).fill(0);
-  const det=[];D.L.filter(c=>c.b!=='fiscali').forEach(c=>{const k=qC(c.id),o={id:c.id,k,v:c.mesi};det.push(o);M.forEach(m=>{dir[m]+=c.mesi[m]*(1-k.carta-k.fuori);car[m]+=c.mesi[m]*k.carta})});
-  const carDic=sm[12].carte||0, add=M.map(m=>m===1?carDic:car[m-1]);add.unshift(0);
-  PV_SPU={a,N,det,carDic,att:D.att,fis:D.fis};
+  // Paolo 20/11 pomeriggio: previsione semplice. Ogni mese esce dall'Unicredit la somma di tutte le spese del mese
+  // (Totale spese − spese per attività, che con Inarcassa e tasse escono dal Revolut). Niente carte al mese dopo:
+  // le carte di dicembre dell'anno in corso sono già tolte dal saldo di partenza.
+  const dir=Array(13).fill(0);D.L.filter(c=>c.b!=='fiscali').forEach(c=>M.forEach(m=>dir[m]+=c.mesi[m]));
+  const carDic=sm[12].carte||0, u0=(sm[12][uniId]||0)-carDic;
   const R0=D.R0, daSp=R0.reale?R0.daSp||0:0, accM=acc.slice();accM[1]+=daSp;
-  const uni=Array(13).fill(0);let u=sm[12][uniId]||0;M.forEach(m=>{u+=totE[m]-accM[m]-dir[m]-add[m];uni[m]=u});
+  const uni=Array(13).fill(0);let u=u0;M.forEach(m=>{u+=totE[m]-accM[m]-dir[m];uni[m]=u});
   const ini=(v,v0)=>{const o=M.map(m=>m===1?v0:v[m-1]);o.unshift(0);return o};
-  const uI=ini(uni,sm[12][uniId]||0);
+  const uI=ini(uni,u0);
   const r0=R0.reale?R0.fine:D.acc26, rI=ini(rev,r0);
   // Paolo 20/11: il deposito cresce con il tasso di interesse (quello scritto in "Aggiorna saldo"), interessi ogni mese
   const dTs=dep?tassoAl(dep,`${N}-01-01`):null, dInt=dep?S.movimenti.filter(x=>x.conto===dep.id&&x.cat==='interessi'&&annoDi(x.data)===a&&x.eur<0):[], dMesi=new Set(dInt.map(x=>meseDi(x.data))).size;
@@ -4961,15 +4936,14 @@ function pvConti(D,acc,rev,totE,n0){
   const c0=coi?(sm[12][coi.id]||0)*q:0, cA=coi?(+si[coi.id]||0)*q:0, cMed=(c0-cA)/12, cF=Array(13).fill(0);M.forEach(m=>cF[m]=c0+cMed*m);
   const cI=ini(cF,c0), tot=M.map(m=>uI[m]+rI[m]+dI[m]+cI[m]);tot.unshift(0);
   const totFin=uni[12]+rev[12]+dF[12]+cF[12];
-  const cella=(v,o={},m)=>{const z=Math.abs(v)<0.5;return `<td class="${o.c||''} ${o.segno&&v<-0.5?'neg':''} ${z?'zero':''}"${o.pop&&!z?` data-pv-spu="${m}" title="Clicca per vedere da quali spese viene"`:''}>${z?'–':n0(v)}</td>`};
+  const cella=(v,o={},m)=>{const z=Math.abs(v)<0.5;return `<td class="${o.c||''} ${o.segno&&v<-0.5?'neg':''} ${z?'zero':''}">${z?'–':n0(v)}</td>`};
   const riga=(nome,v,o={})=>`<tr class="${o.r||''}"><th class="${o.c||''}"${o.tit?` title="${esc(o.tit)}"`:''}>${nome}</th>${M.map(m=>cella(v[m],o,m)).join('')}<td class="tot ${o.c||''} ${o.segno&&o.tot<-0.5?'neg':''}"${o.titTot?` title="${esc(o.titTot)}"`:''}>${o.tot==null?'':n0(o.tot)}</td><td class="med ${o.c||''}">${o.med==null?'':n0(o.med)}</td></tr>`;
   const sT=v=>M.reduce((s,m)=>s+(v[m]||0),0);
   let h=`<tr class="an-sez"><th colspan="15">I conti a inizio mese <span>stima: gennaio parte dai saldi previsti al 31/12/${a} della pagina Anno · poi entrate e spese di questa tabella · "fine anno" è il saldo al 31/12/${N}</span></th></tr>`;
-  // Paolo 20/11: niente "carte del mese prima": un'unica riga con tutto quello che esce dall'Unicredit, così la matematica si legge
-  const spU=M.map(m=>dir[m]+add[m]);spU.unshift(0);
-  h+=riga(esc(conto(uniId).nome||'Unicredit conto'),uI,{segno:1,tot:uni[12],tit:`Saldo del conto il 1° del mese. Il mese dopo = questo + entrate − spese da Unicredit − accantonamento sul Revolut`,titTot:`Saldo al 31/12/${N}`});
+  const spU=dir;
+  h+=riga(esc(conto(uniId).nome||'Unicredit conto'),uI,{segno:1,tot:uni[12],tit:`Saldo del conto il 1° del mese. Il mese dopo = questo + entrate − spese da Unicredit − accantonamento sul Revolut. Gennaio = saldo previsto al 31/12/${a}${carDic>0.5?` meno le carte di dicembre (${euro(carDic)})`:''}`,titTot:`Saldo al 31/12/${N}`});
   h+=riga('+ entrate',totE,{c:'pos',tot:sT(totE),med:sT(totE)/12,tit:'Le entrate del mese, dalla sezione Entrate qui sotto: arrivano sul conto'});
-  h+=riga('− spese da Unicredit',spU.map(v=>-v),{c:'neg',pop:1,tot:-sT(spU),med:-sT(spU)/12,tit:`Tutto quello che esce dal conto nel mese: le spese pagate dal conto + le carte del mese prima (gennaio: carte di dicembre ${a}). Ogni categoria si divide tra conto e carte come nel ${a}. Non ci sono le spese per attività e le tasse (escono dal Revolut) né quelle pagate dal cointestato. Clicca un mese per il dettaglio`});
+  h+=riga('− spese da Unicredit',spU.map(v=>-v),{c:'neg',tot:-sT(spU),med:-sT(spU)/12,tit:'Tutte le spese del mese tranne le spese per attività (che con Inarcassa e tasse escono dal Revolut): è il Totale spese qui sotto meno le spese per attività'});
   h+=riga('− accantonamento sul Revolut',accM.map(v=>-v),{c:'neg',tot:-sT(accM),med:sT(accM)/12*-1,tit:`Giroconti dal conto al Revolut: aprile, luglio, ottobre, dicembre${daSp>0.5?` · gennaio: accantonamento ${a} ancora da spostare`:''}`});
   h+=riga(esc(revC?revC.nome:'Revolut'),rI,{r:'an-div',segno:1,tot:rev[12],tit:`Saldo del Revolut il 1° del mese: è la stessa riga della sezione "Il Revolut nel ${N}" qui sotto`,titTot:`Saldo al 31/12/${N}`});
   if(sT(accM)>0.5)h+=riga('+ accantonati nel mese',accM,{r:'an-acc',c:'acc',tot:sT(accM),med:sT(accM)/12,tit:`Giroconti di accantonamento dal conto al Revolut: aprile, luglio, ottobre, dicembre${daSp>0.5?` (gennaio: accantonamento ${a} ancora da spostare)`:''}`});
@@ -7154,7 +7128,6 @@ document.addEventListener('click',e=>{
   const cmv=e.target.closest('[data-coi-mov]');if(cmv){const id=idCoi();Object.assign(UI,{pagina:'movimenti',conto:UI.conto===id&&UI.pagina==='movimenti'?'':id,cat:'',nota:''});salvaUI();render();return}
   const cmo=e.target.closest('[data-coi-mod]');if(cmo){apriMovimentoCoi(S.cointestato.find(x=>x.id===+cmo.dataset.coiMod));return}
   const ap=e.target.closest('[data-an-pop]');if(ap){apriPopAnno(ap.dataset.anPop,+ap.dataset.m);return}
-  const sp=e.target.closest('[data-pv-spu]');if(sp){apriPopSpu(+sp.dataset.pvSpu);return}
   const av=e.target.closest('[data-an-vai]');if(av){Object.assign(UI,{pagina:'movimenti',mese:av.dataset.m,cat:av.dataset.anVai,conto:av.dataset.c||'',stato:'',nota:'',q:''});salvaUI();render();window.scrollTo(0,0);return}
   const tv=e.target.closest('[data-trim-vai]');if(tv&&!tv.disabled){UI.trim=tv.dataset.trimVai;salvaUI();render();return}
   const vc=e.target.closest('[data-vedi-cat]');if(vc){const q=+UI.trim;Object.assign(UI,{pagina:'movimenti',mese:'q'+q,cat:vc.dataset.vediCat,conto:'',stato:'',nota:'',q:''});salvaUI();render();window.scrollTo(0,0);return}
