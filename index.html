@@ -2254,6 +2254,12 @@ i.p-ent-prev{background:#fff;border:1.5px dashed var(--verde)}.legenda span.p-en
 .h3B .h3-g>section.h3-bb.h3-r5{grid-row:3}
 .h3B .h3-g>section.h3-conti{grid-row:4/6}
 .h3 .h3-sal .h3-sal-t{grid-column:span 2}
+.h3 .h3-sal:has(>.h3-disp) .h3-sal-t{grid-column:span 1}
+/* Paolo 23/11: striscia Restano del mese sopra la colonna del mese */
+.h3-disp{display:flex;align-items:center;min-width:0}
+.h3-disp .bd-disp{margin:0;width:100%;align-self:stretch;border-radius:var(--r-mid);padding:5px 12px 5px 6px}
+.h3-disp .bd-disp>span{white-space:normal;overflow:visible;line-height:1.3}
+.bd-a{font-style:normal}.h3-disp .bd-a{white-space:nowrap}
 .h3B .h3-g>section.h3-bb.h3-r5 .hm-voci:has(>.hm-v:nth-child(4)){grid-template-columns:repeat(4,minmax(0,1fr))}
 .h3B .h3-g>section.h3-bb.h3-r5 .hm-voci:has(>.hm-v:nth-child(4)) .hm-v-t>b{font-size:min(var(--f-cifra),3.7cqw)}
 .h3B .h3-g>section.h3-bb.h3-r5 .hm-voci:has(>.hm-v:nth-child(4))>.hm-v{padding:8px 10px}
@@ -5799,8 +5805,8 @@ function stipendioHome(a,m,giornoOggi,giorniMese){ // riquadro Home: stipendio d
     <div class="hs-r4"><span><i style="--b:${bF.colore}"></i>fisse ${euro(tF)}</span><span><i style="--b:${bV.colore}"></i>variabili ${euro(tV)} di ${euro(puoi)}</span></div></div>`;
   return {html,d,alGiorno};
 }
-function badgeDisp(){
-  const a=S.anno, mesi=mesiSel(UI.mese)||[1,2,3,4,5,6,7,8,9,10,11,12];
+function badgeDisp(aa,mm){ // Movimenti: anno e periodo guardati; Home (Paolo 23/11): mese di oggi, sopra la colonna del mese
+  const a=aa??S.anno, mesi=mm||mesiSel(UI.mese)||[1,2,3,4,5,6,7,8,9,10,11,12];
   let bud=0,manca=0;const mesiB=[];for(const m of mesi){const n=nettoTrim(a,Math.ceil(m/3)-1);if(n==null)manca++;else{bud+=n/3;mesiB.push(m)}}
   if(!mesiB.length) return '';
   const mov=S.movimenti.filter(x=>annoDi(x.data)===a&&mesiB.includes(meseDi(x.data))&&!x.giro&&daUni(x)&&['fisse','variabili'].includes(bollaDi(x.cat)));
@@ -5812,7 +5818,7 @@ function badgeDisp(){
   const nomeBud=mesi.length===1?'Stipendio del mese':mesi.length===3?'Stipendio del trimestre':'Stipendi dell\'anno';
   const pq=resta<0&&mesiB.length<=3?` perche" data-perche="${mesiB.join(',')}`:'';
   return `<span class="bd-disp ${cls}${pq}" title="Stipendio = netto del trimestre precedente ÷ 3 (entrate su Unicredit − accantonamento − attività pagata da Unicredit). Spese = fisse e variabili uscite da Unicredit: pagate ${euro(pag)}, previste ${euro(prv)}.${manca?' Per '+manca+' mesi manca il trimestre precedente: sono esclusi dal conto.':''}">
-    <b>${stato}${pq?' <i class="ps-q">perché?</i>':''}</b><span>stipendio${manca?' '+MESI[mesiB[0]-1].slice(0,3).toLowerCase()+'–'+MESI[mesiB[mesiB.length-1]-1].slice(0,3).toLowerCase():''} ${euro(bud)} − spese ${euro(pag+prv)}${inCorso?` · usato ${Math.round(usato*100)}%, ${mesi.length===1?'mese':'periodo'} al ${Math.round(tempo*100)}%`:''}</span></span>`;
+    <b>${stato}${pq?' <i class="ps-q">perché?</i>':''}</b><span><i class="bd-a">stipendio${manca?' '+MESI[mesiB[0]-1].slice(0,3).toLowerCase()+'–'+MESI[mesiB[mesiB.length-1]-1].slice(0,3).toLowerCase():''} ${euro(bud)} − spese ${euro(pag+prv)}</i>${inCorso?` <i class="bd-a">· usato ${Math.round(usato*100)}%, ${mesi.length===1?'mese':'periodo'} al ${Math.round(tempo*100)}%</i>`:''}</span></span>`;
 }
 function infoMese(){
   const a=S.anno, m=mesiSel(UI.mese), B=sommeBolle(a,m);
@@ -6233,7 +6239,7 @@ function h3Saluto(X){const d=new Date(), gs=['domenica','lunedì','martedì','me
         <span class="h3-al-i">${cl==='ok'?'✓':'!'}</span><span><b>Spese variabili: ${cl===''?'tetto superato':cl==='att'?'quasi al tetto':'sei dentro'}</b>
         <small>${e(sp)} di ${e(pl)} a ${nm}${perG!=null?` · ${e(perG)} al giorno`:''}</small><i class="h3-al-bar"><i style="width:${Math.min(100,sp/pl*100)}%"></i></i></span>
         <strong>${r>=-0.5?'restano '+e(r):'oltre di '+e(-r)}</strong></div>`}}
-  return `<header class="saluto h3-sal"><div class="h3-sal-t"><h1>Ciao${nome?' '+esc(nome):''},</h1><p>${corr?`ecco la situazione ad oggi, ${gs[d.getDay()]} ${d.getDate()} ${MESI[d.getMonth()]} ${d.getFullYear()}.`:`stai guardando il ${S.anno}.`}</p></div>${al||'<span></span>'}</header>`}
+  return `<header class="saluto h3-sal"><div class="h3-sal-t"><h1>Ciao${nome?' '+esc(nome):''},</h1><p>${corr?`ecco la situazione ad oggi, ${gs[d.getDay()]} ${d.getDate()} ${MESI[d.getMonth()]} ${d.getFullYear()}.`:`stai guardando il ${S.anno}.`}</p></div>${corr?`<div class="h3-disp">${badgeDisp(d.getFullYear(),[d.getMonth()+1])}</div>`:''}${al||'<span></span>'}</header>`}
 // Paolo 16/11: il tetto delle variabili sta nel riquadro Restano (niente più avviso sopra la colonna)
 function h3Tetto(X){if(!X.corr)return '';const sp=X.VT.pag, pl=X.TV, q=`${X.a}-${Math.ceil(X.m/3)}`, e=v=>'€ '+numIt(Math.round(v)).replace(/,00$/,'');
   if(pl==null) return `<span class="h3-tet att" data-tb-tet="${q}" title="Fissa quanto vuoi spendere al mese per le spese variabili">budget variabili: <b>fissa →</b></span>`;
