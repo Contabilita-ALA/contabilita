@@ -6131,7 +6131,8 @@ function h3Dati(){ // numeri condivisi dalle tre proposte
         if(carta){tit=(c.id==='CONTO'?'Unicredit':c.nome)+' · disponibile';cifra=R[c.id]-R[carta.id];sub=`sul conto ${euro(R[c.id])} − carte ${euro(R[carta.id])}`}
         else{if(c.id==='REVOLUT')tit='Revolut · accantonati';if(c.id==='DEPOSITO')tit='Revolut · deposito';sub=`previsto al 31/12: ${euroH(P[c.id])}`}
         const neg=prev.slice(1).find(r=>r[c.id]<-0.005);
-        if(neg) all=`<span class="h3-al" title="A ${MESI[neg.mese-1]} andrebbe a ${euro(neg[c.id])}">⚠ ${MESI3[neg.mese-1]} ${e0(neg[c.id])}</span>`}
+        if(neg&&neg.mese===12&&!carta) sub='⚠ '+sub; // Paolo 23/11: se va sotto zero solo a dicembre è lo stesso numero del 31/12, non ripeterlo
+        else if(neg) all=`<span class="h3-al" title="A ${MESI[neg.mese-1]} andrebbe a ${euro(neg[c.id])}">⚠ ${MESI3[neg.mese-1]} ${e0(neg[c.id])}</span>`}
       tuoi+=cifra;conti.push({c,tit,cifra,sub,all})});}
   // cose da fare
   const fare=[];
@@ -6358,7 +6359,8 @@ function renderHome2b(){ // Home in due metà: mese (con calendario) | anno
         if(carta){tit=(c.id==='CONTO'?'Unicredit':c.nome)+' · disponibile';cifra=Rr[c.id]-Rr[carta.id];sub=`sul conto ${euro(Rr[c.id])} − carte ${euro(Rr[carta.id])}`}
         else{if(c.id==='REVOLUT')tit='Revolut · accantonati';if(c.id==='DEPOSITO')tit='Revolut · deposito';sub=`previsto al 31/12: ${euroH(P[c.id])}`}
         const neg=prev.slice(1).find(r=>r[c.id]<-0.005);
-        if(neg) all=`<span class="hm-v-dx neg" title="A ${MESI[neg.mese-1]} andrebbe a ${euro(neg[c.id])}">⚠ ${MESI3[neg.mese-1]} ${euro(neg[c.id])}</span>`;
+        if(neg&&neg.mese===12&&!carta) sub='⚠ '+sub; // Paolo 23/11: se va sotto zero solo a dicembre è lo stesso numero del 31/12, non ripeterlo
+        else if(neg) all=`<span class="hm-v-dx neg" title="A ${MESI[neg.mese-1]} andrebbe a ${euro(neg[c.id])}">⚠ ${MESI3[neg.mese-1]} ${euro(neg[c.id])}</span>`;
       }
       return `<div class="hm-v hm-c" style="--b:${c.colore}" data-conto="${c.id}" title="Clicca per vedere i movimenti di questo conto">
         <span class="ic-ico">${ico(c.tipo)}</span><div class="hm-v-c"><div class="hm-v-t"><span>${esc(tit)}</span><b>${euroH(cifra)}</b></div>
