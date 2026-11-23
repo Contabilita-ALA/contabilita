@@ -1614,6 +1614,7 @@ table.mov td{overflow:hidden}table.mov td select,table.mov td input{max-width:10
 .importo{display:flex;align-items:center;gap:8px;border:2px solid var(--inchiostro);border-radius:var(--r-mid);padding:6px 12px;background:var(--cella);margin-bottom:12px}
 .importo span{font:700 var(--f-titolo) var(--font-titoli)}
 .importo input{border:0;background:transparent;font:700 var(--f-titolo) var(--font-titoli);width:100%;outline:none}
+#m-imp-som{white-space:nowrap;font-weight:700;opacity:.6}#m-imp-som:empty{display:none}
 .campi{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .campi label{display:flex;flex-direction:column;font-size:var(--f-piccolo);font-weight:700;gap:4px}
 .campi label.largo{grid-column:1/-1}
@@ -2863,6 +2864,15 @@ function parseNum(s){
   if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.');
   else if((s.match(/\./g)||[]).length>1 || /\.\d{3}$/.test(s)) s=s.replace(/\./g,'');
   return Number(s);
+}
+// 23/11: nell'importo si può scrivere una somma (es. 3,50+4,99-1,20): Invio la sostituisce col risultato
+const haSomma=s=>/\d\s*[+\-−]\s*\d/.test(String(s??''));
+function parseSomma(s){
+  s=String(s??'').replace(/€|\s/g,'').replace(/−/g,'-');
+  if(!haSomma(s))return parseNum(s);
+  const pz=s.match(/[+-]?[^+-]+/g);if(!pz||pz.join('')!==s)return NaN;
+  let t=0;for(const x of pz){const v=parseNum(x);if(isNaN(v))return NaN;t+=v}
+  return Math.round(t*100)/100;
 }
 const dataIt=iso=>iso?iso.slice(8,10)+'/'+iso.slice(5,7)+'/'+iso.slice(0,4):'';
 const oggiISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
@@ -6559,7 +6569,7 @@ function disegnaFinestra(){
   $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra" role="dialog" aria-modal="true">
     <h3>${b.id?'Modifica movimento':'Nuovo movimento'}</h3>
     <div class="tipi">${[['uscita','Uscita'],['entrata','Entrata (non da fattura)'],['giro','Giroconto'],...(b.id?[]:[['coi','Cointestato']])].map(([k,n])=>`<button data-tipo="${k}" class="${b.tipo===k?'on':''}">${n}</button>`).join('')}</div>
-    <div class="importo"><span>€</span><input id="m-imp" inputmode="decimal" placeholder="0,00" value="${b.imp===''||isNaN(b.imp)?'':numIt(b.imp)}"></div>
+    <div class="importo"><span>€</span><input id="m-imp" inputmode="decimal" placeholder="0,00" title="Puoi scrivere anche una somma, es. 3,50+4,99+6,79: premi Invio per il totale" value="${b.imp===''||isNaN(b.imp)?'':numIt(b.imp)}"><small id="m-imp-som"></small></div>
     <div class="campi">
       <label>Data<input type="date" id="m-data" value="${b.data}"></label>
       <label class="spunta" style="align-self:end"><input type="checkbox" id="m-ok" ${b.ok?'checked':''}> ${b.tipo==='entrata'?'Incassata':'Pagata'}</label>
@@ -6586,7 +6596,7 @@ function disegnaFinestraCoi(){
     <h3>${b.id?'Modifica voce del cointestato':'Nuovo movimento'}</h3>
     ${b.id?'':`<div class="tipi">${[['uscita','Uscita'],['entrata','Entrata (non da fattura)'],['giro','Giroconto'],['coi','Cointestato']].map(([k,n])=>`<button data-tipo="${k}" class="${b.tipo===k?'on':''}">${n}</button>`).join('')}</div>`}
     <div class="co-tipo">${[['add','Esce dal cointestato'],['acc','Entra nel cointestato']].map(([k,n])=>`<button data-coi-v="${k}" class="${b.coiV===k?'on '+k:''}">${n}</button>`).join('')}</div>
-    <div class="importo"><span>€</span><input id="m-imp" inputmode="decimal" placeholder="0,00" value="${b.imp===''||isNaN(b.imp)?'':numIt(b.imp)}"></div>
+    <div class="importo"><span>€</span><input id="m-imp" inputmode="decimal" placeholder="0,00" title="Puoi scrivere anche una somma, es. 3,50+4,99+6,79: premi Invio per il totale" value="${b.imp===''||isNaN(b.imp)?'':numIt(b.imp)}"><small id="m-imp-som"></small></div>
     <div class="campi">
       <label>Data<input type="date" id="m-data" value="${b.data}"></label>
       <label class="spunta" style="align-self:end"><input type="checkbox" id="m-ok" ${b.ok?'checked':''}> Fatta (non solo prevista)</label>
@@ -6604,8 +6614,8 @@ function disegnaFinestraCoi(){
 }
 function leggiFinestra(){
   const b=bozza;
-  if(b.tipo==='coi'){b.imp=parseNum($('#m-imp').value);if(isNaN(b.imp))b.imp='';b.data=$('#m-data').value;b.ok=$('#m-ok').checked;b.det=$('#m-det').value.trim();b.cat=$('#c-cat').value.trim();return}
-  b.imp=parseNum($('#m-imp').value);if(isNaN(b.imp))b.imp='';b.data=$('#m-data').value;b.ok=$('#m-ok').checked;b.det=$('#m-det').value.trim();
+  if(b.tipo==='coi'){b.imp=parseSomma($('#m-imp').value);if(isNaN(b.imp))b.imp='';b.data=$('#m-data').value;b.ok=$('#m-ok').checked;b.det=$('#m-det').value.trim();b.cat=$('#c-cat').value.trim();return}
+  b.imp=parseSomma($('#m-imp').value);if(isNaN(b.imp))b.imp='';b.data=$('#m-data').value;b.ok=$('#m-ok').checked;b.det=$('#m-det').value.trim();
   b.conto=$('#m-conto').value;b.nota=$('#m-nota').value;b.rip=$('#m-rip').checked;
   if($('#m-cat'))b.cat=$('#m-cat').value;if($('#m-verso'))b.verso=$('#m-verso').value;
   if($('#m-per'))b.per=leggiPer($('#m-per').value,b);
@@ -7301,6 +7311,7 @@ document.addEventListener('change',e=>{
 document.addEventListener('input',e=>{
   if(e.target.id==='f-q'){UI.q=e.target.value;salvaUI();renderTabella()}
   if(e.target.id==='f-prest'||e.target.id==='f-nonimp')calcoliFattura();
+  if(e.target.id==='m-imp'&&$('#m-imp-som')){const v=e.target.value, t=haSomma(v)?parseSomma(v):NaN;$('#m-imp-som').textContent=isNaN(t)?'':'= '+numIt(t)+' · Invio'}
   if(e.target.id==='fc-x'){UI.fcX=e.target.value;salvaUI();renderCalcFat()}
 });
 document.addEventListener('keydown',e=>{
@@ -7310,6 +7321,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&SEL.size){SEL.clear();aggiornaSel();return}
   if(e.key==='Enter'&&$('[data-pm-salva]')&&e.target.tagName==='INPUT'){e.preventDefault();if(e.target.id==='pm-ug')$('[data-pm-tutti]').click();else $('[data-pm-salva]').click();return}
   if(e.key==='Enter'&&$('[data-pv-salva]')&&e.target.tagName==='INPUT'){e.preventDefault();$('[data-pv-salva]').click();return}
+  if(e.key==='Enter'&&e.target.id==='m-imp'&&haSomma(e.target.value)){e.preventDefault();const t=parseSomma(e.target.value);if(isNaN(t)){toast('Somma non valida');return}e.target.value=numIt(t);$('#m-imp-som').textContent='';return}
   if(e.key==='Enter'&&$('.finestra')&&e.target.tagName==='INPUT'){e.preventDefault();bozzaF?salvaFattura():salvaFinestra(false);return}
   if(e.key==='Enter'&&e.target.closest&&e.target.closest('.mov')&&e.target.tagName==='INPUT')e.target.blur();
 });
