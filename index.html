@@ -3878,10 +3878,10 @@ function prestDaLordo(L){ // lordo (incasso) -> prestazione
 }
 function pillPerc(chi,perc,lunga){
   const v=numIt(Math.round(perc*1000)/10).replace(/,0+$/,'');
-  return `<button class="pp${lunga?' pp-l':''}" data-pp="${chi}" title="Clicca per cambiare la percentuale${chi==='anno'?' di accantonamento del '+S.anno+' (vale per tutte le fatture dell\'anno)':' solo per questo calcolo'}">${lunga?'accantono ':''}<b>${v}%</b><i>✎</i></button>`;
+  return `<button class="pp${lunga?' pp-l':''}" data-pp="${chi}" title="Clicca per cambiare la percentuale${chi==='anno'?' di accantonamento del '+S.anno+' (vale per tutte le fatture dell\'anno)':chi==='prev'?' di accantonamento del '+(S.anno+1)+' (vale per tutte le fatture del '+(S.anno+1)+', anche prima di aprire l\'anno)':' solo per questo calcolo'}">${lunga?'accantono ':''}<b>${v}%</b><i>✎</i></button>`;
 }
 function apriPill(btn){
-  const chi=btn.dataset.pp, cur=chi==='anno'?(S.impostazioni.accantonamento[S.anno]??0.25):percCalc();
+  const chi=btn.dataset.pp, cur=chi==='anno'?(S.impostazioni.accantonamento[S.anno]??0.25):chi==='prev'?(S.impostazioni.accantonamento[S.anno+1]??S.impostazioni.accantonamento[S.anno]??0.25):percCalc();
   const inp=document.createElement('input');inp.className='pp-in';inp.inputMode='decimal';inp.value=numIt(Math.round(cur*1000)/10).replace(/,0+$/,'');
   const wrap=document.createElement('span');wrap.className='pp pp-ed'+(btn.classList.contains('pp-l')?' pp-l':'');wrap.append(inp,Object.assign(document.createElement('em'),{textContent:'%'}));
   btn.replaceWith(wrap);inp.focus();inp.select();
@@ -3889,6 +3889,7 @@ function apriPill(btn){
   const fine=ok=>{if(fatto)return;fatto=true;const v=parseNum(inp.value);
     if(ok&&v>=0&&v<100&&Math.abs(v/100-cur)>1e-9){
       if(chi==='anno'){modifica(()=>S.impostazioni.accantonamento[S.anno]=v/100);toast('Accantonamento '+S.anno+': '+inp.value+'%',true)}
+      else if(chi==='prev'){modifica(()=>S.impostazioni.accantonamento[S.anno+1]=v/100);toast('Accantonamento '+(S.anno+1)+': '+inp.value+'%',true)}
       else{UI.fcPerc=v/100;salvaUI();render()}
     } else render();};
   inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();fine(true)}else if(e.key==='Escape'){e.stopPropagation();fine(false)}});
@@ -4801,7 +4802,7 @@ function renderPrevisione(){
   voci+=`<div class="pd-tot"><span class="pd-n">Totale spese <small>senza Inarcassa e F24</small></span><span></span><span></span><span class="pd-t">${euro(tG)}</span><span class="pd-m">${euro(tG/12)}</span></div>`
     +`<div class="pd-tot pd-tot2"><span class="pd-n">Con Inarcassa e F24</span><span></span><span></span><span class="pd-t">${euro(tAll)}</span><span class="pd-m">${euro(tAll/12)}</span></div>`;
   $('#main').innerHTML=`<div class="tq pv pv2">
-    <div class="tq-testa"><h1 title="Si aggiorna da sola con i movimenti del ${a}">Previsione ${N}</h1>
+    <div class="tq-testa"><h1 title="Si aggiorna da sola con i movimenti del ${a}">Previsione ${N}</h1>${pillPerc('prev',S.impostazioni.accantonamento[N]??S.impostazioni.accantonamento[a]??0.25,true)}
       ${pvSwitch(D)}<span class="spazio"></span>${vista}</div>
     <div class="tq-kpi">${kpis}</div>
     <div class="pv-g">
@@ -4912,7 +4913,7 @@ function renderPrevisioneTab(D,vista){
   h=pvConti(D,acc,rev,totE,n0)+h; // Paolo 20/11: in alto i conti a inizio mese, come nella pagina Anno
   const testa=`<tr><th class="an-v">${N}</th>${M.map(m=>`<th>${MESI[m-1].slice(0,3)}</th>`).join('')}<th class="tot">fine anno<small>/ totale</small></th><th class="med">media<small>al mese</small></th></tr>`;
   $('#main').innerHTML=`<div class="tq an pv2">
-    <div class="tq-testa"><h1 title="Si aggiorna da sola con i movimenti del ${a}">Previsione ${N}</h1>
+    <div class="tq-testa"><h1 title="Si aggiorna da sola con i movimenti del ${a}">Previsione ${N}</h1>${pillPerc('prev',S.impostazioni.accantonamento[N]??S.impostazioni.accantonamento[a]??0.25,true)}
       ${pvSwitch(D)}
       <span class="spazio"></span><button class="btn piccolo" data-pv-tutti="${Object.values(chiusi).some(Boolean)?'apri':'chiudi'}">${Object.values(chiusi).some(Boolean)?'Apri tutti i gruppi':'Chiudi i gruppi'}</button>${vista}</div>
     <div class="an-wrap"><table class="an-t"><thead>${testa}</thead><tbody>${h}</tbody></table></div></div>`;
