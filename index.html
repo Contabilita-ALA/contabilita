@@ -5292,7 +5292,11 @@ function renderTotali(){
 }
 function infoOggi(){
   const oggi=oggiISO(), mc=annoDi(oggi)===S.anno?meseDi(oggi):(annoDi(oggi)>S.anno?12:1);
-  return {mc,reali:saldiMensili(S.anno,true),prev:saldiMensili(S.anno,false)};
+  const reali=saldiMensili(S.anno,true);
+  // Paolo 23/11: il cointestato "oggi" è lo stesso della sua pagina (saldo al 1/1 + voci fatte fino a oggi), non la fine del mese con tutte le voci
+  const coiC=S.conti.find(c=>c.tipo==='cointestato');
+  if(coiC&&annoDi(oggi)===S.anno) reali[mc]={...reali[mc],[coiC.id]:r2(datiCoi(S.anno).saldoOggi)};
+  return {mc,reali,prev:saldiMensili(S.anno,false)};
 }
 const contiVisibili=()=>S.conti.filter(c=>c.tipo!=='contanti'); // i contanti non contano ai fini della contabilità
 const piediConti=()=>{const c=$('#conti');if(c)uniformaPiedi(c)};
@@ -6026,7 +6030,7 @@ function contiInfo(selez){
       if(c.id==='REVOLUT')tit='Revolut · accantonati';
       const carta=c.tipo==='conto'?S.conti.find(x=>x.tipo==='carta'&&x.addebito===c.id):null;
       if(carta){tit=(c.id==='CONTO'?'Unicredit':c.nome)+' · disponibile';cifra=R[c.id]-R[carta.id];riga=`sul conto ${euro(R[c.id])} − carte ${euro(R[carta.id])}`}
-      else riga=`al 31/12 ${euroH(P[c.id])}`;
+      else riga=`previsto al 31/12: ${euroH(P[c.id])}`;
       const neg=prev.slice(1).find(r=>r[c.id]<-0.005);
       if(neg) allarme=`⚠ a ${MESI[neg.mese-1]} va a ${euro(neg[c.id])}`;
       if(c.tipo==='deposito'&&!(S.impostazioni.saldiIniziali[S.anno]||{})[c.id]&&!S.movimenti.some(m=>annoDi(m.data)===S.anno&&(m.conto===c.id||m.verso===c.id))) riga='saldo iniziale da inserire';
@@ -6048,7 +6052,7 @@ function contiCompatti(selez){
       if(c.id==='REVOLUT')tit='Revolut · accantonati';
       const carta=c.tipo==='conto'?S.conti.find(x=>x.tipo==='carta'&&x.addebito===c.id):null;
       if(carta){tit=(c.id==='CONTO'?'Unicredit':c.nome)+' · disponibile';cifra=R[c.id]-R[carta.id];riga=`sul conto ${euro(R[c.id])}<br>carte da addebitare ${euro(R[carta.id])}`}
-      else riga=`al 31/12 ${euroH(P[c.id])}`;
+      else riga=`previsto al 31/12: ${euroH(P[c.id])}`;
       const neg=prev.slice(1).find(r=>r[c.id]<-0.005);
       if(neg) allarme=`<div class="cc-allarme" title="A ${MESI[neg.mese-1]} andrebbe a ${euro(neg[c.id])}${c.tipo==='salvadanaio'?': hai accantonato meno di quanto devi pagare':''}">⚠ a ${MESI[neg.mese-1]} va a ${euro(neg[c.id])}</div>`;
       if(c.tipo==='deposito'&&!(S.impostazioni.saldiIniziali[S.anno]||{})[c.id]&&!S.movimenti.some(m=>annoDi(m.data)===S.anno&&(m.conto===c.id||m.verso===c.id))) riga='saldo iniziale da inserire';
@@ -6125,7 +6129,7 @@ function h3Dati(){ // numeri condivisi dalle tre proposte
       if(c.tipo==='cointestato'){const q=c.quota??1;tit='Cointestato · tua quota';cifra=R[c.id]*q;sub=`saldo conto ${euro(R[c.id])}`}
       else{const carta=c.tipo==='conto'?S.conti.find(x=>x.tipo==='carta'&&x.addebito===c.id):null;
         if(carta){tit=(c.id==='CONTO'?'Unicredit':c.nome)+' · disponibile';cifra=R[c.id]-R[carta.id];sub=`sul conto ${euro(R[c.id])} − carte ${euro(R[carta.id])}`}
-        else{if(c.id==='REVOLUT')tit='Revolut · accantonati';if(c.id==='DEPOSITO')tit='Revolut · deposito';sub=`al 31/12 ${euroH(P[c.id])}`}
+        else{if(c.id==='REVOLUT')tit='Revolut · accantonati';if(c.id==='DEPOSITO')tit='Revolut · deposito';sub=`previsto al 31/12: ${euroH(P[c.id])}`}
         const neg=prev.slice(1).find(r=>r[c.id]<-0.005);
         if(neg) all=`<span class="h3-al" title="A ${MESI[neg.mese-1]} andrebbe a ${euro(neg[c.id])}">⚠ ${MESI3[neg.mese-1]} ${e0(neg[c.id])}</span>`}
       tuoi+=cifra;conti.push({c,tit,cifra,sub,all})});}
@@ -6352,7 +6356,7 @@ function renderHome2b(){ // Home in due metà: mese (con calendario) | anno
       else{
         const carta=c.tipo==='conto'?S.conti.find(x=>x.tipo==='carta'&&x.addebito===c.id):null;
         if(carta){tit=(c.id==='CONTO'?'Unicredit':c.nome)+' · disponibile';cifra=Rr[c.id]-Rr[carta.id];sub=`sul conto ${euro(Rr[c.id])} − carte ${euro(Rr[carta.id])}`}
-        else{if(c.id==='REVOLUT')tit='Revolut · accantonati';if(c.id==='DEPOSITO')tit='Revolut · deposito';sub=`al 31/12 ${euroH(P[c.id])}`}
+        else{if(c.id==='REVOLUT')tit='Revolut · accantonati';if(c.id==='DEPOSITO')tit='Revolut · deposito';sub=`previsto al 31/12: ${euroH(P[c.id])}`}
         const neg=prev.slice(1).find(r=>r[c.id]<-0.005);
         if(neg) all=`<span class="hm-v-dx neg" title="A ${MESI[neg.mese-1]} andrebbe a ${euro(neg[c.id])}">⚠ ${MESI3[neg.mese-1]} ${euro(neg[c.id])}</span>`;
       }
