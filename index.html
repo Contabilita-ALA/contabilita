@@ -1563,7 +1563,7 @@ table.mov td{overflow:hidden}table.mov td select,table.mov td input{max-width:10
 .spiega li{margin-bottom:3px}
 /* finestra */
 .velo{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:40px 12px;overflow-y:auto}
-.finestra{background:var(--carta);border:2px solid var(--inchiostro);border-radius:14px;width:100%;max-width:520px;padding:18px 20px 16px;box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+.finestra{position:relative;background:var(--carta);border:2px solid var(--inchiostro);border-radius:14px;width:100%;max-width:520px;padding:18px 20px 16px;box-shadow:0 12px 40px rgba(0,0,0,0.3)}
 .finestra.larga{max-width:760px}
 .im-col.c-a{position:relative}.im-perc{position:absolute;top:8px;right:8px;display:inline-block;font-family:var(--font);background:#fff;border:1px solid var(--inchiostro);border-radius:999px;padding:0 6px;font-size:var(--f-piccolo);font-weight:700;color:var(--inchiostro);letter-spacing:0;vertical-align:3px}
 .tp-box{margin-top:14px;border-top:1px dashed var(--grigio-chiaro);padding-top:10px}.tp-box h4{font:700 var(--f-testo) var(--font-titoli);margin:0 0 4px}.tp-box p{margin:0 0 8px;font-size:var(--f-testo)}
@@ -1607,7 +1607,8 @@ table.mov td{overflow:hidden}table.mov td select,table.mov td input{max-width:10
 .perche{cursor:pointer}.hm-mt .tq-d.perche.no{box-shadow:inset 0 0 0 1px var(--rosso)}.tq-d.perche i{font-style:normal;font-weight:700;margin-left:2px;opacity:.75}
 .ps-q{font-size:var(--f-mini);text-transform:none;letter-spacing:0;background:var(--rosso);color:var(--inchiostro);border-radius:999px;padding:0 6px;font-weight:700}
 .tq-k.perche:hover{outline:2px solid var(--pesca)}
-.finestra h3{font:700 var(--f-cifra) var(--font-titoli);margin:0 0 12px}
+.fin-x{position:absolute;top:10px;right:10px;width:32px;height:32px;border:0;border-radius:50%;background:transparent;color:var(--inchiostro);font-size:18px;line-height:1;cursor:pointer;z-index:2}.fin-x:hover{background:var(--cella)}
+.finestra h3{padding-right:36px;font:700 var(--f-cifra) var(--font-titoli);margin:0 0 12px}
 .tipi{display:flex;gap:6px;margin-bottom:12px}
 .tipi button{flex:1;border:1.5px solid var(--bd-card);background:var(--carta);border-radius:12px;padding:7px;font-weight:700;cursor:pointer}
 .tipi button.on{background:var(--inchiostro);color:#fff}
@@ -3811,7 +3812,7 @@ window.addEventListener('resize',()=>{if(UI.pagina==='calendario')requestAnimati
 function apriTettoTrim(a,q){ // Paolo 13/11: il tetto si fissa anche dal Trimestre (stessi dati di Impostazioni)
   const T=((S.impostazioni.tetto||{})[a])||{base:null,m:{}}, ms=[q*3-2,q*3-1,q*3];
   const n=v=>v!=null?numIt(v).replace(/,00$/,''):'';
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra tbt-fin" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra tbt-fin" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>Tetto alle variabili</h3>
     <p class="aiuto">Quanto ti concedi al mese per le spese <b>variabili</b> (le fisse non contano, e nemmeno le spese di coppia con la nota DA DIVIDERE). È lo stesso tetto di Impostazioni: vale per Home, Previsione e "Posso permettermelo?".</p>
     <label class="tbt-base">Tetto mensile del ${a}<span class="dp-eur">€<input data-tetto="${a}" value="${n(T.base)}" placeholder="nessuno" inputmode="decimal"></span></label>
@@ -4210,7 +4211,7 @@ function ppTesto(R){
 function apriPosso(){
   const o=new Date(), mOra=o.getMonth()+1, cats=S.categorie.filter(c=>c.bolla==='variabili'||c.bolla==='fisse');
   const def=cats.find(c=>c.id==='spese variabili')||cats[0];
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra pp-fin" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra pp-fin" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>Posso permettermelo?</h3>
     <p class="aiuto">Guardo lo stipendio del mese e del trimestre, le spese già fatte e quelle previste, e il conto Unicredit fino a fine anno.</p>
     <div class="pp-campi">
@@ -4412,7 +4413,7 @@ function apriAggDeposito(id){
   const c=S.conti.find(x=>x.id===id); if(!c) return;
   const oggi=oggiISO(), t=tassoAl(c,oggi), M=mesiDeposito(c);
   const riga=(d,mov,altra)=>`<div class="r" data-dp-r="${altra?'':d}">${altra?`<span><input type="date" class="dp-d" value="" title="Un altro giorno"></span>`:`<span>${d.slice(8)==='01'?'1°':+d.slice(8)} ${MESI[+d.slice(5,7)-1]}</span>`}<span class="n dp-app"></span><span class="dp-eur">€<input class="dp-v" inputmode="decimal" value="${mov?numIt(saldoContoAl(c.id,d)):''}" placeholder="${altra?'saldo':'saldo al 1°'}"></span><span class="n dp-int"></span></div>`;
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra dp-fin" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra dp-fin" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>Aggiorna il saldo di ${esc(c.nome)}</h3>
     <p class="aiuto">Il 1° di ogni mese scrivi il saldo che vedi sul conto. La differenza con il saldo che conosce l'app viene registrata come <b>interessi</b> del mese prima: un movimento sul deposito, fuori da spese ed entrate. Le righe già scritte si possono correggere.</p>
     <label class="dp-tl">Tasso annuo <span class="dp-eur"><input id="dp-tasso" inputmode="decimal" value="${t==null?'':String(t).replace('.',',')}" placeholder="1,44">%</span>${(c.tassi||[]).length>1?`<small>${(c.tassi||[]).slice().sort((x,y)=>x.dal<y.dal?-1:1).map(x=>`${String(x.t).replace('.',',')}% dal ${dataIt(x.dal)}`).join(' · ')}</small>`:''}</label>
@@ -4848,7 +4849,7 @@ function apriPopPrev(cat,m){
   const rigaE=x=>{const v=RV[x.id]!=null?RV[x.id]:x.st;return `<div class="ap-r pv-r ${RV[x.id]===0?'pv-tolta':''}" data-det="${esc((x.det||'').trim().toUpperCase())}"><span class="ap-d">${x.data&&x.s!=='fis'?pvMeseSel(m):`<span class="pv-mfix">${MESI[m-1].slice(0,3).toLowerCase()}</span>`}</span>${pvSimb(x.s,a)}<span class="ap-t">${esc(x.det||'')}${x.sub?`<small>${x.sub}</small>`:''}</span><span class="pv-xa"><button type="button" class="pv-tm1" data-pv-tm ${x.s==='fis'?'hidden':''} title="Metti il totale di questo mese in tutti i mesi del ${N}">↦ tutti i mesi</button><button type="button" class="pv-xv" data-pv-via title="Togli questa spesa">✕</button><input class="pv-ri ${RV[x.id]!=null?'ov':''}" data-pv-riga="${esc(String(x.id))}" data-st="${x.st}" data-or="${numIt(v)}" value="${numIt(v)}" inputmode="decimal" title="Importo previsto nel ${N}"></span></div>`};
   const rigaX=(x={det:'',eur:''})=>`<div class="ap-r pv-r pv-x"><span class="ap-d">${pvMeseSel(m)}</span>${pvSimb('nuova',a)}<span class="ap-t"><input class="pv-xd" placeholder="descrizione" value="${esc(x.det||'')}"></span><span class="pv-xa">${ent?'':`<button type="button" class="pv-tm1" data-pv-tm title="Metti il totale di questo mese in tutti i mesi del ${N}">↦ tutti i mesi</button><button type="button" class="pv-xv" data-pv-xvia title="Togli questa spesa">✕</button>`}${ent?`<input class="pv-xf" value="${x.prest!=null&&x.prest!==''?numIt(x.prest):''}" placeholder="fattura" inputmode="decimal" title="Importo della fattura (prestazione): il lordo si calcola da solo, + bollo 2 € e + 4%"><span class="pv-fa">→</span>`:''}<input class="pv-ri pv-xe" data-or="${x.eur===''?'':numIt(x.eur)}" value="${x.eur===''?'':numIt(x.eur)}" placeholder="${ent?'lordo':'0,00'}" inputmode="decimal"${ent?' title="Lordo incassato: si calcola dalla fattura, ma lo puoi anche scrivere"':''}>${ent?`<button type="button" class="pv-tm1" data-pv-tm title="Metti il totale di questo mese in tutti i mesi del ${N}">↦ tutti i mesi</button><button type="button" class="pv-xv" data-pv-xvia title="Togli questa entrata">✕</button>`:''}</span></div>`;
   const totale=L.reduce((s,x)=>s+(RV[x.id]!=null?RV[x.id]:x.st),0)+XS.reduce((s,x)=>s+(+x.eur||0),0);
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra ap-fin${ent?' pv-fin-ent':''}" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra ap-fin${ent?' pv-fin-ent':''}" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>${esc(nomeCat(cat))} <span class="ap-per">${mm} ${N}</span></h3>
     <p class="ap-nota" style="margin:0 4px 8px">${spiega} Ogni importo si può cambiare.</p>
     <div class="ap-lista" id="pv-righe">${L.map(rigaE).join('')}${XS.map(rigaX).join('')}${!L.length&&!XS.length?'<p class="pv-vuoto" style="padding:8px 4px;color:var(--grigio)">Nessuna spesa prevista: aggiungila qui sotto.</p>':''}</div>
@@ -4864,7 +4865,7 @@ function apriPopMesi(cat){
   const a=S.anno, N=a+1, D=datiPrevisione(a,pvVaX(N));
   const c=D.L.find(x=>x.id===cat)||D.ent.find(x=>x.id===cat)||D.fisCat[cat]; if(!c) return;
   const M=[1,2,3,4,5,6,7,8,9,10,11,12], r2=v=>Math.round(v*100)/100;
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra ap-fin pm-fin" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra ap-fin pm-fin" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>${esc(nomeCat(cat))} <span class="ap-per">tutti i mesi del ${N}</span></h3>
     <div class="pm-ug"><label for="pm-ug">Uguale ogni mese</label><input id="pm-ug" class="pv-ri" placeholder="es. 250" inputmode="decimal"><button type="button" class="btn chiaro piccolo" data-pm-tutti>Metti in tutti i mesi</button></div>
     <div class="pm-g">${M.map(m=>`<label class="pm-m"><span>${MESI[m-1]}</span><input class="pv-ri pm-v ${c.ov[m]?'ov':''}" data-m="${m}" data-st="${r2(c.stima[m])}" data-or="${r2(c.mesi[m])}" value="${numIt(r2(c.mesi[m]))}" inputmode="decimal" title="Stima: ${euro(c.stima[m])}"></label>`).join('')}</div>
@@ -4993,7 +4994,7 @@ function apriPopAnno(k,m){
     if(P.meno){const r=P.meno(m); if(Math.abs(r)>=0.005){nota=`Somma dei movimenti ${euro(tot)}, meno ${euro(r)} che restano come risparmio nel cointestato (dal bonifico mutuo+risparmi) = <b>${euro(tot-r)}</b>.`;tot-=r}}
     if(!nota&&L.some(x=>P.seg*x.eur<0&&!P.giro)) nota='Gli importi con il segno meno sono resi e rimborsi, già sottratti.';
   }
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra ap-fin" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra ap-fin" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>${esc(P.nome)} <span class="ap-per">${per}${AN_POP.fC?' · '+esc(nomeConto(AN_POP.fC)):''}</span></h3>
     <div class="ap-lista">${righe||'<p>Nessun movimento.</p>'}</div>
     <div class="ap-tot"><span>Totale</span><b>${euro(tot)}</b></div>
@@ -6474,7 +6475,7 @@ function analisiSforo(a,mesi){
 function apriPerche(a,mesi){
   const A=analisiSforo(a,mesi); if(!A) return;
   const tit=A.nomeP[0].toUpperCase()+A.nomeP.slice(1);
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra larga ps-fin" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra larga ps-fin" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>${A.d<0?'Perché '+(mesi.length===1?'a '+MESI[mesi[0]-1]+' hai sforato':A.nomeP+' è andato sotto'):tit+': com\'è andata'}</h3>${A.html}
     <div class="azioni"><button class="btn chiaro" data-act="chiudi">Chiudi</button><button class="btn" data-act="perche-mov" data-mesi="${mesi.join(',')}">Vedi i movimenti</button></div></div></div>`;
 }
@@ -6493,7 +6494,7 @@ function calendario(a,m,mov,oggi){
 }
 function apriGiorno(iso){
   const lista=S.movimenti.filter(x=>x.data===iso).sort((a,b)=>a.id-b.id);
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>${+iso.slice(8,10)} ${MESI[meseDi(iso)-1]} ${annoDi(iso)}</h3>
     ${lista.length?'<div class="giorno-lista">'+lista.map(x=>{const g={colore:coloreCat(x.cat)};return `<button class="giorno-voce ${x.ok?'':'prev'}" data-vedi-mov="${x.id}" title="Clicca per modificare">
       <i class="${x.eur<0&&!x.giro?(x.ok?'p-ent':'p-ent-prev'):x.ok?'p-fatto':'p-prev'}" style="--pc:${g?g.colore:'#ccc'}"></i>
@@ -6566,7 +6567,7 @@ function pickCat(v){ // scelta categoria a colori: il campo prende il colore del
 function disegnaFinestra(){
   const b=bozza, giro=b.tipo==='giro';
   if(b.tipo==='coi') return disegnaFinestraCoi();
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>${b.id?'Modifica movimento':'Nuovo movimento'}</h3>
     <div class="tipi">${[['uscita','Uscita'],['entrata','Entrata (non da fattura)'],['giro','Giroconto'],...(b.id?[]:[['coi','Cointestato']])].map(([k,n])=>`<button data-tipo="${k}" class="${b.tipo===k?'on':''}">${n}</button>`).join('')}</div>
     <div class="importo"><span>€</span><input id="m-imp" inputmode="decimal" placeholder="0,00" title="Puoi scrivere anche una somma, es. 3,50+4,99+6,79: premi Invio per il totale" value="${b.imp===''||isNaN(b.imp)?'':numIt(b.imp)}"><small id="m-imp-som"></small></div>
@@ -6592,7 +6593,7 @@ function disegnaFinestra(){
 function disegnaFinestraCoi(){
   const b=bozza, cats=[...new Set(S.cointestato.map(c=>nomeCoi(c.cat)).filter(Boolean))].sort();
   if(!b.coiV)b.coiV='add';
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>${b.id?'Modifica voce del cointestato':'Nuovo movimento'}</h3>
     ${b.id?'':`<div class="tipi">${[['uscita','Uscita'],['entrata','Entrata (non da fattura)'],['giro','Giroconto'],['coi','Cointestato']].map(([k,n])=>`<button data-tipo="${k}" class="${b.tipo===k?'on':''}">${n}</button>`).join('')}</div>`}
     <div class="co-tipo">${[['add','Esce dal cointestato'],['acc','Entra nel cointestato']].map(([k,n])=>`<button data-coi-v="${k}" class="${b.coiV===k?'on '+k:''}">${n}</button>`).join('')}</div>
@@ -6655,7 +6656,7 @@ function apriFattura(f){
 }
 function disegnaFattura(){
   const b=bozzaF;
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>${b.id?'Fattura n. '+b.n:'Nuova fattura'}</h3>
     <div class="campi"><label title="I tipi sono le categorie del gruppo Entrate: per aggiungerne uno crea la categoria in Impostazioni › Categorie">Tipo di fattura<select id="f-tipo">${tipiFat().map(([k,n])=>`<option value="${esc(k)}" ${b.tipo===k?'selected':''}>${esc(n)}</option>`).join('')}</select></label></div>
     <div class="importo"><span>€</span><input id="f-prest" inputmode="decimal" placeholder="prestazione" value="${b.prest===''?'':numIt(b.prest)}"></div>
@@ -6727,7 +6728,7 @@ function apriNuovoAnno(anno){
   const rip=S.movimenti.filter(m=>annoDi(m.data)===prec&&m.rip&&!m.fat).length, ripF=S.fatture.filter(f=>annoDi(f.data)===prec&&f.rip).length;
   const val={};S.conti.forEach(c=>val[c.id]=r2(P[c.id]||0));
   const perc=S.impostazioni.accantonamento[anno]??S.impostazioni.accantonamento[prec]??0.25;
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra larga" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra larga" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>Crea il ${anno}</h3>
     <p style="margin-top:0">Ti propongo come saldi al 1° gennaio ${anno} quelli calcolati al 31/12/${prec}. Confrontali con gli estratti conto e correggi i centesimi prima di confermare.</p>
     ${campoSaldi(anno,val,'data-ns',P)}
@@ -6846,7 +6847,7 @@ function apriSposta(tipo,id){
   const n=isCat?usoCat(id):usoConto(id);
   const alt=isCat?S.categorie.filter(c=>c.id!==id).map(c=>[c.id,(S.gruppi.find(g=>g.id===c.gruppo)||{}).nome+' › '+c.nome])
                  :contiMov().filter(c=>c.id!==id).map(c=>[c.id,c.nome]);
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra" role="dialog" aria-modal="true">
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>Elimina ${isCat?'la categoria':'il conto'} “${esc(el.nome)}”</h3>
     <p style="margin-top:0">${n} moviment${n===1?'o usa':'i usano'} ${isCat?'questa categoria':'questo conto'}. Dove li sposto?</p>
     <div class="campi"><label>Sposta in<select id="sposta-in">${opz(alt,'')}</select></label></div>
@@ -7189,7 +7190,7 @@ document.addEventListener('click',e=>{
   if(tg){const tr=tg.closest('tr[data-id]'),m=S.movimenti.find(x=>x.id===+tr.dataset.id);cambiaCampo(tr,m,tg.dataset.tog,!m[tg.dataset.tog]);return}
   const a=e.target.closest('[data-act]');if(!a)return;
   const act=a.dataset.act;
-  if(act==='chiudi-velo'&&e.target!==a)return;
+  if(act==='chiudi-velo')return; // 23/11: le finestre si chiudono solo con la X (o Annulla/Esc), non cliccando fuori
   const tr=a.closest('tr[data-id]'),m=tr?S.movimenti.find(x=>x.id===+tr.dataset.id):null;
   switch(act){
     case 'menu':if(innerWidth>900){UI.sideChiusa=!UI.sideChiusa;salvaUI();render();window.dispatchEvent(new Event('resize'))}else $('#side').classList.toggle('aperto');break;
