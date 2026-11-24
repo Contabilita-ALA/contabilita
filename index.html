@@ -4955,7 +4955,11 @@ function pvConti(D,acc,rev,totE,n0){
   const dTi=dep&&dTs==null&&dMesi?(-dInt.reduce((s,x)=>s+x.eur,0))/Math.max(1,sm[12][dep.id]||0)*12/dMesi*100:null;
   const dT=dTs!=null?+dTs:(dTi!=null?Math.round(dTi*100)/100:0), d0=dep?(sm[12][dep.id]||0):0, dF=Array(13).fill(0);{let d=d0;M.forEach(m=>{d*=1+dT/100/12;dF[m]=d})}
   const dI=ini(dF,d0);
-  const c0=coi?(sm[12][coi.id]||0)*q:0, cA=coi?(+si[coi.id]||0)*q:0, cMed=(c0-cA)/12, cF=Array(13).fill(0);M.forEach(m=>cF[m]=c0+cMed*m);
+  const c0=coi?(sm[12][coi.id]||0)*q:0, cA=coi?(+si[coi.id]||0)*q:0, cMed=(c0-cA)/12, cF=Array(13).fill(0);
+  // Paolo 24/11: la voce "mutuo+risparmi" è il bonifico verso il cointestato: se la cambi (es. 500 → 600) la differenza
+  // rispetto alla stima va anche nella tua metà del cointestato (l'Unicredit scende, il cointestato sale della stessa cifra).
+  const cMu=D.L.find(c=>c.id==='rata mutuo'), cDif=Array(13).fill(0);if(cMu&&cMu.stima)M.forEach(m=>cDif[m]=(cMu.mesi[m]||0)-(cMu.stima[m]||0));
+  const cDifT=M.reduce((s,m)=>s+cDif[m],0);{let c=c0;M.forEach(m=>{c+=cMed+cDif[m];cF[m]=c})}
   const cI=ini(cF,c0), tot=M.map(m=>uI[m]+rI[m]+dI[m]+cI[m]);tot.unshift(0);
   const totFin=uni[12]+rev[12]+dF[12]+cF[12];
   const cella=(v,o={},m)=>{const z=Math.abs(v)<0.5;return `<td class="${o.c||''} ${o.segno&&v<-0.5?'neg':''} ${z?'zero':''}">${z?'–':n0(v)}</td>`};
@@ -4970,7 +4974,7 @@ function pvConti(D,acc,rev,totE,n0){
   h+=riga(esc(revC?revC.nome:'Revolut'),rI,{r:'an-div',segno:1,tot:rev[12],tit:`Saldo del Revolut il 1° del mese: è la stessa riga della sezione "Il Revolut nel ${N}" qui sotto`,titTot:`Saldo al 31/12/${N}`});
   if(sT(accM)>0.5)h+=riga('+ accantonati nel mese',accM,{r:'an-acc',c:'acc',tot:sT(accM),med:sT(accM)/12,tit:`Giroconti di accantonamento dal conto al Revolut: aprile, luglio, ottobre, dicembre${daSp>0.5?` (gennaio: accantonamento ${a} ancora da spostare)`:''}`});
   if(dep)h+=riga(esc(dep.nome)+(dT?` <small>${String(dT).replace('.',',')}%</small>`:''),dI,{segno:1,tot:dF[12],tit:dT?`Saldo il 1° del mese: cresce con gli interessi al ${String(dT).replace('.',',')}% annuo (${euro(dF[12]-d0)} nel ${N}), ${dTs!=null?'tasso da "Aggiorna saldo" in Conti e risparmi':`tasso ricavato dagli interessi registrati nel ${a} (${dMesi} mesi): scrivilo in "Aggiorna saldo" per usare quello esatto`}. Nessun versamento previsto`:'Il deposito resta fermo: scrivi il tasso in Conti e risparmi (Aggiorna saldo) per vedere gli interessi',titTot:`Saldo al 31/12/${N}, interessi compresi`});
-  if(coi)h+=riga(`${esc(coi.nome)} <small>tua metà</small>`,cI,{r:'an-div',segno:1,tot:cF[12],tit:`La tua metà del cointestato: cresce di ${euro(cMed)} al mese, la media del ${a}`});
+  if(coi)h+=riga(`${esc(coi.nome)} <small>tua metà</small>`,cI,{r:'an-div',segno:1,tot:cF[12],tit:`La tua metà del cointestato: cresce di ${euro(cMed)} al mese, la media del ${a}${Math.abs(cDifT)>0.5?`, ${cDifT>0?'più':'meno'} ${euro(Math.abs(cDifT))} nell'anno perché hai cambiato la voce mutuo+risparmi`:''}`});
   h+=riga('Totale soldi tuoi',tot,{segno:1,r:'tot',tot:totFin,tit:'Unicredit + Revolut + deposito + tua quota del cointestato (le carte sono già tolte dall\'Unicredit nella riga spese)'});
   return h;
 }
