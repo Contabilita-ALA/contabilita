@@ -2871,7 +2871,9 @@ h1,.tq-k-v{letter-spacing:-.4px}
 .tq.co .lo-r input{padding:2px 3px}
 .tq.co .lo-l{grid-template-columns:60px minmax(0,1fr) 60px 12px}
 /* 25/11 colonne in em: seguono la grandezza del testo e non tagliano le scritte */
-.tq.co .lo-o{grid-template-columns:5.7em minmax(4.6em,1fr) 3.1em 4.1em 4.5em .9em}
+.tq.co .lo-o{grid-template-columns:3.4em minmax(4.6em,1fr) 2.6em 3.7em 3.8em 4.1em 0}
+.tq.co .lo-o input{padding:2px 1px}
+.tq.co .lo-r{position:relative}.tq.co .lo-o .lo-x{position:absolute;right:-12px;top:50%;transform:translateY(-50%)}.tq.co .lo-o{padding-right:2px}.tq.co .lo .lo-tab{padding-right:12px}
 .tq.co .lo-l{grid-template-columns:5.7em minmax(0,1fr) 4.5em .9em}
 .tq.co .lo-r input{text-overflow:clip}
 .tq.co .lo-r.h{font-size:inherit}.tq.co .lo-r.h>*{font-size:var(--f-mini)}
@@ -4165,7 +4167,7 @@ function datiCoi(a){
 /* ---- Leonilde e Olga (25/11/2026): pagamenti in contanti di 4 appartamenti del condominio, solo totali (nessuna divisione) ---- */
 function datiLO(){
   if(!S.condominio)S.condominio={tariffa:2.5,creditoIni:0,olga:[],leo:[]};
-  const C=S.condominio, dov=r=>Math.round((+r.ore||0)*(r.t??C.tariffa)*100)/100;
+  const C=S.condominio, dov=r=>Math.round(((+r.ore||0)*(r.t??C.tariffa)+(+r.prod||0))*100)/100;
   const ord=(x,y)=>x.data<y.data?-1:x.data>y.data?1:x.id-y.id;
   const O=[...C.olga].sort(ord), L=[...C.leo].sort(ord);
   // quanto dovete a Olga: tutte le ore di sempre − tutto quello che avete dato − l'eventuale credito di partenza
@@ -4187,12 +4189,12 @@ function renderLO(a){
     :resta>0?`<span class="lo-st deb" title="Ore segnate meno quello che avete già dato${+C.creditoIni?' (contato il credito di partenza di '+euro(+C.creditoIni)+')':''}">da dare ${euro(resta)}</span>`
     :`<span class="lo-st cre" title="Avete dato di più: si scala la prossima volta">in credito ${euro(-resta)}</span>`;
   const riO=r=>{const d=dov(r), ap=r.pag==null, df=!ap&&Math.abs(+r.pag-d)>0.005;
-    return `<div class="lo-r lo-o ${ap?'apre':''} ${df?'diff':''}"><input data-lo="olga" data-id="${r.id}" data-k="data" value="${dIt(r.data)}"><input data-lo="olga" data-id="${r.id}" data-k="per" value="${esc(r.per||'')}" placeholder="periodo"><input class="n" inputmode="decimal" data-lo="olga" data-id="${r.id}" data-k="ore" value="${vo(r.ore)}" placeholder="ore"><span class="n dov" title="${vo(r.ore)} ore × ${euro(r.t??C.tariffa)}">${d?numIt(d):'–'}</span><span class="pg"><input class="n" inputmode="decimal" data-lo="olga" data-id="${r.id}" data-k="pag" value="${v(r.pag)}" placeholder="${ap?'da dare':''}" title="${df?(+r.pag<d?'Dato meno: '+euro(d-r.pag)+' restano da dare':'Dato di più: '+euro(r.pag-d)+' di credito'):'Quanto avete dato in contanti (vuoto = non ancora pagato)'}"></span><button class="lo-x" data-lo-del="olga" data-id="${r.id}" title="Togli la riga">×</button></div>`};
+    return `<div class="lo-r lo-o ${ap?'apre':''} ${df?'diff':''}"><input data-lo="olga" data-id="${r.id}" data-k="data" value="${dIt(r.data).slice(0,5)}" title="${dataIt(r.data)}"><input data-lo="olga" data-id="${r.id}" data-k="per" value="${esc(r.per||'')}" placeholder="periodo"><input class="n" inputmode="decimal" data-lo="olga" data-id="${r.id}" data-k="ore" value="${vo(r.ore)}" placeholder="ore"><input class="n" inputmode="decimal" data-lo="olga" data-id="${r.id}" data-k="prod" value="${+r.prod?v(r.prod):''}" placeholder="–" title="Soldi spesi da Olga per i prodotti di pulizia: si sommano al dovuto (puoi scrivere 12,50+8)"><span class="n dov" title="${vo(r.ore)} ore × ${euro(r.t??C.tariffa)}${+r.prod?' + prodotti '+euro(+r.prod):''}">${d?numIt(d):'–'}</span><span class="pg"><input class="n" inputmode="decimal" data-lo="olga" data-id="${r.id}" data-k="pag" value="${v(r.pag)}" placeholder="${ap?'da dare':''}" title="${df?(+r.pag<d?'Dato meno: '+euro(d-r.pag)+' restano da dare':'Dato di più: '+euro(r.pag-d)+' di credito'):'Quanto avete dato in contanti (vuoto = non ancora pagato)'}"></span><button class="lo-x" data-lo-del="olga" data-id="${r.id}" title="Togli la riga">×</button></div>`};
   const riL=r=>`<div class="lo-r lo-l"><input data-lo="leo" data-id="${r.id}" data-k="data" value="${dIt(r.data)}"><span></span><input class="n" inputmode="decimal" data-lo="leo" data-id="${r.id}" data-k="eur" value="${v(r.eur)}"><button class="lo-x" data-lo-del="leo" data-id="${r.id}" title="Togli la riga">×</button></div>`;
   const inc=k=>`<textarea class="lo-inc" data-lo-incolla="${k}" placeholder="Per portare lo storico: copia dal foglio le righe ${k==='olga'?'(data, periodo, ore, soldi)':'(data, soldi)'} e incollale qui"></textarea>`;
   const ult=L.length?L[L.length-1]:null, gg=ult?Math.round((new Date(oggiISO())-new Date(ult.data))/864e5):null;
   const olga=`<section class="tq-p lo"><h3>${ico('calendario')} Olga<small>a ore · pagati nel ${a} <b style="color:var(--inchiostro)">${euro(totO)}</b></small></h3>
-    <div class="lo-tab"><div class="lo-r lo-o h"><span>data</span><span>periodo</span><span class="n">ore</span><span class="n">dovuto</span><span class="n">dato</span><span></span></div>
+    <div class="lo-tab"><div class="lo-r lo-o h"><span>data</span><span>periodo</span><span class="n">ore</span><span class="n" title="Prodotti per pulire comprati da Olga">prod.</span><span class="n">dovuto</span><span class="n">dato</span><span></span></div>
     ${Oa.length?Oa.map(riO).join(''):`<div class="lo-vuoto">Nessun pagamento nel ${a}</div>`}${O.length?'':inc('olga')}</div>
     <div class="lo-f">${st}<span title="Vale per le righe nuove">€/ora <input data-lo-tar inputmode="decimal" value="${numIt(C.tariffa)}"></span><button class="lo-add sp" data-lo-add="olga">+ ore ${loProssimo(O)}</button></div></section>`;
   const leo=`<section class="tq-p lo"><h3>${ico('calendario')} Leonilde<small>pagati nel ${a} <b style="color:var(--inchiostro)">${euro(totL)}</b></small></h3>
@@ -4221,8 +4223,11 @@ function loIncolla(k,txt){ // righe copiate dal foglio (colonne separate da tabu
 document.addEventListener('change',e=>{
   const i=e.target.closest('[data-lo]');
   if(i){const C=datiLO().C, r=C[i.dataset.lo].find(x=>x.id===+i.dataset.id), k=i.dataset.k;if(!r)return;
+    // dopo il ridisegno torno sul campo dove eri andato con Tab o clic
+    return setTimeout(()=>{const f=document.activeElement, dove=f&&f.dataset&&f.dataset.lo?[f.dataset.lo,f.dataset.id,f.dataset.k]:null;
     modifica(()=>{if(k==='data'){const d=loData(i.value,r.data);if(d)r.data=d;else{toast('Scrivi la data come 25/11/26');render();return}}else if(k==='per')r.per=i.value.trim().toUpperCase();
-      else{const n=parseNum(i.value);r[k]=i.value.trim()===''?(k==='pag'?null:0):(isNaN(n)?r[k]:n)}});return}
+      else{const n=k==='prod'?parseSomma(i.value):parseNum(i.value);r[k]=i.value.trim()===''?(k==='pag'?null:0):(isNaN(n)?r[k]:n)}});
+    if(dove){const g=document.querySelector(`[data-lo="${dove[0]}"][data-id="${dove[1]}"][data-k="${dove[2]}"]`);if(g){g.focus();g.select&&g.select()}}},0)}
   const t=e.target.closest('[data-lo-tar]');
   if(t){const n=parseNum(t.value);if(!isNaN(n)&&n>0)modifica(()=>datiLO().C.tariffa=n);else render();}
 });
