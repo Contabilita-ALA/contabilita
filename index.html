@@ -1307,7 +1307,11 @@ button.rd-g{cursor:pointer}button.rd-g:hover{border-color:var(--inchiostro)}
 .rd-g.mez{background:linear-gradient(90deg,var(--corallo) 50%,#fff 50%);border-color:var(--corallo);font-weight:700}
 .rd-g.int{background:var(--corallo);border-color:var(--corallo);font-weight:700}
 .rd-g.comp{background:var(--salvia);border-color:var(--salvia);font-weight:700}
-.rd-g.fuori{opacity:.55}.rd-g i{position:absolute;top:0;right:2px;font-style:normal;font-size:var(--f-mini);font-weight:700}
+.rd-g.fuori{opacity:.55}.rd-g.alt{opacity:.35}
+.rd-per{margin-left:6px;display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.rd-lim{width:44px;text-align:center;font:700 var(--f-piccolo) var(--font-testo,inherit);color:var(--inchiostro);background:var(--carta);border:1.5px solid var(--grigio-chiaro);border-radius:8px;padding:0 2px}
+span.rd-lim{display:inline-block;background:transparent;border-color:transparent}
+input.rd-lim.mano{border-color:var(--inchiostro)}.rd-g i{position:absolute;top:0;right:2px;font-style:normal;font-size:var(--f-mini);font-weight:700}
 .rd-aiuto{margin:6px 0 0;font-size:var(--f-piccolo);color:var(--grigio)}
 .rd-conto{gap:6px}.rd-conto h4{margin:4px 0 0;font:700 var(--f-testo) var(--font-titoli)}.rd-conto h4 small{font:500 var(--f-piccolo) var(--font-testo,inherit);color:var(--grigio)}
 .rd-c{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:3px 10px;align-items:center;font-size:var(--f-piccolo)}
@@ -4000,9 +4004,32 @@ function renderFatture(){
 const GSETT=['dom','lun','mar','mer','gio','ven','sab'];
 function radDi(a){
   if(!S.radames) S.radames={};
-  if(!S.radames[a]){const p=S.radames[a-1];S.radames[a]={base:p?[...p.base]:[0,0,0,0],mezza:p?p.mezza:33.5,extra:[0,0,0,0],extraNota:['','','',''],assenze:[]}}
-  return S.radames[a];
+  if(!S.radames[a]){const p=S.radames[a-1];S.radames[a]={base:p?[...p.base]:[0,0,0,0],mezza:p?p.mezza:33.5,extra:[0,0,0,0],extraNota:['','','',''],assenze:[],fine:[null,null,null]}}
+  const R0=S.radames[a];
+  if(!Array.isArray(R0.fine)){ // anni già segnati: le assenze spostate a mano nel trimestre dopo diventano il confine del trimestre
+    R0.fine=[null,null,null];
+    for(let q=1;q<=3;q++){
+      const qa=R0.assenze.filter(x=>x.q===q||x.q===q+1), fq=fineRad(a)[q-1].d;if(!qa.some(x=>x.q===q?x.d>fq:x.d<=fq))continue;
+      const sp=qa.filter(x=>x.q===q+1&&Math.ceil(meseDi(x.d)/3)===q).map(x=>x.d).sort(), re=qa.filter(x=>x.q===q).map(x=>x.d).sort();
+      R0.fine[q-1]=sp.length?giornoPiu(sp[0],-1):re[re.length-1];
+    }
+  }
+  return R0;
 }
+const giornoPiu=(d,n)=>{const t=new Date(d+'T12:00');t.setDate(t.getDate()+n);return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0')};
+const fineCal=(a,q)=>giornoPiu(`${q===4?a+1:a}-${String(q===4?1:q*3+1).padStart(2,'0')}-01`,-1);
+function fineRad(a){ // ultimo giorno di ogni trimestre: scelto a mano, altrimenti il giorno prima della fattura (se emessa prima della fine), altrimenti fine del trimestre di calendario
+  const R0=radDi(a), E=[];
+  for(let q=1;q<=4;q++){
+    const cal=fineCal(a,q), ini=q===1?a+'-01-01':giornoPiu(E[q-2].d,1);let d=cal,da='cal';
+    if(q<4){const m=R0.fine[q-1],f=fatturaRad(a,q);
+      if(m){d=m;da='mano'}else if(f&&f.data<=cal&&f.data>ini){d=giornoPiu(f.data,-1);da='fat'}}
+    if(d<ini||d>=a+'-12-31'&&q<4){d=cal;da='cal'}
+    E.push({q,ini,d,da,cal});
+  }
+  return E;
+}
+function trimRad(a,d){const E=fineRad(a);for(const e of E)if(d<=e.d)return e.q;return 4}
 function festivi(a){ // festività nazionali (Pasquetta compresa)
   const f=new Set(['01-01','01-06','04-25','05-01','06-02','08-15','11-01','12-08','12-25','12-26'].map(x=>a+'-'+x));
   const A=a%19,B=Math.floor(a/100),C=a%100,D=Math.floor(B/4),E=B%4,F=Math.floor((B+8)/25),G=Math.floor((B-F+1)/3),H=(19*A+B-D-G+15)%30,I=Math.floor(C/4),K=C%4,L=(32+2*E+2*I-H-K)%7,M=Math.floor((A+11*H+22*L)/451),mese=Math.floor((H+L-7*M+114)/31),g=((H+L-7*M+114)%31)+1;
@@ -4010,23 +4037,20 @@ function festivi(a){ // festività nazionali (Pasquetta compresa)
   return f;
 }
 function fatturaRad(a,q){return S.fatture.filter(f=>f.tipo==='RADAMES'&&annoDi(f.data)===a&&Math.ceil(meseDi(f.data)/3)===q).sort((x,y)=>x.data.localeCompare(y.data))[0]||null}
-function trimDefaultRad(a,d){ // l'assenza va nel trimestre della data, ma se la fattura di quel trimestre è già emessa passa al successivo
-  let q=Math.ceil(meseDi(d)/3); const f=fatturaRad(a,q); if(f&&f.data<=d&&q<4) q++; return q;
-}
 function datiRad(a){
-  const R0=radDi(a);
+  const R0=radDi(a), E=fineRad(a), qDi=d=>{for(const e of E)if(d<=e.d)return e.q;return 4};
   return [1,2,3,4].map(q=>{
-    const ass=R0.assenze.filter(x=>x.q===q), mezze=ass.filter(x=>!x.comp).reduce((s,x)=>s+x.mezze,0), comp=ass.filter(x=>x.comp).reduce((s,x)=>s+x.mezze,0);
+    const ass=R0.assenze.filter(x=>qDi(x.d)===q), mezze=ass.filter(x=>!x.comp).reduce((s,x)=>s+x.mezze,0), comp=ass.filter(x=>x.comp).reduce((s,x)=>s+x.mezze,0);
     // compensata in un giorno feriale = assenza già recuperata (non si scala); compensata di sabato, domenica o festivo = mezza giornata lavorata in più, che recupera un'assenza
     const fest=festivi(a), lav=ass.filter(x=>x.comp&&(fest.has(x.d)||[0,6].includes(new Date(x.d+'T12:00').getDay()))).reduce((s,x)=>s+x.mezze,0);
     const netteM=Math.max(0,mezze-lav), avanzoM=Math.max(0,lav-mezze);
-    const base=+R0.base[q-1]||0, extra=+R0.extra[q-1]||0, ded=netteM*R0.mezza, da=base-ded+extra, f=fatturaRad(a,q);
+    const lim=E[q-1], base=+R0.base[q-1]||0, extra=+R0.extra[q-1]||0, ded=netteM*R0.mezza, da=base-ded+extra, f=fatturaRad(a,q);
     const m=f?S.movimenti.find(x=>x.fat===f.id&&x.fatParte!=='rimborso'):null;
-    return {q,ass,mezze,comp,lav,netteM,avanzoM,base,extra,ded,da,f,inc:!!(m&&m.ok),diff:f?r2((+f.prest||0)-da):0};
+    return {q,lim,ass,mezze,comp,lav,netteM,avanzoM,base,extra,ded,da,f,inc:!!(m&&m.ok),diff:f?r2((+f.prest||0)-da):0};
   });
 }
 function renderRadames(){
-  const a=S.anno, R0=radDi(a), D=datiRad(a), oggi=oggiISO(), fest=festivi(a);
+  const a=S.anno, R0=radDi(a), D=datiRad(a), oggi=oggiISO(), fest=festivi(a), qDi=d=>{for(const x of D)if(d<=x.lim.d)return x.q;return 4};
   const qOra=new Date().getFullYear()===a?Math.ceil((new Date().getMonth()+1)/3):0;
   const MES3=['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
   const tool=UI.radTool==='comp'?'comp':'mez';
@@ -4039,18 +4063,24 @@ function renderRadames(){
     let c='<span></span>'.repeat(off);
     for(let g=1;g<=gg;g++){
       const d=`${a}-${String(m).padStart(2,'0')}-${String(g).padStart(2,'0')}`, dw=new Date(a,m-1,g).getDay(), we=dw===0||dw===6, fe=fest.has(d);
-      const x=R0.assenze.find(z=>z.d===d), fuori=x&&x.q!==q;
-      const cls=['rd-g',we?'we':'',fe?'fe':'',d===oggi?'oggi':'',x?(x.comp?(x.mezze===2?'comp':'comp mz'):(x.mezze===2?'int':'mez')):'',fuori?'fuori':''].filter(Boolean).join(' ');
-      const tit=x?`${GSETT[dw]} ${dataIt(d)}: ${x.mezze===2?'giornata intera':'mezza giornata'}${x.comp?' compensata':' di assenza'}${fuori?' (conta nel '+ROMANI[x.q-1]+' trim: fattura già emessa)':''}${x.nota?' · '+x.nota:''}`:(fe?'festivo · clicca se hai lavorato':we?'clicca se hai lavorato (es. per compensare)':'');
-      c+=`<button class="${cls}" data-rad-g="${d}"${tit?` title="${esc(tit)}"`:''}>${g}${fuori?`<i>${ROMANI[x.q-1]}</i>`:''}</button>`;
+      const x=R0.assenze.find(z=>z.d===d), qd=qDi(d), fuori=x&&qd!==q, xq=x?Object.assign({},x,{q:qd}):null, alt=!x&&qd!==q;
+      const cls=['rd-g',we?'we':'',fe?'fe':'',d===oggi?'oggi':'',x?(x.comp?(x.mezze===2?'comp':'comp mz'):(x.mezze===2?'int':'mez')):'',fuori?'fuori':'',alt?'alt':''].filter(Boolean).join(' ');
+      const tit=x?`${GSETT[dw]} ${dataIt(d)}: ${x.mezze===2?'giornata intera':'mezza giornata'}${x.comp?' compensata':' di assenza'}${fuori?' (conta nel '+ROMANI[qd-1]+' trim)':''}${x.nota?' · '+x.nota:''}`:(alt?`conta nel ${ROMANI[qd-1]} trim · ${fe?'festivo':we?'weekend':'clicca per segnare un\'assenza'}`:fe?'festivo · clicca se hai lavorato':we?'clicca se hai lavorato (es. per compensare)':'');
+      c+=`<button class="${cls}" data-rad-g="${d}"${tit?` title="${esc(tit)}"`:''}>${g}${fuori||alt?`<i>${ROMANI[qd-1]}</i>`:''}</button>`;
     }
     const righe=Math.ceil((off+gg)/7); c+='<span></span>'.repeat(righe*7-off-gg);
     const nm=R0.assenze.filter(z=>meseDi(z.d)===m&&annoDi(z.d)===a&&!z.comp).reduce((s,z)=>s+z.mezze,0), nc=R0.assenze.filter(z=>meseDi(z.d)===m&&annoDi(z.d)===a&&z.comp).reduce((s,z)=>s+z.mezze,0);
     return `<div class="rd-m" style="flex:${righe} 1 0"><div class="rd-m-t"><b>${MESI[m-1]}</b><span>${nm?`<i class="rd-m-n">${nm} ${nm===1?'mezza':'mezze'}</i>`:''}${nc?`<i class="rd-m-c">${nc} comp.</i>`:''}</span></div><div class="rd-gg" style="grid-template-rows:repeat(${righe},minmax(0,1fr))">${c}</div></div>`;
   };
+  const dm=d=>d.slice(8,10)+'/'+d.slice(5,7);
+  const tFine=l=>l.da==='mano'?'Scelto da te. Cancella per tornare al calcolo automatico':l.da==='fat'?'Il giorno prima della fattura: da lì in poi le assenze vanno nel trimestre dopo. Scrivi un altro giorno se serve':'Fine del trimestre di calendario. Scrivi un altro giorno (gg/mm) per spostare il confine';
+  const periodo=x=>{const l=x.lim, p=D[x.q-2];
+    const dal=x.q===1?`<span class="rd-lim fisso">${dm(l.ini)}</span>`:`<input class="rd-lim ${p.lim.da}" data-rad-dal="${x.q}" value="${dm(l.ini)}" title="Primo giorno del ${ROMANI[x.q-1]} trim. ${tFine(p.lim)}">`;
+    const al=x.q===4?`<span class="rd-lim fisso">31/12</span>`:`<input class="rd-lim ${l.da}" data-rad-al="${x.q}" value="${dm(l.d)}" title="Ultimo giorno del ${ROMANI[x.q-1]} trim. ${tFine(l)}">`;
+    return `<span class="rd-per">dal ${dal} al ${al}</span>`};
   const col=x=>`<section class="rd-col ${x.q===qOra?'ora':''}">
       <div class="rd-qc">
-        <div class="rd-qc-t"><b>${ROMANI[x.q-1]} trim</b> ${MES3[x.q*3-3]}–${MES3[x.q*3-1]}<span class="spazio"></span>${x.q===qOra?'<i class="rd-ora">in corso</i>':''}</div>
+        <div class="rd-qc-t"><b>${ROMANI[x.q-1]} trim</b>${periodo(x)}<span class="spazio"></span>${x.q===qOra?'<i class="rd-ora">in corso</i>':''}</div>
         <div class="rd-qc-v">${euro(x.da)}</div>
         <div class="rd-qc-d"><label title="Fattura base del trimestre">base<input data-rad-base="${x.q}" inputmode="decimal" value="${numIt(x.base).replace(/,00$/,'')}"></label><span class="${x.netteM?'neg':'zero'}" title="${x.mezze} mezze di assenza${x.lav?` − ${x.lav} lavorate nel weekend o festivi`:''} = ${x.netteM} × ${euro(R0.mezza)}${x.avanzoM?` · ${x.avanzoM} ${x.avanzoM===1?'mezza lavorata':'mezze lavorate'} in più, non pagate`:''}">− ${x.netteM} ${x.netteM===1?'mezza':'mezze'}</span><label title="Extra da aggiungere in fattura">+ extra<input data-rad-extra="${x.q}" inputmode="decimal" value="${x.extra?numIt(x.extra).replace(/,00$/,''):''}" placeholder="0"></label></div>
         ${fBtn(x)}
@@ -4061,7 +4091,7 @@ function renderRadames(){
   const tot=k=>D.reduce((s,x)=>s+x[k],0), emesse=D.filter(x=>x.f).length;
   $('#main').innerHTML=`<div class="tq rd rd4">
     <div class="tq-testa"><h1>Radames ${a}</h1>
-      <div class="rd-tool" title="Scegli cosa segnare, poi clicca i giorni: 1 clic mezza giornata, 2 clic giornata intera, 3 clic la togli. I giorni con il numero romano contano nel trimestre dopo (fattura già emessa).">${strumenti}<span class="rd-tool-a">1 clic ½ · 2 clic intera · 3 clic togli</span></div>
+      <div class="rd-tool" title="Scegli cosa segnare, poi clicca i giorni: 1 clic mezza giornata, 2 clic giornata intera, 3 clic la togli. I giorni con il numero romano contano in un altro trimestre: il confine si sceglie in cima a ogni trimestre (dal … al …).">${strumenti}<span class="rd-tool-a">1 clic ½ · 2 clic intera · 3 clic togli</span></div>
       <span class="spazio"></span>
       <div class="rd-sum"><span>½ giornata <label class="rd-in sm">€<input data-rad-mezza inputmode="decimal" value="${numIt(R0.mezza)}" title="Valore di una mezza giornata (vale per tutto il ${a})"></label></span><span><b class="neg">${tot('netteM')}</b> mezze scalate (− ${euro(tot('ded')).replace(/,00$/,'')})</span><span title="Di cui lavorate di sabato, domenica o festivi: ${tot('lav')}, recuperano altrettante assenze"><b class="pos">${tot('comp')}</b> compensate</span><span>anno <b>${euro(tot('da')).replace(/,00$/,'')}</b> · ${emesse}/4 fatture</span></div>
     </div>
@@ -7115,7 +7145,7 @@ document.addEventListener('click',e=>{
   const rt=e.target.closest('[data-rad-tool]');if(rt){UI.radTool=rt.dataset.radTool;salvaUI();document.querySelectorAll('[data-rad-tool]').forEach(b=>b.classList.toggle('on',b===rt));return}
   const rg=e.target.closest('[data-rad-g]');if(rg){const d=rg.dataset.radG,a=annoDi(d),R0=radDi(a),x=R0.assenze.find(z=>z.d===d),comp=UI.radTool==='comp';
     modifica(()=>{
-      if(!x){R0.assenze.push({d,nota:'',q:trimDefaultRad(a,d),comp,mezze:1});R0.assenze.sort((p,q)=>p.d.localeCompare(q.d));return}
+      if(!x){R0.assenze.push({d,nota:'',comp,mezze:1});R0.assenze.sort((p,q)=>p.d.localeCompare(q.d));return}
       if(x.comp!==comp){x.comp=comp;x.mezze=1;return}
       if(x.mezze===1)x.mezze=2;else R0.assenze.splice(R0.assenze.indexOf(x),1);
     });return}
@@ -7291,6 +7321,13 @@ document.addEventListener('change',e=>{
   if(el.dataset.radComp){const x=radDi(S.anno).assenze.find(z=>z.d===el.dataset.radComp);if(x)modifica(()=>x.comp=el.checked);return}
   if(el.dataset.radNota){const x=radDi(S.anno).assenze.find(z=>z.d===el.dataset.radNota);if(x)modifica(()=>x.nota=el.value.trim(),{ridisegna:false});return}
   if(el.dataset.radXnota){const R0=radDi(S.anno);modifica(()=>R0.extraNota[+el.dataset.radXnota-1]=el.value.trim(),{ridisegna:false});return}
+  if(el.dataset.radAl||el.dataset.radDal){const a=S.anno,R0=radDi(a),q=+(el.dataset.radAl||el.dataset.radDal-1),t=el.value.trim();
+    if(!t){modifica(()=>R0.fine[q-1]=null);return}
+    const m=t.match(/^(\d{1,2})\s*[\/.\-]\s*(\d{1,2})/);let d=m?`${a}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`:'';
+    if(d&&el.dataset.radDal)d=giornoPiu(d,-1);
+    const E=fineRad(a),ini=E[q-1].ini,dopo=E[q].d;
+    if(!m||isNaN(new Date(d+'T12:00'))||giornoPiu(d,0)!==d||d<ini||d>=dopo){toast(`Giorno non valido: scrivi gg/mm tra ${ini.slice(8)}/${ini.slice(5,7)} e ${dopo.slice(8)}/${dopo.slice(5,7)}`);renderRadames();return}
+    modifica(()=>R0.fine[q-1]=d);return}
   if(el.dataset.radBase||el.dataset.radExtra||el.dataset.radMezza!==undefined){const R0=radDi(S.anno),v=parseNum(el.value)||0;
     modifica(()=>{if(el.dataset.radBase)R0.base[+el.dataset.radBase-1]=v;else if(el.dataset.radExtra)R0.extra[+el.dataset.radExtra-1]=v;else R0.mezza=v});return}
   if(el.dataset.f==='per'){const tr=el.closest('tr[data-id]'),m=S.movimenti.find(x=>x.id===+tr.dataset.id),P=leggiPer(el.value,m);
