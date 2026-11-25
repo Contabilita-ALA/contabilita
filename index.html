@@ -3115,6 +3115,61 @@ body.mob.mb-calcmode .mb-cf-ris{flex:1;display:flex;flex-direction:column;gap:cl
 body.mob.mb-calcmode .mb-cf-ris .mb-cr{padding-top:clamp(5px,calc((100dvh - 720px)/24 + 5px),11px);padding-bottom:clamp(5px,calc((100dvh - 720px)/24 + 5px),11px)}
 body.mob.mb-calcmode .mb-cf-ris .mb-cg{padding:clamp(2px,calc((100dvh - 720px)/40 + 2px),6px) 14px}
 body.mob.mb-calcmode .mb-cf-ris .mb-riga-pill{margin-top:auto}
+/* Oggi come la Home del computer (25/11) */
+body.mob .mb-rest{display:flex;flex-direction:column;align-items:center;text-align:center;padding:6px 0 2px}
+body.mob .mb-rest>small{font:600 16px var(--font);margin-bottom:2px}
+body.mob .mb-rest-b{display:flex;width:100%;height:14px;border-radius:7px;background:var(--grigino);overflow:hidden;margin:12px 0 8px}
+body.mob .mb-rest-b i{display:block;height:100%;background:var(--b)}
+body.mob .mb-rest-b i.v{background:repeating-linear-gradient(135deg,var(--b) 0 4px,color-mix(in srgb,var(--b) 45%,#fff) 4px 8px)}
+body.mob .mb-rest-t{font-size:14.5px;color:var(--grigio)}
+body.mob .mb-rest-l{display:flex;gap:16px;margin-top:6px;font-size:14px}
+body.mob .mb-rest-l i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--b);margin-right:5px}
+body.mob #mob .mb-al{appearance:none;border:0;width:100%;display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;text-align:left;border-radius:18px;padding:10px 12px;background:var(--giallo-ch);color:var(--inchiostro)}
+body.mob #mob .mb-al.no{background:#fbe3e0}
+body.mob .mb-al-i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--giallo)}
+body.mob .mb-al.no .mb-al-i{background:var(--rosso);color:#fff}
+body.mob .mb-al b{display:block;font-size:15px}body.mob .mb-al small{font-size:13px;color:var(--grigio)}
+body.mob .mb-al strong{font-size:15px;text-align:right;white-space:nowrap}body.mob .mb-al em{display:block;font-style:normal;font-size:12.5px;color:var(--grigio);font-weight:400}
+body.mob .mb-k3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+body.mob .mb-k{border-radius:20px;padding:10px 11px 12px;display:flex;flex-direction:column;gap:2px;line-height:1.2}
+body.mob .mb-k small{display:flex;align-items:center;gap:4px;font:700 12px var(--font);text-transform:uppercase;letter-spacing:.3px}
+body.mob .mb-k small .ico{width:14px;height:14px}
+body.mob .mb-k b{font:700 21px var(--font);margin-top:2px}
+body.mob .mb-k span{font-size:12.5px}
+body.mob .mb-k.ent{background:var(--salvia)}body.mob .mb-k.spe{background:var(--corallo)}
+body.mob .mb-k.nero{background:var(--inchiostro);color:#fff}body.mob .mb-k.nero span{color:rgba(255,255,255,.8)}
+body.mob .mb-k-bar{display:block;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin-top:6px;overflow:hidden}
+body.mob .mb-k-bar i{display:block;height:100%;background:var(--giallo)}
+body.mob .mb-k-bar,body.mob .mb-k-bar i{font-style:normal}
+body.mob #mob .mb-voce.pieno{background:color-mix(in srgb,var(--b) 85%,#fff)}
+body.mob #mob .mb-voce.pieno small,body.mob #mob .mb-voce.pieno em{color:var(--inchiostro);opacity:.8}
+body.mob .mb-conti{background:rgba(255,255,255,.6);border-radius:22px;padding:12px 14px 4px}
+body.mob .mb-conti-b{display:flex;height:12px;border-radius:6px;overflow:hidden;gap:2px;margin-bottom:6px}
+body.mob .mb-conti-b i{display:block;height:100%}
+body.mob .mb-cr2{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid rgba(0,0,0,.06)}
+body.mob .mb-cr2:nth-child(2){border-top:0}
+body.mob .mb-cr2>i{width:12px;height:12px;border-radius:50%}
+body.mob .mb-cr2 span{display:flex;flex-direction:column;min-width:0}body.mob .mb-cr2 b{font-size:15.5px}body.mob .mb-cr2 small{font-size:12.5px;color:var(--grigio)}
+body.mob .mb-cr2 em{font-style:normal;font-weight:700;font-size:16px;text-align:right;white-space:nowrap}
+body.mob .mb-cr2 em small{display:block;font-weight:400;font-size:12.5px}
+body.mob .mb-cr2.rosso em{color:var(--rosso)}
+body.mob .mb-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:rgba(255,255,255,.6);border-radius:22px;padding:10px}
+body.mob .mb-cal-gs{text-align:center;font:700 12.5px var(--font);color:var(--grigio);padding-bottom:2px}
+body.mob #mob .mb-cal-d{appearance:none;border:0;background:var(--panna);border-radius:10px;min-height:52px;padding:4px 2px 3px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;color:var(--inchiostro)}
+body.mob #mob .mb-cal-d.we{background:var(--grigino)}
+body.mob #mob .mb-cal-d.oggi{background:var(--giallo)}
+body.mob #mob .mb-cal-d.on{box-shadow:inset 0 0 0 2px var(--inchiostro)}
+body.mob .mb-cal-d.pass b{color:var(--grigio)}
+body.mob .mb-cal-d b{font-size:13.5px}
+body.mob .mb-cal-p{display:flex;gap:2px;min-height:7px}
+body.mob .mb-cal-p i{width:7px;height:7px;border-radius:50%;background:var(--pc)}
+body.mob .mb-cal-p i.p{background:none;box-shadow:inset 0 0 0 1.5px var(--pc)}
+body.mob .mb-cal-d em{font-style:normal;font-size:11.5px;font-weight:600;color:var(--grigio)}
+body.mob .mb-cal-d em.pos{color:var(--verde)}
+body.mob .mb-it.rit .mb-it-v small{color:var(--rosso)}
+body.mob #mob .mb-al{grid-template-columns:30px 1fr}
+body.mob #mob .mb-al strong{grid-column:2;text-align:left}
+body.mob #mob .mb-al strong em{display:inline;margin-left:6px}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -7966,42 +8021,50 @@ function anello(seg,centro,R=104,SW=26){ // anello a segmenti con le icone (come
     return `<circle r="${R}" cx="140" cy="140" fill="none" stroke="${x.c}" stroke-width="${SW}" stroke-linecap="round" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-s}" transform="rotate(-90 140 140)"/>`}).join('');
   return `<div class="mb-an"><svg viewBox="0 0 280 280">${arc}</svg>${ic}<div class="mb-an-c">${centro}</div></div>`;
 }
-function pOggi(){
-  const X=h3Dati(), o=new Date(), nome=(S.impostazioni.nome??'').trim(), m=X.m, a=X.a;
+function pOggi(){ // Paolo 25/11: come la Home del computer (stessi riquadri e numeri) + calendario del mese
+  const X=h3Dati(), o=new Date(), nome=(S.impostazioni.nome??'').trim(), {m,a,B}=X, nM=MESI[m-1];
+  const E=v=>euro(v).replace(/,00$/,'');
   let h=`<p class="mb-ciao">${nome?esc(nome)+', ':''}come vanno i conti oggi?<small>${GL[o.getDay()]} ${o.getDate()} ${MESI[o.getMonth()]}</small></p>`;
-  // stipendio del mese: fisse + variabili (da Unicredit) + quello che resta
-  const n=nettoTrim(a,Math.ceil(m/3)-1), mov=S.movimenti.filter(x=>annoDi(x.data)===a&&meseDi(x.data)===m&&!x.giro&&daUni(x));
-  const su=b=>mov.filter(x=>bollaMov(x)===b).reduce((s,x)=>s+x.eur,0), F=su('fisse'), V=su('variabili');
-  if(n!=null){const bud=n/3, r=bud-F-V;
-    h+=anello([{v:F,c:'var(--azzurro)',i:'fisse'},{v:V,c:'var(--lavanda)',i:'variabili'},{v:r,c:'var(--giallo)',i:'salvadanaio'}],
-      `${giga(r,r<-0.5?'neg':'')}<span>${r<-0.5?'sfori':'restano'} a ${MESI[m-1]}</span><em>stipendio ${e0(bud)}</em>`);
-    // legenda: le spese del mese pagate dallo stipendio (Paolo 25/11: l'anello deve dire qualcosa)
-    const pp=b=>{const L=mov.filter(x=>bollaMov(x)===b);return [L.filter(x=>x.ok).reduce((s,x)=>s+x.eur,0),L.filter(x=>!x.ok).reduce((s,x)=>s+x.eur,0)]}, [Fp,Fv]=pp('fisse'), [Vp,Vv]=pp('variabili'), pc=v=>bud>0?Math.round(v/bud*100)+'%':'';
-    const leg=(c,t,v,sub,att)=>`<button class="mb-leg" ${att||''}><i style="background:${c}"></i><small>${t}</small><b class="${v<-0.5?'neg':''}">${e0(v)}</b><em>${sub}</em></button>`;
-    h+=`<div class="mb-legenda">${leg('var(--azzurro)','Fisse',F,(Fv>0.5?'+ '+e0(Fv)+' prev. · ':'')+pc(F),'data-mb-tab="movimenti" data-mb-solo="fisse"')}${leg('var(--lavanda)','Variabili',V,(Vv>0.5?'+ '+e0(Vv)+' prev. · ':'')+pc(V),'data-mb-tab="movimenti" data-mb-solo="variabili"')}${leg('var(--giallo)',r<-0.5?'Sfori':'Restano',r,pc(Math.max(0,r))+' dello stipendio')}</div>
-    <p class="mb-nota mb-leg-n">Lo stipendio del mese diviso tra spese fisse, variabili (pagate e previste dal conto Unicredit e dalle carte) e quello che resta.</p>`;
-  }
-  // budget delle variabili + tasti rapidi
-  let bp='';
-  if(X.corr&&X.TV!=null){const sp=X.VT.pag, r=X.TV-sp, perG=X.gRest&&r>0.5?r/X.gRest:null;bp=`<button class="mb-pill nero" data-mb-tab="movimenti">${r>=-0.5?`budget ${e0(r)}`:`budget sforato ${e0(-r)}`}${perG?` · ${e0(perG)}/giorno`:''}</button>`}
-  h+=`<div class="mb-riga-pill">${bp}<button class="mb-cerchio" data-mb-nuovo="fat" aria-label="Nuova fattura">${ico('fattura')}</button><button class="mb-cerchio" data-mb-calc="pp" aria-label="Posso permettermelo?">${ico('salvadanaio')}</button></div>`;
-  // avviso Revolut (come la scheda dell'assistente)
+  // Restano del mese (la striscia in alto della Home): stipendio − spese fisse e variabili da Unicredit
+  if(X.D&&X.D.completo&&X.lim>0){const F=X.F,V=X.V,lim=X.lim,r=X.resta,sc=Math.max(lim,X.tF+X.tV,1),w=v=>Math.max(0,v)/sc*100;
+    const pag=F.pag+V.pag, usato=Math.round(pag/lim*100), tempo=X.corr?Math.round(X.gOggi/X.giorniMese*100):100;
+    h+=`<div class="mb-rest ${r<-0.5?'no':''}"><small>${r<-0.5?'Sfori di':'Restano'} a ${nM}</small>${giga(Math.abs(r),r<-0.5?'neg':'')}
+      <span class="mb-rest-b"><i style="width:${w(F.pag)}%;--b:var(--azzurro)"></i><i class="v" style="width:${w(F.prv)}%;--b:var(--azzurro)"></i><i style="width:${w(V.pag)}%;--b:var(--lavanda)"></i><i class="v" style="width:${w(V.prv)}%;--b:var(--lavanda)"></i></span>
+      <span class="mb-rest-t">stipendio ${E(lim)} − spese ${E(X.tF+X.tV)}${X.corr?` · usato ${usato}%, mese al ${tempo}%`:''}</span>
+      <span class="mb-rest-l"><span><i style="--b:var(--azzurro)"></i>fisse ${E(X.tF)}</span><span><i style="--b:var(--lavanda)"></i>variabili ${E(X.tV)}</span></span></div>`}
+  // avviso Revolut
   if(X.corr){const A=h3AllarmeRev();
-    h+=A?`<div class="mb-avv rosa"><small>Revolut</small><p>Il Revolut non basta per il <b>${giornoIt(A.primo.d)}</b> (${esc((A.primo.m.det||nomeCat(A.primo.m.cat)).toLowerCase())}): sposta <b>${e0(Math.ceil(A.min))}</b> da Unicredit.</p><button class="mb-pill nero" data-rev-sposta="${Math.ceil(A.min)}">Registra il giroconto</button>${forma('cuore','rgba(255,255,255,.45)',-12)}</div>`
-      :`<div class="mb-avv verde"><small>Revolut</small><p>Il Revolut basta per tasse e Inarcassa dei prossimi 12 mesi.</p>${forma('stella','rgba(255,255,255,.5)',8)}</div>`}
-  // conti
-  const ord={conto:0,carta:1,cointestato:2}, L=[...X.conti].sort((p,q)=>(ord[p.c.tipo]??3)-(ord[q.c.tipo]??3)), mx=Math.max(1,...L.map(r=>Math.abs(r.cifra)));
-  h+=`<div class="mb-sez"><h2>I tuoi conti</h2><span class="mb-pill nero piccola">${e0(X.tuoi)}</span></div>
-    <div class="mb-lista">${L.map(r=>`<div class="mb-sys">${icoC(r.c.tipo,r.c.colore)}<span class="mb-sys-t"><b>${esc(r.tit)}</b><span class="mb-sys-b"><i style="width:${Math.abs(r.cifra)/mx*100}%;background:${r.cifra<-0.5?'var(--corallo)':r.c.colore}"></i></span></span><span class="mb-sys-v ${r.cifra<-0.5?'neg':''}">${e0(r.cifra)}</span></div>`).join('')}</div>`;
-  // prossimi giorni
-  const R=calEventi(X.fra(-60),X.fra(-1)).filter(x=>!x.ok&&x.tipo!=='acc'), P=X.ag(14).slice(0,5);
-  h+=`<div class="mb-sez"><h2>Prossimi giorni</h2></div><div class="mb-lista">`;
-  if(R.length) h+=`<button class="mb-it rosso" data-mb-tab="movimenti" data-mb-solo="prev">${icoC('calendario','var(--corallo)')}<span class="mb-it-t"><b>${R.length} ${R.length===1?'voce passata':'voci passate'}: le hai pagate?</b><small>${R.slice(0,3).map(x=>esc(x.det.toLowerCase())).join(', ')}${R.length>3?'…':''}</small></span><span class="mb-it-v">${e0(R.reduce((s,x)=>s+x.eur,0))}</span></button>`;
-  h+=P.map(x=>`<button class="mb-it" ${x.m?`data-mb-mov="${x.m.id}"`:''}><span class="mb-ic piccola" style="--b:${x.col}">${ico(x.tipo==='ent'?'entrate':x.tipo==='tas'?'fiscali':'variabili')}</span><span class="mb-it-t"><b>${esc(x.det)}</b><small>${x.data===X.oggi?'oggi':giornoIt(x.data)} · ${esc(x.sub)}</small></span><span class="mb-it-v ${x.tipo==='ent'?'pos':''}">${x.tipo==='ent'?'+ ':''}${e0(x.eur)}</span></button>`).join('')||'<p class="mb-nota">Niente in programma.</p>';
-  return h+'</div>';
+    h+=A?`<button class="mb-al no" data-rev-sposta="${Math.ceil(A.min)}"><span class="mb-al-i">!</span><span><b>Il Revolut non basta per il ${giornoIt(A.primo.d)}</b><small>${esc((A.primo.m.det||nomeCat(A.primo.m.cat)).toLowerCase())} ${E(A.primo.m.eur)}</small></span><strong>sposta ${E(Math.ceil(A.min))}<em>registra ›</em></strong></button>`
+      :`<div class="mb-al ok"><span class="mb-al-i">✓</span><span><b>Il Revolut basta</b><small>per tasse e Inarcassa dei prossimi 12 mesi</small></span></div>`}
+  // il mese: Entrate / Spese / Budget come i tre riquadri della Home
+  const k=(cls,ic,t,v,s,att)=>`<div class="mb-k ${cls}" ${att||''}><small>${ico(ic)}${t}</small><b>${v}</b><span>${s}</span></div>`;
+  let bud;
+  if(X.corr&&X.TV!=null){const sp=X.VT.pag,r=X.TV-sp;bud=k('nero','salvadanaio',r>=-0.5?'Budget':'Sforato',(r<-0.5?'− ':'')+e0(Math.abs(r)),`${r>=-0.5?'di':'oltre i'} ${e0(X.TV)} per le variabili<i class="mb-k-bar"><i style="width:${Math.min(100,sp/X.TV*100)}%"></i></i>`,'data-mb-tab="movimenti" data-mb-solo="variabili"')}
+  else bud=k('nero','salvadanaio','Budget','—','fissalo sul computer');
+  h+=`<div class="mb-sez"><h2>${nM[0].toUpperCase()+nM.slice(1)}</h2></div>
+    <div class="mb-k3">${k('ent','entrate','Entrate',e0(B.entrate.pag),B.accant>0.5?'accant. '+e0(B.accant):B.entrate.prv>0.5?'+ '+e0(B.entrate.prv)+' attese':'incassate','data-mb-tab="movimenti" data-mb-solo="ent"')}${k('spe','variabili','Spese',e0(X.tF+X.tV),'fisse + variabili')}${bud}</div>
+    <div class="mb-voci">${[['fisse','Fisse','var(--azzurro)'],['variabili','Variabili','var(--lavanda)'],['fiscali','Attività','var(--cappuccino)']].map(([b,n,c])=>{const x=B[b];
+      return `<button class="mb-voce pieno" data-mb-tab="movimenti" data-mb-solo="${b}" style="--b:${c}">${icoC(b,'rgba(255,255,255,.55)','piccola')}<small>${n}</small><b>${e0(x.pag)}</b><em>${x.prv>0.5?'+ '+e0(x.prv)+' previste':'tutte pagate'}</em></button>`}).join('')}</div>`;
+  // i conti di oggi
+  const ord={conto:0,carta:1,cointestato:2}, L=[...X.conti].sort((p,q)=>(ord[p.c.tipo]??3)-(ord[q.c.tipo]??3)), pos=L.filter(r=>!r.carta&&r.cifra>0.5), tp=pos.reduce((s,r)=>s+r.cifra,0);
+  h+=`<div class="mb-sez"><h2>I tuoi conti oggi</h2><span class="mb-pill nero piccola ${X.tuoi<-0.5?'no':''}">in tutto ${E(X.tuoi)}</span></div>
+    <div class="mb-conti">${tp>0?`<span class="mb-conti-b">${pos.map(r=>`<i style="width:${r.cifra/tp*100}%;background:${r.c.colore}"></i>`).join('')}</span>`:''}
+    ${L.map(r=>`<div class="mb-cr2 ${r.cifra<-0.5?'rosso':''}"><i style="background:${r.c.colore}"></i><span><b>${esc(r.tit)}</b><small>${r.carta?'già tolte da Unicredit':r.sub}</small></span><em>${E(r.cifra)}${!r.carta&&r.cifra>0.5&&tp?`<small>${Math.round(r.cifra/tp*100)}%</small>`:r.cifra<-0.5?'<small>in rosso</small>':''}</em></div>`).join('')}</div>`;
+  // calendario del mese + cosa ti aspetta
+  const mm=String(m).padStart(2,'0'), gg=new Date(a,m,0).getDate(), primo=(new Date(a,m-1,1).getDay()+6)%7, fest=festivi(a), EV=calEventi(`${a}-${mm}-01`,`${a}-${mm}-${gg}`);
+  let cal=['L','M','M','G','V','S','D'].map(s=>`<span class="mb-cal-gs">${s}</span>`).join('');
+  for(let i=0;i<primo;i++)cal+='<span></span>';
+  for(let d=1;d<=gg;d++){const iso=`${a}-${mm}-${String(d).padStart(2,'0')}`, Lg=EV.filter(x=>x.data===iso), wd=(primo+d-1)%7;
+    const usc=Lg.filter(x=>x.tipo==='spe'||x.tipo==='tas').reduce((s,x)=>s+x.eur,0), ent=Lg.filter(x=>x.tipo==='ent').reduce((s,x)=>s+x.eur,0);
+    cal+=`<button class="mb-cal-d ${wd>4||fest.has(iso)?'we':''} ${iso===X.oggi?'oggi':''} ${iso<X.oggi?'pass':''} ${MU.giorno===iso?'on':''}" data-mb-giorno="${iso}"><b>${d}</b><span class="mb-cal-p">${Lg.slice(0,4).map(x=>`<i class="${x.ok?'f':'p'}" style="--pc:${x.col}"></i>`).join('')}</span>${ent>0.5?`<em class="pos">+${Math.round(ent)}</em>`:usc>0.5?`<em>${Math.round(usc)}</em>`:''}</button>`}
+  h+=`<div class="mb-sez"><h2>Calendario di ${nM}</h2></div><div class="mb-cal">${cal}</div>`;
+  const rigaE=x=>`<button class="mb-it ${x.ok?'':'prv'} ${x.rit?'rit':''}" ${x.m?`data-mb-mov="${x.m.id}"`:x.tipo==='acc'?`data-rev-sposta="${Math.round(x.eur)}"`:''}><span class="mb-ic piccola" style="--b:${x.col}">${ico(x.tipo==='ent'?'entrate':x.tipo==='tas'?'fiscali':x.tipo==='acc'||x.tipo==='accG'?'salvadanaio':'variabili')}</span><span class="mb-it-t"><b>${esc(x.det)}</b><small>${x.data===X.oggi?'oggi':giornoIt(x.data)} · ${esc(x.sub||'')}</small></span><span class="mb-it-v ${x.tipo==='ent'?'pos':''}">${x.tipo==='ent'?'+ ':''}${E(x.eur)}${x.rit?'<small>è passata: fatta?</small>':x.ok?'':'<small>prevista</small>'}</span></button>`;
+  if(MU.giorno&&MU.giorno.slice(0,7)===`${a}-${mm}`){const Lg=EV.filter(x=>x.data===MU.giorno);
+    h+=`<div class="mb-sez"><h2>${giornoIt(MU.giorno)}</h2><button class="mb-pill piccola" data-mb-giorno="${MU.giorno}">tutti i prossimi ›</button></div><div class="mb-lista">${Lg.map(rigaE).join('')||'<p class="mb-nota">Niente in questo giorno.</p>'}</div>`}
+  else{const R=calEventi(X.fra(-60),X.fra(-1)).filter(x=>!x.ok&&x.tipo!=='acc').map(x=>({...x,rit:1})), P=[...R,...X.ag(30)].slice(0,10);
+    h+=`<div class="mb-sez"><h2>Cosa ti aspetta</h2><button class="mb-pill piccola" data-mb-tab="movimenti">tutto ›</button></div><div class="mb-lista">${P.map(rigaE).join('')||'<p class="mb-nota">Niente in programma.</p>'}</div>`}
+  return h;
 }
-
-/* ---------- MOVIMENTI ---------- */
 function pMov(){
   const a=S.anno, o=new Date();if(!MU.m)MU.m=o.getFullYear()===a?o.getMonth()+1:12;
   const m=MU.m, B=sommeBolle(a,m), mOra=o.getFullYear()===a?o.getMonth()+1:0;
@@ -8180,7 +8243,7 @@ new MutationObserver(()=>{if(!window.MOB)return;const f=document.querySelector('
 /* ---------- eventi ---------- */
 document.addEventListener('click',e=>{
   if(!window.MOB||!e.target.closest('#mob'))return;
-  const t=e.target.closest('[data-mb-tab],[data-mb-nuovo],[data-mb-mov],[data-mb-fat],[data-mb-mm],[data-mb-calc],[data-mb-cfda],[data-mb-crea-fat],[data-mb-vista],[data-mb-perc],[data-mb-voce],[data-mb-filtri],[data-mb-solo-f],[data-mb-conto-f],[data-mb-prev],[data-mb-piu],[data-mb-chiudi-calc]');if(!t)return;
+  const t=e.target.closest('[data-mb-tab],[data-mb-nuovo],[data-mb-mov],[data-mb-fat],[data-mb-mm],[data-mb-calc],[data-mb-cfda],[data-mb-crea-fat],[data-mb-vista],[data-mb-perc],[data-mb-giorno],[data-mb-voce],[data-mb-filtri],[data-mb-solo-f],[data-mb-conto-f],[data-mb-prev],[data-mb-piu],[data-mb-chiudi-calc]');if(!t)return;
   e.preventDefault();e.stopPropagation();const d=t.dataset;
   if(t.matches('[data-mb-piu]')){MU.piu=!MU.piu;render();return}
   MU.piu=false;
@@ -8194,6 +8257,7 @@ document.addEventListener('click',e=>{
   else if(d.mbTab){MU.tab=d.mbTab;MU.calc='';if(d.mbTab==='movimenti'){MU.m=null;MU.solo=d.mbSolo||'';MU.conto=''}scrollTo(0,0)}
   else if(d.mbMm)MU.m=+d.mbMm;
   else if(d.mbCfda)MU.cf.da=d.mbCfda;
+  else if(d.mbGiorno){MU.giorno=MU.giorno===d.mbGiorno?'':d.mbGiorno}
   else if(d.mbVoce!=null)MU.solo=MU.solo===d.mbVoce?'':d.mbVoce;
   else if(t.matches('[data-mb-filtri]'))MU.filtri=!MU.filtri;
   else if(d.mbSoloF!=null)MU.solo=d.mbSoloF;
