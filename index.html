@@ -3031,6 +3031,11 @@ body.mob .finestra h3{line-height:40px!important;margin:0 0 10px!important;paddi
 .mb-k .mb-bar{width:60%}
 .mb-k small{display:block;text-align:center}.mb-k small .ico{display:inline-block;vertical-align:-2px;margin-right:4px}
 .mb-campo i{display:none}.mb-campo small::after{content:' in €'}
+/* mesi su una barra che scorre (25/11) */
+.mb-mesi{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:2px -16px 0;padding:4px calc(50% - 34px);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
+.mb-mesi::-webkit-scrollbar{display:none}
+.mb-mesi button{flex:0 0 68px;scroll-snap-align:center;padding:10px 0}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -7858,7 +7863,16 @@ function renderMob(){
   el.innerHTML=`${head}<div class="mb-body">${corpo}</div>
     ${MU.piu?piuMenu():''}
     <nav class="mb-tab">${TABS.map(([k,n,i])=>k==='+'?`<button class="mb-piu ${MU.piu?'on':''}" data-mb-piu aria-label="Aggiungi o calcola">${MU.piu?'✕':'+'}</button>`:`<button data-mb-tab="${k}" class="${MU.tab===k&&!MU.calc?'on':''}" aria-label="${n}">${ico(i)}</button>`).join('')}</nav>`;
-  renderSalvato();
+  renderSalvato();mesiAggancia();
+}
+
+/* mesi di Movimenti su una barra che scorre (Paolo 25/11): il mese che si ferma al centro è quello scelto */
+function mesiCentro(el){const r=el.getBoundingClientRect(), c=r.left+r.width/2;let best=null,d=1e9;
+  el.querySelectorAll('[data-mb-mm]').forEach(b=>{const q=b.getBoundingClientRect(), x=Math.abs(q.left+q.width/2-c);if(x<d){d=x;best=b}});return best}
+function mesiAggancia(){const el=document.querySelector('#mob .mb-mesi');if(!el)return;
+  const on=el.querySelector('button.on');if(on)el.scrollLeft=on.offsetLeft+on.offsetWidth/2-el.clientWidth/2;
+  let t=0;const fine=()=>{const b=mesiCentro(el);if(b&&+b.dataset.mbMm!==MU.m){MU.m=+b.dataset.mbMm;MU.giorno='';salvaMU();render()}};
+  el.addEventListener('scroll',()=>{clearTimeout(t);t=setTimeout(fine,160)},{passive:true});
 }
 function piuMenu(){
   const r=(att,i,col,t,s)=>`<button class="mb-pm-r" ${att}>${icoC(i,col)}<span><b>${t}</b><small>${s}</small></span></button>`;
@@ -8086,7 +8100,7 @@ document.addEventListener('click',e=>{
   if(d.mbCalc){MU.calc=d.mbCalc;scrollTo(0,0)}
   else if(t.matches('[data-mb-chiudi-calc]'))MU.calc='';
   else if(d.mbTab){MU.tab=d.mbTab;MU.calc='';if(d.mbTab==='movimenti'){MU.m=null;MU.solo=d.mbSolo||'';MU.conto=''}scrollTo(0,0)}
-  else if(d.mbMm)MU.m=+d.mbMm;
+  else if(d.mbMm){const el=t.closest('.mb-mesi');if(el&&+d.mbMm!==MU.m){el.scrollTo({left:t.offsetLeft+t.offsetWidth/2-el.clientWidth/2,behavior:'smooth'});return}MU.m=+d.mbMm}
   else if(d.mbCfda)MU.cf.da=d.mbCfda;
   else if(d.mbVmov!=null){MU.vmov=d.mbVmov;MU.giorno=''}
   else if(d.mbGiorno){MU.giorno=MU.giorno===d.mbGiorno?'':d.mbGiorno}
