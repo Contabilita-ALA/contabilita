@@ -2782,6 +2782,218 @@ button.h3-allarme:hover,.h3-allarme.clic:hover{box-shadow:2px 2px 0 var(--inchio
 .lo-st{white-space:nowrap;border-radius:999px;padding:2px 9px;font-weight:700;color:var(--inchiostro)}
 .lo-st.deb{background:var(--corallo-ch)}.lo-st.cre{background:var(--menta-ch)}.lo-st.pari{background:var(--grigino)}
 .lo-add{border:0;border-radius:999px;background:var(--inchiostro);color:#fff;font:600 var(--f-piccolo) var(--font);padding:4px 11px;cursor:pointer}
+
+/* ===== Versione telefono (25/11/2026), stile Intelly ===== */
+#mob{display:none}
+body.mob{background:var(--panna);-webkit-text-size-adjust:100%}
+body.mob .app{display:none}
+body.mob #mob{display:block;min-height:100vh;padding:0 0 calc(104px + env(safe-area-inset-bottom));background:var(--panna);transition:background .2s}
+body.mob #mob.t-giallo{background:var(--salvia-ch)} body.mob #mob.t-rosa{background:var(--giallo-ch)} body.mob #mob.t-corallo{background:var(--corallo-ch)} body.mob #mob.t-azzurro{background:var(--azzurro-ch)}
+body.mob:has(#mob.t-giallo){background:var(--salvia-ch)} body.mob:has(#mob.t-rosa){background:var(--giallo-ch)} body.mob:has(#mob.t-corallo){background:var(--corallo-ch)} body.mob:has(#mob.t-azzurro){background:var(--azzurro-ch)}
+#mob *{-webkit-tap-highlight-color:transparent}
+#mob{font:16.5px/1.35 var(--font);color:var(--inchiostro)}
+#mob button{font:inherit;color:inherit}
+.mb-top{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top)) 16px 6px;background:inherit}
+#mob .mb-top{background:transparent;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.mb-top-t{grid-column:2;text-align:center;font:600 15.5px var(--font)}
+.mb-top>.mb-cerchio{grid-column:1}
+.mb-top #salvato,.mb-top .mb-sw{grid-column:3;justify-self:end}
+.mb-top .mb-sw+#salvato{display:none}
+.mb-top #salvato{font-size:13px;color:var(--grigio);white-space:nowrap}
+.mb-top #salvato .sync-st{font-size:13px;padding:3px 8px;border-radius:999px;border:0;background:rgba(255,255,255,.6)}
+.mb-body{padding:2px 18px 18px;display:flex;flex-direction:column;gap:14px}
+/* elementi base */
+.mb-cerchio{appearance:none;flex:none;width:40px;height:40px;border-radius:50%;border:1.5px solid var(--inchiostro);background:transparent;display:grid;place-items:center;font-size:16.5px;padding:0}
+.mb-cerchio svg{width:19px;height:19px}
+.mb-pill{appearance:none;border:0;border-radius:99px;padding:11px 18px;background:rgba(255,255,255,.65);font:600 15.5px var(--font)!important;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.mb-pill.nero{background:var(--inchiostro);color:#fff!important}
+.mb-pill.piccola{padding:5px 12px;font-size:14px!important}
+.mb-pill.no{background:var(--corallo);color:var(--inchiostro)}
+.mb-pill svg{width:17px;height:17px}
+.mb-riga-pill{display:flex;justify-content:center;align-items:center;gap:8px}
+.mb-ic{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--b)}
+.mb-ic svg{width:19px;height:19px}
+.mb-ic.piccola{width:32px;height:32px}.mb-ic.piccola svg{width:16px;height:16px}
+.mb-ic.num{font:800 14px var(--font)}
+#mob .ico{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+/* numeri giganti */
+.mb-ciao{margin:4px 0 0;text-align:center;font:600 19px var(--font);letter-spacing:-.2px}
+.mb-ciao small{display:block;font:500 14px var(--font);color:var(--grigio);margin-top:2px}
+.mb-giga{font:500 64px/1 var(--font);letter-spacing:-3px;display:inline-flex;align-items:flex-start;white-space:nowrap}
+.mb-giga small{font:600 24px/1 var(--font);letter-spacing:0;margin:8px 4px 0 0}
+.mb-giga i{font-style:normal;margin-right:2px}
+.mb-giga.neg{color:var(--rosso)}
+.mb-esito{font-size:72px;font-weight:600;letter-spacing:-2px}
+.mb-hero{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:26px 0 10px;isolation:isolate}
+.mb-hero>svg{position:absolute;z-index:-1;width:180px;height:180px;top:50%;left:50%;margin:-100px 0 0 -90px}
+.mb-hero-f>svg{width:86px;height:86px;margin:0}.mb-hero-f>svg:nth-of-type(1){left:2%;top:0}.mb-hero-f>svg:nth-of-type(2){left:auto;right:2%;top:70px;width:64px;height:64px}
+.mb-hero span{font-size:14.5px;color:var(--grigio);margin-top:8px}
+.mb-hero .mb-hero-t{font:600 18px var(--font);margin-bottom:6px}
+.mb-hero .mb-nota{max-width:260px}
+.mb-tre{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;gap:6px}
+.mb-tre small{display:block;font:600 12.5px var(--font);text-transform:uppercase;letter-spacing:.5px;color:var(--grigio)}
+.mb-tre b{font:600 18px var(--font)} .mb-tre b.neg{color:var(--rosso)}
+/* anello */
+.mb-an{position:relative;width:280px;max-width:82vw;aspect-ratio:1;margin:6px auto 0}
+.mb-an svg{width:100%;height:100%}
+.mb-an-i{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:var(--carta);box-shadow:0 0 0 3px var(--b);display:grid;place-items:center}
+.mb-an-i svg{width:16px;height:16px}
+.mb-an-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.mb-an-c span{font-size:14.5px;color:var(--grigio);margin-top:6px} .mb-an-c em{font:normal 600 12px var(--font);margin-top:3px}
+/* avvisi (come la scheda dell'assistente) */
+.mb-avv{position:relative;overflow:hidden;border-radius:22px;padding:14px 16px;isolation:isolate}
+.mb-avv.rosa{background:var(--corallo-ch)} .mb-avv.verde{background:var(--giallo-ch)} .mb-avv.bianco{background:rgba(255,255,255,.6)}
+.mb-avv>small{font:600 13px var(--font);color:var(--grigio)}
+.mb-avv p{margin:4px 0 10px;font-size:16.5px;max-width:85%} .mb-avv p:last-child{margin-bottom:0}
+.mb-avv .mb-big{display:block;font:600 26px var(--font);letter-spacing:-.5px;margin-bottom:2px}
+.mb-avv>svg{position:absolute;z-index:-1;right:-14px;bottom:-22px;width:110px;height:110px}
+/* sezioni e liste */
+.mb-sez{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.mb-sez h2{margin:0;font:600 20px var(--font);letter-spacing:-.3px}
+.mb-lista{display:flex;flex-direction:column;gap:8px}
+.mb-sys{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px}
+.mb-sys-t b{display:block;font-weight:600;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mb-sys-t b small{font-weight:500;color:var(--grigio);font-size:13px}
+.mb-sys-b{display:block;height:7px;border-radius:99px;background:rgba(0,0,0,.06);margin-top:5px;overflow:hidden}
+.mb-sys-b i{display:block;height:100%;border-radius:99px}
+.mb-sys-v{font:600 16.5px var(--font);white-space:nowrap} .mb-sys-v.neg{color:var(--rosso)}
+.mb-it{appearance:none;border:0;width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:rgba(255,255,255,.55);border-radius:18px;padding:11px 14px}
+#mob:not([class^=t-]) .mb-it{background:var(--grigino)}
+.mb-it.prv{background:transparent!important;box-shadow:inset 0 0 0 1.5px var(--grigio-chiaro)}
+.mb-it.rosso{background:var(--corallo-ch)!important}
+.mb-it-t{flex:1;min-width:0}
+.mb-it-t b{display:block;font-weight:600;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mb-it-t small{display:block;font-size:14px;color:var(--grigio);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mb-it-v{font:600 16.5px var(--font);white-space:nowrap;text-align:right}
+.mb-it-v small{display:block;font:500 13px var(--font);color:var(--grigio)}
+.mb-it-v.pos{color:var(--verde)} .mb-it-v.neg{color:var(--rosso)}
+.mb-d{font:600 13px var(--font);color:var(--grigio);text-transform:uppercase;letter-spacing:.5px;padding:6px 4px 0}
+.mb-nota{font-size:14px;color:var(--grigio);margin:0;line-height:1.4}
+/* mesi (come la striscia dei giorni) */
+.mb-mesi{display:grid;grid-template-columns:repeat(6,1fr);gap:4px 6px}
+.mb-mesi button{appearance:none;border:0;background:rgba(255,255,255,.5);border-radius:99px;padding:7px 0 9px;position:relative}
+.mb-mesi small{font:600 14px var(--font);text-transform:uppercase;letter-spacing:.2px}
+.mb-mesi button.ora small{text-decoration:underline;text-underline-offset:3px}
+#mob .mb-mesi button.on{background:var(--inchiostro);color:#fff}
+.mb-mesi i{position:absolute;left:50%;bottom:3px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--rosso)}
+.mb-cerca{display:flex;gap:8px}
+.mb-cerca input{flex:1;min-width:0;border:0;border-radius:99px;padding:11px 16px;background:var(--grigino);font:17px var(--font)}
+.mb-cerca select{appearance:none;-webkit-appearance:none;border:0;padding:0 16px;font-size:15.5px}
+/* calcolatori */
+.mb-chips{display:flex;justify-content:center;gap:6px}
+.mb-chips button{appearance:none;border:0;border-radius:99px;padding:9px 14px;background:rgba(255,255,255,.55);font-weight:600!important;font-size:14.5px!important}
+.mb-chips button.on{background:var(--inchiostro);color:#fff!important}
+.mb-campo{display:block;background:rgba(255,255,255,.6);border-radius:20px;padding:10px 16px}
+.mb-campo small{display:block;font:600 13px var(--font);color:var(--grigio)}
+.mb-campo span{display:flex;align-items:center;gap:6px} .mb-campo i{font:normal 600 22px var(--font)}
+.mb-campo input{flex:1;min-width:0;border:0;background:none;font:600 30px var(--font);outline:none;padding:2px 0;color:var(--inchiostro)}
+.mb-sel{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mb-sel select{width:100%;border:0;border-radius:99px;padding:11px 14px;background:rgba(255,255,255,.6);font:17px var(--font);color:var(--inchiostro)}
+.mb-in-s{display:flex;align-items:center;gap:4px;width:120px;background:rgba(255,255,255,.75);border-radius:99px;padding:4px 12px}
+.mb-in-s i{font-style:normal;font-weight:600}.mb-in-s input{flex:1;min-width:0;border:0;background:none;font:600 18px var(--font);text-align:right;outline:none;color:var(--inchiostro)}
+/* interruttore previsto */
+.mb-sw{appearance:none;border:0;background:rgba(255,255,255,.6);border-radius:99px;padding:5px 6px 5px 12px;display:flex;align-items:center;gap:8px;font:600 14px var(--font)!important}
+.mb-sw i{width:38px;height:22px;border-radius:99px;background:var(--grigio-chiaro);position:relative;transition:background .2s}
+.mb-sw i::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}
+.mb-sw.on i{background:var(--inchiostro)}.mb-sw.on i::after{left:19px}
+/* trimestri */
+.mb-q2{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center}
+.mb-q2>b{font:600 17px var(--font)} .mb-q2>b small{display:block;font:500 13px var(--font);color:var(--grigio)}
+.mb-q2-b{display:flex;flex-direction:column;gap:4px}.mb-q2-b>span{display:block;height:7px;border-radius:99px;background:rgba(0,0,0,.06);overflow:hidden}.mb-q2-b i{display:block;height:100%;border-radius:99px}
+.mb-q2-b small{font-size:13px;color:var(--grigio)}
+/* forme */
+.mb-forme{position:relative;height:330px}
+.mb-fo{position:absolute;aspect-ratio:1}
+.mb-fo svg{width:100%;height:100%;display:block}
+.mb-fo span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:13px;line-height:1.15;padding:18%}
+.mb-fo b{font:600 14.5px var(--font);display:block}
+.mb-pc{align-self:center;margin-top:8px}
+/* barra in basso: pillola nera con il + al centro */
+.mb-tab{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:30;height:62px;background:var(--inchiostro);border-radius:22px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding:0 6px}
+.mb-tab button{appearance:none;border:0;background:none;color:rgba(255,255,255,.7)!important;display:grid;place-items:center;height:44px;position:relative}
+.mb-tab button svg{width:24px;height:24px}
+.mb-tab button.on{color:#fff!important}
+.mb-tab button.on::after{content:'';position:absolute;bottom:2px;width:18px;height:3px;border-radius:2px;background:var(--giallo)}
+.mb-tab .mb-piu{justify-self:center;width:58px;height:58px;border-radius:50%;background:var(--giallo);color:var(--inchiostro)!important;font:300 34px/1 var(--font)!important;margin-top:-34px;box-shadow:0 0 0 7px var(--panna)}
+#mob[class^=t-] .mb-tab .mb-piu{box-shadow:0 0 0 7px rgba(255,255,255,.5)}
+.mb-tab .mb-piu.on{font-size:22px!important}
+/* menu del + */
+.mb-velo{position:fixed;inset:0;z-index:28;background:rgba(0,0,0,.25)}
+.mb-pm{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:29;background:var(--inchiostro);color:#fff;border-radius:24px;padding:14px 14px 30px;max-height:72vh;overflow:auto}
+.mb-pm h3{margin:4px 6px 6px;font:600 18px var(--font);text-align:center}
+.mb-pm h3+h3,.mb-pm .mb-pm-r+h3{margin-top:14px}
+.mb-pm-r{appearance:none;border:0;background:none;width:100%;display:flex;align-items:center;gap:12px;padding:7px 6px;text-align:left;color:#fff!important}
+.mb-pm-r .mb-ic{color:var(--inchiostro)}
+.mb-pm-r b{display:block;font-weight:600;font-size:16.5px} .mb-pm-r small{display:block;font-size:14px;opacity:.65}
+/* finestre (Nuovo movimento, Nuova fattura) a tutto schermo */
+body.mob .velo{padding:0;align-items:stretch;background:var(--panna)}
+body.mob .finestra{max-width:none!important;width:100%!important;min-height:100%;border:0;border-radius:0;box-shadow:none;padding:calc(14px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));background:var(--panna)}
+body.mob .finestra h3{font-size:24px;margin-bottom:14px}
+body.mob .fin-x{top:calc(12px + env(safe-area-inset-top));right:14px;width:40px;height:40px;font-size:18px}
+body.mob .finestra input,body.mob .finestra select{font-size:17px!important;min-height:44px}
+body.mob .finestra .campi{grid-template-columns:1fr 1fr!important;gap:12px}
+body.mob .finestra .campi label{font-size:14px}
+body.mob .finestra .campi label.largo,body.mob .finestra .campi.f-3 label:last-child{grid-column:1/-1}
+body.mob .finestra .tipi{flex-wrap:wrap}
+body.mob .finestra .tipi button{flex:1 1 40%;padding:10px 6px;font-size:15.5px}
+body.mob .finestra .importo{background:var(--carta);border:0;border-radius:18px;padding:10px 16px}
+body.mob .finestra .importo input,body.mob .finestra .importo span{font-size:30px!important}
+body.mob .finestra .azioni{position:sticky;bottom:0;background:var(--panna);padding:12px 0 calc(4px + env(safe-area-inset-bottom));display:flex;gap:8px;flex-wrap:wrap}
+body.mob .finestra .azioni .btn{flex:1;min-height:48px;font-size:17px}
+body.mob .finestra .cp-pan{position:fixed;left:8px!important;right:8px;width:auto;top:auto!important;bottom:8px;max-height:60vh}
+body.mob .finestra .calcoli{font-size:16.5px}
+body.mob .finestra .aiuto{font-size:14px}
+body.mob #toast,body.mob .toast{bottom:calc(90px + env(safe-area-inset-bottom))!important}
+body.mob .sync-box{max-width:92vw}
+body.mob .velo{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+body.mob .finestra{min-height:100vh;min-height:100dvh}
+body.mob .finestra .campi>label{min-width:0}
+body.mob .finestra .campi input:not([type=checkbox]),body.mob .finestra .campi select{width:100%;min-width:0;border-radius:12px;padding:9px 10px;background:var(--carta);border-color:var(--grigino)}
+body.mob .finestra .campi label.spunta{flex-direction:row;align-items:center;gap:8px;font-size:15.5px}
+body.mob .finestra .campi input[type=checkbox]{width:22px;height:22px;min-height:0}
+body.mob .calcoli.f-calc2{grid-template-columns:minmax(0,1fr) auto;column-gap:12px;padding:10px 14px;border-radius:16px}
+body.mob .calcoli.f-calc2>span:nth-child(4n+3){padding-left:0;border-left:0}
+body.mob .calcoli.f-calc2>*{padding:5px 0;border-top:1px solid rgba(0,0,0,.07)}
+body.mob .calcoli.f-calc2>:nth-child(5),body.mob .calcoli.f-calc2>:nth-child(6){order:1;border-top:0}
+body.mob .calcoli.f-calc2>:nth-child(1),body.mob .calcoli.f-calc2>:nth-child(2){order:2}
+body.mob .calcoli.f-calc2>:nth-child(9),body.mob .calcoli.f-calc2>:nth-child(10){order:3}
+body.mob .calcoli.f-calc2>:nth-child(3),body.mob .calcoli.f-calc2>:nth-child(4){order:4;border-top:1px solid rgba(0,0,0,.2);padding-top:5px}
+body.mob .calcoli.f-calc2>:nth-child(7),body.mob .calcoli.f-calc2>:nth-child(8){order:5}
+body.mob .calcoli.f-calc2>:nth-child(11),body.mob .calcoli.f-calc2>:nth-child(12){order:6;font-size:18px}
+body.mob .calcoli.f-calc2>.f-tot{order:7}
+body.mob .calcoli.f-calc2>:only-child,body.mob .calcoli.f-calc2>span:first-child:nth-last-child(2){white-space:normal}
+body.mob .finestra h3{font:600 16.5px var(--font)!important;text-align:center;padding:0 48px!important;margin:2px 0 18px!important;line-height:40px}
+body.mob .fin-x{left:16px;right:auto;border:1.5px solid var(--inchiostro);font-size:15.5px}
+body.mob .mb-ok{position:absolute;top:calc(12px + env(safe-area-inset-top));right:16px;width:40px;height:40px;border-radius:50%;border:1.5px solid var(--inchiostro);background:transparent;font:600 18px var(--font);color:var(--inchiostro);z-index:2}
+body.mob .finestra .tipi button{border:0;border-radius:99px;background:var(--grigino)}
+body.mob .finestra .tipi button.on{background:var(--inchiostro);color:#fff}
+body.mob .finestra .importo{border-radius:22px}
+body.mob .finestra .azioni .btn{border-radius:99px}
+body.mob .finestra .campi input:not([type=checkbox]),body.mob .finestra .campi select{border:0;background:var(--grigino);border-radius:99px;padding:9px 14px}
+.mb-fo>i{position:absolute;inset:0;border-radius:50%}
+body.mob .mb-perc{display:flex;align-items:center;gap:8px;margin:12px 0 4px;padding:10px 12px;background:rgba(255,255,255,.55);border-radius:20px}
+body.mob .mb-perc>span{flex:1;display:flex;flex-direction:column;line-height:1.2}body.mob .mb-perc>span b{font-size:15.5px}body.mob .mb-perc>span small{font-size:13px;color:var(--grigio)}
+body.mob #mob .mb-perc>button:not(.mb-pill){width:34px;height:34px;border-radius:50%;border:0;background:var(--inchiostro);color:#fff;font:500 20px/1 var(--font)}
+body.mob .mb-perc label{display:flex;align-items:center;background:#fff;border-radius:14px;padding:0 8px}
+body.mob .mb-perc input{width:44px;border:0;background:none;font:700 17px var(--font);text-align:right;padding:6px 0;color:var(--inchiostro)}body.mob .mb-perc label i{font-style:normal;font-weight:700}
+body.mob .mb-cg{background:rgba(255,255,255,.55);border-radius:20px;padding:6px 14px;margin:10px 0}
+body.mob .mb-cr{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;font-size:15.5px}
+body.mob .mb-cr+.mb-cr{border-top:1px solid rgba(0,0,0,.06)}
+body.mob .mb-cr.t{font-weight:700;font-size:16.5px}body.mob .mb-cr.acc{color:#8a5a37}
+body.mob .mb-cr.on{background:var(--cappuccino-ch);margin:0 -10px;padding:7px 10px;border-radius:10px}
+body.mob .mb-cf-vuoto{text-align:center;padding:30px 10px}
+body.mob .mb-hero .mb-hero-p{margin-top:4px;font-size:14.5px;color:var(--inchiostro);background:rgba(255,255,255,.55);padding:4px 12px;border-radius:999px}
+body.mob .mb-tre em{display:block;font-style:normal;font-size:12.5px;color:var(--grigio);margin-top:2px;line-height:1.2}
+body.mob .mb-sys-v small{display:block;font-size:12.5px;color:var(--grigio);font-weight:400}
+body.mob .mb-avv-p{display:block;margin-top:6px;font-size:14px;color:var(--grigio)}
+
+/* leggibilità iPhone (Paolo 25/11): grigi e rossi/verdi più scuri, sfondi delle pagine più chiari */
+body.mob{--grigio:#454f4a;--verde:#2a6a4c;--rosso:#a5362d}
+body.mob #mob.t-giallo,body.mob:has(#mob.t-giallo){background:#e2ede1}
+body.mob #mob.t-rosa,body.mob:has(#mob.t-rosa){background:#e8f3ec}
+body.mob #mob.t-corallo,body.mob:has(#mob.t-corallo){background:#fce9e6}
+body.mob #mob.t-azzurro,body.mob:has(#mob.t-azzurro){background:#e9f0f0}
+body.mob .mb-avv.rosa{background:#fbe3e0}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -7560,6 +7772,317 @@ if(document.fonts)document.fonts.ready.then(pianifica)})();
 /* barre: segna i pezzi che toccano l'inizio o la fine (per le estremità curve del contorno) */
 function curveBarre(){document.querySelectorAll('.im-g-bar,.tg-bar').forEach(b=>{const w=b.clientWidth;if(!w)return;for(const c of b.children){if(c.tagName==='EM')continue;const l=c.offsetLeft,cw=c.offsetWidth;c.classList.toggle('b-ini',cw>0&&l<=1);c.classList.toggle('b-fin',cw>0&&l+cw>=w-1)}})}
 {let _cb=0;const pc=()=>{cancelAnimationFrame(_cb);_cb=requestAnimationFrame(curveBarre)};new MutationObserver(pc).observe(document.documentElement,{childList:true,subtree:true});addEventListener('resize',pc)}
+</script>
+<script>/* ===== Versione telefono (Paolo 25/11/2026), stile Intelly =====
+   Sullo schermo stretto (iPhone) l'app mostra un'interfaccia sua: Oggi, Movimenti, Fatture, Anno + il tasto centrale
+   (aggiungi movimento/fattura, calcolatori). Stessi dati (S) e stesse funzioni di calcolo della versione per computer;
+   le finestre + Movimento e + Fattura sono le stesse, a tutto schermo. */
+(function(){
+const K_VISTA='contabilita_vista';
+const vista=()=>{try{return localStorage.getItem(K_VISTA)||''}catch(e){return ''}};
+const telefono=()=>vista()==='tel'||(vista()!=='pc'&&Math.min(screen.width,innerWidth)<=640);
+window.MOB=telefono();
+const MU={tab:'oggi',m:null,q:'',solo:'',calc:'',cf:{da:'prest',v:''},pp:{imp:'',m:0,nr:1},piu:false};
+try{Object.assign(MU,JSON.parse(sessionStorage.getItem('mob_ui')||'{}'))}catch(e){}
+MU.piu=false;
+const salvaMU=()=>{try{sessionStorage.setItem('mob_ui',JSON.stringify(MU))}catch(e){}};
+const e0=v=>(v<-0.5?'− ':'')+'€ '+numIt(Math.abs(Math.round(v))).replace(/,00$/,'');
+const n0=v=>numIt(Math.abs(Math.round(v))).replace(/,00$/,'');
+const giga=(v,cls)=>`<div class="mb-giga ${cls||''}">${v<-0.5?'<i>−</i>':''}<small>€</small>${n0(v)}</div>`;
+const GS=['dom','lun','mar','mer','gio','ven','sab'], GL=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+const giornoIt=iso=>{const d=new Date(+iso.slice(0,4),+iso.slice(5,7)-1,+iso.slice(8,10));return `${GS[d.getDay()]} ${d.getDate()} ${MESI3[d.getMonth()]}`};
+const nomeConto=id=>{const c=S.conti.find(c=>c.id===id);return c?c.nome:id||''};
+const icoC=(i,col,cls)=>`<span class="mb-ic ${cls||''}" style="--b:${col||'var(--grigino)'}">${ico(i)}</span>`;
+const TABS=[['oggi','Oggi','oggi'],['movimenti','Movimenti','variabili'],['+'],['fatture','Fatture','fattura'],['anno','Anno','anno']];
+
+/* niente forme decorative (Paolo 25/11): solo colori pieni */
+const forma=()=>'';
+
+const _render=window.render;
+window.render=function(){
+  if(!window.MOB){document.body.classList.remove('mob');return _render()}
+  document.body.classList.add('mob');renderMob();
+};
+function annoOggi(){const a=new Date().getFullYear();if(S.anno!==a&&(S.movimenti.some(m=>annoDi(m.data)===a)||S.fatture.some(f=>annoDi(f.data)===a)))S.anno=a;return S.anno}
+
+function renderMob(){
+  annoOggi();
+  let el=document.getElementById('mob');
+  if(!el){el=document.createElement('div');el.id='mob';document.body.insertBefore(el,document.getElementById('modale'))}
+  let corpo='', head='', tema='';
+  try{
+    if(MU.calc){const C={fat:[calcFat,'Calcola una fattura','giallo'],pp:[calcPP,'Posso permettermelo?','rosa'],coi:[calcCoi,'Risparmi del cointestato','corallo']}[MU.calc]||[calcFat,'',''];
+      tema=C[2];head=`<header class="mb-top"><button class="mb-cerchio" data-mb-chiudi-calc aria-label="Chiudi">✕</button><span class="mb-top-t">${C[1]}</span><span id="salvato"></span></header>`;corpo=C[0]()}
+    else{const T={oggi:pOggi,movimenti:pMov,fatture:pFat,anno:pAnno}[MU.tab]||pOggi;
+      head=`<header class="mb-top"><span class="mb-top-t">${{oggi:'',movimenti:'Movimenti',fatture:'Fatture '+S.anno,anno:'Il '+S.anno}[MU.tab]||''}</span><span id="salvato"></span></header>`;
+      tema=MU.tab==='anno'?'azzurro':'';corpo=T()}
+  }catch(x){console.error(x);corpo=`<div class="mb-card">Qualcosa non torna in questa pagina (${esc(x.message)}).</div>`}
+  el.className=tema?'t-'+tema:'';
+  el.innerHTML=`${head}<div class="mb-body">${corpo}</div>
+    ${MU.piu?piuMenu():''}
+    <nav class="mb-tab">${TABS.map(([k,n,i])=>k==='+'?`<button class="mb-piu ${MU.piu?'on':''}" data-mb-piu aria-label="Aggiungi o calcola">${MU.piu?'✕':'+'}</button>`:`<button data-mb-tab="${k}" class="${MU.tab===k&&!MU.calc?'on':''}" aria-label="${n}">${ico(i)}</button>`).join('')}</nav>`;
+  renderSalvato();
+}
+function piuMenu(){
+  const r=(att,i,col,t,s)=>`<button class="mb-pm-r" ${att}>${icoC(i,col)}<span><b>${t}</b><small>${s}</small></span></button>`;
+  return `<div class="mb-velo" data-mb-piu></div><div class="mb-pm"><h3>Aggiungi…</h3>
+    ${r('data-mb-nuovo="uscita"','variabili','var(--lavanda)','Uscita','spesa da un conto o da una carta')}
+    ${r('data-mb-nuovo="entrata"','entrate','var(--salvia)','Entrata','non da fattura')}
+    ${r('data-mb-nuovo="fat"','fattura','var(--salvia)','Fattura','con il calcolo del netto')}
+    ${r('data-mb-nuovo="giro"','netto','var(--grigino)','Giroconto','tra due conti')}
+    ${r('data-mb-nuovo="coi"','cointestato','var(--corallo)','Cointestato','voce del conto cointestato')}
+    <h3>Calcola…</h3>
+    ${r('data-mb-calc="fat"','fattura','var(--salvia)','Una fattura','da prestazione, bonifico o netto')}
+    ${r('data-mb-calc="pp"','salvadanaio','var(--giallo)','Posso permettermelo?','mese, trimestre e conto')}
+    ${r('data-mb-calc="coi"','cointestato','var(--corallo)','Risparmi del cointestato','i prossimi anni')}</div>`;
+}
+
+/* ---------- OGGI ---------- */
+function anello(seg,centro,R=104,SW=26){ // anello a segmenti con le icone (come il punteggio di Intelly)
+  const C=2*Math.PI*R, tot=seg.reduce((s,x)=>s+Math.max(0,x.v),0)||1, gap=10;let pos=0, ic='';
+  const arc=seg.filter(x=>x.v>0.5).map(x=>{const f=x.v/tot, len=Math.max(0.5,f*C-gap-SW), s=pos*C+gap/2+SW/2, mid=(pos+f/2)*2*Math.PI-Math.PI/2;pos+=f;
+    ic+=`<span class="mb-an-i" style="left:${50+Math.cos(mid)*R/2.8}%;top:${50+Math.sin(mid)*R/2.8}%;--b:${x.c}">${ico(x.i)}</span>`;
+    return `<circle r="${R}" cx="140" cy="140" fill="none" stroke="${x.c}" stroke-width="${SW}" stroke-linecap="round" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-s}" transform="rotate(-90 140 140)"/>`}).join('');
+  return `<div class="mb-an"><svg viewBox="0 0 280 280">${arc}</svg>${ic}<div class="mb-an-c">${centro}</div></div>`;
+}
+function pOggi(){
+  const X=h3Dati(), o=new Date(), nome=(S.impostazioni.nome??'').trim(), m=X.m, a=X.a;
+  let h=`<p class="mb-ciao">${nome?esc(nome)+', ':''}come vanno i conti oggi?<small>${GL[o.getDay()]} ${o.getDate()} ${MESI[o.getMonth()]}</small></p>`;
+  // stipendio del mese: fisse + variabili (da Unicredit) + quello che resta
+  const n=nettoTrim(a,Math.ceil(m/3)-1), mov=S.movimenti.filter(x=>annoDi(x.data)===a&&meseDi(x.data)===m&&!x.giro&&daUni(x));
+  const su=b=>mov.filter(x=>bollaMov(x)===b).reduce((s,x)=>s+x.eur,0), F=su('fisse'), V=su('variabili');
+  if(n!=null){const bud=n/3, r=bud-F-V;
+    h+=anello([{v:F,c:'var(--azzurro)',i:'fisse'},{v:V,c:'var(--lavanda)',i:'variabili'},{v:r,c:'var(--giallo)',i:'salvadanaio'}],
+      `${giga(r,r<-0.5?'neg':'')}<span>${r<-0.5?'sfori':'restano'} a ${MESI[m-1]}</span><em>stipendio ${e0(bud)}</em>`);
+  }
+  // budget delle variabili + tasti rapidi
+  let bp='';
+  if(X.corr&&X.TV!=null){const sp=X.VT.pag, r=X.TV-sp, perG=X.gRest&&r>0.5?r/X.gRest:null;bp=`<button class="mb-pill nero" data-mb-tab="movimenti">${r>=-0.5?`budget ${e0(r)}`:`budget sforato ${e0(-r)}`}${perG?` · ${e0(perG)}/giorno`:''}</button>`}
+  h+=`<div class="mb-riga-pill">${bp}<button class="mb-cerchio" data-mb-nuovo="fat" aria-label="Nuova fattura">${ico('fattura')}</button><button class="mb-cerchio" data-mb-calc="pp" aria-label="Posso permettermelo?">${ico('salvadanaio')}</button></div>`;
+  // avviso Revolut (come la scheda dell'assistente)
+  if(X.corr){const A=h3AllarmeRev();
+    h+=A?`<div class="mb-avv rosa"><small>Revolut</small><p>Il Revolut non basta per il <b>${giornoIt(A.primo.d)}</b> (${esc((A.primo.m.det||nomeCat(A.primo.m.cat)).toLowerCase())}): sposta <b>${e0(Math.ceil(A.min))}</b> da Unicredit.</p><button class="mb-pill nero" data-rev-sposta="${Math.ceil(A.min)}">Registra il giroconto</button>${forma('cuore','rgba(255,255,255,.45)',-12)}</div>`
+      :`<div class="mb-avv verde"><small>Revolut</small><p>Il Revolut basta per tasse e Inarcassa dei prossimi 12 mesi.</p>${forma('stella','rgba(255,255,255,.5)',8)}</div>`}
+  // conti
+  const ord={conto:0,carta:1,cointestato:2}, L=[...X.conti].sort((p,q)=>(ord[p.c.tipo]??3)-(ord[q.c.tipo]??3)), mx=Math.max(1,...L.map(r=>Math.abs(r.cifra)));
+  h+=`<div class="mb-sez"><h2>I tuoi conti</h2><span class="mb-pill nero piccola">${e0(X.tuoi)}</span></div>
+    <div class="mb-lista">${L.map(r=>`<div class="mb-sys">${icoC(r.c.tipo,r.c.colore)}<span class="mb-sys-t"><b>${esc(r.tit)}</b><span class="mb-sys-b"><i style="width:${Math.abs(r.cifra)/mx*100}%;background:${r.cifra<-0.5?'var(--corallo)':r.c.colore}"></i></span></span><span class="mb-sys-v ${r.cifra<-0.5?'neg':''}">${e0(r.cifra)}</span></div>`).join('')}</div>`;
+  // prossimi giorni
+  const R=calEventi(X.fra(-60),X.fra(-1)).filter(x=>!x.ok&&x.tipo!=='acc'), P=X.ag(14).slice(0,5);
+  h+=`<div class="mb-sez"><h2>Prossimi giorni</h2></div><div class="mb-lista">`;
+  if(R.length) h+=`<button class="mb-it rosso" data-mb-tab="movimenti" data-mb-solo="prev">${icoC('calendario','var(--corallo)')}<span class="mb-it-t"><b>${R.length} ${R.length===1?'voce passata':'voci passate'}: le hai pagate?</b><small>${R.slice(0,3).map(x=>esc(x.det.toLowerCase())).join(', ')}${R.length>3?'…':''}</small></span><span class="mb-it-v">${e0(R.reduce((s,x)=>s+x.eur,0))}</span></button>`;
+  h+=P.map(x=>`<button class="mb-it" ${x.m?`data-mb-mov="${x.m.id}"`:''}><span class="mb-ic piccola" style="--b:${x.col}">${ico(x.tipo==='ent'?'entrate':x.tipo==='tas'?'fiscali':'variabili')}</span><span class="mb-it-t"><b>${esc(x.det)}</b><small>${x.data===X.oggi?'oggi':giornoIt(x.data)} · ${esc(x.sub)}</small></span><span class="mb-it-v ${x.tipo==='ent'?'pos':''}">${x.tipo==='ent'?'+ ':''}${e0(x.eur)}</span></button>`).join('')||'<p class="mb-nota">Niente in programma.</p>';
+  return h+'</div>';
+}
+
+/* ---------- MOVIMENTI ---------- */
+function pMov(){
+  const a=S.anno, o=new Date();if(!MU.m)MU.m=o.getFullYear()===a?o.getMonth()+1:12;
+  const m=MU.m, B=sommeBolle(a,m), mOra=o.getFullYear()===a?o.getMonth()+1:0;
+  const sp=B.variabili.pag+B.fisse.pag+B.fiscali.pag, spP=B.variabili.prv+B.fisse.prv+B.fiscali.prv;
+  const hasPrv=k=>S.movimenti.some(x=>annoDi(x.data)===a&&meseDi(x.data)===k&&!x.ok);
+  let h=`<div class="mb-mesi">${MESI3.map((n,i)=>`<button data-mb-mm="${i+1}" class="${i+1===m?'on':''} ${i+1===mOra?'ora':''}"><small>${n}</small>${hasPrv(i+1)&&i+1>=mOra?'<i></i>':''}</button>`).join('')}</div>
+    <div class="mb-hero">${giga(sp)}<span>spese di ${MESI[m-1]}${spP>0.5?` · + ${e0(spP)} previste`:''}</span></div>
+    <div class="mb-tre"><div><small>entrate</small><b>${e0(B.entrate.pag)}</b></div><div><small>da incassare</small><b>${e0(B.entrate.prv)}</b></div><div><small>accantona</small><b>${e0(B.accant)}</b></div></div>
+    
+    <div class="mb-cerca"><input type="search" data-mb-q placeholder="Cerca (lidl, bolletta…)" value="${esc(MU.q)}"><select data-mb-solo-sel class="mb-pill nero">${[['','Tutti'],['prev','Da pagare'],['ent','Entrate']].map(([k,n])=>`<option value="${k}" ${MU.solo===k?'selected':''}>${n}</option>`).join('')}</select></div>`;
+  return h+`<div id="mb-mov-l">${movLista(movFiltra())}</div>`;
+}
+function movFiltra(){const a=S.anno, q=MU.q.trim().toLowerCase();
+  let L=S.movimenti.filter(x=>annoDi(x.data)===a&&meseDi(x.data)===MU.m);
+  if(q)L=L.filter(x=>(x.det+' '+nomeCat(x.cat)+' '+nomeConto(x.conto)+' '+(x.nota||'')).toLowerCase().includes(q));
+  if(MU.solo==='prev')L=L.filter(x=>!x.ok);
+  if(MU.solo==='ent')L=L.filter(x=>!x.giro&&x.eur<0);
+  return L}
+function movLista(L){let h='';
+  const riga=x=>{const ent=!x.giro&&x.eur<0, giro=x.giro, col=giro?'var(--grigino)':coloreCat(x.cat)||'#ccc';
+    return `<button class="mb-it ${x.ok?'':'prv'}" data-mb-mov="${x.id}"><span class="mb-ic piccola" style="--b:${col}">${ico(giro?'netto':ent?'entrate':bollaMov(x)==='fisse'?'fisse':bollaMov(x)==='fiscali'?'fiscali':'variabili')}</span><span class="mb-it-t"><b>${esc(x.det||nomeCat(x.cat))}</b><small>${giro?`${esc(nomeConto(x.conto))} → ${esc(nomeConto(x.verso))}`:`${esc(nomeCat(x.cat))} · ${esc(nomeConto(x.conto))}`}</small></span><span class="mb-it-v ${ent?'pos':''}">${ent?'+ ':giro?'':'− '}${euro(Math.abs(x.eur))}${x.ok?'':`<small>${ent?'da incassare':'prevista'}</small>`}</span></button>`};
+  const prv=L.filter(x=>!x.ok).sort((p,q)=>p.data.localeCompare(q.data)), fatti=L.filter(x=>x.ok).sort((p,q)=>q.data.localeCompare(p.data));
+  const perGiorno=L2=>{let gg='';const P=[];for(const x of L2){if(x.data!==gg){gg=x.data;P.push(`<div class="mb-d">${x.data===oggiISO()?'oggi':giornoIt(x.data)}</div>`)}P.push(riga(x))}return P.join('')};
+  if(prv.length) h+=`<div class="mb-sez"><h2>Da pagare</h2><span class="mb-pill piccola">${prv.length}</span></div><div class="mb-lista">${perGiorno(prv)}</div>`;
+  h+=`<div class="mb-sez"><h2>Fatti</h2><span class="mb-pill piccola">${fatti.length}</span></div><div class="mb-lista">${perGiorno(fatti)||'<p class="mb-nota">Nessun movimento.</p>'}</div>`;
+  return h;
+}
+
+/* ---------- FATTURE ---------- */
+function pFat(){
+  const a=S.anno, LF=datiFatture(a), inc=LF.filter(x=>x.inc), att=LF.filter(x=>!x.inc), s=(L,k)=>L.reduce((t,x)=>t+x.c[k],0);
+  const perc=S.impostazioni.accantonamento[a]??0.25;
+  let h=`<div class="mb-hero mb-hero-f">${forma('croce','var(--giallo)',12)}${forma('stella','var(--cappuccino)',0)}${giga(s(inc,'conBollo'))}<span>fatturato ${a} ad oggi · ${inc.length} fatture incassate</span>${att.length?`<span class="mb-hero-p">con le ${att.length} da incassare <b>${e0(s(LF,'conBollo'))}</b></span>`:''}</div>
+    <div class="mb-tre"><div><small>netto</small><b>${e0(s(inc,'netto'))}</b></div><div><small>accantoni ${Math.round(perc*100)}%</small><b>${e0(s(inc,'accant'))}</b></div><div><small>da incassare</small><b>${e0(s(att,'lordo'))}</b></div></div>`;
+  const riga=x=>{const t=tipiFat().find(t=>t[0]===x.f.tipo);
+    return `<button class="mb-it ${x.inc?'':'prv'}" data-mb-fat="${x.f.id}"><span class="mb-ic piccola num" style="--b:${t?t[2]:'var(--grigino)'}">${x.f.n}</span><span class="mb-it-t"><b>${esc(x.f.rif||nomeTipo(x.f.tipo))}</b><small>${esc(nomeTipo(x.f.tipo))} · ${x.dataInc?giornoIt(x.dataInc):''}</small></span><span class="mb-it-v">${euro(x.c.lordo)}<small>${x.inc?'netto '+e0(x.c.netto):'da incassare'}</small></span></button>`};
+  if(att.length) h+=`<div class="mb-sez"><h2>Da incassare</h2><span class="mb-pill piccola">${e0(s(att,'lordo'))}</span></div><div class="mb-lista">${att.sort((p,q)=>(p.dataInc||'').localeCompare(q.dataInc||'')).map(riga).join('')}</div>`;
+  h+=`<div class="mb-sez"><h2>Incassate</h2><span class="mb-pill piccola">${inc.length}</span></div><div class="mb-lista">${inc.reverse().map(riga).join('')||'<p class="mb-nota">Nessuna fattura incassata.</p>'}</div>`;
+  return h;
+}
+
+/* ---------- CALCOLA (pagine colorate, dal tasto centrale) ---------- */
+function calcFat(){
+  const da=MU.cf.da, lab={prest:'Prestazione (imponibile)',lordo:'Bonifico che arriva (lordo)',netto:'Netto che vuoi in tasca'}[da];
+  const pa=S.impostazioni.accantonamento[new Date().getFullYear()]??0.25, pv=percCalc(), pt=x=>numIt(Math.round(x*1000)/10).replace(/,0+$/,'');
+  return `<div class="mb-chips">${[['prest','Prestazione'],['lordo','Bonifico'],['netto','Netto']].map(([k,n])=>`<button data-mb-cfda="${k}" class="${da===k?'on':''}">${n}</button>`).join('')}</div>
+    <label class="mb-campo"><small>${lab}</small><span><i>€</i><input data-mb-cf inputmode="decimal" placeholder="0" value="${esc(MU.cf.v)}"></span></label>
+    <div class="mb-perc"><span><b>Accantonamento</b><small>${Math.abs(pv-pa)>1e-9?'solo per questo calcolo':'quello dell\'anno'}</small></span>
+      <button data-mb-perc="-1" aria-label="meno">−</button><label><input data-mb-perc-in inputmode="decimal" value="${pt(pv)}"><i>%</i></label><button data-mb-perc="1" aria-label="più">+</button>
+      ${Math.abs(pv-pa)>1e-9?'<button class="mb-pill piccola" data-mb-perc="0">'+pt(pa)+'%</button>':''}</div>
+    <div class="mb-cf-ris">${calcFatRis()}</div>`;
+}
+function calcFatRis(){
+  const da=MU.cf.da, v=parseNum(MU.cf.v), perc=percCalc();
+  let p=NaN;
+  if(v>0){if(da==='prest')p=v;else if(da==='lordo')p=prestDaLordo(v);else p=prestDaLordo(v/(1-perc))}
+  const c=p>0?calcFattura({prest:r2(p),data:oggiISO()}):null;
+  if(!c) return '<p class="mb-nota mb-cf-vuoto">Scrivi un importo: '+(da==='prest'?'la prestazione che chiedi al cliente':da==='lordo'?'quanto vuoi incassare in tutto':'quanto vuoi avere in mano dopo l\'accantonamento')+'. I calcoli sono gli stessi della finestra + Fattura.</p>';
+  c.accant=c.lordo*perc; c.netto=c.lordo-c.accant;
+  const r=(t,v,cl,on)=>`<div class="mb-cr ${cl||''}${on?' on':''}"><span>${t}</span><b>${euro(v)}</b></div>`;
+  return `<div class="mb-hero"><small class="mb-hero-t">Netto in mano</small>${giga(c.netto)}<span>da una fattura lorda di ${euro(c.lordo)}</span></div>
+    <div class="mb-cg">${r('Prestazione',p,'',da==='prest')}${r('+ bollo',c.bollo)}${r('+ integrativo 4%',c.integr)}${r('= fattura lorda',c.lordo,'t',da==='lordo')}</div>
+    <div class="mb-cg">${r('Reddito 78%',c.reddito)}${r('contributi e tasse',c.sogg+c.stato)}${r('accantonamento '+numIt(Math.round(perc*1000)/10).replace(/,0+$/,'')+'%',c.accant,'acc')}${r('= netto in mano',c.netto,'t',da==='netto')}</div>
+    <p class="mb-nota">Volume d'affari ${euro(c.conBollo)} · contributi e tasse = soggettivo Inarcassa 14,5% + imposta 15%</p>
+    <div class="mb-riga-pill"><button class="mb-pill nero" data-mb-crea-fat="${r2(p)}">Crea questa fattura</button></div>`;
+}
+function calcPP(){
+  const o=new Date(), mOra=o.getMonth()+1, P=MU.pp, m0=+P.m||mOra, cats=S.categorie.filter(c=>c.bolla==='variabili'||c.bolla==='fisse');
+  const catSel=P.cat||(cats.find(c=>c.id==='spese variabili')||cats[0]||{}).id;
+  return `<label class="mb-campo"><small>Quanto costa</small><span><i>€</i><input data-mb-pp="imp" inputmode="decimal" placeholder="es. 350" value="${esc(P.imp)}"></span></label>
+    <div class="mb-sel"><select data-mb-pp="m">${[0,1,2,3].map(i=>mOra+i).filter(m=>m<=12).map(m=>`<option value="${m}" ${m===m0?'selected':''}>${m===mOra?'questo mese':MESI[m-1]}</option>`).join('')}</select>
+    <select data-mb-pp="nr">${[1,2,3,4,5,6,10,12].map(n=>`<option value="${n}" ${n===+P.nr?'selected':''}>${n===1?'tutto subito':n+' rate'}</option>`).join('')}</select>
+    <select id="pp-cat" data-mb-pp="cat" style="grid-column:1/-1">${cats.map(c=>`<option value="${esc(c.id)}" ${c.id===catSel?'selected':''}>${esc(c.nome)}</option>`).join('')}</select></div>
+    <div id="mb-pp-ris">${ppRis()}</div>`;
+}
+function ppRis(){const o=new Date(), mOra=o.getMonth()+1, P=MU.pp, imp=parseNum(P.imp), m0=+P.m||mOra;
+  if(!(imp>0)) return `<div class="mb-hero">${forma('cuore','rgba(255,255,255,.4)',0)}<p class="mb-nota">Guardo lo stipendio del mese e del trimestre, le spese già fatte e previste, e il conto Unicredit fino a fine anno.</p></div>`;
+  const R=(()=>{const o=UI.prevBase;UI.prevBase='eff';try{return ppCalcola(imp,m0,+P.nr||1)}finally{UI.prevBase=o}})(), T=ppTesto(R);
+  let h=`<div class="mb-hero">${forma('cuore','rgba(255,255,255,.45)',0)}<div class="mb-giga mb-esito">${{si:'Sì',forse:'Sì, ma…',no:'No'}[T.cl]}</div><span>${T.tit.toLowerCase().replace(/^./,c=>c.toUpperCase())}</span></div>
+    <div class="mb-lista">${T.L.map(r=>`<div class="mb-it"><span class="mb-it-t"><b>${r.tit}</b><small>${r.sub}</small></span><span class="mb-it-v ${r.cl==='no'?'neg':''}">${r.dp}<small>${r.nota||''}</small></span></div>`).join('')}</div>`;
+  if(T.C.length) h+=`<div class="mb-sez"><h2>Se la vuoi fare comunque</h2></div><div class="mb-lista">${T.C.map(c=>`<div class="mb-it">${icoC(c.ic,'rgba(255,255,255,.6)','piccola')}<span class="mb-it-t"><b>${c.t}</b><small>${c.s}</small></span><span class="mb-it-v">${c.v}</span></div>`).join('')}</div>`;
+  return h;
+}
+function coiPrev(){ // il previsionale "I risparmi nei prossimi anni" della pagina Conto cointestato (stessi conti, stessi campi)
+  const a=S.anno, D=datiCoi(a), q=D.q, mOra=new Date().getFullYear()===a?new Date().getMonth()+1:(new Date().getFullYear()>a?13:0);
+  const ult=re=>{const l=D.L.filter(c=>re.test((c.cat+' '+c.ogg).toUpperCase()));return l.length?l[l.length-1]:null};
+  const mutuo=+((ult(/MUTUO/)||{}).add||0), canone=+((ult(/CANONE/)||{}).add||0);
+  const bollo=D.L.filter(c=>/BOLLO/.test(c.cat.toUpperCase())).reduce((s,c)=>s+(+c.add||0),0);
+  const extra0=D.L.filter(c=>+c.add&&!/MUTUO|CANONE|BOLLO/.test(c.cat.toUpperCase())).reduce((s,c)=>s+(+c.add),0);
+  const vers0=+((ult(/BONIFICO PAOLO/)||{}).acc||0);
+  const versP=UI.coiVers!=null?UI.coiVers:vers0, extra=UI.coiExtra!=null?UI.coiExtra:Math.round(extra0/10)*10;
+  const annuo=versP*2*12-(mutuo+canone)*12-bollo-extra;
+  const bolM=Array(13).fill(0), extM=Array(13).fill(0);
+  D.L.forEach(c=>{const u=(c.cat||'').toUpperCase();if(!+c.add)return;if(/BOLLO/.test(u))bolM[meseDi(c.data)]+=+c.add;else if(!/MUTUO|CANONE/.test(u))extM[meseDi(c.data)]+=+c.add});
+  const fx=extra0>0?extra/extra0:0, pts=[D.ini,...D.mesi.slice(1).map(x=>x.saldo)];
+  for(let k=1;k<=3;k++)for(let m=1;m<=12;m++)pts.push(pts[pts.length-1]+versP*2-mutuo-canone-bolM[m]-(fx?extM[m]*fx:extra/12));
+  const ob=UI.coiOb!=null?UI.coiOb:20000, iOb=pts.findIndex(s=>s>=ob);
+  return {a,D,q,mOra,mutuo,canone,bollo,extra0,versP,extra,annuo,pts,ob,quandoOb:iOb>0?MESI[(iOb-1)%12]+' '+(a+Math.floor((iOb-1)/12)):null}
+}
+function calcCoi(){const P=coiPrev();
+  const campo=(k,v,lab,sub)=>`<div class="mb-it"><span class="mb-it-t"><b>${lab}</b><small>${sub}</small></span><span class="mb-in-s"><i>€</i><input data-mb-coi="${k}" inputmode="decimal" value="${n0(v)}"></span></div>`;
+  return `<div class="mb-hero">${forma('stella','rgba(255,255,255,.4)',0)}<small class="mb-hero-t">Saldo oggi</small>${giga(P.D.saldoOggi)}<span>tua metà ${e0(P.D.saldoOggi*P.q)} · a fine ${P.a} ${e0(P.D.fine)}</span></div>
+    <div class="mb-sez"><h2>I risparmi nei prossimi anni</h2></div>
+    <div class="mb-lista">${campo('vers',P.versP,'Versate a testa','al mese')}${campo('extra',P.extra,'Spese extra','all\'anno · nel '+P.a+' '+e0(P.extra0))}${campo('ob',P.ob,'Obiettivo','saldo del conto')}</div>
+    <p class="mb-nota">Mutuo ${e0(P.mutuo)} e canone ${e0(P.canone)} al mese, bolli ${e0(P.bollo)} all'anno come nel ${P.a}.</p>
+    <div id="mb-coi-ris">${coiRis(P)}</div>`}
+function coiRis(P){const mx=Math.max(...[12,24,36,48].map(i=>P.pts[i]),P.ob,1);
+  return `<div class="mb-avv bianco"><small>${P.annuo>=0?'Mettete da parte':'Il conto cala di'}</small><p><b class="mb-big">${e0(Math.abs(P.annuo))} all'anno</b>obiettivo ${e0(P.ob)}: ${P.quandoOb?'ci arrivate a <b>'+P.quandoOb+'</b>':'non entro il '+(P.a+3)}</p></div>
+    <div class="mb-sez"><h2>Saldo a fine anno</h2></div>
+    <div class="mb-lista">${[12,24,36,48].map((i,k)=>`<div class="mb-sys"><span class="mb-ic piccola num" style="--b:rgba(255,255,255,.6)">${String(P.a+k).slice(2)}</span><span class="mb-sys-t"><b>${P.a+k} <small>${k?'stima':'in corso'} · tua metà ${e0(P.pts[i]*P.q)}</small></b><span class="mb-sys-b"><i style="width:${Math.max(0,P.pts[i])/mx*100}%;background:var(--inchiostro)"></i></span></span><span class="mb-sys-v">${e0(P.pts[i])}</span></div>`).join('')}</div>`}
+
+/* ---------- FISCO (Paolo 25/11): quest'anno e il prossimo, come il Riepilogo fiscale ---------- */
+function mobFisco(){
+  const a=S.anno, d=(S.fiscale||{})[a];if(!d||!fiscoAnno(a))return '';
+  const X=fiscoAnno(a), VF=X.VF;
+  const fis=x=>!x.giro&&(x.cat==='inarcassa'||x.cat==='tasse stato'), L=S.movimenti.filter(x=>annoDi(x.data)===a&&fis(x));
+  const pag=L.filter(x=>x.ok).reduce((s,x)=>s+x.eur,0), man=L.filter(x=>!x.ok).sort((p,q)=>p.data.localeCompare(q.data)), manT=man.reduce((s,x)=>s+x.eur,0);
+  const calc=inPrev=>{
+  const vaPrev=d.vaPrev!=null?+d.vaPrev:X.va, vaY=inPrev||!VF?vaPrev:VF.inc, Y=fiscoAnno(a,0,vaY), N=fiscoAnno(a+1)||X;
+  const ina=N.minimi+(Y.rate>1?0:Y.cong), tas=Y.saldo+Y.imposta, tot=ina+tas;
+  const lordoY=vaY*(1+(S.impostazioni.aliquote.integrativo||0.04)), perc=S.impostazioni.accantonamento[a]??0.25;
+  const LF=VF?datiFatture(a):[], accOggi=LF.filter(x=>x.inc).reduce((s,x)=>s+x.c.accant,0), accPrev=VF?VF.acc:0;
+  const spostato=S.movimenti.filter(x=>annoDi(x.data)===a&&x.giro&&x.ok&&(S.conti.find(c=>c.id===x.verso)||{}).tipo==='salvadanaio').reduce((s,x)=>s+x.eur,0);
+  const accY=(!inPrev&&VF?accOggi:d.vaPrev!=null?lordoY*perc:accPrev)+Math.max(0,spostato-accOggi), copre=tot?accY/tot:1;
+  return {vaY,Y,ina,tot,accY,copre}};
+  const E=calc(false), PV=calc(true), {vaY,Y,ina,tot,accY,copre}=E, inPrev=false;
+  const riga=(i,col,t,s,v)=>`<div class="mb-it">${icoC(i,col,'piccola')}<span class="mb-it-t"><b>${t}</b><small>${s}</small></span><span class="mb-it-v">${v}</span></div>`;
+  return `<div class="mb-sez"><h2>Fisco · ${a}</h2><span class="mb-pill nero piccola">${e0(pag+manT)}</span></div>
+    <div class="mb-lista">${riga('fiscali','var(--cappuccino)','Già pagato','Inarcassa e F24',e0(pag))}${riga('calendario','var(--corallo)','Manca',man.length?man.length+' scadenze':'niente',e0(manT))}
+      ${man.slice(0,3).map(x=>riga('calendario','var(--grigino)',giornoIt(x.data),esc(x.det.toLowerCase()),e0(x.eur))).join('')}</div>
+    <div class="mb-sez"><h2>Fisco · ${a+1}</h2><span class="mb-pill nero piccola">${e0(tot)}</span></div>
+    <div class="mb-avv ${copre>=0.995?'verde':'rosa'}"><small>Nel ${a+1} pagherai</small><p><b class="mb-big">${e0(tot)}</b>accantonamento ${e0(accY)}: ${copre>=0.995?(accY-tot>=1?'avanzano '+e0(accY-tot):'basta giusto'):'mancano <b>'+e0(tot-accY)+'</b>'} (${Math.round(copre*100)}%)${Math.abs(PV.tot-tot)>=1?`<small class="mb-avv-p">con il previsto: ${e0(PV.tot)} · accantonamento ${e0(PV.accY)}</small>`:''}</p>${forma('croce','rgba(255,255,255,.45)',15)}</div>
+    <div class="mb-lista">${riga('fiscali','var(--cappuccino)','Inarcassa',`minimi ${a+1}${Y.rate>1?'':' + conguaglio '+a}`,e0(ina))}${riga('fiscali','var(--cappuccino)','F24 giugno',`saldo ${a} + 1° acconto`,e0(Y.saldo+Y.imposta/2))}${riga('fiscali','var(--cappuccino)','F24 novembre','2° acconto',e0(Y.imposta/2))}</div>
+    <p class="mb-nota">Su un volume d'affari ${a} di ${e0(vaY)} (${!VF?'previsto':'solo fatture incassate'}${Math.abs(PV.vaY-vaY)>=1?', con il previsto '+e0(PV.vaY):''}). Il dettaglio è nel Riepilogo fiscale sul computer.</p>`;
+}
+
+/* ---------- ANNO ---------- */
+const conBase=(b,fn)=>{const o=UI.prevBase;UI.prevBase=b;try{return conScen(fn)}finally{UI.prevBase=o}};
+// Paolo 25/11: sul telefono niente interruttore: in grande "ad oggi" (incassato), sotto in piccolo "con il previsto"
+function pAnno(){const P=conBase('prev',()=>{const X=h3Dati();return {Y:h3Anno(X),B:X.B}});return conBase('eff',()=>pAnno2(P))}
+function pAnno2(P){
+  const X=h3Dati(), Y=h3Anno(X), B=X.B, nM=MESI[X.m-1], prev=false, YP=P.Y, pv=(e,v)=>Math.abs(v-e)>=1?`<em>con il previsto ${e0(v)}</em>`:'';
+  let h=`<div class="mb-hero">${forma('stella','var(--azzurro)',0)}<small class="mb-hero-t">Netto del ${X.a} ad oggi</small>${giga(Y.netto)}<span>fatturato incassato ${e0(Y.vol)}</span>${Math.abs(YP.netto-Y.netto)>=1?`<span class="mb-hero-p">con il previsto <b>${e0(YP.netto)}</b> · fatturato ${e0(YP.vol)}</span>`:''}</div>
+    <div class="mb-tre"><div><small>accantonato</small><b>${e0(Y.spo)}</b>${pv(Y.spo,YP.spo)}</div><div><small>da accantonare</small><b>${e0(Y.acc)}</b>${pv(Y.acc,YP.acc)}</div><div><small>risparmio</small><b class="${Y.ris<-0.5?'neg':''}">${e0(Y.ris)}</b>${pv(Y.ris,YP.ris)}</div></div>`;
+  // il mese
+  const ent=B.entrate.pag+(prev?B.entrate.prv:0), vv=[['entrate','var(--salvia)','Entrate',ent],['fisse','var(--azzurro)','Spese fisse',B.fisse.pag+B.fisse.prv],['variabili','var(--lavanda)','Spese variabili',B.variabili.pag+B.variabili.prv],['fiscali','var(--cappuccino)','Spese per l\'attività',B.fiscali.pag+B.fiscali.prv],['salvadanaio','var(--grigino)','Da accantonare',B.accant]], mx=Math.max(1,...vv.map(x=>x[3]));
+  h+=`<div class="mb-sez"><h2>${nM[0].toUpperCase()+nM.slice(1)}</h2></div><div class="mb-lista">${vv.map(([i,c,t,v])=>`<div class="mb-sys">${icoC(i,c,'piccola')}<span class="mb-sys-t"><b>${t}</b><span class="mb-sys-b"><i style="width:${v/mx*100}%;background:${c}"></i></span></span><span class="mb-sys-v">${e0(v)}${i==='entrate'&&B.entrate.prv>0.5?`<small>+ ${e0(B.entrate.prv)} previste</small>`:''}</span></div>`).join('')}</div>`;
+  // trimestri
+  const oq=X.corr?Math.ceil(X.m/3):5, TT=[1,2,3,4].map(q=>trimB(X.a,q)), mq=Math.max(1,...TT.map(T=>T?Math.max(T.stip||0,T.fis+T.vari):0));
+  h+=`<div class="mb-sez"><h2>Trimestre per trimestre</h2></div><div class="mb-lista">${TT.map((T,k)=>{const q=k+1;if(!T)return `<div class="mb-it"><span class="mb-it-t"><b>${ROMANI[k]} trim</b><small>nessun movimento</small></span></div>`;const sp=T.fis+T.vari;
+    return `<div class="mb-q2"><b>${ROMANI[k]}<small>${q===oq?'in corso':q>oq?'prev.':'chiuso'}</small></b><span class="mb-q2-b"><span><i style="width:${(T.stip||0)/mq*100}%;background:var(--salvia)"></i></span><span><i style="width:${sp/mq*100}%;background:var(--lavanda)"></i></span><small>stipendio ${T.stip==null?'—':e0(T.stip)} · spese ${e0(sp)}</small></span><span class="mb-pill piccola ${T.avanzo!=null&&T.avanzo<-0.5?'no':''}">${T.avanzo==null?'—':(T.avanzo>=-0.5?'+':'−')+' '+n0(T.avanzo)}</span></div>`}).join('')}</div>`;
+  try{h+=mobFisco()}catch(x){console.error(x)}
+  // dove vanno i soldi, a cerchi
+  const pc={};S.movimenti.filter(x=>annoDi(x.data)===X.a&&!x.giro&&x.ok&&['fisse','variabili','fiscali'].includes(bollaMov(x))).forEach(x=>pc[x.cat]=(pc[x.cat]||0)+x.eur);
+  const C=Object.entries(pc).filter(c=>c[1]>0.5).sort((x,y)=>y[1]-x[1]).slice(0,6);
+  if(C.length){const POS=[[2,4,46],[50,0,44],[30,40,40],[64,44,36],[0,58,34],[44,70,30]], mx=C[0][1];
+    h+=`<div class="mb-sez"><h2>Dove vanno i soldi</h2><button class="mb-pill piccola" data-mb-tab="movimenti">tutto ›</button></div>
+      <div class="mb-forme">${C.map(([c,v],k)=>{const [l,t,w]=POS[k], s=w*(0.75+0.25*Math.sqrt(v/mx));
+        return `<div class="mb-fo" style="left:${l}%;top:${t}%;width:${s}%"><i style="background:${coloreCat(c)||'#ccc'}"></i><span><b>${esc(nomeCat(c))}</b>${e0(v)}</span></div>`}).join('')}</div>`}
+  h+=`<button class="mb-pill mb-pc" data-mb-vista="pc">Apri la versione per computer</button>`;
+  return h;
+}
+
+/* ---------- finestre (+ Movimento, + Fattura): tasti ✕ e ✓ in alto come Intelly ---------- */
+new MutationObserver(()=>{if(!window.MOB)return;const f=document.querySelector('#modale .finestra');if(!f||f.querySelector('.mb-ok'))return;
+  const s=f.querySelector('[data-act="m-salva"],[data-act="f-salva"]');if(!s)return;
+  const b=document.createElement('button');b.type='button';b.className='mb-ok';b.setAttribute('aria-label','Salva');b.textContent='✓';b.onclick=()=>s.click();f.prepend(b)})
+  .observe(document.getElementById('modale'),{childList:true,subtree:true});
+
+/* ---------- eventi ---------- */
+document.addEventListener('click',e=>{
+  if(!window.MOB||!e.target.closest('#mob'))return;
+  const t=e.target.closest('[data-mb-tab],[data-mb-nuovo],[data-mb-mov],[data-mb-fat],[data-mb-mm],[data-mb-calc],[data-mb-cfda],[data-mb-crea-fat],[data-mb-vista],[data-mb-perc],[data-mb-prev],[data-mb-piu],[data-mb-chiudi-calc]');if(!t)return;
+  e.preventDefault();e.stopPropagation();const d=t.dataset;
+  if(t.matches('[data-mb-piu]')){MU.piu=!MU.piu;render();return}
+  MU.piu=false;
+  if(d.mbNuovo){render();d.mbNuovo==='fat'?apriFattura(null):apriMovimento(null,d.mbNuovo);return}
+  if(d.mbMov){const m=S.movimenti.find(x=>x.id==d.mbMov);if(m)apriMovimento(m);return}
+  if(d.mbFat){const f=S.fatture.find(x=>x.id==d.mbFat);if(f)apriFattura(f);return}
+  if(d.mbCreaFat){apriFattura(null);setTimeout(()=>{const i=$('#f-prest');if(i){i.value=numIt(+d.mbCreaFat);calcoliFattura()}},30);return}
+  if(d.mbVista){try{localStorage.setItem(K_VISTA,'pc')}catch(x){}window.MOB=false;render();return}
+  if(d.mbCalc){MU.calc=d.mbCalc;scrollTo(0,0)}
+  else if(t.matches('[data-mb-chiudi-calc]'))MU.calc='';
+  else if(d.mbTab){MU.tab=d.mbTab;MU.calc='';if(d.mbTab==='movimenti'){MU.m=null;MU.solo=d.mbSolo||''}scrollTo(0,0)}
+  else if(d.mbMm)MU.m=+d.mbMm;
+  else if(d.mbCfda)MU.cf.da=d.mbCfda;
+  else if(d.mbPerc!=null){const k=+d.mbPerc;UI.fcPerc=k?Math.max(0,Math.min(0.9,Math.round(percCalc()*100+k)/100)):null;salvaUI()}
+  else if(t.matches('[data-mb-prev]')){UI.prevBase=pvBase()==='prev'?'eff':'prev';salvaUI()}
+  salvaMU();render();
+},true);
+let tIn=0;
+document.addEventListener('input',e=>{
+  if(!window.MOB||!e.target.closest('#mob'))return;const t=e.target, d=t.dataset;
+  // si aggiorna solo la parte dei risultati: il campo resta com'è e la tastiera non si chiude
+  if(d.mbQ!=null){MU.q=t.value;salvaMU();clearTimeout(tIn);tIn=setTimeout(()=>{const el=$('#mb-mov-l');if(el)el.innerHTML=movLista(movFiltra())},200)}
+  else if(t.matches('[data-mb-solo-sel]')){MU.solo=t.value;salvaMU();const el=$('#mb-mov-l');if(el)el.innerHTML=movLista(movFiltra())}
+  else if(d.mbPercIn!=null){const v=parseNum(t.value);if(v>=0&&v<100){UI.fcPerc=v/100;salvaUI();const el=$('#mob .mb-cf-ris');if(el)el.innerHTML=calcFatRis()}}
+  else if(d.mbCf!=null){MU.cf.v=t.value;salvaMU();const el=$('#mob .mb-cf-ris');if(el)el.innerHTML=calcFatRis()}
+  else if(d.mbCoi){const v=parseNum(t.value);if(!isNaN(v)&&v>=0){UI[{vers:'coiVers',extra:'coiExtra',ob:'coiOb'}[d.mbCoi]]=v;salvaUI();const el=$('#mb-coi-ris');if(el)el.innerHTML=coiRis(coiPrev())}}
+  else if(d.mbPp){MU.pp[d.mbPp]=t.value;salvaMU();const el=$('#mb-pp-ris');if(el)el.innerHTML=ppRis()}
+});
+// la versione per computer, su un telefono, ha un tasto per tornare a quella per telefono
+document.addEventListener('click',e=>{const b=e.target.closest('[data-mb-vista-tel]');if(!b)return;e.preventDefault();try{localStorage.setItem(K_VISTA,'tel')}catch(x){}window.MOB=true;render()});
+addEventListener('resize',()=>{const n=telefono();if(n!==window.MOB){window.MOB=n;render()}});
+if(window.MOB)render();
+})();
+document.addEventListener('change',e=>{if(window.MOB&&e.target.matches&&e.target.matches('#mob [data-mb-perc-in]'))render()});
 </script>
 </body>
 </html>
