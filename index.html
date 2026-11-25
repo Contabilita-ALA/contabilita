@@ -3108,6 +3108,13 @@ body.mob .mb-leg small{font:600 13px var(--font);color:var(--grigio)}
 body.mob .mb-leg b{font:700 19px var(--font);margin:1px 0}
 body.mob .mb-leg em{font-style:normal;font-size:12.5px;color:var(--grigio)}
 body.mob .mb-leg-n{text-align:center;margin:-4px 6px 0;font-size:13px}
+/* Calcola una fattura: usa tutta l'altezza (Paolo 25/11) */
+body.mob.mb-calcmode #mob{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+body.mob.mb-calcmode .mb-body{flex:1}
+body.mob.mb-calcmode .mb-cf-ris{flex:1;display:flex;flex-direction:column;gap:clamp(8px,calc((100dvh - 720px)/6 + 8px),20px)}
+body.mob.mb-calcmode .mb-cf-ris .mb-cr{padding-top:clamp(5px,calc((100dvh - 720px)/24 + 5px),11px);padding-bottom:clamp(5px,calc((100dvh - 720px)/24 + 5px),11px)}
+body.mob.mb-calcmode .mb-cf-ris .mb-cg{padding:clamp(2px,calc((100dvh - 720px)/40 + 2px),6px) 14px}
+body.mob.mb-calcmode .mb-cf-ris .mb-riga-pill{margin-top:auto}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
