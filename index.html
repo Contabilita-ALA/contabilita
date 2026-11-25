@@ -2971,11 +2971,6 @@ body.mob .finestra .importo{border-radius:22px}
 body.mob .finestra .azioni .btn{border-radius:99px}
 body.mob .finestra .campi input:not([type=checkbox]),body.mob .finestra .campi select{border:0;background:var(--grigino);border-radius:99px;padding:9px 14px}
 .mb-fo>i{position:absolute;inset:0;border-radius:50%}
-body.mob .mb-perc{display:flex;align-items:center;gap:8px;margin:12px 0 4px;padding:10px 12px;background:rgba(255,255,255,.55);border-radius:20px}
-body.mob .mb-perc>span{flex:1;display:flex;flex-direction:column;line-height:1.2}body.mob .mb-perc>span b{font-size:15.5px}body.mob .mb-perc>span small{font-size:13px;color:var(--grigio)}
-body.mob #mob .mb-perc>button:not(.mb-pill){width:34px;height:34px;border-radius:50%;border:0;background:var(--inchiostro);color:#fff;font:500 20px/1 var(--font)}
-body.mob .mb-perc label{display:flex;align-items:center;background:#fff;border-radius:14px;padding:0 8px}
-body.mob .mb-perc input{width:44px;border:0;background:none;font:700 17px var(--font);text-align:right;padding:6px 0;color:var(--inchiostro)}body.mob .mb-perc label i{font-style:normal;font-weight:700}
 body.mob .mb-cg{background:rgba(255,255,255,.55);border-radius:20px;padding:6px 14px;margin:10px 0}
 body.mob .mb-cr{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;font-size:15.5px}
 body.mob .mb-cr+.mb-cr{border-top:1px solid rgba(0,0,0,.06)}
@@ -2994,6 +2989,125 @@ body.mob #mob.t-rosa,body.mob:has(#mob.t-rosa){background:#e8f3ec}
 body.mob #mob.t-corallo,body.mob:has(#mob.t-corallo){background:#fce9e6}
 body.mob #mob.t-azzurro,body.mob:has(#mob.t-azzurro){background:#e9f0f0}
 body.mob .mb-avv.rosa{background:#fbe3e0}
+/* Movimenti: voci come sul computer + filtro (25/11) */
+body.mob .mb-voci{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 14px}
+body.mob #mob .mb-voce{appearance:none;border:0;border-radius:20px;background:rgba(255,255,255,.6);padding:10px 10px 12px;display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;color:var(--inchiostro);box-shadow:inset 0 0 0 2px transparent}
+body.mob #mob .mb-voce.on{box-shadow:inset 0 0 0 2px var(--inchiostro)}
+body.mob .mb-voce .mb-ic{margin-bottom:4px}
+body.mob .mb-voce small{font-size:13px;color:var(--grigio)}
+body.mob .mb-voce b{font:700 19px var(--font)}
+body.mob .mb-voce em{font-style:normal;font-size:12.5px;color:var(--grigio)}
+body.mob .mb-voce-b{display:block;width:100%;height:6px;border-radius:3px;background:var(--grigino);margin:6px 0 2px;overflow:hidden}
+body.mob .mb-voce-b i{display:block;height:100%;background:var(--b);border-radius:3px}body.mob .mb-voce-b i.no{background:var(--rosso)}
+body.mob #mob .mb-filtro{appearance:none;border:0;width:46px;height:46px;flex:none;border-radius:50%;background:var(--grigino);color:var(--inchiostro);display:grid;place-items:center;position:relative}
+body.mob #mob .mb-filtro.attivo{background:var(--inchiostro);color:#fff}
+body.mob .mb-filtro svg{width:21px;height:21px}
+body.mob .mb-filtro i{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--giallo)}
+body.mob .mb-filtri{background:rgba(255,255,255,.6);border-radius:20px;padding:10px 12px;margin-top:10px}
+body.mob .mb-filtri>small{display:block;font-size:13px;color:var(--grigio);margin:2px 2px 6px}
+body.mob .mb-chips.sx{justify-content:flex-start;flex-wrap:wrap;margin-bottom:8px}
+/* niente scorrimento di lato (iOS, finestre) */
+html:has(body.mob),body.mob{overflow-x:hidden;max-width:100%}
+body.mob:has(#modale .velo){overflow:hidden}
+body.mob .velo{overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y}
+body.mob .finestra{max-width:100vw;overflow-x:hidden;box-sizing:border-box}
+body.mob .finestra *{min-width:0;box-sizing:border-box}
+body.mob .finestra input,body.mob .finestra select,body.mob .finestra textarea{max-width:100%}
+body.mob .finestra input[type=date]{-webkit-appearance:none;appearance:none;display:block;width:100%;min-height:44px}
+/* Fisco in Anno (25/11) */
+body.mob .mb-fc{background:rgba(255,255,255,.6);border-radius:22px;padding:14px 16px 8px;margin-bottom:10px}
+body.mob .mb-fc-t{display:flex;justify-content:space-between;align-items:flex-end}
+body.mob .mb-fc-t>span{display:flex;flex-direction:column}
+body.mob .mb-fc-t small{font-size:13px;color:var(--grigio)}
+body.mob .mb-fc-t>span>b{font:700 24px var(--font)}
+body.mob .mb-fc-n{align-items:flex-end}body.mob .mb-fc-n b{font:700 26px var(--font)}
+body.mob .mb-fbar{display:block;height:10px;border-radius:5px;background:var(--grigino);margin:10px 0 6px;overflow:hidden}
+body.mob .mb-fbar i{display:block;height:100%;border-radius:5px;background:var(--cappuccino)}body.mob .mb-fbar i.no{background:var(--corallo)}
+body.mob .mb-fc-l{display:flex;justify-content:space-between;font-size:14.5px;color:var(--grigio);margin-bottom:6px}
+body.mob .mb-fc-l b{color:var(--inchiostro)}body.mob .mb-fc-l .pos b{color:var(--verde)}body.mob .mb-fc-l .neg b{color:var(--rosso)}
+body.mob .mb-fr{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(0,0,0,.07)}
+body.mob .mb-fr>span{display:flex;flex-direction:column;min-width:0}body.mob .mb-fr b{font-size:15.5px}body.mob .mb-fr small{font-size:13px;color:var(--grigio)}
+body.mob .mb-fr em{font-style:normal;font-weight:700;font-size:16px;white-space:nowrap}
+body.mob .mb-fc-p{font-size:13px;color:var(--grigio);margin:6px 0 4px}
+/* calcolatori in una schermata (25/11) */
+body.mob.mb-calcmode .mb-tab{display:none}
+body.mob.mb-calcmode #mob{padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+body.mob.mb-calcmode .mb-body{gap:10px}
+body.mob.mb-calcmode .mb-top{padding-bottom:2px}
+body.mob.mb-calcmode .mb-hero{padding:4px 0 0}
+body.mob.mb-calcmode .mb-giga{font-size:54px}
+body.mob.mb-calcmode .mb-hero .mb-hero-t{font-size:16px;margin-bottom:2px}
+body.mob.mb-calcmode .mb-hero span{margin-top:4px}
+body.mob .mb-cf-riga{display:grid;grid-template-columns:1fr auto;gap:8px}
+body.mob .mb-cf-riga .mb-campo{padding:8px 14px}
+body.mob .mb-cf-riga .mb-campo input{font-size:26px}
+body.mob .mb-perc{display:flex;flex-direction:column;justify-content:center;gap:4px;background:rgba(255,255,255,.6);border-radius:20px;padding:8px 10px}
+body.mob .mb-perc>small{font:600 13px var(--font);color:var(--grigio);white-space:nowrap}
+body.mob #mob .mb-perc-r{appearance:none;border:0;background:none;padding:0;font:inherit;color:var(--inchiostro);text-decoration:underline}
+body.mob .mb-perc>span{display:flex;align-items:center;gap:6px}
+body.mob #mob .mb-perc>span>button{width:32px;height:32px;border-radius:50%;border:0;background:var(--inchiostro);color:#fff;font:500 20px/1 var(--font);flex:none}
+body.mob .mb-perc label{display:flex;align-items:center;background:#fff;border-radius:12px;padding:0 6px}
+body.mob .mb-perc input{width:38px;border:0;background:none;font:700 17px var(--font);text-align:right;padding:5px 0;color:var(--inchiostro)}
+body.mob .mb-perc label i{font-style:normal;font-weight:700}
+body.mob .mb-cg{margin:0;padding:2px 14px}
+body.mob .mb-cr{padding:5px 0;font-size:15px}
+body.mob .mb-cr.t{font-size:15.5px}
+body.mob.mb-calcmode .mb-nota{margin:0;font-size:13px}
+body.mob .mb-sel.tre{grid-template-columns:1fr 1fr 1.2fr;gap:6px}
+body.mob .mb-sel.tre select{padding:10px 10px;font-size:16px}
+body.mob.mb-calcmode .mb-it{padding-top:8px;padding-bottom:8px}
+body.mob.mb-calcmode .mb-sez{margin-top:2px}
+body.mob .mb-cr.on{padding:5px 10px}
+/* finestre in una schermata (Paolo 25/11) */
+body.mob .finestra{padding-top:calc(8px + env(safe-area-inset-top))}
+body.mob .finestra h3{margin:0 0 8px!important}
+body.mob .finestra .tipi{display:grid!important;grid-template-columns:1fr 1.25fr 1fr 1fr;gap:5px;margin-bottom:8px}
+body.mob .finestra .tipi button{padding:6px 4px;font-size:13.5px;line-height:1.15;min-height:40px}
+body.mob .finestra .importo{padding:4px 14px;margin-bottom:8px}
+body.mob .finestra .importo input,body.mob .finestra .importo span{font-size:26px!important}
+body.mob .finestra .campi{gap:8px 10px!important;margin-bottom:8px}
+body.mob .finestra .campi label{font-size:12.5px;gap:3px}
+body.mob .finestra input,body.mob .finestra select{min-height:40px}
+body.mob .finestra .campi input:not([type=checkbox]),body.mob .finestra .campi select{padding:7px 12px}
+body.mob .finestra input[type=date]{min-height:40px}
+body.mob .finestra .campi label.alt-campo{grid-column:auto}
+body.mob .finestra .aiuto,body.mob .finestra>p{display:none}
+body.mob .finestra .campi label.spunta{font-size:14.5px}
+body.mob .finestra .campi.f-3{grid-template-columns:.7fr 1.3fr!important}
+body.mob .finestra .calcoli{font-size:15px;padding:8px 14px!important;margin-bottom:4px}
+body.mob .finestra .calcoli>*{padding-top:3px!important;padding-bottom:3px!important}
+body.mob .finestra .azioni{padding-top:8px}
+body.mob .finestra .azioni .btn.chiaro:first-child{display:none}
+body.mob .finestra .azioni .btn{min-height:46px}
+body.mob .mb-cf-riga{grid-template-columns:minmax(0,1fr) auto}
+body.mob .mb-sel.tre{grid-template-columns:.8fr 1fr 1.5fr}
+body.mob .mb-pp-g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+body.mob .mb-pp-g>div{background:rgba(255,255,255,.6);border-radius:18px;padding:9px 12px;display:flex;flex-direction:column;line-height:1.2}
+body.mob .mb-pp-g small{font:600 13px var(--font);color:var(--grigio)}
+body.mob .mb-pp-g b{font:700 19px var(--font);margin-top:2px}
+body.mob .mb-pp-g .no b{color:var(--rosso)}
+body.mob .mb-pp-g em{font-style:normal;font-size:12.5px;color:var(--grigio)}
+body.mob .mb-pp-g span{font-size:12.5px;color:var(--grigio);margin-top:3px}
+body.mob .mb-anni{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+body.mob .mb-anni>div{display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,.6);border-radius:16px;padding:8px 4px}
+body.mob .mb-anni small{font:600 13px var(--font);color:var(--grigio)}
+body.mob .mb-anni-b{display:flex;align-items:flex-end;width:22px;height:54px;background:var(--grigino);border-radius:6px;overflow:hidden;margin:4px 0}
+body.mob .mb-anni-b i{display:block;width:100%;background:var(--corallo);border-radius:6px}
+body.mob .mb-anni b{font:700 15px var(--font)}
+body.mob .mb-anni em{font-style:normal;font-size:12px;color:var(--grigio)}
+body.mob.mb-calcmode .mb-avv{padding-top:10px;padding-bottom:10px}
+body.mob.mb-calcmode .mb-lista{gap:6px}
+body.mob .fin-x,body.mob .mb-ok{top:calc(8px + env(safe-area-inset-top))!important}
+body.mob .finestra h3{line-height:40px!important;margin:0 0 10px!important;padding-top:0!important}
+body.mob.mb-calcmode .mb-coi .mb-giga{font-size:46px}
+/* legenda dell'anello in Oggi (25/11) */
+body.mob .mb-legenda{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:-4px}
+body.mob #mob .mb-leg{appearance:none;border:0;background:rgba(255,255,255,.6);border-radius:18px;padding:9px 10px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;color:var(--inchiostro);line-height:1.2}
+body.mob .mb-leg i{width:12px;height:12px;border-radius:50%;margin-bottom:5px}
+body.mob .mb-leg small{font:600 13px var(--font);color:var(--grigio)}
+body.mob .mb-leg b{font:700 19px var(--font);margin:1px 0}
+body.mob .mb-leg em{font-style:normal;font-size:12.5px;color:var(--grigio)}
+body.mob .mb-leg-n{text-align:center;margin:-4px 6px 0;font-size:13px}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -7782,7 +7896,7 @@ const K_VISTA='contabilita_vista';
 const vista=()=>{try{return localStorage.getItem(K_VISTA)||''}catch(e){return ''}};
 const telefono=()=>vista()==='tel'||(vista()!=='pc'&&Math.min(screen.width,innerWidth)<=640);
 window.MOB=telefono();
-const MU={tab:'oggi',m:null,q:'',solo:'',calc:'',cf:{da:'prest',v:''},pp:{imp:'',m:0,nr:1},piu:false};
+const MU={tab:'oggi',m:null,q:'',solo:'',conto:'',filtri:false,calc:'',cf:{da:'prest',v:''},pp:{imp:'',m:0,nr:1},piu:false};
 try{Object.assign(MU,JSON.parse(sessionStorage.getItem('mob_ui')||'{}'))}catch(e){}
 MU.piu=false;
 const salvaMU=()=>{try{sessionStorage.setItem('mob_ui',JSON.stringify(MU))}catch(e){}};
@@ -7817,7 +7931,7 @@ function renderMob(){
       head=`<header class="mb-top"><span class="mb-top-t">${{oggi:'',movimenti:'Movimenti',fatture:'Fatture '+S.anno,anno:'Il '+S.anno}[MU.tab]||''}</span><span id="salvato"></span></header>`;
       tema=MU.tab==='anno'?'azzurro':'';corpo=T()}
   }catch(x){console.error(x);corpo=`<div class="mb-card">Qualcosa non torna in questa pagina (${esc(x.message)}).</div>`}
-  el.className=tema?'t-'+tema:'';
+  el.className='';document.body.classList.toggle('mb-calcmode',!!MU.calc); // Paolo 25/11: un solo colore di sfondo
   el.innerHTML=`${head}<div class="mb-body">${corpo}</div>
     ${MU.piu?piuMenu():''}
     <nav class="mb-tab">${TABS.map(([k,n,i])=>k==='+'?`<button class="mb-piu ${MU.piu?'on':''}" data-mb-piu aria-label="Aggiungi o calcola">${MU.piu?'✕':'+'}</button>`:`<button data-mb-tab="${k}" class="${MU.tab===k&&!MU.calc?'on':''}" aria-label="${n}">${ico(i)}</button>`).join('')}</nav>`;
@@ -7854,6 +7968,11 @@ function pOggi(){
   if(n!=null){const bud=n/3, r=bud-F-V;
     h+=anello([{v:F,c:'var(--azzurro)',i:'fisse'},{v:V,c:'var(--lavanda)',i:'variabili'},{v:r,c:'var(--giallo)',i:'salvadanaio'}],
       `${giga(r,r<-0.5?'neg':'')}<span>${r<-0.5?'sfori':'restano'} a ${MESI[m-1]}</span><em>stipendio ${e0(bud)}</em>`);
+    // legenda: le spese del mese pagate dallo stipendio (Paolo 25/11: l'anello deve dire qualcosa)
+    const pp=b=>{const L=mov.filter(x=>bollaMov(x)===b);return [L.filter(x=>x.ok).reduce((s,x)=>s+x.eur,0),L.filter(x=>!x.ok).reduce((s,x)=>s+x.eur,0)]}, [Fp,Fv]=pp('fisse'), [Vp,Vv]=pp('variabili'), pc=v=>bud>0?Math.round(v/bud*100)+'%':'';
+    const leg=(c,t,v,sub,att)=>`<button class="mb-leg" ${att||''}><i style="background:${c}"></i><small>${t}</small><b class="${v<-0.5?'neg':''}">${e0(v)}</b><em>${sub}</em></button>`;
+    h+=`<div class="mb-legenda">${leg('var(--azzurro)','Fisse',F,(Fv>0.5?'+ '+e0(Fv)+' prev. · ':'')+pc(F),'data-mb-tab="movimenti" data-mb-solo="fisse"')}${leg('var(--lavanda)','Variabili',V,(Vv>0.5?'+ '+e0(Vv)+' prev. · ':'')+pc(V),'data-mb-tab="movimenti" data-mb-solo="variabili"')}${leg('var(--giallo)',r<-0.5?'Sfori':'Restano',r,pc(Math.max(0,r))+' dello stipendio')}</div>
+    <p class="mb-nota mb-leg-n">Lo stipendio del mese diviso tra spese fisse, variabili (pagate e previste dal conto Unicredit e dalle carte) e quello che resta.</p>`;
   }
   // budget delle variabili + tasti rapidi
   let bp='';
@@ -7883,9 +8002,12 @@ function pMov(){
   const hasPrv=k=>S.movimenti.some(x=>annoDi(x.data)===a&&meseDi(x.data)===k&&!x.ok);
   let h=`<div class="mb-mesi">${MESI3.map((n,i)=>`<button data-mb-mm="${i+1}" class="${i+1===m?'on':''} ${i+1===mOra?'ora':''}"><small>${n}</small>${hasPrv(i+1)&&i+1>=mOra?'<i></i>':''}</button>`).join('')}</div>
     <div class="mb-hero">${giga(sp)}<span>spese di ${MESI[m-1]}${spP>0.5?` · + ${e0(spP)} previste`:''}</span></div>
-    <div class="mb-tre"><div><small>entrate</small><b>${e0(B.entrate.pag)}</b></div><div><small>da incassare</small><b>${e0(B.entrate.prv)}</b></div><div><small>accantona</small><b>${e0(B.accant)}</b></div></div>
-    
-    <div class="mb-cerca"><input type="search" data-mb-q placeholder="Cerca (lidl, bolletta…)" value="${esc(MU.q)}"><select data-mb-solo-sel class="mb-pill nero">${[['','Tutti'],['prev','Da pagare'],['ent','Entrate']].map(([k,n])=>`<option value="${k}" ${MU.solo===k?'selected':''}>${n}</option>`).join('')}</select></div>`;
+    <div class="mb-voci">${[['fisse','Fisse','var(--azzurro)'],['variabili','Variabili','var(--lavanda)'],['fiscali','Attività','var(--cappuccino)']].map(([k,n,c])=>{const x=B[k], tt=k==='variabili'?tettoMese(a,m):null, tot=x.pag+x.prv;
+      return `<button class="mb-voce ${MU.solo===k?'on':''}" data-mb-voce="${k}" style="--b:${c}">${icoC(k,c,'piccola')}<small>${n}</small><b>${e0(x.pag)}</b><em>${x.prv>0.5?'+ '+e0(x.prv)+' prev.':'tutte pagate'}</em>${tt?`<span class="mb-voce-b"><i style="width:${Math.min(100,tot/tt*100)}%" class="${tot>tt+0.5?'no':''}"></i></span><em>tetto ${e0(tt)}</em>`:''}</button>`}).join('')}</div>
+    <div class="mb-cerca"><input type="search" data-mb-q placeholder="Cerca (lidl, bolletta…)" value="${esc(MU.q)}"><button class="mb-filtro ${MU.solo||MU.conto?'attivo':''}" data-mb-filtri aria-label="Filtri"><svg viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>${MU.solo||MU.conto?'<i></i>':''}</button></div>
+    ${MU.filtri?`<div class="mb-filtri"><small>Mostra</small><div class="mb-chips sx">${[['','Tutti'],['prev','Da pagare'],['ent','Entrate'],['fisse','Fisse'],['variabili','Variabili'],['fiscali','Attività'],['giro','Giroconti']].map(([k,n])=>`<button data-mb-solo-f="${k}" class="${MU.solo===k?'on':''}">${n}</button>`).join('')}</div>
+      <small>Conto</small><div class="mb-chips sx">${[['','Tutti']].concat(S.conti.map(c=>[c.id,c.nome])).map(([k,n])=>`<button data-mb-conto-f="${k}" class="${MU.conto===k?'on':''}">${esc(n)}</button>`).join('')}</div></div>`:''}
+`;
   return h+`<div id="mb-mov-l">${movLista(movFiltra())}</div>`;
 }
 function movFiltra(){const a=S.anno, q=MU.q.trim().toLowerCase();
@@ -7893,6 +8015,9 @@ function movFiltra(){const a=S.anno, q=MU.q.trim().toLowerCase();
   if(q)L=L.filter(x=>(x.det+' '+nomeCat(x.cat)+' '+nomeConto(x.conto)+' '+(x.nota||'')).toLowerCase().includes(q));
   if(MU.solo==='prev')L=L.filter(x=>!x.ok);
   if(MU.solo==='ent')L=L.filter(x=>!x.giro&&x.eur<0);
+  if(MU.solo==='giro')L=L.filter(x=>x.giro);
+  if(['fisse','variabili','fiscali'].includes(MU.solo))L=L.filter(x=>!x.giro&&bollaMov(x)===MU.solo);
+  if(MU.conto)L=L.filter(x=>x.conto===MU.conto||x.verso===MU.conto);
   return L}
 function movLista(L){let h='';
   const riga=x=>{const ent=!x.giro&&x.eur<0, giro=x.giro, col=giro?'var(--grigino)':coloreCat(x.cat)||'#ccc';
@@ -7919,13 +8044,11 @@ function pFat(){
 
 /* ---------- CALCOLA (pagine colorate, dal tasto centrale) ---------- */
 function calcFat(){
-  const da=MU.cf.da, lab={prest:'Prestazione (imponibile)',lordo:'Bonifico che arriva (lordo)',netto:'Netto che vuoi in tasca'}[da];
+  const da=MU.cf.da, lab={prest:'Prestazione',lordo:'Bonifico (lordo)',netto:'Netto in tasca'}[da];
   const pa=S.impostazioni.accantonamento[new Date().getFullYear()]??0.25, pv=percCalc(), pt=x=>numIt(Math.round(x*1000)/10).replace(/,0+$/,'');
   return `<div class="mb-chips">${[['prest','Prestazione'],['lordo','Bonifico'],['netto','Netto']].map(([k,n])=>`<button data-mb-cfda="${k}" class="${da===k?'on':''}">${n}</button>`).join('')}</div>
-    <label class="mb-campo"><small>${lab}</small><span><i>€</i><input data-mb-cf inputmode="decimal" placeholder="0" value="${esc(MU.cf.v)}"></span></label>
-    <div class="mb-perc"><span><b>Accantonamento</b><small>${Math.abs(pv-pa)>1e-9?'solo per questo calcolo':'quello dell\'anno'}</small></span>
-      <button data-mb-perc="-1" aria-label="meno">−</button><label><input data-mb-perc-in inputmode="decimal" value="${pt(pv)}"><i>%</i></label><button data-mb-perc="1" aria-label="più">+</button>
-      ${Math.abs(pv-pa)>1e-9?'<button class="mb-pill piccola" data-mb-perc="0">'+pt(pa)+'%</button>':''}</div>
+    <div class="mb-cf-riga"><label class="mb-campo"><small>${lab}</small><span><i>€</i><input data-mb-cf inputmode="decimal" placeholder="0" value="${esc(MU.cf.v)}"></span></label>
+    <div class="mb-perc"><small>Accantono${Math.abs(pv-pa)>1e-9?` · <button class="mb-perc-r" data-mb-perc="0">torna a ${pt(pa)}%</button>`:''}</small><span><button data-mb-perc="-1" aria-label="meno">−</button><label><input data-mb-perc-in inputmode="decimal" value="${pt(pv)}"><i>%</i></label><button data-mb-perc="1" aria-label="più">+</button></span></div></div>
     <div class="mb-cf-ris">${calcFatRis()}</div>`;
 }
 function calcFatRis(){
@@ -7946,16 +8069,16 @@ function calcPP(){
   const o=new Date(), mOra=o.getMonth()+1, P=MU.pp, m0=+P.m||mOra, cats=S.categorie.filter(c=>c.bolla==='variabili'||c.bolla==='fisse');
   const catSel=P.cat||(cats.find(c=>c.id==='spese variabili')||cats[0]||{}).id;
   return `<label class="mb-campo"><small>Quanto costa</small><span><i>€</i><input data-mb-pp="imp" inputmode="decimal" placeholder="es. 350" value="${esc(P.imp)}"></span></label>
-    <div class="mb-sel"><select data-mb-pp="m">${[0,1,2,3].map(i=>mOra+i).filter(m=>m<=12).map(m=>`<option value="${m}" ${m===m0?'selected':''}>${m===mOra?'questo mese':MESI[m-1]}</option>`).join('')}</select>
-    <select data-mb-pp="nr">${[1,2,3,4,5,6,10,12].map(n=>`<option value="${n}" ${n===+P.nr?'selected':''}>${n===1?'tutto subito':n+' rate'}</option>`).join('')}</select>
-    <select id="pp-cat" data-mb-pp="cat" style="grid-column:1/-1">${cats.map(c=>`<option value="${esc(c.id)}" ${c.id===catSel?'selected':''}>${esc(c.nome)}</option>`).join('')}</select></div>
+    <div class="mb-sel tre"><select data-mb-pp="m">${[0,1,2,3].map(i=>mOra+i).filter(m=>m<=12).map(m=>`<option value="${m}" ${m===m0?'selected':''}>${m===mOra?'ora':MESI[m-1]}</option>`).join('')}</select>
+    <select data-mb-pp="nr">${[1,2,3,4,5,6,10,12].map(n=>`<option value="${n}" ${n===+P.nr?'selected':''}>${n===1?'subito':n+' rate'}</option>`).join('')}</select>
+    <select id="pp-cat" data-mb-pp="cat">${cats.map(c=>`<option value="${esc(c.id)}" ${c.id===catSel?'selected':''}>${esc(c.nome)}</option>`).join('')}</select></div>
     <div id="mb-pp-ris">${ppRis()}</div>`;
 }
 function ppRis(){const o=new Date(), mOra=o.getMonth()+1, P=MU.pp, imp=parseNum(P.imp), m0=+P.m||mOra;
   if(!(imp>0)) return `<div class="mb-hero">${forma('cuore','rgba(255,255,255,.4)',0)}<p class="mb-nota">Guardo lo stipendio del mese e del trimestre, le spese già fatte e previste, e il conto Unicredit fino a fine anno.</p></div>`;
   const R=(()=>{const o=UI.prevBase;UI.prevBase='eff';try{return ppCalcola(imp,m0,+P.nr||1)}finally{UI.prevBase=o}})(), T=ppTesto(R);
   let h=`<div class="mb-hero">${forma('cuore','rgba(255,255,255,.45)',0)}<div class="mb-giga mb-esito">${{si:'Sì',forse:'Sì, ma…',no:'No'}[T.cl]}</div><span>${T.tit.toLowerCase().replace(/^./,c=>c.toUpperCase())}</span></div>
-    <div class="mb-lista">${T.L.map(r=>`<div class="mb-it"><span class="mb-it-t"><b>${r.tit}</b><small>${r.sub}</small></span><span class="mb-it-v ${r.cl==='no'?'neg':''}">${r.dp}<small>${r.nota||''}</small></span></div>`).join('')}</div>`;
+    <div class="mb-pp-g">${T.L.map(r=>`<div class="${r.cl==='no'?'no':''}"><small>${r.tit}</small><b>${r.dp}</b><em>${r.nota||''}</em><span>${r.sub}</span></div>`).join('')}</div>`;
   if(T.C.length) h+=`<div class="mb-sez"><h2>Se la vuoi fare comunque</h2></div><div class="mb-lista">${T.C.map(c=>`<div class="mb-it">${icoC(c.ic,'rgba(255,255,255,.6)','piccola')}<span class="mb-it-t"><b>${c.t}</b><small>${c.s}</small></span><span class="mb-it-v">${c.v}</span></div>`).join('')}</div>`;
   return h;
 }
@@ -7977,15 +8100,14 @@ function coiPrev(){ // il previsionale "I risparmi nei prossimi anni" della pagi
 }
 function calcCoi(){const P=coiPrev();
   const campo=(k,v,lab,sub)=>`<div class="mb-it"><span class="mb-it-t"><b>${lab}</b><small>${sub}</small></span><span class="mb-in-s"><i>€</i><input data-mb-coi="${k}" inputmode="decimal" value="${n0(v)}"></span></div>`;
-  return `<div class="mb-hero">${forma('stella','rgba(255,255,255,.4)',0)}<small class="mb-hero-t">Saldo oggi</small>${giga(P.D.saldoOggi)}<span>tua metà ${e0(P.D.saldoOggi*P.q)} · a fine ${P.a} ${e0(P.D.fine)}</span></div>
-    <div class="mb-sez"><h2>I risparmi nei prossimi anni</h2></div>
+  return `<div class="mb-hero mb-coi">${forma('stella','rgba(255,255,255,.4)',0)}<small class="mb-hero-t">Saldo oggi</small>${giga(P.D.saldoOggi)}<span>tua metà ${e0(P.D.saldoOggi*P.q)} · a fine ${P.a} ${e0(P.D.fine)}</span></div>
     <div class="mb-lista">${campo('vers',P.versP,'Versate a testa','al mese')}${campo('extra',P.extra,'Spese extra','all\'anno · nel '+P.a+' '+e0(P.extra0))}${campo('ob',P.ob,'Obiettivo','saldo del conto')}</div>
     <p class="mb-nota">Mutuo ${e0(P.mutuo)} e canone ${e0(P.canone)} al mese, bolli ${e0(P.bollo)} all'anno come nel ${P.a}.</p>
     <div id="mb-coi-ris">${coiRis(P)}</div>`}
 function coiRis(P){const mx=Math.max(...[12,24,36,48].map(i=>P.pts[i]),P.ob,1);
   return `<div class="mb-avv bianco"><small>${P.annuo>=0?'Mettete da parte':'Il conto cala di'}</small><p><b class="mb-big">${e0(Math.abs(P.annuo))} all'anno</b>obiettivo ${e0(P.ob)}: ${P.quandoOb?'ci arrivate a <b>'+P.quandoOb+'</b>':'non entro il '+(P.a+3)}</p></div>
     <div class="mb-sez"><h2>Saldo a fine anno</h2></div>
-    <div class="mb-lista">${[12,24,36,48].map((i,k)=>`<div class="mb-sys"><span class="mb-ic piccola num" style="--b:rgba(255,255,255,.6)">${String(P.a+k).slice(2)}</span><span class="mb-sys-t"><b>${P.a+k} <small>${k?'stima':'in corso'} · tua metà ${e0(P.pts[i]*P.q)}</small></b><span class="mb-sys-b"><i style="width:${Math.max(0,P.pts[i])/mx*100}%;background:var(--inchiostro)"></i></span></span><span class="mb-sys-v">${e0(P.pts[i])}</span></div>`).join('')}</div>`}
+    <div class="mb-anni">${[12,24,36,48].map((i,k)=>`<div><small>${P.a+k}${k?'':' ora'}</small><span class="mb-anni-b"><i style="height:${Math.max(4,Math.max(0,P.pts[i])/mx*100)}%"></i></span><b>${e0(P.pts[i])}</b><em>metà ${e0(P.pts[i]*P.q)}</em></div>`).join('')}</div>`}
 
 /* ---------- FISCO (Paolo 25/11): quest'anno e il prossimo, come il Riepilogo fiscale ---------- */
 function mobFisco(){
@@ -8002,14 +8124,24 @@ function mobFisco(){
   const accY=(!inPrev&&VF?accOggi:d.vaPrev!=null?lordoY*perc:accPrev)+Math.max(0,spostato-accOggi), copre=tot?accY/tot:1;
   return {vaY,Y,ina,tot,accY,copre}};
   const E=calc(false), PV=calc(true), {vaY,Y,ina,tot,accY,copre}=E, inPrev=false;
-  const riga=(i,col,t,s,v)=>`<div class="mb-it">${icoC(i,col,'piccola')}<span class="mb-it-t"><b>${t}</b><small>${s}</small></span><span class="mb-it-v">${v}</span></div>`;
-  return `<div class="mb-sez"><h2>Fisco · ${a}</h2><span class="mb-pill nero piccola">${e0(pag+manT)}</span></div>
-    <div class="mb-lista">${riga('fiscali','var(--cappuccino)','Già pagato','Inarcassa e F24',e0(pag))}${riga('calendario','var(--corallo)','Manca',man.length?man.length+' scadenze':'niente',e0(manT))}
-      ${man.slice(0,3).map(x=>riga('calendario','var(--grigino)',giornoIt(x.data),esc(x.det.toLowerCase()),e0(x.eur))).join('')}</div>
-    <div class="mb-sez"><h2>Fisco · ${a+1}</h2><span class="mb-pill nero piccola">${e0(tot)}</span></div>
-    <div class="mb-avv ${copre>=0.995?'verde':'rosa'}"><small>Nel ${a+1} pagherai</small><p><b class="mb-big">${e0(tot)}</b>accantonamento ${e0(accY)}: ${copre>=0.995?(accY-tot>=1?'avanzano '+e0(accY-tot):'basta giusto'):'mancano <b>'+e0(tot-accY)+'</b>'} (${Math.round(copre*100)}%)${Math.abs(PV.tot-tot)>=1?`<small class="mb-avv-p">con il previsto: ${e0(PV.tot)} · accantonamento ${e0(PV.accY)}</small>`:''}</p>${forma('croce','rgba(255,255,255,.45)',15)}</div>
-    <div class="mb-lista">${riga('fiscali','var(--cappuccino)','Inarcassa',`minimi ${a+1}${Y.rate>1?'':' + conguaglio '+a}`,e0(ina))}${riga('fiscali','var(--cappuccino)','F24 giugno',`saldo ${a} + 1° acconto`,e0(Y.saldo+Y.imposta/2))}${riga('fiscali','var(--cappuccino)','F24 novembre','2° acconto',e0(Y.imposta/2))}</div>
-    <p class="mb-nota">Su un volume d'affari ${a} di ${e0(vaY)} (${!VF?'previsto':'solo fatture incassate'}${Math.abs(PV.vaY-vaY)>=1?', con il previsto '+e0(PV.vaY):''}). Il dettaglio è nel Riepilogo fiscale sul computer.</p>`;
+  const tot0=pag+manT, r=(t,s,v,cl)=>`<div class="mb-fr ${cl||''}"><span><b>${t}</b>${s?`<small>${s}</small>`:''}</span><em>${v}</em></div>`;
+  const barra=(x,cl)=>`<span class="mb-fbar"><i class="${cl||''}" style="width:${Math.max(0,Math.min(100,x*100))}%"></i></span>`;
+  const ok=copre>=0.995, diff=accY-tot;
+  return `<div class="mb-sez"><h2>Tasse e Inarcassa</h2></div>
+    <div class="mb-fc">
+      <div class="mb-fc-t"><span><small>Quest'anno</small><b>${a}</b></span><span class="mb-fc-n"><b>${e0(tot0)}</b><small>in tutto</small></span></div>
+      ${barra(tot0?pag/tot0:1)}
+      <div class="mb-fc-l"><span>pagato <b>${e0(pag)}</b></span><span>manca <b>${e0(manT)}</b></span></div>
+      ${man.slice(0,3).map(x=>r(giornoIt(x.data),esc(x.det.toLowerCase()),e0(x.eur),'sc')).join('')||'<p class="mb-nota">Tutto pagato.</p>'}
+    </div>
+    <div class="mb-fc">
+      <div class="mb-fc-t"><span><small>L'anno prossimo</small><b>${a+1}</b></span><span class="mb-fc-n"><b>${e0(tot)}</b><small>da pagare</small></span></div>
+      ${barra(copre,ok?'':'no')}
+      <div class="mb-fc-l"><span>accantonato <b>${e0(accY)}</b></span><span class="${ok?'pos':'neg'}">${ok?(diff>=1?'avanzano <b>'+e0(diff)+'</b>':'basta giusto'):'mancano <b>'+e0(-diff)+'</b>'}</span></div>
+      ${r('Inarcassa',`giugno, settembre${Y.rate>1?'':', dicembre'} · minimi ${a+1}${Y.rate>1?'':' + conguaglio '+a}`,e0(ina))}${r('F24 giugno',`saldo ${a} + 1° acconto`,e0(Y.saldo+Y.imposta/2))}${r('F24 novembre','2° acconto',e0(Y.imposta/2))}
+      ${Math.abs(PV.tot-tot)>=1?`<p class="mb-fc-p">Con il previsto: ${e0(PV.tot)} da pagare, accantonamento ${e0(PV.accY)}.</p>`:''}
+    </div>
+    <p class="mb-nota">Calcolato su un volume d'affari ${a} di ${e0(vaY)} (${!VF?'previsto':'fatture incassate'}). Il dettaglio è nel Riepilogo fiscale sul computer.</p>`;
 }
 
 /* ---------- ANNO ---------- */
@@ -8020,13 +8152,6 @@ function pAnno2(P){
   const X=h3Dati(), Y=h3Anno(X), B=X.B, nM=MESI[X.m-1], prev=false, YP=P.Y, pv=(e,v)=>Math.abs(v-e)>=1?`<em>con il previsto ${e0(v)}</em>`:'';
   let h=`<div class="mb-hero">${forma('stella','var(--azzurro)',0)}<small class="mb-hero-t">Netto del ${X.a} ad oggi</small>${giga(Y.netto)}<span>fatturato incassato ${e0(Y.vol)}</span>${Math.abs(YP.netto-Y.netto)>=1?`<span class="mb-hero-p">con il previsto <b>${e0(YP.netto)}</b> · fatturato ${e0(YP.vol)}</span>`:''}</div>
     <div class="mb-tre"><div><small>accantonato</small><b>${e0(Y.spo)}</b>${pv(Y.spo,YP.spo)}</div><div><small>da accantonare</small><b>${e0(Y.acc)}</b>${pv(Y.acc,YP.acc)}</div><div><small>risparmio</small><b class="${Y.ris<-0.5?'neg':''}">${e0(Y.ris)}</b>${pv(Y.ris,YP.ris)}</div></div>`;
-  // il mese
-  const ent=B.entrate.pag+(prev?B.entrate.prv:0), vv=[['entrate','var(--salvia)','Entrate',ent],['fisse','var(--azzurro)','Spese fisse',B.fisse.pag+B.fisse.prv],['variabili','var(--lavanda)','Spese variabili',B.variabili.pag+B.variabili.prv],['fiscali','var(--cappuccino)','Spese per l\'attività',B.fiscali.pag+B.fiscali.prv],['salvadanaio','var(--grigino)','Da accantonare',B.accant]], mx=Math.max(1,...vv.map(x=>x[3]));
-  h+=`<div class="mb-sez"><h2>${nM[0].toUpperCase()+nM.slice(1)}</h2></div><div class="mb-lista">${vv.map(([i,c,t,v])=>`<div class="mb-sys">${icoC(i,c,'piccola')}<span class="mb-sys-t"><b>${t}</b><span class="mb-sys-b"><i style="width:${v/mx*100}%;background:${c}"></i></span></span><span class="mb-sys-v">${e0(v)}${i==='entrate'&&B.entrate.prv>0.5?`<small>+ ${e0(B.entrate.prv)} previste</small>`:''}</span></div>`).join('')}</div>`;
-  // trimestri
-  const oq=X.corr?Math.ceil(X.m/3):5, TT=[1,2,3,4].map(q=>trimB(X.a,q)), mq=Math.max(1,...TT.map(T=>T?Math.max(T.stip||0,T.fis+T.vari):0));
-  h+=`<div class="mb-sez"><h2>Trimestre per trimestre</h2></div><div class="mb-lista">${TT.map((T,k)=>{const q=k+1;if(!T)return `<div class="mb-it"><span class="mb-it-t"><b>${ROMANI[k]} trim</b><small>nessun movimento</small></span></div>`;const sp=T.fis+T.vari;
-    return `<div class="mb-q2"><b>${ROMANI[k]}<small>${q===oq?'in corso':q>oq?'prev.':'chiuso'}</small></b><span class="mb-q2-b"><span><i style="width:${(T.stip||0)/mq*100}%;background:var(--salvia)"></i></span><span><i style="width:${sp/mq*100}%;background:var(--lavanda)"></i></span><small>stipendio ${T.stip==null?'—':e0(T.stip)} · spese ${e0(sp)}</small></span><span class="mb-pill piccola ${T.avanzo!=null&&T.avanzo<-0.5?'no':''}">${T.avanzo==null?'—':(T.avanzo>=-0.5?'+':'−')+' '+n0(T.avanzo)}</span></div>`}).join('')}</div>`;
   try{h+=mobFisco()}catch(x){console.error(x)}
   // dove vanno i soldi, a cerchi
   const pc={};S.movimenti.filter(x=>annoDi(x.data)===X.a&&!x.giro&&x.ok&&['fisse','variabili','fiscali'].includes(bollaMov(x))).forEach(x=>pc[x.cat]=(pc[x.cat]||0)+x.eur);
@@ -8048,7 +8173,7 @@ new MutationObserver(()=>{if(!window.MOB)return;const f=document.querySelector('
 /* ---------- eventi ---------- */
 document.addEventListener('click',e=>{
   if(!window.MOB||!e.target.closest('#mob'))return;
-  const t=e.target.closest('[data-mb-tab],[data-mb-nuovo],[data-mb-mov],[data-mb-fat],[data-mb-mm],[data-mb-calc],[data-mb-cfda],[data-mb-crea-fat],[data-mb-vista],[data-mb-perc],[data-mb-prev],[data-mb-piu],[data-mb-chiudi-calc]');if(!t)return;
+  const t=e.target.closest('[data-mb-tab],[data-mb-nuovo],[data-mb-mov],[data-mb-fat],[data-mb-mm],[data-mb-calc],[data-mb-cfda],[data-mb-crea-fat],[data-mb-vista],[data-mb-perc],[data-mb-voce],[data-mb-filtri],[data-mb-solo-f],[data-mb-conto-f],[data-mb-prev],[data-mb-piu],[data-mb-chiudi-calc]');if(!t)return;
   e.preventDefault();e.stopPropagation();const d=t.dataset;
   if(t.matches('[data-mb-piu]')){MU.piu=!MU.piu;render();return}
   MU.piu=false;
@@ -8059,9 +8184,13 @@ document.addEventListener('click',e=>{
   if(d.mbVista){try{localStorage.setItem(K_VISTA,'pc')}catch(x){}window.MOB=false;render();return}
   if(d.mbCalc){MU.calc=d.mbCalc;scrollTo(0,0)}
   else if(t.matches('[data-mb-chiudi-calc]'))MU.calc='';
-  else if(d.mbTab){MU.tab=d.mbTab;MU.calc='';if(d.mbTab==='movimenti'){MU.m=null;MU.solo=d.mbSolo||''}scrollTo(0,0)}
+  else if(d.mbTab){MU.tab=d.mbTab;MU.calc='';if(d.mbTab==='movimenti'){MU.m=null;MU.solo=d.mbSolo||'';MU.conto=''}scrollTo(0,0)}
   else if(d.mbMm)MU.m=+d.mbMm;
   else if(d.mbCfda)MU.cf.da=d.mbCfda;
+  else if(d.mbVoce!=null)MU.solo=MU.solo===d.mbVoce?'':d.mbVoce;
+  else if(t.matches('[data-mb-filtri]'))MU.filtri=!MU.filtri;
+  else if(d.mbSoloF!=null)MU.solo=d.mbSoloF;
+  else if(d.mbContoF!=null)MU.conto=d.mbContoF;
   else if(d.mbPerc!=null){const k=+d.mbPerc;UI.fcPerc=k?Math.max(0,Math.min(0.9,Math.round(percCalc()*100+k)/100)):null;salvaUI()}
   else if(t.matches('[data-mb-prev]')){UI.prevBase=pvBase()==='prev'?'eff':'prev';salvaUI()}
   salvaMU();render();
