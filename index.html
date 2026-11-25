@@ -2857,6 +2857,19 @@ h1,.tq-k-v{letter-spacing:-.4px}
 @media (max-height:860px){.side{padding-top:14px}.side .logo{font-size:19px}.side .sd-sotto{padding-bottom:8px}.side .sd-tit{padding-top:7px;padding-bottom:2px}.side a{padding-top:4px;padding-bottom:4px}.side .mesi-side button{padding:1px 0}}
 @media (max-width:900px){.app{grid-template-columns:minmax(0,1fr)}.side{position:fixed;margin:0;top:0;height:100vh;border-radius:0 24px 24px 0}}
 .app.chiusa{grid-template-columns:minmax(0,1fr)}
+/* Conto cointestato allineato (Paolo 25/11): colonne come i 4 riquadri in alto, due righe alla stessa altezza */
+.tq.co .co-due{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto minmax(0,1fr);gap:10px}
+.tq.co .lo-sx,.tq.co .co-dx{display:contents}
+.tq.co .co-mm{grid-column:1;grid-row:1}
+.tq.co .co-lista{grid-column:2;grid-row:1;min-height:0;display:flex;flex-direction:column}
+.tq.co .co-lista .co-mvs{flex:1;min-height:0;overflow:auto}
+.tq.co .lo-due{grid-column:1;grid-row:2;grid-template-columns:repeat(2,minmax(0,1fr))}
+.tq.co .co-dove{grid-column:2;grid-row:2;min-height:0}
+.tq.co .lo-sx .co-tab>.r>*{min-height:clamp(15px,2.15vh,23px)}
+.tq.co .lo-r{gap:2px}
+.tq.co .lo-o{grid-template-columns:56px minmax(58px,1fr) 30px 44px 50px 10px}
+.tq.co .lo-r input{padding:2px 3px}
+.tq.co .lo-l{grid-template-columns:60px minmax(0,1fr) 60px 12px}
 </style>
 </head>
 <body>
