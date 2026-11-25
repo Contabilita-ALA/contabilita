@@ -2751,6 +2751,37 @@ button.h3-allarme:hover,.h3-allarme.clic:hover{box-shadow:2px 2px 0 var(--inchio
 .tq-k-t .ico{box-sizing:content-box;width:12px;height:12px;padding:5px;border-radius:50%;background:rgba(255,255,255,.72);flex:none}
 .tq-k.k-r .tq-k-t .ico,.tq-k.k-nero .tq-k-t .ico{background:rgba(255,255,255,.16)}
 .tq-p>h3>.ico:first-child{box-sizing:content-box;width:13px;height:13px;padding:5px;border-radius:50%;background:var(--panna)}
+/* Leonilde e Olga (25/11/2026) */
+.lo-sx{display:flex;flex-direction:column;gap:10px;min-height:0}
+.lo-sx .co-tab>.r>*{min-height:clamp(17px,2.4vh,23px)}
+.lo-sx .co-mm{flex:0 0 auto;min-height:0;display:flex;flex-direction:column}
+.lo-due{flex:1 1 0;min-height:120px;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:10px}
+.lo{display:flex;flex-direction:column;min-height:0}
+.lo-tab{flex:1;min-height:0;overflow:auto;font-size:var(--f-piccolo);font-variant-numeric:tabular-nums}
+.lo-r{display:grid;align-items:center;gap:4px;border-bottom:1px solid var(--linea);min-height:24px}
+.lo-o{grid-template-columns:68px minmax(50px,1fr) 42px 56px 62px 14px}
+.lo-l{grid-template-columns:68px minmax(0,1fr) 62px 14px}
+.lo-r.h{position:sticky;top:0;background:var(--carta);z-index:1;font-size:var(--f-mini);font-weight:700;color:var(--grigio);text-transform:uppercase;letter-spacing:.3px;border-bottom:1.5px solid var(--div);min-height:18px}
+.lo-r .n{text-align:right;justify-content:flex-end}
+.lo-r input{width:100%;min-width:0;border:1px solid transparent;border-radius:6px;background:transparent;font:inherit;color:var(--inchiostro);padding:2px 4px}
+.lo-r input.n{text-align:right}
+.lo-r input:hover{border-color:var(--grigio-chiaro)}
+.lo-r input:focus{border-color:var(--inchiostro);background:#fff;outline:0}
+.lo-r input[data-k=data]{color:var(--grigio)}
+.lo-r .dov{color:var(--grigio);padding-right:4px}
+.lo-r.apre>*{background:var(--cappuccino-ch)}
+.lo-r.apre input::placeholder{color:var(--ambra);font-weight:600}
+.lo-r.diff .pg input{color:var(--ambra);font-weight:700}
+.lo-x{border:0;background:none;color:var(--grigio);cursor:pointer;font-size:14px;line-height:1;padding:0;opacity:.35}
+.lo-r:hover .lo-x{opacity:1}.lo-x:hover{color:var(--rosso)}
+.lo-vuoto{color:var(--grigio);padding:8px 2px;font-style:italic}
+.lo-inc{width:100%;height:46px;margin-top:6px;border:1px dashed var(--grigio-chiaro);border-radius:8px;background:var(--retino);font:var(--f-mini) var(--font);color:var(--grigio);padding:4px 6px;resize:none}
+.lo-f{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:6px;font-size:var(--f-piccolo);color:var(--grigio)}
+.lo-f .sp{margin-left:auto}
+.lo-f input{width:48px;border:1px solid var(--grigio-chiaro);border-radius:6px;padding:1px 4px;text-align:right;font:inherit;color:var(--inchiostro);background:#fff}
+.lo-st{white-space:nowrap;border-radius:999px;padding:2px 9px;font-weight:700;color:var(--inchiostro)}
+.lo-st.deb{background:var(--corallo-ch)}.lo-st.cre{background:var(--menta-ch)}.lo-st.pari{background:var(--grigino)}
+.lo-add{border:0;border-radius:999px;background:var(--inchiostro);color:#fff;font:600 var(--f-piccolo) var(--font);padding:4px 11px;cursor:pointer}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -4113,6 +4144,80 @@ function datiCoi(a){
   const saldoOggi=ini+L.filter(c=>okCoi(c)).reduce((t,c)=>t+(+c.acc||0)-(+c.add||0),0);
   return {coi,q,ini,L,mesi,fine:s,saldoOggi,oggi};
 }
+/* ---- Leonilde e Olga (25/11/2026): pagamenti in contanti di 4 appartamenti del condominio, solo totali (nessuna divisione) ---- */
+function datiLO(){
+  if(!S.condominio)S.condominio={tariffa:2.5,creditoIni:0,olga:[],leo:[]};
+  const C=S.condominio, dov=r=>Math.round((+r.ore||0)*(r.t??C.tariffa)*100)/100;
+  const ord=(x,y)=>x.data<y.data?-1:x.data>y.data?1:x.id-y.id;
+  const O=[...C.olga].sort(ord), L=[...C.leo].sort(ord);
+  // quanto dovete a Olga: tutte le ore di sempre − tutto quello che avete dato − l'eventuale credito di partenza
+  const resta=Math.round((O.reduce((s,r)=>s+dov(r)-(r.pag==null?0:+r.pag),0)-(+C.creditoIni||0))*100)/100;
+  return {C,O,L,dov,resta};
+}
+const LO_BIM=['GEN-FEB','MAR-APR','MAG-GIU','LUG-AGO','SET-OTT','NOV-DIC'];
+function loProssimo(O){
+  const u=O.length?String(O[O.length-1].per||'').toUpperCase().replace('SETT','SET'):'';const i=LO_BIM.indexOf(u);
+  if(i>=0)return LO_BIM[(i+1)%6];
+  return LO_BIM[Math.floor((new Date().getMonth()+11)%12/2)]; // il bimestre appena finito
+}
+function renderLO(a){
+  const {C,O,L,dov,resta}=datiLO(), inA=r=>annoDi(r.data)===a;
+  const Oa=O.filter(inA), La=L.filter(inA);
+  const totO=Oa.reduce((s,r)=>s+(r.pag==null?0:+r.pag),0), totL=La.reduce((s,r)=>s+(+r.eur||0),0);
+  const v=x=>x==null||x===''?'':numIt(x), vo=x=>x==null||x===''?'':String(x).replace('.',','), dIt=d=>d?dataIt(d).slice(0,6)+d.slice(2,4):'';
+  const st=Math.abs(resta)<0.005?`<span class="lo-st pari" title="${+C.creditoIni?'Contato il credito di partenza di '+euro(+C.creditoIni):''}">in pari</span>`
+    :resta>0?`<span class="lo-st deb" title="Ore segnate meno quello che avete già dato${+C.creditoIni?' (contato il credito di partenza di '+euro(+C.creditoIni)+')':''}">da dare ${euro(resta)}</span>`
+    :`<span class="lo-st cre" title="Avete dato di più: si scala la prossima volta">in credito ${euro(-resta)}</span>`;
+  const riO=r=>{const d=dov(r), ap=r.pag==null, df=!ap&&Math.abs(+r.pag-d)>0.005;
+    return `<div class="lo-r lo-o ${ap?'apre':''} ${df?'diff':''}"><input data-lo="olga" data-id="${r.id}" data-k="data" value="${dIt(r.data)}"><input data-lo="olga" data-id="${r.id}" data-k="per" value="${esc(r.per||'')}" placeholder="periodo"><input class="n" inputmode="decimal" data-lo="olga" data-id="${r.id}" data-k="ore" value="${vo(r.ore)}" placeholder="ore"><span class="n dov" title="${vo(r.ore)} ore × ${euro(r.t??C.tariffa)}">${d?numIt(d):'–'}</span><span class="pg"><input class="n" inputmode="decimal" data-lo="olga" data-id="${r.id}" data-k="pag" value="${v(r.pag)}" placeholder="${ap?'da dare':''}" title="${df?(+r.pag<d?'Dato meno: '+euro(d-r.pag)+' restano da dare':'Dato di più: '+euro(r.pag-d)+' di credito'):'Quanto avete dato in contanti (vuoto = non ancora pagato)'}"></span><button class="lo-x" data-lo-del="olga" data-id="${r.id}" title="Togli la riga">×</button></div>`};
+  const riL=r=>`<div class="lo-r lo-l"><input data-lo="leo" data-id="${r.id}" data-k="data" value="${dIt(r.data)}"><span></span><input class="n" inputmode="decimal" data-lo="leo" data-id="${r.id}" data-k="eur" value="${v(r.eur)}"><button class="lo-x" data-lo-del="leo" data-id="${r.id}" title="Togli la riga">×</button></div>`;
+  const inc=k=>`<textarea class="lo-inc" data-lo-incolla="${k}" placeholder="Per portare lo storico: copia dal foglio le righe ${k==='olga'?'(data, periodo, ore, soldi)':'(data, soldi)'} e incollale qui"></textarea>`;
+  const ult=L.length?L[L.length-1]:null, gg=ult?Math.round((new Date(oggiISO())-new Date(ult.data))/864e5):null;
+  const olga=`<section class="tq-p lo"><h3>${ico('calendario')} Olga<small>a ore · pagati nel ${a} <b style="color:var(--inchiostro)">${euro(totO)}</b></small></h3>
+    <div class="lo-tab"><div class="lo-r lo-o h"><span>data</span><span>periodo</span><span class="n">ore</span><span class="n">dovuto</span><span class="n">dato</span><span></span></div>
+    ${Oa.length?Oa.map(riO).join(''):`<div class="lo-vuoto">Nessun pagamento nel ${a}</div>`}${O.length?'':inc('olga')}</div>
+    <div class="lo-f">${st}<span title="Vale per le righe nuove">€/ora <input data-lo-tar inputmode="decimal" value="${numIt(C.tariffa)}"></span><button class="lo-add sp" data-lo-add="olga">+ ore ${loProssimo(O)}</button></div></section>`;
+  const leo=`<section class="tq-p lo"><h3>${ico('calendario')} Leonilde<small>pagati nel ${a} <b style="color:var(--inchiostro)">${euro(totL)}</b></small></h3>
+    <div class="lo-tab"><div class="lo-r lo-l h"><span>data</span><span></span><span class="n">€</span><span></span></div>
+    ${La.length?La.map(riL).join(''):`<div class="lo-vuoto">Nessun pagamento nel ${a}</div>`}${L.length?'':inc('leo')}</div>
+    <div class="lo-f">${ult?`<span>ultimo pagamento ${gg===0?'oggi':gg===1?'ieri':gg+' giorni fa'}</span>`:''}<button class="lo-add sp" data-lo-add="leo">+ pagamento</button></div></section>`;
+  return `<div class="lo-due">${olga}${leo}</div>`;
+}
+function loData(s,vecchia){ // "25/11", "25/11/26" o "25/11/2026"
+  const m=String(s).trim().match(/^(\d{1,2})[\/.\-](\d{1,2})(?:[\/.\-](\d{2,4}))?$/);if(!m)return null;
+  const y=m[3]?(m[3].length===2?'20'+m[3]:m[3]):(vecchia||oggiISO()).slice(0,4), d=y+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
+  return isNaN(new Date(d))?null:d;
+}
+function loIncolla(k,txt){ // righe copiate dal foglio (colonne separate da tabulazione)
+  const C=datiLO().C, dt=s=>{const m=String(s).trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);if(!m)return null;const y=m[3].length===2?'20'+m[3]:m[3];return y+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0')};
+  const righe=String(txt).split(/\r?\n/).map(l=>l.split('\t').map(x=>x.trim())).filter(c=>dt(c[0]));
+  if(!righe.length){toast('Non trovo righe con una data: copia le celle dal foglio');return}
+  modifica(()=>{
+    if(k==='olga'){let diff=0;righe.forEach(c=>{const ore=parseNum(c[2]),pag=parseNum(c[3]);const r={id:nuovoId(),data:dt(c[0]),per:(c[1]||'').toUpperCase().replace('SETT','SET'),ore:isNaN(ore)?0:ore,t:C.tariffa,pag:isNaN(pag)?null:pag};C.olga.push(r);if(r.pag!=null)diff+=r.ore*r.t-r.pag});
+      // nel foglio eravate in pari: se avete dato meno delle ore segnate era un credito di prima (es. NOV-DIC '25 −15 €)
+      if(diff>0.005)C.creditoIni=Math.round(((+C.creditoIni||0)+diff)*100)/100;}
+    else righe.forEach(c=>{const e=parseNum(c[1]);C.leo.push({id:nuovoId(),data:dt(c[0]),eur:isNaN(e)?0:e})});
+  });
+  toast(righe.length+' righe portate',true);
+}
+document.addEventListener('change',e=>{
+  const i=e.target.closest('[data-lo]');
+  if(i){const C=datiLO().C, r=C[i.dataset.lo].find(x=>x.id===+i.dataset.id), k=i.dataset.k;if(!r)return;
+    modifica(()=>{if(k==='data'){const d=loData(i.value,r.data);if(d)r.data=d;else{toast('Scrivi la data come 25/11/26');render();return}}else if(k==='per')r.per=i.value.trim().toUpperCase();
+      else{const n=parseNum(i.value);r[k]=i.value.trim()===''?(k==='pag'?null:0):(isNaN(n)?r[k]:n)}});return}
+  const t=e.target.closest('[data-lo-tar]');
+  if(t){const n=parseNum(t.value);if(!isNaN(n)&&n>0)modifica(()=>datiLO().C.tariffa=n);else render();}
+});
+document.addEventListener('paste',e=>{const ta=e.target.closest&&e.target.closest('[data-lo-incolla]');if(!ta)return;e.preventDefault();loIncolla(ta.dataset.loIncolla,(e.clipboardData||window.clipboardData).getData('text'))});
+document.addEventListener('click',e=>{
+  const ad=e.target.closest('[data-lo-add]');
+  if(ad){const {C,O,L}=datiLO(), k=ad.dataset.loAdd, oggi=oggiISO();let id;
+    modifica(()=>{id=nuovoId();if(k==='olga')C.olga.push({id,data:oggi,per:loProssimo(O),ore:null,t:C.tariffa,pag:null});else C.leo.push({id,data:oggi,eur:L.length?L[L.length-1].eur:0})});
+    const f=document.querySelector(`[data-lo="${k}"][data-id="${id}"][data-k="${k==='olga'?'ore':'eur'}"]`);if(f){f.focus();f.select()}return}
+  const dl=e.target.closest('[data-lo-del]');
+  if(dl){const k=dl.dataset.loDel,id=+dl.dataset.id;modifica(()=>{const C=datiLO().C;C[k]=C[k].filter(x=>x.id!==id)});toast('Riga tolta',true);return}
+});
+
 function renderCointestato(){
   const a=S.anno, D=datiCoi(a), q=D.q, n0=v=>numIt(Math.round(v)).replace(/,00$/,'');
   const mOra=new Date().getFullYear()===a?new Date().getMonth()+1:(new Date().getFullYear()>a?13:0);
@@ -4182,7 +4287,7 @@ function renderCointestato(){
     <div class="tq-testa"><h1>Conto cointestato ${a}</h1><span class="tq-conf">${esc(D.coi.nome||'')} · conto intero, la tua quota è ${Math.round(q*100)}% · le voci si aggiungono con + Movimento → Cointestato</span></div>
     <div class="tq-kpi">${kpis}</div>
     <div class="co-due">
-      <section class="tq-p co-mm"><h3>${ico('anno')} Mese per mese<small>clicca un mese per vedere i suoi movimenti</small></h3>${tab}</section>
+      <div class="lo-sx"><section class="tq-p co-mm"><h3>${ico('anno')} Mese per mese<small>clicca un mese per vedere i suoi movimenti</small></h3>${tab}</section>${renderLO(a)}</div>
       <div class="co-dx">
         <section class="tq-p co-lista"><h3>${ico('calendario')} ${sel?'Movimenti di '+MESI[sel-1]:'Tutti i movimenti del '+a}<small>${sel?`<button class="co-tutto" data-coi-mese="0">tutto l'anno</button>`:''}${Lm.length} voci · <b class="${tm>=0?'pos':'neg'}">${tm>=0?'+ ':'− '}${euro(Math.abs(tm))}</b></small></h3><div class="co-mvs">${lista}</div></section>
         <section class="tq-p co-dove"><h3>${ico('netto')} I risparmi nei prossimi anni<small title="Rata mutuo ${euro(mutuo)} e canone ${euro(canone)} al mese, bolli ${euro(bollo)} all'anno come nel ${a}">mettete da parte circa <b class="pos">${euro(annuo).replace(/,\d\d$/,'')}</b> all'anno</small></h3>
