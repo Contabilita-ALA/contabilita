@@ -845,7 +845,9 @@ main:has(.tq){padding-top:12px;padding-bottom:12px}
 .fm-n{font-size:var(--f-mini);color:var(--grigio);margin-top:3px;border-top:1.5px solid var(--div);width:100%;text-align:center;padding-top:2px}
 .fm-col.ora .fm-n{color:var(--inchiostro);font-weight:700}
 .fm-leg{gap:8px !important}.fm-leg span{display:inline-flex;align-items:center;gap:3px}.fm-leg i{display:inline-block;width:9px;height:9px;border-radius:2px;border:1px solid var(--inchiostro)}
-.ft-ttab{grid-template-columns:auto 30px 60px minmax(0,1fr) auto;font-size:var(--f-piccolo)}
+.ft-ttab{grid-template-columns:auto 30px 60px minmax(0,1fr) auto auto;font-size:var(--f-piccolo)}
+.ft-ttab>.r>.tq-cr-b{margin-right:6px;max-width:150px}
+.ft-ttab>.r>:last-child{padding-left:16px}
 .ft-ttab>.r.h>*{font-size:var(--f-mini);font-weight:700;text-transform:uppercase;color:var(--grigio);border-bottom:1.5px solid var(--div);padding:2px 0}
 .ft-calc{gap:6px}
 /* Riepilogo fiscale */
@@ -3971,8 +3973,8 @@ function renderFatture(){
   const barre=perM.map((r,i)=>`<div class="fm-col ${i+1===oggiM?'ora':''}" title="${MESI[i]}: ${euro(r.tot)}${tipiFat().map(([t,nm])=>r[t]?' · '+nm+' '+euro(r[t]):'').join('')}"><span class="fm-v">${r.tot?kf(r.tot):''}</span><div class="fm-b" style="height:${r.tot/maxM*100}%">${tipiFat().map(([t,,col])=>r[t]?`<i style="flex:${r[t]};background:${col}"></i>`:'').join('')}</div><span class="fm-n">${r.n}</span></div>`).join('');
   const leg=tipiFat().map(([t,nm,col])=>`<span><i style="background:${col}"></i>${nm}</span>`).join('');
   // per tipo
-  const perT=tipiFat().map(([t,nm,col])=>{const xs=L.filter(x=>x.f.tipo===t), v=xs.reduce((s,x)=>s+x.c.conBollo,0);return {t,nm,col,n:xs.length,v,media:xs.length?v/xs.length:0}});
-  const tipoR=perT.map(r=>`<div class="r"><span><i class="ft-tipo" style="--c:${r.col}">${r.nm}</i></span><span class="n">${r.n}</span><span class="n">${r.n?numIt(Math.round(r.media)).replace(/,00$/,''):'—'}</span><span class="tq-cr-b"><i style="width:${vol?r.v/vol*100:0}%;background:${r.col}"></i></span><b class="n">${euro(r.v)}</b></div>`).join('');
+  const perT=tipiFat().map(([t,nm,col])=>{const xs=L.filter(x=>x.f.tipo===t), v=xs.reduce((s,x)=>s+x.c.conBollo,0);return {t,nm,col,n:xs.length,v,media:xs.length?v/xs.length:0,mNet:xs.length?xs.reduce((s,x)=>s+x.c.netto,0)/xs.length:0}});
+  const tipoR=perT.map(r=>`<div class="r"><span><i class="ft-tipo" style="--c:${r.col}">${r.nm}</i></span><span class="n">${r.n}</span><span class="n">${r.n?numIt(Math.round(r.media)).replace(/,00$/,''):'—'}</span><span class="tq-cr-b"><i style="width:${vol?r.v/vol*100:0}%;background:${r.col}"></i></span><b class="n">${euro(r.v)}</b><span class="n ft-nt" title="Media per fattura al netto dell'accantonamento per tasse e Inarcassa (lordo − ${Math.round(perc*100)}%)">${r.n?euro(Math.round(r.mNet)).replace(/,00$/,''):'—'}</span></div>`).join('');
   const calcSalv=UI.fcX||'', daSalv=UI.fcDa||'prest';
   $('#main').innerHTML=`<div class="tq ft">
     <div class="tq-testa"><h1>Fatture ${a}</h1>${pillPerc('anno',perc,true)}<span class="tq-conf">fatture per data di emissione · l'incasso si segna con la spunta</span></div>
@@ -3981,7 +3983,7 @@ function renderFatture(){
       <section class="tq-p ft-tp"><h3>${ico('fattura')} Le fatture del ${a}<small>clicca una riga per il dettaglio</small></h3>${tab}</section>
       <div class="ft-dx">
         <section class="tq-p"><h3>${ico('anno')} Fatturato mese per mese<small class="fm-leg">${leg}</small></h3><div class="fm-graf">${barre}</div></section>
-        <section class="tq-p ft-pt"><h3>${ico('entrate')} Per tipo</h3><div class="tq-tab ft-ttab"><div class="r h"><span></span><span class="n">n.</span><span class="n">media</span><span></span><span class="n">volume</span></div>${tipoR}</div></section>
+        <section class="tq-p ft-pt"><h3>${ico('entrate')} Per tipo</h3><div class="tq-tab ft-ttab"><div class="r h"><span></span><span class="n">n.</span><span class="n">media</span><span></span><span class="n">volume</span><span class="n" title="Media per fattura al netto di tasse e Inarcassa (lordo − accantonamento)">media netta</span></div>${tipoR}</div></section>
         <section class="tq-p ft-calc"><h3>${ico('netto')} Calcola una fattura<small class="pp-w">accantono ${pillPerc('calc',percCalc())}${UI.fcPerc!=null&&Math.abs(UI.fcPerc-perc)>1e-9?`<button class="pp-r" data-pp-reset title="Torna alla percentuale dell'anno (${Math.round(perc*100)}%)">↺</button>`:''}</small></h3>
           <div class="fc-in"><span class="fc-da">${[['prest','prestazione'],['lordo','lordo'],['netto','netto']].map(([v,n])=>`<button data-fc-da="${v}" class="${daSalv===v?'on':''}">${n}</button>`).join('')}</span><label>€<input id="fc-x" inputmode="decimal" placeholder="importo" value="${esc(calcSalv)}"></label></div>
           <div id="fc-out"></div></section>
