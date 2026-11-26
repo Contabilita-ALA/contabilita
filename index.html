@@ -3061,6 +3061,7 @@ body.mob .finestra h3{line-height:40px!important;margin:0 0 10px!important;paddi
 .mb-mm-s{flex-direction:column;justify-content:flex-end;align-items:center;gap:0}.mb-mm-s i{width:12px;border-radius:0}.mb-mm-s i:first-child{border-radius:3px 3px 0 0}
 .mb-mm13 small{font-size:10px}
 .mb-mm-z{position:relative;width:100%;justify-content:center}.mb-mm-z i{position:absolute;left:50%;margin-left:-6px}.mb-mm-z u{position:absolute;left:-2px;right:-2px;height:1px;background:rgba(0,0,0,.25)}
+.pp2-max{background:var(--inchiostro,#24332f);color:#fff;border-radius:18px;padding:16px 18px;margin:0 0 6px;display:flex;flex-direction:column;gap:4px}.pp2-max small{font-size:13px;opacity:.8}.pp2-max b{font-size:30px;line-height:1.1}.pp2-max span{font-size:13px;opacity:.85}
 .pp-fin.pp2{max-width:460px}
 .pp2-campo{display:flex;flex-direction:column;gap:6px;margin:14px 0 12px;font-size:13px;color:var(--testo-2,#556)}
 .pp2-in{display:flex;align-items:center;gap:8px;font-size:26px;font-weight:700;background:#fff;border-radius:14px;padding:8px 14px}
@@ -4678,6 +4679,13 @@ function pp2(imp){
   const tit={si:'Sì',forse:'Sì, ma…',no:'No'}[esito];
   return {esito,tit,m,a,R,TV,budPrima,budDopo,dopo};
 }
+function ppMax(){const o=new Date(), a=o.getFullYear(), m=o.getMonth()+1, R=ppCalcola(0,m,1);if(R.lim==null)return null;
+  const TV=tettoMese(a,m), bud=TV!=null?TV-R.sm.vt:null, v=bud!=null?Math.min(R.restaM,bud):R.restaM;
+  return {v:Math.max(0,v),m,daBud:bud!=null&&bud<R.restaM};
+}
+function ppMaxTesto(X){if(!X)return null;const e0=v=>euro(Math.round(v)).replace(/,00$/,''), M=MESI[X.m-1].toLowerCase();
+  return X.v<0.5?{v:e0(0),s:`a ${M} ${X.daBud?'il budget delle variabili è finito':'lo stipendio è già tutto speso'}`}:{v:e0(X.v),s:`senza sforare ${X.daBud?'il budget delle variabili':'lo stipendio'} di ${M}`};
+}
 function pp2Frase(X){const e0=v=>euro(Math.round(v)).replace(/,00$/,''), M=k=>MESI[k-1].toLowerCase();
   if(X.manca) return 'Manca lo stipendio del mese: serve il netto del trimestre prima.';
   if(X.esito==='si') return `Dopo la spesa ti restano ${e0(X.R.dopoM)} fino a fine ${M(X.m)}.`;
@@ -4701,11 +4709,11 @@ function apriPosso(){
     <div id="pp-ris" class="pp2-ris"></div>
     <div class="azioni"><button class="btn chiaro" data-act="chiudi">Chiudi</button><button class="btn" data-pp-segna disabled title="Aggiunge la spesa in Movimenti come prevista">Segna come spesa prevista</button></div>
   </div></div>`;
-  $('#pp-imp').focus();
+  $('#pp-imp').focus();ppAggiorna();
 }
 function ppAggiorna(){
   const el=$('#pp-ris');if(!el)return;const imp=parseNum($('#pp-imp').value), b=$('[data-pp-segna]');
-  if(isNaN(imp)||imp<=0){el.innerHTML='<p class="pp2-vuoto">Scrivi quanto costa: ti dico se ci sta nello stipendio di questo mese.</p>';if(b)b.disabled=true;return}
+  if(isNaN(imp)||imp<=0){const T=ppMaxTesto(ppMax());el.innerHTML=T?`<div class="pp2-max"><small>Questo mese puoi spendere fino a</small><b>${T.v}</b><span>${T.s}</span></div>`:'<p class="pp2-vuoto">Scrivi quanto costa: ti dico se ci sta nello stipendio di questo mese.</p>';if(b)b.disabled=true;return}
   const X=pp2(imp);
   el.innerHTML=`<div class="pp2-esito ${X.esito}"><b>${X.tit}</b><span>${pp2Frase(X)}</span></div>
     ${pp2Righe(X).map(r=>`<div class="pp2-r ${r.no?'no':''}"><span><b>${r.t}</b><small>${r.s}</small></span><span class="pp2-n"><s>${r.pt}</s><i>→</i><b>${r.dt}</b></span></div>`).join('')}`;
@@ -8134,7 +8142,7 @@ function calcPP(){const P=MU.pp;
     <div id="mb-pp-ris">${ppRis()}</div>`;
 }
 function ppRis(){const imp=parseNum(MU.pp.imp);
-  if(!(imp>0)) return `<p class="mb-nota mb-cf-vuoto">Scrivi quanto costa: ti dico se ci sta nello stipendio di questo mese.</p>`;
+  if(!(imp>0)){const T=ppMaxTesto(conBase('eff',ppMax));return T?`<div class="mb-k nero mb-esito"><small>Questo mese puoi spendere fino a</small><b>${T.v}</b><span>${T.s}</span></div><p class="mb-nota">Scrivi quanto costa per sapere se ci sta.</p>`:`<p class="mb-nota mb-cf-vuoto">Scrivi quanto costa: ti dico se ci sta nello stipendio di questo mese.</p>`}
   const X=conBase('eff',()=>pp2(imp));
   return `<div class="mb-k ${{si:'ent',forse:'att',no:'spe'}[X.esito]} mb-esito"><small>Posso permettermelo?</small><b>${X.tit}</b><span>${pp2Frase(X)}</span></div>
     ${card(pp2Righe(X).map(r=>riga({col:r.no?'var(--corallo)':'var(--salvia)',t:r.t,s:r.s+' · prima '+r.pt,v:r.dt,vs:'dopo'})).join(''))}`;
