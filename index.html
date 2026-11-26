@@ -3080,6 +3080,66 @@ body.mob .finestra h3{line-height:40px!important;margin:0 0 10px!important;paddi
 /* Paolo 26/11: nelle finestre restano solo × e ✓ in alto; via Annulla e Salva in basso (Elimina e Salva e nuova restano) */
 body.mob #modale .finestra:has(.mb-ok) .azioni :is([data-act="chiudi"],[data-act="m-salva"],[data-act="f-salva"]){display:none}
 body.mob #modale .finestra:has(.mb-ok) .azioni:not(:has([data-act="m-elimina"],[data-act="f-elimina"],[data-act="m-salva-nuova"])){display:none}
+
+/* proposte 26/11 Home e Anno */
+#mob .mb-an-card{display:flex;flex-direction:column;align-items:center;padding:14px 14px 14px;border:0;width:100%;color:inherit;font:inherit}
+.mb-an{position:relative;width:var(--sz);height:var(--sz)}
+.mb-an svg{width:100%;height:100%}
+.mb-an-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.3;text-align:center}
+.mb-an-c b{font:700 34px var(--font);letter-spacing:-.6px;margin:2px 0}
+.mb-an-c small{font-size:var(--mb-f5);color:var(--grigio);max-width:130px}
+.mb-an-g{margin:8px 0 2px;font-size:var(--mb-f3);text-align:center}
+.mb-ritmo{margin:6px 0 0;padding:5px 12px;border-radius:999px;background:var(--salvia-ch);font-size:var(--mb-f5);font-weight:600;text-align:center}
+.mb-ritmo.no{background:var(--corallo-ch)}
+.mb-wk{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:8px}
+.mb-wk-d{border:0;background:var(--panna);border-radius:12px;padding:6px 0 5px;display:flex;flex-direction:column;align-items:center;gap:2px;font:inherit;color:inherit;min-height:74px}
+.mb-wk-d small{font-size:11px;font-weight:600;color:var(--grigio);text-transform:lowercase}
+.mb-wk-d b{font-size:var(--mb-f3)}
+.mb-wk-d em{font-style:normal;font-size:11px;font-weight:600;color:var(--grigio);min-height:13px}
+.mb-wk-d em.pos{color:var(--verde)}
+.mb-wk-d.oggi{background:var(--giallo)}
+.mb-wk-d.on{box-shadow:inset 0 0 0 2px var(--inchiostro)}
+.mb-hero{background:var(--inchiostro);color:#fff;border-radius:var(--mb-r);padding:16px 16px 12px;text-align:center}
+.mb-hero small{font:700 var(--mb-f5) var(--font);text-transform:uppercase;letter-spacing:.4px;opacity:.85}
+.mb-hero>b{display:block;font:700 36px var(--font);letter-spacing:-.7px;margin:2px 0 8px}
+.mb-hero>b.neg{color:#f6b7af}
+.mb-spark{width:100%;height:70px;display:block}
+.mb-hero-p{display:flex;justify-content:space-between;font-size:var(--mb-f5);opacity:.8;margin-top:4px}
+.mb-pr{padding:10px 0}
+.mb-pr+.mb-pr{border-top:1px solid var(--grigino)}
+.mb-pr>div{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.mb-pr>div b{font-size:var(--mb-f3)}
+.mb-pr>div span{font-size:var(--mb-f4);font-weight:600}
+.mb-pr .mb-bar{height:10px}
+.mb-pr small{display:block;margin-top:4px;font-size:var(--mb-f5);color:var(--grigio);text-align:right}
+.mb-k-hero{padding:16px 10px}
+.mb-k-hero b{font-size:28px}
+.mb-tot{text-align:center;margin:10px 0 8px;font-size:var(--mb-f3)}
+.mb-stack{display:flex;height:26px;border-radius:13px;overflow:hidden;gap:2px;margin:0 0 6px}
+.mb-stack i{display:block;height:100%}
+.mb-tess{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.mb-tess>div{border-radius:14px;padding:9px 2px;text-align:center;line-height:1.25;background:var(--mb-bianco)}
+.mb-tess>div.si{background:var(--salvia-ch)}
+.mb-tess>div.no{background:var(--corallo-ch)}
+.mb-tess>div.fut{opacity:.62}
+.mb-tess>div.ora{box-shadow:inset 0 0 0 2px var(--inchiostro)}
+.mb-tess small{display:block;font:700 var(--mb-f5) var(--font);text-transform:uppercase;letter-spacing:.4px}
+.mb-tess b{font-size:var(--mb-f4)}
+.mb-mesi12{padding:8px 14px}
+.mb-mesi12>div{display:grid;grid-template-columns:34px 1fr 64px;align-items:center;gap:8px;padding:4px 0}
+.mb-mesi12>div.fut{opacity:.6}
+.mb-mesi12>div.ora small{background:var(--giallo);border-radius:6px}
+.mb-mesi12 small{font:700 var(--mb-f5) var(--font);text-transform:uppercase;text-align:center;padding:2px 0}
+.mb-mesi12 span{display:flex;flex-direction:column;gap:3px}
+.mb-mesi12 span i{display:block;height:7px;border-radius:4px;min-width:2px}
+.mb-mesi12 span i.n{background:var(--salvia)}
+.mb-mesi12 span i.s{background:var(--corallo)}
+.mb-mesi12 b{text-align:right;font-size:var(--mb-f4)}
+.mb-mesi12 b.pos{color:var(--verde)}
+.mb-mesi12 b.neg{color:var(--rosso)}
+.mb-mesi12 b.gr{color:var(--grigio)}
+.mb-pr .mb-bar{display:block;width:100%;margin:0}
+.mb-pil b{white-space:nowrap}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -7942,7 +8002,7 @@ function mesiCentro(el){const r=el.getBoundingClientRect(), c=r.left+r.width/2;l
   el.querySelectorAll('[data-mb-mm]').forEach(b=>{const q=b.getBoundingClientRect(), x=Math.abs(q.left+q.width/2-c);if(x<d){d=x;best=b}});return best}
 function mesiAggancia(){const el=document.querySelector('#mob .mb-mesi');if(!el)return;
   const on=el.querySelector('button.on');if(on)el.scrollLeft=on.offsetLeft+on.offsetWidth/2-el.clientWidth/2;
-  let t=0;const fine=()=>{const b=mesiCentro(el);if(b&&+b.dataset.mbMm!==MU.m){MU.m=+b.dataset.mbMm;MU.giorno='';salvaMU();render()}};
+  let t=0;const fine=()=>{if(!el.isConnected)return;const b=mesiCentro(el);if(b&&+b.dataset.mbMm!==MU.m){MU.m=+b.dataset.mbMm;MU.giorno='';salvaMU();render()}};
   el.addEventListener('scroll',()=>{clearTimeout(t);t=setTimeout(fine,160)},{passive:true});
 }
 function piuMenu(){
@@ -7970,39 +8030,7 @@ const conBase=(b,fn)=>{const o=UI.prevBase;UI.prevBase=b;try{return conScen(fn)}
 const barra=(x,cl,col)=>`<i class="mb-bar"><i class="${cl||''}" style="width:${Math.max(0,Math.min(100,x*100))}%${col?';background:'+col:''}"></i></i>`;
 
 /* ---------- OGGI come la prima pagina di un'app della banca (Paolo 26/11) ---------- */
-function pOggi(){return conBase('eff',()=>{
-  const X=h3Dati(), o=new Date(), nome=(S.impostazioni.nome??'').trim(), {m}=X, nM=MESI[m-1];
-  let h=`<p class="mb-ciao">${nome?'Ciao '+esc(nome):'Ciao'}<small>${GL[o.getDay()]} ${o.getDate()} ${MESI[o.getMonth()]}</small></p>`;
-  // i conti come le carte dell'app della banca, su una riga che scorre
-  const ord={conto:0,carta:1,cointestato:2}, L=[...X.conti].sort((p,q)=>(ord[p.c.tipo]??3)-(ord[q.c.tipo]??3));
-  h+=`<div class="mb-cc">${`<div class="mb-c tot"><small>Soldi tuoi oggi</small><b class="${X.tuoi<-0.5?'neg':''}">${Ec(Math.round(X.tuoi))}</b><span>${L.filter(r=>!r.carta).length} conti · metà del cointestato</span></div>`}${L.map(r=>`<button class="mb-c" style="--b:${r.c.colore}" data-mb-tab="movimenti" data-mb-conto="${r.c.id}"><small>${esc(r.tit)}</small><b class="${r.cifra<-0.5?'neg':''}">${Ec(r.cifra)}</b><span>${r.carta?'spese del mese':esc(String(r.sub).replace(/<[^>]+>/g,''))}</span></button>`).join('')}</div>`;
-  // il mese in due bolle: quanto resta dello stipendio e del budget
-  if(X.D&&X.D.completo&&X.lim>0){const r=X.resta;
-    const bud=X.corr&&X.TV!=null?(()=>{const sp=X.VT.pag,rb=X.TV-sp;return bol('nero','salvadanaio',rb>=-0.5?'Budget rimasto':'Budget sforato',(rb<-0.5?'− ':'')+e0(Math.abs(rb)),`di ${e0(X.TV)} per le variabili${barra(sp/X.TV)}`,'data-mb-tab="movimenti" data-mb-solo="variabili"')})():bol('nero','salvadanaio','Budget','—','fissalo sul computer');
-    h+=pil(nM,'mese')+`<div class="mb-k2">${bol(r<-0.5?'spe':'ent','entrate',r<-0.5?'Sfori di':'Restano',e0(Math.abs(r)),`stipendio ${e0(X.lim)} − spese ${e0(X.tF+X.tV)}${X.F.prv+X.V.prv>0.5?` (di cui ${e0(X.F.prv+X.V.prv)} da pagare)`:''}${barra((X.tF+X.tV)/X.lim,r<-0.5?'no':'')}`)}${bud}</div>`}
-  // il calendario del mese (Paolo 26/11: in Home); tocca un giorno per vedere cosa c'è
-  h+=movCal(X.a,m,true);
-  return h})}
 /* ---------- IL 2026: il riassunto dell'anno (Paolo 26/11) ---------- */
-function pAnno(){const X=h3Dati(), a=X.a, sT=v=>v.reduce((s,x)=>s+x,0), K=['fisse','variabili','fiscali'];
-  // Paolo 26/11: il riassunto dell'anno guarda il PREVISTO (a fine anno), l'attuale in piccolo; stesso schema del Previsionale
-  const Yp=conBase('prev',()=>h3Anno(X)), Ye=conBase('eff',()=>h3Anno(X)), B=sommeBolle(a,0);
-  const T=conBase('prev',()=>[1,2,3,4].map(q=>trimB(a,q))), risP=T.reduce((s,t)=>s+(t&&t.avanzo!=null?t.avanzo:0),0);
-  let D=null;try{D=datiConti(a)}catch(x){console.error(x)}
-  const pcA=Yp.vol>0.5?Math.round(Yp.acc/Yp.vol*100):0, daP=k=>B[k].prv>0.5?e0(B[k].prv)+' da pagare':'tutte pagate';
-  let h=pil('Fatture '+a,'anno')+`<div class="mb-k3">${bol('ent','entrate','Fatturato',e0(Yp.vol),e0(Ye.vol)+' incassato')}${bol('acc','salvadanaio','Accantoni',e0(Yp.acc),pcA+'% sul Revolut')}${bol('net','netto','Netto',e0(Yp.netto),'quello che resta a te')}</div>`;
-  h+=pil('Spese '+a)+`<div class="mb-k3">${bol('fis','fisse','Fisse',e0(B.fisse.pag+B.fisse.prv),daP('fisse'))}${bol('var','variabili','Variabili',e0(B.variabili.pag+B.variabili.prv),daP('variabili'))}${bol('att','fiscali','Attività',e0(B.fiscali.pag+B.fiscali.prv),daP('fiscali'))}</div>`;
-  h+=pil('A fine '+a)+`<div class="mb-k2">${bol(risP<-0.5?'spe':'net','salvadanaio',risP<-0.5?'Ti mancano':'Ti avanzano',e0(Math.abs(risP)),'stipendio − fisse − variabili')}${D?bol(D.fine.rev<-0.5?'spe':'acc','deposito','Revolut',e0(D.fine.rev),'oggi '+e0(D.oggi.rev)):''}</div>`;
-  // mese per mese: stipendio (netto del trimestre prima / 3) e spese fisse + variabili
-  const M=[1,2,3,4,5,6,7,8,9,10,11,12], st=M.map(m=>{const t=T[Math.ceil(m/3)-1];return t&&t.stip!=null?t.stip/3:0}), sp=M.map(m=>{const b=sommeBolle(a,m);return b.fisse.pag+b.fisse.prv+b.variabili.pag+b.variabili.prv}), mx=Math.max(1,...st,...sp);
-  h+=`<div class="mb-card mb-mm">${M.map((m,i)=>`<div><span class="mb-mm-b"><i class="n" style="height:${st[i]/mx*100}%"></i><i class="s" style="height:${sp[i]/mx*100}%"></i></span><small>${MESI3[i][0].toUpperCase()}</small></div>`).join('')}</div>
-    <p class="mb-nota"><i class="mb-lg n"></i>stipendio <i class="mb-lg s"></i>spese fisse e variabili · con le fatture e le spese previste</p>`;
-  // dove vanno i soldi
-  const pc={};S.movimenti.filter(x=>annoDi(x.data)===a&&!x.giro&&K.includes(bollaMov(x))).forEach(x=>pc[x.cat]=(pc[x.cat]||0)+x.eur);
-  const C=Object.entries(pc).filter(c=>c[1]>0.5).sort((x,y)=>y[1]-x[1]), tot=C.reduce((s,c)=>s+c[1],0);
-  if(C.length) h+=pil('Dove vanno i soldi','',e0(tot))+card(C.slice(0,6).map(([c,v])=>riga({col:coloreCat(c)||'#ccc',t:esc(nomeCat(c)),s:barra(v/C[0][1],'',coloreCat(c)||'#ccc'),v:e0(v),vs:Math.round(v/tot*100)+'%'})).join(''));
-  try{h+=mobFisco()}catch(x){console.error(x)}
-  return h}
 function mesiStriscia(a,m){const o=new Date(), mOra=o.getFullYear()===a?o.getMonth()+1:0, hasPrv=k=>S.movimenti.some(x=>annoDi(x.data)===a&&meseDi(x.data)===k&&!x.ok);
   return `<div class="mb-mesi">${MESI3.map((n,i)=>`<button data-mb-mm="${i+1}" class="${i+1===m?'on':''} ${i+1===mOra?'ora':''}">${n}${hasPrv(i+1)&&i+1>=mOra?'<i></i>':''}</button>`).join('')}</div>`}
 function evRiga(x,X){return riga({att:x.m?`data-mb-mov="${x.m.id}"`:x.tipo==='acc'?`data-rev-sposta="${Math.round(x.eur)}"`:'',cls:(x.ok?'':'prv')+(x.rit?' rit':''),col:x.col,ic:x.tipo==='ent'?'entrate':x.tipo==='tas'?'fiscali':x.tipo==='acc'||x.tipo==='accG'?'salvadanaio':'variabili',
@@ -8016,9 +8044,10 @@ function pMov(){
   let h=mesiStriscia(a,m)+`<div class="mb-k3">${bol('spe'+(MU.solo==='spese'?' on':''),'variabili','Spese',e0(sp),spP>0.5?'+ '+e0(spP)+' previste':'tutte pagate','data-mb-solo-f="'+(MU.solo==='spese'?'':'spese')+'"')}${bol('car'+(MU.conto===idC&&idC?' on':''),'carta','Carte',e0(cP),cV>0.5?'+ '+e0(cV)+' previste':'questo mese','data-mb-conto-f="'+(MU.conto===idC?'':idC)+'"')}${bol('ent'+(MU.solo==='ent'?' on':''),'entrate','Entrate',e0(B.entrate.pag),B.entrate.prv>0.5?'+ '+e0(B.entrate.prv)+' attese':'incassate','data-mb-solo-f="'+(MU.solo==='ent'?'':'ent')+'"')}</div>`;
   // le voci come scelte piccole (toccale per vedere solo quelle)
   h+=`<div class="mb-chips mb-voci2">${[['fisse','Fisse','var(--azzurro)'],['variabili','Variabili','var(--lavanda)'],['fiscali','Attività','var(--cappuccino)']].map(([k,n,c])=>`<button data-mb-voce="${k}" class="${MU.solo===k?'on':''}" style="--b:${c}"><i></i>${n} ${e0(B[k].pag+B[k].prv)}</button>`).join('')}</div>`;
-  h+=`<div class="mb-cerca"><input type="search" data-mb-q placeholder="Cerca (lidl, bolletta…)" value="${esc(MU.q)}"><button class="mb-filtro ${MU.solo||MU.conto?'attivo':''}" data-mb-filtri aria-label="Filtri"><svg viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button></div>
+  h+=`<div class="mb-cerca"><input type="search" data-mb-q placeholder="Cerca (lidl, bolletta…)" value="${esc(MU.q)}"><button class="mb-filtro ${MU.vmov==='cal'?'attivo':''}" data-mb-vmov="${MU.vmov==='cal'?'':'cal'}" aria-label="Calendario"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><button class="mb-filtro ${MU.solo||MU.conto?'attivo':''}" data-mb-filtri aria-label="Filtri"><svg viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button></div>
     ${MU.filtri?`<div class="mb-card mb-filtri"><small>Mostra</small><div class="mb-chips">${[['','Tutti'],['prev','Da pagare'],['spese','Spese'],['ent','Entrate'],['fisse','Fisse'],['variabili','Variabili'],['fiscali','Attività'],['giro','Giroconti']].map(([k,n])=>`<button data-mb-solo-f="${k}" class="${MU.solo===k?'on':''}">${n}</button>`).join('')}</div>
       <small>Conto</small><div class="mb-chips">${[['','Tutti']].concat(S.conti.map(c=>[c.id,c.nome])).map(([k,n])=>`<button data-mb-conto-f="${k}" class="${MU.conto===k?'on':''}">${esc(n)}</button>`).join('')}</div></div>`:''}`;
+  if(MU.vmov==='cal') return h+movCal(a,m,true); // Paolo 26/11: il calendario del mese torna in Movimenti
   return h+`<div id="mb-mov-l">${movLista(movFiltra())}</div>`;
 }
 /* ---------- PREVISIONALE dell'anno prossimo (dal +), come la pagina Previsione del computer ---------- */
@@ -8222,6 +8251,43 @@ document.addEventListener('input',e=>{
 // la versione per computer, su un telefono, ha un tasto per tornare a quella per telefono
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mb-vista-tel]');if(!b)return;e.preventDefault();try{localStorage.setItem(K_VISTA,'tel')}catch(x){}window.MOB=true;render()});
 addEventListener('resize',()=>{const n=telefono();if(n!==window.MOB){window.MOB=n;render()}});
+/* ---------- HOME e IL 2026 scelti da Paolo (26/11 14:56): Home = anello del budget + barre stipendio/budget + settimana; Anno = 3 bolle + ogni 100 € + tasse ---------- */
+const anello=(fr,col,dentro,sz)=>{const R=84,C=2*Math.PI*R,f=Math.max(0,Math.min(1,fr));return `<div class="mb-an" style="--sz:${sz||210}px"><svg viewBox="0 0 200 200"><circle r="${R}" cx="100" cy="100" fill="none" stroke="var(--grigino)" stroke-width="16"/>${f>0.005?`<circle r="${R}" cx="100" cy="100" fill="none" stroke="${col}" stroke-width="16" stroke-linecap="round" stroke-dasharray="${f*C} ${C}" transform="rotate(-90 100 100)"/>`:''}</svg><div class="mb-an-c">${dentro}</div></div>`};
+function pOggi(){return conBase('eff',()=>{
+  const X=h3Dati(), o=new Date(), nome=(S.impostazioni.nome??'').trim();
+  let h=`<p class="mb-ciao">${nome?'Ciao '+esc(nome):'Ciao'}<small>${GL[o.getDay()]} ${o.getDate()} ${MESI[o.getMonth()]}</small></p>`;
+  if(X.corr&&X.TV>0){const sp=X.VT.pag, rb=X.TV-sp, fM=X.gOggi/X.giorniMese, fB=sp/X.TV, gg=X.gRest||1, veloce=fB>fM+0.08;
+    h+=`<button class="mb-card mb-an-card" data-mb-tab="movimenti" data-mb-solo="variabili">${anello(fB,rb<-0.5?'var(--corallo)':'var(--salvia)',`<small>${rb>=-0.5?'puoi ancora spendere':'hai sforato di'}</small><b>${e0(Math.abs(rb))}</b><small>di ${e0(X.TV)} per le variabili</small>`,190)}
+      <p class="mb-an-g">${rb>0.5?`circa <b>${e0(rb/gg)} al giorno</b> fino al ${X.giorniMese} ${MESI[X.m-1]}`:'per questo mese il budget è finito'}</p>
+      <p class="mb-ritmo ${veloce?'no':''}">${veloce?'stai spendendo più in fretta del mese':'sei in linea con il mese'} · mese al ${Math.round(fM*100)}%, budget al ${Math.round(fB*100)}%</p></button>`}
+  // stipendio e budget del mese a barre
+  if(X.D&&X.D.completo&&X.lim>0){const spT=X.tF+X.tV, r=X.resta, spV=X.VT.pag, rb=X.TV-spV;
+    const pr=(t,a,b,col,dx,nt)=>`<div class="mb-pr"><div><b>${t}</b><span>${dx}</span></div>${barra(b?a/b:0,a>b+0.5?'no':'',col)}<small>${e0(a)} di ${e0(b)}${nt||''}</small></div>`, dp=X.F.prv+X.V.prv;
+    h+=`<div class="mb-card">${pr('Stipendio di '+MESI[X.m-1],spT,X.lim,'var(--salvia)',r<-0.5?'sfori di '+e0(-r):'restano '+e0(r),dp>0.5?` · di cui ${e0(dp)} da pagare`:'')}${X.TV>0?pr('Budget variabili',spV,X.TV,'var(--lavanda)',rb<-0.5?'sforato di '+e0(-rb):'restano '+e0(rb)):''}</div>`}
+  // i conti come le carte dell'app della banca, su una riga che scorre (Paolo 26/11)
+  const ord={conto:0,carta:1,cointestato:2}, L=[...X.conti].sort((p,q)=>(ord[p.c.tipo]??3)-(ord[q.c.tipo]??3));
+  h+=`<div class="mb-cc"><div class="mb-c tot"><small>Soldi tuoi oggi</small><b class="${X.tuoi<-0.5?'neg':''}">${Ec(Math.round(X.tuoi))}</b><span>${L.filter(r=>!r.carta).length} conti · metà del cointestato</span></div>${L.map(r=>`<button class="mb-c" style="--b:${r.c.colore}" data-mb-tab="movimenti" data-mb-conto="${r.c.id}"><small>${esc(r.tit)}</small><b class="${r.cifra<-0.5?'neg':''}">${Ec(r.cifra)}</b><span>${r.carta?'spese del mese':esc(String(r.sub).replace(/<[^>]+>/g,''))}</span></button>`).join('')}</div>`;
+  // i prossimi 7 giorni
+  const EV=calEventi(X.oggi,X.fra(6));let w='';
+  for(let i=0;i<7;i++){const iso=X.fra(i), d=new Date(iso+'T12:00'), L=EV.filter(x=>x.data===iso), usc=L.filter(x=>x.tipo==='spe'||x.tipo==='tas').reduce((s,x)=>s+x.eur,0), ent=L.filter(x=>x.tipo==='ent').reduce((s,x)=>s+x.eur,0);
+    w+=`<button class="mb-wk-d ${i?'':'oggi'} ${MU.giorno===iso?'on':''}" data-mb-giorno="${iso}"><small>${i?GL[d.getDay()].slice(0,3):'oggi'}</small><b>${d.getDate()}</b><span class="mb-cal-p">${L.slice(0,3).map(x=>`<i class="${x.ok?'f':'p'}" style="--pc:${x.col}"></i>`).join('')}</span><em class="${ent>0.5?'pos':''}">${ent>0.5?'+'+Math.round(ent):usc>0.5?Math.round(usc):''}</em></button>`}
+  h+=pil('I prossimi 7 giorni')+`<div class="mb-card mb-wk">${w}</div>`;
+  const g=MU.giorno&&MU.giorno>=X.oggi&&MU.giorno<=X.fra(6)?MU.giorno:'', Lg=g?EV.filter(x=>x.data===g):EV.slice(0,4);
+  h+=card(Lg.map(x=>evRiga(x,X)).join(''),g?'Niente in questo giorno.':'Niente in programma questa settimana.');
+  return h})}
+function pAnno(){const X=h3Dati(), a=X.a;
+  const Yp=conBase('prev',()=>h3Anno(X)), B=sommeBolle(a,0), FISC=new Set(['inarcassa','tasse stato']);
+  const LA=S.movimenti.filter(x=>annoDi(x.data)===a&&!x.giro&&bollaMov(x)==='fiscali'&&!FISC.has(x.cat)), att=LA.reduce((s,x)=>s+x.eur,0), attP=LA.filter(x=>x.ok).reduce((s,x)=>s+x.eur,0), Ye=conBase('eff',()=>h3Anno(X));
+  const V=[['Accantoni per tasse e Inarcassa','var(--grigio-chiaro)',Yp.acc,Ye.spo,'già messi da parte'],['Spese fisse','var(--azzurro)',B.fisse.pag+B.fisse.prv,B.fisse.pag],['Spese variabili','var(--lavanda)',B.variabili.pag+B.variabili.prv,B.variabili.pag],['Spese per attività','var(--cappuccino)',att,attP]];
+  const usato=V.reduce((s,v)=>s+v[2],0), resto=Yp.vol-usato, base=Math.max(Yp.vol,usato)||1;
+  // le tre bolle (Paolo 26/11): stessi numeri della barra sotto, con il previsto
+  let h=`<div class="mb-k3">${bol('vol','fattura','Fatturato',e0(Yp.vol),'previsto')}${bol('spe','variabili','Spese',e0(usato),'con gli accantoni')}${bol(resto<-0.5?'spe':'ent','salvadanaio',resto<-0.5?'Mancano':'Restano',e0(Math.abs(resto)),'a fine anno')}</div>`;
+  if(resto>0.5)V.push(['Ti resta','var(--salvia)',resto]);
+  h+=pil('Ogni 100 € che fatturi','anno')+`<div class="mb-card"><div class="mb-stack">${V.map(v=>`<i style="width:${v[2]/base*100}%;background:${v[1]}"></i>`).join('')}</div>
+    ${V.map(v=>riga({col:v[1],t:v[0],s:v[3]!=null?`${v[4]||'già spesi'} ${e0(v[3])}`:'con il previsto',v:e0(v[2]),vs:Math.round(v[2]/(Yp.vol||1)*100)+'%'})).join('')}${resto<-0.5?riga({col:'var(--corallo)',t:'Mancano',s:'le spese superano il fatturato',v:e0(-resto),vc:'neg',vs:Math.round(-resto/(Yp.vol||1)*100)+'%'}):''}</div>`;
+  try{h+=mobFisco()}catch(e){console.error(e)}
+  return h}
+
 if(window.MOB)render();
 })();
 document.addEventListener('change',e=>{if(window.MOB&&e.target.matches&&e.target.matches('#mob [data-mb-perc-in]'))render()});
