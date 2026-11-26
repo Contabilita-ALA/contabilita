@@ -7938,25 +7938,25 @@ function pOggi(){return conBase('eff',()=>{
   h+=movCal(X.a,m,true);
   return h})}
 /* ---------- IL 2026: il riassunto dell'anno (Paolo 26/11) ---------- */
-function pAnno(){return conBase('eff',()=>{const X=h3Dati(), a=X.a, Y=h3Anno(X);let h='';
-  // i soldi: dal 1° gennaio a oggi e a fine anno, mese per mese
-  try{const D=datiConti(a), tO=D.tot(D.oggi), tI=D.tot(D.ini), tF=D.tot(D.fine), dv=tO-tI, sg=v=>(v<-0.5?'− ':'+ ')+e0(Math.abs(v));
-    h+=pil('I tuoi soldi','anno')+`<div class="mb-k2">${bol(tO<-0.5?'spe':'net','conto','Oggi',e0(tO),`${sg(dv)} dal 1° gennaio`)}${bol('bia','calendario','A fine anno',e0(tF),'con le spese previste')}</div>`;
-    const V=D.serie.map(s=>D.tot(s)), mn=Math.min(0,...V), mx=Math.max(1,...V), sc=v=>(v-mn)/(mx-mn||1)*100;
-    h+=`<div class="mb-card mb-mm mb-mm13">${D.serie.map((s,i)=>`<div><span class="mb-mm-b mb-mm-z"><i class="t ${s.stima?'st':''} ${V[i]<-0.5?'neg':''}" style="bottom:${V[i]<0?sc(V[i]):sc(0)}%;height:${Math.max(2,Math.abs(sc(V[i])-sc(0)))}%"></i><u style="bottom:${sc(0)}%"></u></span><small>${i?MESI3[i-1][0].toUpperCase():'1/1'}</small></div>`).join('')}</div>`}catch(x){console.error(x)}
-  // entrate, spese e risparmio dell'anno
-  const B=sommeBolle(a,0), K=['fisse','variabili','fiscali'], sp=K.reduce((s,k)=>s+B[k].pag,0), spP=K.reduce((s,k)=>s+B[k].prv,0);
-  h+=pil('Entrate e spese')+`<div class="mb-k3">${bol('ent','entrate','Entrate',e0(B.entrate.pag),B.entrate.prv>0.5?'+ '+e0(B.entrate.prv)+' attese':'incassate')}${bol('spe','variabili','Spese',e0(sp),spP>0.5?'+ '+e0(spP)+' previste':'tutte pagate')}${bol(Y.ris<-0.5?'spe':'net','salvadanaio','Risparmio',e0(Y.ris),'avanzato dallo stipendio')}</div>`;
-  // spese mese per mese, divise in fisse, variabili, attività
-  const SM=[1,2,3,4,5,6,7,8,9,10,11,12].map(m=>{const b=sommeBolle(a,m);return K.map(k=>b[k].pag+b[k].prv)}), mxS=Math.max(1,...SM.map(v=>v[0]+v[1]+v[2])), col=['var(--azzurro)','var(--lavanda)','var(--cappuccino)'];
-  h+=`<div class="mb-card mb-mm">${SM.map((v,i)=>`<div><span class="mb-mm-b mb-mm-s">${v.map((x,k)=>`<i style="height:${x/mxS*100}%;background:${col[k]}"></i>`).reverse().join('')}</span><small>${MESI3[i][0].toUpperCase()}</small></div>`).join('')}</div>
-    <p class="mb-nota"><i class="mb-lg" style="background:var(--azzurro)"></i>fisse <i class="mb-lg" style="background:var(--lavanda)"></i>variabili <i class="mb-lg" style="background:var(--cappuccino)"></i>attività</p>`;
+function pAnno(){const X=h3Dati(), a=X.a, sT=v=>v.reduce((s,x)=>s+x,0), K=['fisse','variabili','fiscali'];
+  // Paolo 26/11: il riassunto dell'anno guarda il PREVISTO (a fine anno), l'attuale in piccolo; stesso schema del Previsionale
+  const Yp=conBase('prev',()=>h3Anno(X)), Ye=conBase('eff',()=>h3Anno(X)), B=sommeBolle(a,0);
+  const T=conBase('prev',()=>[1,2,3,4].map(q=>trimB(a,q))), risP=T.reduce((s,t)=>s+(t&&t.avanzo!=null?t.avanzo:0),0);
+  let D=null;try{D=datiConti(a)}catch(x){console.error(x)}
+  const pcA=Yp.vol>0.5?Math.round(Yp.acc/Yp.vol*100):0, daP=k=>B[k].prv>0.5?e0(B[k].prv)+' da pagare':'tutte pagate';
+  let h=pil('Fatture '+a,'anno')+`<div class="mb-k3">${bol('ent','entrate','Fatturato',e0(Yp.vol),e0(Ye.vol)+' incassato')}${bol('acc','salvadanaio','Accantoni',e0(Yp.acc),pcA+'% sul Revolut')}${bol('net','netto','Netto',e0(Yp.netto),'quello che resta a te')}</div>`;
+  h+=pil('Spese '+a)+`<div class="mb-k3">${bol('fis','fisse','Fisse',e0(B.fisse.pag+B.fisse.prv),daP('fisse'))}${bol('var','variabili','Variabili',e0(B.variabili.pag+B.variabili.prv),daP('variabili'))}${bol('att','fiscali','Attività',e0(B.fiscali.pag+B.fiscali.prv),daP('fiscali'))}</div>`;
+  h+=pil('A fine '+a)+`<div class="mb-k2">${bol(risP<-0.5?'spe':'net','salvadanaio',risP<-0.5?'Ti mancano':'Ti avanzano',e0(Math.abs(risP)),'stipendio − fisse − variabili')}${D?bol(D.fine.rev<-0.5?'spe':'acc','deposito','Revolut',e0(D.fine.rev),'oggi '+e0(D.oggi.rev)):''}</div>`;
+  // mese per mese: stipendio (netto del trimestre prima / 3) e spese fisse + variabili
+  const M=[1,2,3,4,5,6,7,8,9,10,11,12], st=M.map(m=>{const t=T[Math.ceil(m/3)-1];return t&&t.stip!=null?t.stip/3:0}), sp=M.map(m=>{const b=sommeBolle(a,m);return b.fisse.pag+b.fisse.prv+b.variabili.pag+b.variabili.prv}), mx=Math.max(1,...st,...sp);
+  h+=`<div class="mb-card mb-mm">${M.map((m,i)=>`<div><span class="mb-mm-b"><i class="n" style="height:${st[i]/mx*100}%"></i><i class="s" style="height:${sp[i]/mx*100}%"></i></span><small>${MESI3[i][0].toUpperCase()}</small></div>`).join('')}</div>
+    <p class="mb-nota"><i class="mb-lg n"></i>stipendio <i class="mb-lg s"></i>spese fisse e variabili · con le fatture e le spese previste</p>`;
   // dove vanno i soldi
-  const pc={};S.movimenti.filter(x=>annoDi(x.data)===a&&!x.giro&&x.ok&&K.includes(bollaMov(x))).forEach(x=>pc[x.cat]=(pc[x.cat]||0)+x.eur);
+  const pc={};S.movimenti.filter(x=>annoDi(x.data)===a&&!x.giro&&K.includes(bollaMov(x))).forEach(x=>pc[x.cat]=(pc[x.cat]||0)+x.eur);
   const C=Object.entries(pc).filter(c=>c[1]>0.5).sort((x,y)=>y[1]-x[1]), tot=C.reduce((s,c)=>s+c[1],0);
   if(C.length) h+=pil('Dove vanno i soldi','',e0(tot))+card(C.slice(0,6).map(([c,v])=>riga({col:coloreCat(c)||'#ccc',t:esc(nomeCat(c)),s:barra(v/C[0][1],'',coloreCat(c)||'#ccc'),v:e0(v),vs:Math.round(v/tot*100)+'%'})).join(''));
   try{h+=mobFisco()}catch(x){console.error(x)}
-  return h})}
+  return h}
 function mesiStriscia(a,m){const o=new Date(), mOra=o.getFullYear()===a?o.getMonth()+1:0, hasPrv=k=>S.movimenti.some(x=>annoDi(x.data)===a&&meseDi(x.data)===k&&!x.ok);
   return `<div class="mb-mesi">${MESI3.map((n,i)=>`<button data-mb-mm="${i+1}" class="${i+1===m?'on':''} ${i+1===mOra?'ora':''}">${n}${hasPrv(i+1)&&i+1>=mOra?'<i></i>':''}</button>`).join('')}</div>`}
 function evRiga(x,X){return riga({att:x.m?`data-mb-mov="${x.m.id}"`:x.tipo==='acc'?`data-rev-sposta="${Math.round(x.eur)}"`:'',cls:(x.ok?'':'prv')+(x.rit?' rit':''),col:x.col,ic:x.tipo==='ent'?'entrate':x.tipo==='tas'?'fiscali':x.tipo==='acc'||x.tipo==='accG'?'salvadanaio':'variabili',
