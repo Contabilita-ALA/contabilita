@@ -8011,10 +8011,10 @@ function pMov(){
 }
 /* ---------- PREVISIONALE dell'anno prossimo (dal +), come la pagina Previsione del computer ---------- */
 function calcPrev(){const a=S.anno, N=a+1;
-  const D=conBase('eff',()=>datiPrevisione(a,pvVaX(N))), sT=v=>v.reduce((s,x)=>s+x,0);
+  const D=conBase('prev',()=>datiPrevisione(a,pvVaX(N))) /* Paolo 26/11: le tasse 2027 si calcolano sul fatturato 2026 previsto, non solo incassato */, sT=v=>v.reduce((s,x)=>s+x,0);
   const spese=sT(D.fisse)+sT(D.vari), resta=D.netto-spese, revFine=D.acc26+D.acc-D.tFis-D.tAtt, pc=Math.round(D.perc*100);
   let h=pil('Entrate '+N)+`<div class="mb-k3">${bol('ent','entrate','Entrate',e0(D.lordo),D.lordo>0.5?'ipotizzate':'scrivile sul computer')}${bol('acc','salvadanaio','Accantoni',e0(D.acc),pc+'% sul Revolut')}${bol('net','netto','Netto',e0(D.netto),'quello che resta a te')}</div>`;
-  h+=pil('Spese '+N)+`<div class="mb-k3">${bol('fis','fisse','Fisse',e0(sT(D.fisse)),'come il '+a)}${bol('var','variabili','Variabili',e0(sT(D.vari)),'sul budget')}${bol('att','fiscali','Tasse',e0(D.tFis),'Inarcassa e F24')}</div>`;
+  h+=pil('Spese '+N)+`<div class="mb-k3">${bol('fis','fisse','Fisse',e0(sT(D.fisse)),'come il '+a)}${bol('var','variabili','Variabili',e0(sT(D.vari)),'sul budget')}${bol('att','fiscali','Tasse',e0(D.tFis),'Inarcassa e F24 sul '+a+' previsto')}</div>`;
   h+=pil('A fine '+N)+`<div class="mb-k2">${bol(resta<-0.5?'spe':'net','salvadanaio',resta<-0.5?'Ti mancano':'Ti avanzano',e0(Math.abs(resta)),'netto − fisse − variabili')}${bol(revFine<-0.5?'spe':'acc','deposito','Revolut',e0(revFine),revFine<-0.5?'non basta per tasse e attività':'dopo tasse e spese per attività')}</div>`;
   // mese per mese: netto e spese
   const M=[1,2,3,4,5,6,7,8,9,10,11,12], net=M.map(m=>D.totE[m]*(1-D.perc)), sp=M.map(m=>D.fisse[m]+D.vari[m]), mx=Math.max(1,...net,...sp);
@@ -8085,12 +8085,12 @@ function mobFisco(){
     const LF=VF?datiFatture(a):[], accOggi=LF.filter(x=>x.inc).reduce((s,x)=>s+x.c.accant,0), accPrev=VF?VF.acc:0;
     const spostato=S.movimenti.filter(x=>annoDi(x.data)===a&&x.giro&&x.ok&&(S.conti.find(c=>c.id===x.verso)||{}).tipo==='salvadanaio').reduce((s,x)=>s+x.eur,0);
     const accY=(!inPrev&&VF?accOggi:d.vaPrev!=null?lordoY*perc:accPrev)+Math.max(0,spostato-accOggi);return {vaY,Y,ina,tot,accY}};
-  const E=calc(false), PV=calc(true), {Y,ina,tot,accY}=E, diff=accY-tot, ok=diff>=-0.5;
+  const E=calc(true), PV=calc(false), /* Paolo 26/11: in grande il previsto */ {Y,ina,tot,accY}=E, diff=accY-tot, ok=diff>=-0.5;
   return pil('Tasse e Inarcassa '+a)+`<div class="mb-k2">${bol('att','fiscali','Pagato',e0(pag),`di ${e0(pag+manT)}${barra((pag+manT)?pag/(pag+manT):1)}`)}${bol('bia','calendario','Manca',e0(manT),man[0]?'prossima '+giornoIt(man[0].data):'tutto pagato')}</div>
     ${man.length?card(man.slice(0,3).map(x=>riga({col:coloreCat(x.cat)||'var(--cappuccino)',t:giornoIt(x.data),s:esc(x.det.toLowerCase()),v:e0(x.eur)})).join('')):''}
-    ${pil('Tasse e Inarcassa '+(a+1))}<div class="mb-k2">${bol('att','fiscali','Da pagare',e0(tot),Math.abs(PV.tot-tot)>=1?'con il previsto '+e0(PV.tot):'giugno e novembre')}${bol(ok?'net':'spe','salvadanaio','Accantonato',e0(accY),ok?(diff>=1?'avanzano '+e0(diff):'basta giusto'):'mancano '+e0(-diff))}</div>
+    ${pil('Tasse e Inarcassa '+(a+1))}<div class="mb-k2">${bol('att','fiscali','Da pagare',e0(tot),Math.abs(PV.tot-tot)>=1?'ad oggi '+e0(PV.tot):'giugno e novembre')}${bol(ok?'net':'spe','salvadanaio','Accantonato',e0(accY),ok?(diff>=1?'avanzano '+e0(diff):'basta giusto'):'mancano '+e0(-diff))}</div>
     ${card(riga({col:'var(--cappuccino)',t:'Inarcassa',s:`minimi ${a+1}${Y.rate>1?'':' + conguaglio '+a}`,v:e0(ina)})+riga({col:'var(--cappuccino)',t:'F24 giugno',s:`saldo ${a} + 1° acconto`,v:e0(Y.saldo+Y.imposta/2)})+riga({col:'var(--cappuccino)',t:'F24 novembre',s:'2° acconto',v:e0(Y.imposta/2)}))}
-    <p class="mb-nota">Su un volume d'affari ${a} di ${e0(E.vaY)} (${!VF?'previsto':'fatture incassate'}).</p>`;
+    <p class="mb-nota">Su un volume d'affari ${a} di ${e0(E.vaY)} (previsto, con le fatture da incassare).</p>`;
 }
 
 /* ---------- CALCOLATORI (dal tasto +) ---------- */
