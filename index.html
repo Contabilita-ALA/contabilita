@@ -3156,6 +3156,16 @@ body.mob #modale .finestra:has(.mb-ok) .azioni:not(:has([data-act="m-elimina"],[
 #mob .mb-bv-t small{font-size:var(--mb-f5);line-height:1.25;opacity:.85}
 #mob .mb-bv-apri{display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;padding:15px;background:var(--inchiostro);color:#fff;font:600 var(--mb-f3) var(--font)}
 #mob .mb-bv-apri svg{width:22px;height:22px}
+
+/* domande della Home (Paolo 26/11) */
+#mob .mb-bv-t{min-height:112px}
+#mob .mb-bv-q{box-shadow:inset 0 0 0 1.5px var(--grigino)}
+#mob .mb-bv-q .mb-ic{background:var(--inchiostro)!important;color:#fff}
+#mob .mb-bv-q.on{background:var(--salvia-ch);box-shadow:none}
+#mob .mb-bv-q.on.no{background:var(--corallo-ch)}
+#mob .mb-bv-q.on small:first-child{font-weight:700;opacity:1}
+#mob .mb-bv-q .mb-bv-v{font:700 28px var(--font);letter-spacing:-.5px}
+#mob .mb-bv-q .mb-bv-c{display:inline-block;margin-top:4px;font-size:var(--mb-f5);font-weight:700}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -8229,9 +8239,10 @@ new MutationObserver(()=>{if(!window.MOB)return;const f=document.querySelector('
 /* ---------- eventi ---------- */
 document.addEventListener('click',e=>{
   if(!window.MOB||!e.target.closest('#mob'))return;
-  const t=e.target.closest('[data-mb-tab],[data-mb-nuovo],[data-mb-mov],[data-mb-fat],[data-mb-mm],[data-mb-calc],[data-mb-cfda],[data-mb-crea-fat],[data-mb-vista],[data-mb-perc],[data-mb-vmov],[data-mb-giorno],[data-mb-voce],[data-mb-filtri],[data-mb-solo-f],[data-mb-conto-f],[data-mb-prev],[data-mb-piu],[data-mb-chiudi-calc],[data-mb-vedi]');if(!t)return;
+  const t=e.target.closest('[data-mb-tab],[data-mb-nuovo],[data-mb-mov],[data-mb-fat],[data-mb-mm],[data-mb-calc],[data-mb-cfda],[data-mb-crea-fat],[data-mb-vista],[data-mb-perc],[data-mb-vmov],[data-mb-giorno],[data-mb-voce],[data-mb-filtri],[data-mb-solo-f],[data-mb-conto-f],[data-mb-prev],[data-mb-piu],[data-mb-chiudi-calc],[data-mb-vedi],[data-mb-rivela]');if(!t)return;
   e.preventDefault();e.stopPropagation();const d=t.dataset;
   if(t.matches('[data-mb-piu]')){MU.piu=!MU.piu;render();return}
+  if(t.matches('[data-mb-rivela]')){const k=d.mbRivela;MU.rivela={...(MU.rivela||{}),[k]:!(MU.rivela||{})[k]};render();return}
   if(t.matches('[data-mb-vedi]')){MU.entrato=!MU.entrato;salvaMU();scrollTo(0,0);render();return} // Paolo 26/11: all'apertura un saluto senza cifre; i conti dopo il tocco
   MU.piu=false;
   if(d.mbNuovo){render();d.mbNuovo==='fat'?apriFattura(null):apriMovimento(null,d.mbNuovo);return}
@@ -8272,11 +8283,22 @@ addEventListener('resize',()=>{const n=telefono();if(n!==window.MOB){window.MOB=
 const anello=(fr,col,dentro,sz)=>{const R=84,C=2*Math.PI*R,f=Math.max(0,Math.min(1,fr));return `<div class="mb-an" style="--sz:${sz||210}px"><svg viewBox="0 0 200 200"><circle r="${R}" cx="100" cy="100" fill="none" stroke="var(--grigino)" stroke-width="16"/>${f>0.005?`<circle r="${R}" cx="100" cy="100" fill="none" stroke="${col}" stroke-width="16" stroke-linecap="round" stroke-dasharray="${f*C} ${C}" transform="rotate(-90 100 100)"/>`:''}</svg><div class="mb-an-c">${dentro}</div></div>`};
 const OCCHIO=(ap)=>`<svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/>${ap?'':'<path d="M4 4l16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'}</svg>`;
 function pOggi(){return pBenvenuto()} // Paolo 26/11: la Home è solo il saluto; i numeri del mese sono in cima alla pagina Anno
+try{ICONE.domanda='<circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 1 1 3.6 2.4c-.7.3-1.1.9-1.1 1.6v.4M12 17.2v.1"/>'}catch(e){}
+function bvDomande(){ // Paolo 26/11: due domande sul mese; la risposta compare solo quando tocchi (ritocchi e si nasconde)
+  const X=conBase('eff',()=>h3Dati()), R=MU.rivela||{}, q=(k,col,dom,fn)=>{const on=!!R[k];const r=on?fn():null;
+    return `<button class="mb-bv-t mb-bv-q ${on?'on '+(r.cl||''):''}" data-mb-rivela="${k}" style="--b:${col}">${on?`<small>${dom}</small><b class="mb-bv-v">${r.v}</b><small>${r.s}</small>`:`${icoC('domanda','rgba(255,255,255,.6)')}<b>${dom}</b><small>tocca per vedere</small>`}</button>`};
+  const bud=()=>{if(!(X.corr&&X.TV>0))return {v:'—',s:'fissa il budget sul computer'};const sp=X.VT.pag, rb=X.TV-sp, gg=X.gRest||1, fM=X.gOggi/X.giorniMese, fB=sp/X.TV;
+    if(rb<-0.5)return {v:'− '+e0(-rb).replace('€ ','€ '),s:'budget sforato: da qui a fine mese solo spese necessarie',cl:'no'};
+    return {v:e0(rb),s:fB>fM+0.08?`vai piano: al massimo ${e0(rb/gg)} al giorno fino al ${X.giorniMese}`:`circa ${e0(rb/gg)} al giorno fino al ${X.giorniMese}: sei in linea`}};
+  const carte=X.conti.filter(r=>r.carta).reduce((t,r)=>t+r.cifra,0), conCarte=fn=>()=>{const r=fn();if(X.conti.some(c=>c.carta))r.s+=`<br><b class="mb-bv-c">carte Unicredit ${e0(carte)}</b>`;return r}; // Paolo 26/11: saldo delle carte nella domanda del budget
+  const sti=()=>{if(!(X.D&&X.D.completo&&X.lim>0))return {v:'—',s:'manca lo stipendio del mese'};const r=X.resta, dp=X.F.prv+X.V.prv;
+    return {v:(r<-0.5?'− ':'')+e0(Math.abs(r)),cl:r<-0.5?'no':'',s:r<-0.5?`sfori lo stipendio di ${MESI[X.m-1]}`:`di ${e0(X.lim)}${dp>0.5?` · ${e0(dp)} ancora da pagare`:''}`}};
+  return q('bud','var(--mb-bianco)','Quanto posso ancora spendere questo mese?',conCarte(bud))+q('sti','var(--mb-bianco)','Quanto mi resta dello stipendio?',sti)}
 function pBenvenuto(){ // schermata di saluto: niente cifre, solo le cose da fare al volo (anche davanti a un cliente)
   const o=new Date(), hh=o.getHours(), nome=(S.impostazioni.nome??'').trim(), sal=hh>=5&&hh<13?'Buongiorno':hh<18?'Buon pomeriggio':'Buonasera';
   const t=(att,ic,col,tt,ss)=>`<button class="mb-bv-t" ${att} style="--b:${col}">${icoC(ic,'rgba(255,255,255,.55)')}<b>${tt}</b><small>${ss}</small></button>`;
   return `<div class="mb-bv"><div class="mb-bv-s"><small>${GL[o.getDay()].replace(/^./,c=>c.toUpperCase())} ${o.getDate()} ${MESI[o.getMonth()]} ${o.getFullYear()}</small><h2>${sal}${nome?',<br>'+esc(nome):''}</h2></div>
-    <div class="mb-bv-g">${t('data-mb-calc="fat"','fattura','var(--salvia)','Calcola una fattura','quanto chiedere e quanto ti resta')}${t('data-mb-nuovo="uscita"','variabili','var(--lavanda)','Segna una spesa','uscita da un conto o carta')}${t('data-mb-nuovo="fat"','entrate','var(--azzurro)','Nuova fattura','da incassare o incassata')}${t('data-mb-calc="pp"','salvadanaio','var(--cappuccino)','Posso permettermelo?','prima di una spesa grande')}</div>
+    <div class="mb-bv-g">${bvDomande()}${t('data-mb-calc="fat"','fattura','var(--salvia)','Calcola una fattura','quanto chiedere e quanto ti resta')}${t('data-mb-nuovo="uscita"','variabili','var(--lavanda)','Segna una spesa','uscita da un conto o carta')}${t('data-mb-nuovo="fat"','entrate','var(--azzurro)','Nuova fattura','da incassare o incassata')}${t('data-mb-calc="pp"','salvadanaio','var(--cappuccino)','Posso permettermelo?','prima di una spesa grande')}</div>
     <button class="mb-bv-apri" data-mb-tab="anno">${OCCHIO(true)}I tuoi conti</button></div>`}
 function pOggi0(){return conBase('eff',()=>{
   const X=h3Dati(), o=new Date(), nome=(S.impostazioni.nome??'').trim();
