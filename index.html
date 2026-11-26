@@ -3164,6 +3164,20 @@ body.mob #modale .finestra:has(.mb-ok) .azioni:not(:has([data-act="m-elimina"],[
 #mob .mb-bv-q.on small:first-child{font-weight:700;opacity:1}
 #mob .mb-bv-q .mb-bv-v{font:700 28px var(--font);letter-spacing:-.5px}
 #mob .mb-bv-q .mb-bv-c{display:inline-block;margin-top:4px;font-size:var(--mb-f5);font-weight:700}
+/* Categoria sul telefono (Paolo 26/11): campo come gli altri, scelta in un pannello dal basso con sfondo scuro */
+body.mob .finestra .cp-btn{min-height:44px;border:0;border-radius:99px;padding:9px 38px 9px 14px;font:500 17px var(--font);background-position:right 14px center;background-size:12px 8px}
+body.mob .finestra .cp.aperto::before{content:'';position:fixed;inset:0;background:rgba(20,32,30,.45);z-index:30}
+body.mob .finestra .cp-pan{position:fixed;left:0!important;right:0;bottom:0;top:auto!important;width:auto;max-width:none;max-height:78vh;max-height:78dvh;z-index:31;border:0;border-radius:24px 24px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.18);padding:0 16px calc(18px + env(safe-area-inset-bottom));background:var(--panna)}
+body.mob .finestra .cp-pan::before{content:'Scegli la categoria';position:sticky;top:0;display:block;margin:0 -16px 6px;padding:20px 16px 12px;background:var(--panna);font:700 18px var(--font);color:var(--inchiostro);text-align:center;z-index:1}
+body.mob .finestra .cp-pan::after{content:'';position:absolute;top:8px;left:50%;width:40px;height:5px;margin-left:-20px;border-radius:3px;background:var(--grigino);z-index:2}
+body.mob .finestra .cp-g{background:var(--carta);border-radius:18px;padding:12px 12px 14px}
+body.mob .finestra .cp-g+.cp-g{margin-top:10px}
+body.mob .finestra .cp-g small{font:700 13px var(--font);letter-spacing:.4px;color:var(--inchiostro);margin-bottom:10px}
+body.mob .finestra .cp-g small i{width:12px;height:12px;border-radius:4px;border:0}
+body.mob .finestra .cp-ch{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+body.mob .finestra .cp-ch button{border:0;border-radius:14px;padding:10px 8px;min-height:44px;font:600 15.5px/1.2 var(--font);white-space:normal;text-align:center}
+body.mob .finestra .cp-ch button.on{outline:0;box-shadow:inset 0 0 0 2.5px var(--inchiostro);font-weight:700}
+body.mob .finestra .cp-ch button.on::after{content:' ✓'}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -8276,6 +8290,8 @@ document.addEventListener('input',e=>{
 });
 // la versione per computer, su un telefono, ha un tasto per tornare a quella per telefono
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mb-vista-tel]');if(!b)return;e.preventDefault();try{localStorage.setItem(K_VISTA,'tel')}catch(x){}window.MOB=true;render()});
+// Paolo 26/11: sul telefono il pannello della categoria si chiude toccando lo sfondo scuro
+document.addEventListener('click',e=>{if(!window.MOB)return;const cp=e.target.classList&&e.target.classList.contains('cp')&&e.target.classList.contains('aperto')?e.target:null;if(cp){cp.classList.remove('aperto');e.preventDefault();e.stopPropagation()}},true);
 addEventListener('resize',()=>{const n=telefono();if(n!==window.MOB){window.MOB=n;render()}});
 /* ---------- HOME e IL 2026 scelti da Paolo (26/11 14:56): Home = anello del budget + barre stipendio/budget + settimana; Anno = 3 bolle + ogni 100 € + tasse ---------- */
 const anello=(fr,col,dentro,sz)=>{const R=84,C=2*Math.PI*R,f=Math.max(0,Math.min(1,fr));return `<div class="mb-an" style="--sz:${sz||210}px"><svg viewBox="0 0 200 200"><circle r="${R}" cx="100" cy="100" fill="none" stroke="var(--grigino)" stroke-width="16"/>${f>0.005?`<circle r="${R}" cx="100" cy="100" fill="none" stroke="${col}" stroke-width="16" stroke-linecap="round" stroke-dasharray="${f*C} ${C}" transform="rotate(-90 100 100)"/>`:''}</svg><div class="mb-an-c">${dentro}</div></div>`};
