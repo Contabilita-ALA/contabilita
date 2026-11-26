@@ -3178,6 +3178,33 @@ body.mob .finestra .cp-ch{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 body.mob .finestra .cp-ch button{border:0;border-radius:14px;padding:10px 8px;min-height:44px;font:600 15.5px/1.2 var(--font);white-space:normal;text-align:center}
 body.mob .finestra .cp-ch button.on{outline:0;box-shadow:inset 0 0 0 2.5px var(--inchiostro);font-weight:700}
 body.mob .finestra .cp-ch button.on::after{content:' ✓'}
+/* Finestra movimento ordinata (Paolo 26/11 16:40): due colonne uguali, stessi rettangoli, stesse scritte, spazio pieno */
+body.mob .finestra.mb-fin{display:flex;flex-direction:column;padding:calc(10px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom))}
+body.mob .finestra.mb-fin h3{margin:0 0 14px!important}
+body.mob .finestra.mb-fin .tipi{display:grid!important;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 16px}
+body.mob .finestra.mb-fin .tipi button{min-height:46px;padding:8px;border-radius:14px;font:600 16px var(--font)}
+body.mob .finestra.mb-fin .co-tipo{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 16px}
+body.mob .finestra.mb-fin .co-tipo button{min-height:46px;border-radius:14px;font:600 15px var(--font)}
+body.mob .finestra.mb-fin .importo{display:flex;align-items:center;gap:8px;min-height:64px;margin:0 0 18px;padding:6px 16px;border-radius:14px;background:var(--carta)}
+body.mob .finestra.mb-fin .importo input,body.mob .finestra.mb-fin .importo span{font:700 30px var(--font)!important}
+body.mob .finestra.mb-fin .campi{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:18px 12px!important;margin:0 0 18px;align-items:end}
+body.mob .finestra.mb-fin .campi>label{display:flex;flex-direction:column;gap:7px;margin:0;font:600 14px var(--font)!important;color:var(--inchiostro);grid-column:auto}
+body.mob .finestra.mb-fin .campi>label.largo,body.mob .finestra.mb-fin .campi>.mb-tutta{grid-column:1/-1!important}
+body.mob .finestra.mb-fin .campi input:not([type=checkbox]),body.mob .finestra.mb-fin .campi select,body.mob .finestra.mb-fin .cp-btn{height:50px;min-height:50px;width:100%;margin:0;padding:0 14px;border:0;border-radius:14px;background:var(--carta);font:500 17px var(--font)!important;color:var(--inchiostro);line-height:50px}
+body.mob .finestra.mb-fin .campi select,body.mob .finestra.mb-fin .cp-btn{padding-right:36px}
+body.mob .finestra.mb-fin .cp-btn{background:var(--g) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231d1d1b' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 14px center;font-weight:600!important}
+body.mob .finestra.mb-fin .campi input::placeholder{color:var(--grigio);font-size:16px}
+body.mob .finestra.mb-fin .campi>label.spunta{flex-direction:row;align-items:center;gap:10px;height:50px;padding:0 14px;border-radius:14px;background:var(--carta);font:500 16px var(--font)!important}
+body.mob .finestra.mb-fin .campi>label.spunta input{width:24px;height:24px;min-height:0;flex:none;accent-color:var(--inchiostro)}
+body.mob .finestra.mb-fin .campi>label.spunta.largo{height:auto;min-height:50px;padding:12px 14px;line-height:1.3}
+body.mob .finestra.mb-fin .alt-st{font:500 14px var(--font);color:var(--grigio)}
+body.mob .finestra.mb-fin .azioni{margin-top:auto;padding-top:10px}
+body.mob .finestra.mb-fin .azioni .btn{min-height:52px;border-radius:14px;font:600 17px var(--font)}
+body.mob .finestra.mb-fin .campi{flex:none!important;height:auto!important;max-height:none!important;overflow:visible!important;grid-auto-rows:auto!important}
+body.mob .finestra.mb-fin .campi>label>*{flex:none}
+body.mob .finestra.mb-fin .campi select{padding:0 30px 0 12px;font-size:16px!important}
+body.mob .finestra.mb-fin .mb-rimb-t{margin:18px 4px 10px;font:500 14px/1.35 var(--font);color:var(--grigio)}
+body.mob .finestra.mb-fin .mb-rimb-t b{display:block;font:700 15px var(--font);color:var(--inchiostro);margin-bottom:2px}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -8290,6 +8317,23 @@ document.addEventListener('input',e=>{
 });
 // la versione per computer, su un telefono, ha un tasto per tornare a quella per telefono
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mb-vista-tel]');if(!b)return;e.preventDefault();try{localStorage.setItem(K_VISTA,'tel')}catch(x){}window.MOB=true;render()});
+// Paolo 26/11 16:40: finestra "Segna una spesa" ordinata: colonne allineate, categorie solo del tipo giusto (uscita senza entrate e viceversa)
+const gTipo=id=>{const c=S.categorie.find(c=>c.id===id);const g=c&&S.gruppi.find(g=>g.id===c.gruppo);return g?(g.tipo==='entrata'?'entrata':'uscita'):''};
+function mobFinestra(){const f=document.querySelector('#modale .finestra');if(!f||!bozza)return;f.classList.add('mb-fin');
+  const be=f.querySelector('.tipi [data-tipo="entrata"]');if(be)be.textContent='Entrata';
+  const t=bozza.tipo, pan=f.querySelector('.cp-pan');
+  if(t==='uscita')f.querySelectorAll('.cp-g').forEach(g=>{const v=g.querySelector('[data-cp-v]');g.hidden=!!v&&gTipo(v.dataset.cpV)==='entrata'&&!g.querySelector('.on')});
+  if(t==='entrata'&&pan&&!pan.querySelector('.mb-rimb-t')){const G=[...pan.querySelectorAll('.cp-g')],E=G.filter(g=>{const v=g.querySelector('[data-cp-v]');return v&&gTipo(v.dataset.cpV)==='entrata'}),A=G.filter(g=>!E.includes(g));
+    E.forEach(g=>pan.prepend(g));if(A.length){const h=document.createElement('p');h.className='mb-rimb-t';h.innerHTML='<b>È un rimborso di una tua spesa?</b>Scegli la categoria della spesa: l\'importo si toglie da quella voce.';A[0].before(h)}}
+  const fa=f.querySelector('#m-ok');if(fa&&t==='coi'&&fa.nextSibling)fa.nextSibling.textContent=' Fatta';
+  ['#c-cat','#m-det'].forEach(q=>{const x=f.querySelector(q);if(x&&t==='coi')x.closest('label').classList.add('largo')});
+  const cp=f.querySelector('.campi .cp');if(cp)cp.closest('label').classList.add('largo');
+  let col=0;[...f.querySelectorAll('.campi>*')].forEach((el,i,L)=>{if(el.hidden||getComputedStyle(el).display==='none')return;el.classList.remove('mb-tutta');
+    const lg=el.classList.contains('largo');if(lg){col=0;return}
+    const nx=L.slice(i+1).find(x=>!(x.hidden||getComputedStyle(x).display==='none'));if(col===0&&(!nx||nx.classList.contains('largo'))){el.classList.add('mb-tutta');return}col=col?0:1})}
+for(const nome of ['disegnaFinestra','disegnaFinestraCoi']){const orig=window[nome];if(typeof orig!=='function')continue;
+  window[nome]=function(){if(window.MOB&&bozza&&!bozza.id&&(bozza.tipo==='uscita'||bozza.tipo==='entrata')&&gTipo(bozza.cat)&&gTipo(bozza.cat)!==bozza.tipo)bozza.cat=bozza.tipo==='entrata'?'bonifici a mio favore':'spese variabili';
+    const r=orig.apply(this,arguments);if(window.MOB)try{mobFinestra()}catch(e){}return r}}
 // Paolo 26/11: sul telefono il pannello della categoria si chiude toccando lo sfondo scuro
 document.addEventListener('click',e=>{if(!window.MOB)return;const cp=e.target.classList&&e.target.classList.contains('cp')&&e.target.classList.contains('aperto')?e.target:null;if(cp){cp.classList.remove('aperto');e.preventDefault();e.stopPropagation()}},true);
 addEventListener('resize',()=>{const n=telefono();if(n!==window.MOB){window.MOB=n;render()}});
@@ -8314,7 +8358,7 @@ function pBenvenuto(){ // schermata di saluto: niente cifre, solo le cose da far
   const o=new Date(), hh=o.getHours(), nome=(S.impostazioni.nome??'').trim(), sal=hh>=5&&hh<13?'Buongiorno':hh<18?'Buon pomeriggio':'Buonasera';
   const t=(att,ic,col,tt,ss)=>`<button class="mb-bv-t" ${att} style="--b:${col}">${icoC(ic,'rgba(255,255,255,.55)')}<b>${tt}</b><small>${ss}</small></button>`;
   return `<div class="mb-bv"><div class="mb-bv-s"><small>${GL[o.getDay()].replace(/^./,c=>c.toUpperCase())} ${o.getDate()} ${MESI[o.getMonth()]} ${o.getFullYear()}</small><h2>${sal}${nome?',<br>'+esc(nome):''}</h2></div>
-    <div class="mb-bv-g">${bvDomande()}${t('data-mb-calc="fat"','fattura','var(--salvia)','Calcola una fattura','quanto chiedere e quanto ti resta')}${t('data-mb-nuovo="uscita"','variabili','var(--lavanda)','Segna una spesa','uscita da un conto o carta')}${t('data-mb-nuovo="fat"','entrate','var(--azzurro)','Nuova fattura','da incassare o incassata')}${t('data-mb-calc="pp"','salvadanaio','var(--cappuccino)','Posso permettermelo?','prima di una spesa grande')}</div></div>`}
+    <div class="mb-bv-g">${bvDomande()}${t('data-mb-calc="fat"','fattura','var(--salvia)','Calcola una fattura','quanto chiedere e quanto ti resta')}${t('data-mb-nuovo="uscita"','variabili','var(--lavanda)','Segna una spesa','uscita da un conto o carta')}${t('data-mb-calc="pp"','salvadanaio','var(--cappuccino)','Posso permettermelo?','prima di una spesa grande')}${t('data-mb-nuovo="fat"','entrate','var(--azzurro)','Nuova fattura','da incassare o incassata')}</div></div>`}
 function pOggi0(){return conBase('eff',()=>{
   const X=h3Dati(), o=new Date(), nome=(S.impostazioni.nome??'').trim();
   let h=pil(MESI[X.m-1]+(X.corr?' · oggi '+o.getDate():''),'mese');
