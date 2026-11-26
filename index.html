@@ -3275,6 +3275,11 @@ body.mob .finestra.mb-fin input[type=date]::-webkit-datetime-edit{padding:0}
 /* Safari: nelle colonne flex i testi si schiacciano e si sovrappongono; non devono mai restringersi */
 #mob .mb-k>*,#mob .mb-c>*,#mob .mb-kscr>*,#mob .mb-kgr>*{flex-shrink:0}
 #mob .mb-kanno .mb-k{height:auto}
+/* Safari calcola la larghezza della fascia dal contenuto dei riquadri e non dalla loro base flex: larghezze esplicite */
+#mob .mb-kscr>.mb-k{width:112px}
+#mob .mb-kgr>.mb-k{width:108px}
+#mob .mb-kanno>.mb-k,#mob .mb-kanno .mb-kgr>.mb-k{width:136px}
+#mob .mb-kgr{flex:0 0 auto;width:max-content}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
