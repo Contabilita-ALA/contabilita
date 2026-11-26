@@ -8290,7 +8290,7 @@ function bvDomande(){ // Paolo 26/11: due domande sul mese; la risposta compare 
     return {v:e0(rb),s:fB>fM+0.08?'vai piano: stai spendendo più in fretta del mese':'sei in linea con il mese'}};
   const carte=X.conti.filter(r=>r.carta).reduce((t,r)=>t+r.cifra,0), conCarte=fn=>()=>{const r=fn();if(X.conti.some(c=>c.carta))r.s+=`<br><b class="mb-bv-c">carte Unicredit ${e0(carte)}</b>`;return r}; // Paolo 26/11: saldo delle carte nella domanda del budget
   const sti=()=>{if(!(X.D&&X.D.completo&&X.lim>0))return {v:'—',s:'manca lo stipendio del mese'};const r=X.resta, dp=X.F.prv+X.V.prv;
-    return {v:(r<-0.5?'− ':'')+e0(Math.abs(r)),cl:r<-0.5?'no':'',s:r<-0.5?`sfori lo stipendio di ${MESI[X.m-1]}`:`di ${e0(X.lim)}${dp>0.5?`<br>già tolti ${e0(dp)} ancora da pagare`:''}`}};
+    return {v:(r<-0.5?'− ':'')+e0(Math.abs(r)),cl:r<-0.5?'no':'',s:r<-0.5?`sfori lo stipendio di ${MESI[X.m-1]}`:`di ${e0(X.lim)}`}};
   return q('bud','var(--mb-bianco)','Quanto posso ancora spendere questo mese?',conCarte(bud))+q('sti','var(--mb-bianco)','Quanto mi resta dello stipendio?',sti)}
 function pBenvenuto(){ // schermata di saluto: niente cifre, solo le cose da fare al volo (anche davanti a un cliente)
   const o=new Date(), hh=o.getHours(), nome=(S.impostazioni.nome??'').trim(), sal=hh>=5&&hh<13?'Buongiorno':hh<18?'Buon pomeriggio':'Buonasera';
