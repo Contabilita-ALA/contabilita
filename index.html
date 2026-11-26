@@ -8289,8 +8289,10 @@ function bvDomande(){ // Paolo 26/11: due domande sul mese; la risposta compare 
     if(rb<-0.5)return {v:'− '+e0(-rb).replace('€ ','€ '),s:'budget sforato: da qui a fine mese solo spese necessarie',cl:'no'};
     return {v:e0(rb),s:fB>fM+0.08?'vai piano: stai spendendo più in fretta del mese':'sei in linea con il mese'}};
   const carte=X.conti.filter(r=>r.carta).reduce((t,r)=>t+r.cifra,0), conCarte=fn=>()=>{const r=fn();if(X.conti.some(c=>c.carta))r.s+=`<br><b class="mb-bv-c">carte Unicredit ${e0(carte)}</b>`;return r}; // Paolo 26/11: saldo delle carte nella domanda del budget
+  const usoMese=()=>{const o=new Date();if(X.m!==o.getMonth()+1)return '';const ini=new Date(o.getFullYear(),X.m-1,1),fin=new Date(o.getFullYear(),X.m,1),tempo=Math.max(0,Math.min(1,(o-ini)/(fin-ini)));
+    return `<br><b class="mb-bv-c">usato ${Math.round((X.F.pag+X.V.pag)/X.lim*100)}%, mese ${alPerc(tempo)}</b>`}; // Paolo 26/11: come la striscia Restano del computer
   const sti=()=>{if(!(X.D&&X.D.completo&&X.lim>0))return {v:'—',s:'manca lo stipendio del mese'};const r=X.resta, dp=X.F.prv+X.V.prv;
-    return {v:(r<-0.5?'− ':'')+e0(Math.abs(r)),cl:r<-0.5?'no':'',s:r<-0.5?`sfori lo stipendio di ${MESI[X.m-1]}`:`di ${e0(X.lim)}`}};
+    return {v:(r<-0.5?'− ':'')+e0(Math.abs(r)),cl:r<-0.5?'no':'',s:(r<-0.5?`sfori lo stipendio di ${MESI[X.m-1]}`:`di ${e0(X.lim)}`)+usoMese()}};
   return q('bud','var(--mb-bianco)','Quanto posso ancora spendere questo mese?',conCarte(bud))+q('sti','var(--mb-bianco)','Quanto mi resta dello stipendio?',sti)}
 function pBenvenuto(){ // schermata di saluto: niente cifre, solo le cose da fare al volo (anche davanti a un cliente)
   const o=new Date(), hh=o.getHours(), nome=(S.impostazioni.nome??'').trim(), sal=hh>=5&&hh<13?'Buongiorno':hh<18?'Buon pomeriggio':'Buonasera';
