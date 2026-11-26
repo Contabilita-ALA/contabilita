@@ -3471,7 +3471,7 @@ const NAV={st:[],i:-1};
 const NAV_K=['pagina','mese','trim','annoConto'];
 function navTraccia(){const k=JSON.stringify(NAV_K.map(x=>UI[x]??''));if(NAV.st[NAV.i]===k)return;NAV.st=NAV.st.slice(0,NAV.i+1);NAV.st.push(k);if(NAV.st.length>80)NAV.st.shift();NAV.i=NAV.st.length-1}
 function navVai(d){const j=NAV.i+d;if(j<0||j>=NAV.st.length)return;NAV.i=j;JSON.parse(NAV.st[j]).forEach((v,n)=>UI[NAV_K[n]]=v);salvaUI();render();window.scrollTo(0,0)}
-function render(){annoVisto=S.anno;navTraccia();try{aggiornaAutoFisc()}catch(e){}document.querySelector('.app').classList.toggle('chiusa',!!UI.sideChiusa&&innerWidth>900);const cc=S.conti.find(c=>c.tipo==='cointestato');document.documentElement.style.setProperty('--coi',cc&&cc.colore||'#b8d8c4');renderSide();renderTop();renderAvviso();renderPagina();adattaLarghezza();misuraTesta();adattaTesti();piediConti();}
+function render(){annoVisto=S.anno;navTraccia();try{aggiornaAutoFisc()}catch(e){}try{if(rinumeraFatture())salva()}catch(e){}document.querySelector('.app').classList.toggle('chiusa',!!UI.sideChiusa&&innerWidth>900);const cc=S.conti.find(c=>c.tipo==='cointestato');document.documentElement.style.setProperty('--coi',cc&&cc.colore||'#b8d8c4');renderSide();renderTop();renderAvviso();renderPagina();adattaLarghezza();misuraTesta();adattaTesti();piediConti();}
 /* Testi che non ci stanno: prima si rimpicciolisce il carattere (fino al 78%), poi resta il "…" con il testo intero al passaggio del mouse */
 function adattaTesti(root){
   const box=root||document.querySelector('#main'); if(!box) return;
@@ -4977,6 +4977,12 @@ function pagamentiFisc(Y,va1){
   if(P1){add('f24g','06-30',`F24 SALDO ${Y-1} + 1° ACCONTO ${Y}`,'tasse stato',P1.giugno);add('f24n','11-30',`F24 2° ACCONTO ${Y}`,'tasse stato',P1.novembre)}
   return L;
 }
+function rinumeraFatture(){ // Paolo 26/11: le fatture non ancora incassate non sono emesse: numeri in ordine di data, dopo l'ultima incassata
+  let cambiato=false;const aOra=new Date().getFullYear();
+  for(const a of [...new Set(S.fatture.map(f=>annoDi(f.data)))].filter(a=>a>=aOra)){
+    const L=datiFatture(a), base=Math.max(0,...L.filter(x=>x.inc).map(x=>+x.f.n||0));
+    L.filter(x=>!x.inc).sort((x,y)=>(x.dataInc||x.f.data).localeCompare(y.dataInc||y.f.data)||x.f.n-y.f.n).forEach((x,i)=>{if(x.f.n!==base+i+1){x.f.n=base+i+1;cambiato=true}})}
+  return cambiato}
 function aggiornaAutoFisc(){ // allinea gli importi dei pagamenti automatici non ancora pagati; crea quelli nuovi (es. rate del conguaglio)
   let cambiato=false;
   for(const Y of Object.keys(S.fiscale||{}).map(Number)){
@@ -7906,7 +7912,7 @@ const forma=()=>'';
 const _render=window.render;
 window.render=function(){
   if(!window.MOB){document.body.classList.remove('mob');return _render()}
-  document.body.classList.add('mob');renderMob();
+  document.body.classList.add('mob');try{aggiornaAutoFisc()}catch(e){}try{if(typeof rinumeraFatture==='function'&&rinumeraFatture())salva()}catch(e){}renderMob();
 };
 function annoOggi(){const a=new Date().getFullYear();if(S.anno!==a&&(S.movimenti.some(m=>annoDi(m.data)===a)||S.fatture.some(f=>annoDi(f.data)===a)))S.anno=a;return S.anno}
 
