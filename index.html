@@ -3205,6 +3205,22 @@ body.mob .finestra.mb-fin .campi>label>*{flex:none}
 body.mob .finestra.mb-fin .campi select{padding:0 30px 0 12px;font-size:16px!important}
 body.mob .finestra.mb-fin .mb-rimb-t{margin:18px 4px 10px;font:500 14px/1.35 var(--font);color:var(--grigio)}
 body.mob .finestra.mb-fin .mb-rimb-t b{display:block;font:700 15px var(--font);color:var(--inchiostro);margin-bottom:2px}
+/* Movimenti (Paolo 26/11 16:54): riquadri in una riga che scorre, calendario intero nello schermo */
+.mb-kscr{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;margin:0 -16px;padding:2px 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.mb-kscr::-webkit-scrollbar{display:none}
+#mob .mb-kscr>.mb-k{flex:0 0 112px;scroll-snap-align:start;padding:8px 6px 9px;gap:1px}
+.mb-kscr .mb-k b{font-size:21px}
+.mb-kscr .mb-k span{font-size:11.5px;line-height:1.2;white-space:nowrap}
+#mob .mb-cal{gap:3px;padding:8px;touch-action:pan-y}
+#mob .mb-cal-d{min-height:46px;padding:3px 2px}
+.mb-kgr{display:flex;align-items:center;gap:4px;flex:none;padding:5px;border-radius:calc(var(--mb-r) + 5px);background:var(--corallo-ch)}
+#mob .mb-kgr>.mb-k{flex:0 0 108px;box-shadow:none}
+#mob .mb-kgr>.mb-k.on{box-shadow:inset 0 0 0 2.5px var(--inchiostro)}
+.mb-kgr>em{font:700 20px var(--font);font-style:normal;color:var(--inchiostro);opacity:.7}
+.mb-kgr{align-items:stretch}.mb-kgr>em{align-self:center}
+#mob .mb-kgr>.mb-k{justify-content:center}
+.mb-kscr{align-items:stretch}
+.mb-kscr{scroll-padding-inline:16px}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -8106,9 +8122,10 @@ function pMov(){
   const m=MU.m, B=sommeBolle(a,m), K=['fisse','variabili','fiscali'], sp=K.reduce((s,k)=>s+B[k].pag,0), spP=K.reduce((s,k)=>s+B[k].prv,0);
   const carta=new Set(S.conti.filter(c=>c.tipo==='carta').map(c=>c.id)), LC=S.movimenti.filter(x=>annoDi(x.data)===a&&meseDi(x.data)===m&&!x.giro&&carta.has(x.conto)&&x.eur>0);
   const cP=LC.filter(x=>x.ok).reduce((s,x)=>s+x.eur,0), cV=LC.filter(x=>!x.ok).reduce((s,x)=>s+x.eur,0), idC=[...carta][0]||'';
-  let h=mesiStriscia(a,m)+`<div class="mb-k3">${bol('spe'+(MU.solo==='spese'?' on':''),'variabili','Spese',e0(sp),spP>0.5?'+ '+e0(spP)+' previste':'tutte pagate','data-mb-solo-f="'+(MU.solo==='spese'?'':'spese')+'"')}${bol('car'+(MU.conto===idC&&idC?' on':''),'carta','Carte',e0(cP),cV>0.5?'+ '+e0(cV)+' previste':'questo mese','data-mb-conto-f="'+(MU.conto===idC?'':idC)+'"')}${bol('ent'+(MU.solo==='ent'?' on':''),'entrate','Entrate',e0(B.entrate.pag),B.entrate.prv>0.5?'+ '+e0(B.entrate.prv)+' attese':'incassate','data-mb-solo-f="'+(MU.solo==='ent'?'':'ent')+'"')}</div>`;
-  // le voci come scelte piccole (toccale per vedere solo quelle)
-  h+=`<div class="mb-chips mb-voci2">${[['fisse','Fisse','var(--azzurro)'],['variabili','Variabili','var(--lavanda)'],['fiscali','Attività','var(--cappuccino)']].map(([k,n,c])=>`<button data-mb-voce="${k}" class="${MU.solo===k?'on':''}" style="--b:${c}"><i></i>${n} ${e0(B[k].pag+B[k].prv)}</button>`).join('')}</div>`;
+  // Paolo 26/11 16:54: riquadri tutti in una riga che scorre di lato, così il calendario sta intero nello schermo
+  const vo=(k,cls,ic,n)=>bol(cls+(MU.solo===k?' on':''),ic,n,e0(B[k].pag),B[k].prv>0.5?'+ '+e0(B[k].prv)+' previste':'tutte pagate','data-mb-voce="'+k+'"');
+  // Paolo 26/11 16:58: Spese = Fisse + Variabili + Attività, nello stesso riquadro colorato e con gli stessi numeri (pagate + previste)
+  let h=mesiStriscia(a,m)+`<div class="mb-kscr">${bol('ent'+(MU.solo==='ent'?' on':''),'entrate','Entrate',e0(B.entrate.pag),B.entrate.prv>0.5?'+ '+e0(B.entrate.prv)+' attese':'incassate','data-mb-solo-f="'+(MU.solo==='ent'?'':'ent')+'"')}${bol('car'+(MU.conto===idC&&idC?' on':''),'carta','Carte',e0(cP),cV>0.5?'+ '+e0(cV)+' previste':'questo mese','data-mb-conto-f="'+(MU.conto===idC?'':idC)+'"')}<div class="mb-kgr">${bol('spe'+(MU.solo==='spese'?' on':''),'variabili','Spese',e0(sp),spP>0.5?'+ '+e0(spP)+' previste':'tutte pagate','data-mb-solo-f="'+(MU.solo==='spese'?'':'spese')+'"')}<em>=</em>${vo('fisse','fis','fisse','Fisse')}<em>+</em>${vo('variabili','var','variabili','Variabili')}<em>+</em>${vo('fiscali','att','fiscali','Attività')}</div></div>`;
   h+=`<div class="mb-cerca"><input type="search" data-mb-q placeholder="Cerca (lidl, bolletta…)" value="${esc(MU.q)}"><button class="mb-filtro ${MU.vmov==='cal'?'attivo':''}" data-mb-vmov="${MU.vmov==='cal'?'':'cal'}" aria-label="Calendario"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><button class="mb-filtro ${MU.solo||MU.conto?'attivo':''}" data-mb-filtri aria-label="Filtri"><svg viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button></div>
     ${MU.filtri?`<div class="mb-card mb-filtri"><small>Mostra</small><div class="mb-chips">${[['','Tutti'],['prev','Da pagare'],['spese','Spese'],['ent','Entrate'],['fisse','Fisse'],['variabili','Variabili'],['fiscali','Attività'],['giro','Giroconti']].map(([k,n])=>`<button data-mb-solo-f="${k}" class="${MU.solo===k?'on':''}">${n}</button>`).join('')}</div>
       <small>Conto</small><div class="mb-chips">${[['','Tutti']].concat(S.conti.map(c=>[c.id,c.nome])).map(([k,n])=>`<button data-mb-conto-f="${k}" class="${MU.conto===k?'on':''}">${esc(n)}</button>`).join('')}</div></div>`:''}`;
@@ -8334,6 +8351,10 @@ function mobFinestra(){const f=document.querySelector('#modale .finestra');if(!f
 for(const nome of ['disegnaFinestra','disegnaFinestraCoi']){const orig=window[nome];if(typeof orig!=='function')continue;
   window[nome]=function(){if(window.MOB&&bozza&&!bozza.id&&(bozza.tipo==='uscita'||bozza.tipo==='entrata')&&gTipo(bozza.cat)&&gTipo(bozza.cat)!==bozza.tipo)bozza.cat=bozza.tipo==='entrata'?'bonifici a mio favore':'spese variabili';
     const r=orig.apply(this,arguments);if(window.MOB)try{mobFinestra()}catch(e){}return r}}
+// Paolo 26/11: nel calendario di Movimenti si cambia mese scorrendo col dito a destra o a sinistra
+let mbTx=null;document.addEventListener('touchstart',e=>{const c=window.MOB&&e.target.closest('.mb-cal');mbTx=c?{x:e.touches[0].clientX,y:e.touches[0].clientY}:null},{passive:true});
+document.addEventListener('touchend',e=>{if(!mbTx)return;const t=e.changedTouches[0],dx=t.clientX-mbTx.x,dy=t.clientY-mbTx.y;mbTx=null;if(Math.abs(dx)<50||Math.abs(dy)>Math.abs(dx)*0.7)return;
+  const n=(MU.m||1)+(dx<0?1:-1);if(n<1||n>12)return;MU.m=n;MU.giorno='';salvaMU();render()},{passive:true});
 // Paolo 26/11: sul telefono il pannello della categoria si chiude toccando lo sfondo scuro
 document.addEventListener('click',e=>{if(!window.MOB)return;const cp=e.target.classList&&e.target.classList.contains('cp')&&e.target.classList.contains('aperto')?e.target:null;if(cp){cp.classList.remove('aperto');e.preventDefault();e.stopPropagation()}},true);
 addEventListener('resize',()=>{const n=telefono();if(n!==window.MOB){window.MOB=n;render()}});
