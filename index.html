@@ -8287,10 +8287,10 @@ function bvDomande(){ // Paolo 26/11: due domande sul mese; la risposta compare 
     return `<button class="mb-bv-t mb-bv-q ${on?'on '+(r.cl||''):''}" data-mb-rivela="${k}" style="--b:${col}">${on?`<small>${dom}</small><b class="mb-bv-v">${r.v}</b><small>${r.s}</small>`:`${icoC('domanda','rgba(255,255,255,.6)')}<b>${dom}</b><small>tocca per vedere</small>`}</button>`};
   const bud=()=>{if(!(X.corr&&X.TV>0))return {v:'—',s:'fissa il budget sul computer'};const sp=X.VT.pag, rb=X.TV-sp, gg=X.gRest||1, fM=X.gOggi/X.giorniMese, fB=sp/X.TV;
     if(rb<-0.5)return {v:'− '+e0(-rb).replace('€ ','€ '),s:'budget sforato: da qui a fine mese solo spese necessarie',cl:'no'};
-    return {v:e0(rb),s:fB>fM+0.08?`vai piano: al massimo ${e0(rb/gg)} al giorno fino al ${X.giorniMese}`:`circa ${e0(rb/gg)} al giorno fino al ${X.giorniMese}: sei in linea`}};
+    return {v:e0(rb),s:fB>fM+0.08?'vai piano: stai spendendo più in fretta del mese':'sei in linea con il mese'}};
   const carte=X.conti.filter(r=>r.carta).reduce((t,r)=>t+r.cifra,0), conCarte=fn=>()=>{const r=fn();if(X.conti.some(c=>c.carta))r.s+=`<br><b class="mb-bv-c">carte Unicredit ${e0(carte)}</b>`;return r}; // Paolo 26/11: saldo delle carte nella domanda del budget
   const sti=()=>{if(!(X.D&&X.D.completo&&X.lim>0))return {v:'—',s:'manca lo stipendio del mese'};const r=X.resta, dp=X.F.prv+X.V.prv;
-    return {v:(r<-0.5?'− ':'')+e0(Math.abs(r)),cl:r<-0.5?'no':'',s:r<-0.5?`sfori lo stipendio di ${MESI[X.m-1]}`:`di ${e0(X.lim)}${dp>0.5?` · ${e0(dp)} ancora da pagare`:''}`}};
+    return {v:(r<-0.5?'− ':'')+e0(Math.abs(r)),cl:r<-0.5?'no':'',s:r<-0.5?`sfori lo stipendio di ${MESI[X.m-1]}`:`di ${e0(X.lim)}${dp>0.5?`<br>già tolti ${e0(dp)} ancora da pagare`:''}`}};
   return q('bud','var(--mb-bianco)','Quanto posso ancora spendere questo mese?',conCarte(bud))+q('sti','var(--mb-bianco)','Quanto mi resta dello stipendio?',sti)}
 function pBenvenuto(){ // schermata di saluto: niente cifre, solo le cose da fare al volo (anche davanti a un cliente)
   const o=new Date(), hh=o.getHours(), nome=(S.impostazioni.nome??'').trim(), sal=hh>=5&&hh<13?'Buongiorno':hh<18?'Buon pomeriggio':'Buonasera';
