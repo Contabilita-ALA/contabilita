@@ -3248,7 +3248,8 @@ body.mob .finestra.mb-fin .importo input::placeholder{font-weight:600;color:var(
 .mb-stack-k>i{display:block;height:100%}
 .mb-kanno+.mb-pil,.mb-card+.mb-pil{margin-top:14px}
 /* Safari: lo spazio a destra di una riga che scorre non c'è, lo aggiungo io (bug fascia rosa, Paolo 26/11) */
-.mb-kscr::after,.mb-cc::after{content:'';flex:0 0 8px}
+/* Safari ignora il margine destro delle righe scorrevoli: spaziatore vero in fondo */
+.mb-kscr,.mb-cc{padding-right:0}.mb-kfine{display:block;align-self:stretch;flex:0 0 8px;min-width:8px}.mb-cc>.mb-kfine{flex-basis:calc(16px - var(--mb-g));min-width:calc(16px - var(--mb-g))}
 #mob .mb-kanno .mb-k{min-height:120px;justify-content:flex-start;padding-top:12px}
 #mob .mb-kanno .mb-kgr>.mb-k{min-height:110px}
 .mb-kanno .mb-k small{min-height:17px}
@@ -8175,7 +8176,7 @@ function pMov(){
   // Paolo 26/11 16:54: riquadri tutti in una riga che scorre di lato, così il calendario sta intero nello schermo
   const vo=(k,cls,ic,n)=>bol(cls+(MU.solo===k?' on':''),ic,n,e0(B[k].pag),B[k].prv>0.5?'+ '+e0(B[k].prv)+' previste':'tutte pagate','data-mb-voce="'+k+'"');
   // Paolo 26/11 16:58: Spese = Fisse + Variabili + Attività, nello stesso riquadro colorato e con gli stessi numeri (pagate + previste)
-  let h=mesiStriscia(a,m)+`<div class="mb-kscr">${bol('ent'+(MU.solo==='ent'?' on':''),'entrate','Entrate',e0(B.entrate.pag),B.entrate.prv>0.5?'+ '+e0(B.entrate.prv)+' attese':'incassate','data-mb-solo-f="'+(MU.solo==='ent'?'':'ent')+'"')}${bol('car'+(MU.conto===idC&&idC?' on':''),'carta','Carte',e0(cP),cV>0.5?'+ '+e0(cV)+' previste':'questo mese','data-mb-conto-f="'+(MU.conto===idC?'':idC)+'"')}<div class="mb-kgr">${bol('spe'+(MU.solo==='spese'?' on':''),'variabili','Spese',e0(sp),spP>0.5?'+ '+e0(spP)+' previste':'tutte pagate','data-mb-solo-f="'+(MU.solo==='spese'?'':'spese')+'"')}<em>=</em>${vo('fisse','fis','fisse','Fisse')}<em>+</em>${vo('variabili','var','variabili','Variabili')}<em>+</em>${vo('fiscali','att','fiscali','Attività')}</div></div>`;
+  let h=mesiStriscia(a,m)+`<div class="mb-kscr">${bol('ent'+(MU.solo==='ent'?' on':''),'entrate','Entrate',e0(B.entrate.pag),B.entrate.prv>0.5?'+ '+e0(B.entrate.prv)+' attese':'incassate','data-mb-solo-f="'+(MU.solo==='ent'?'':'ent')+'"')}${bol('car'+(MU.conto===idC&&idC?' on':''),'carta','Carte',e0(cP),cV>0.5?'+ '+e0(cV)+' previste':'questo mese','data-mb-conto-f="'+(MU.conto===idC?'':idC)+'"')}<div class="mb-kgr">${bol('spe'+(MU.solo==='spese'?' on':''),'variabili','Spese',e0(sp),spP>0.5?'+ '+e0(spP)+' previste':'tutte pagate','data-mb-solo-f="'+(MU.solo==='spese'?'':'spese')+'"')}<em>=</em>${vo('fisse','fis','fisse','Fisse')}<em>+</em>${vo('variabili','var','variabili','Variabili')}<em>+</em>${vo('fiscali','att','fiscali','Attività')}</div><i class="mb-kfine"></i></div>`;
   h+=`<div class="mb-cerca"><input type="search" data-mb-q placeholder="Cerca (lidl, bolletta…)" value="${esc(MU.q)}"><button class="mb-filtro ${MU.vmov==='cal'?'attivo':''}" data-mb-vmov="${MU.vmov==='cal'?'':'cal'}" aria-label="Calendario"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><button class="mb-filtro ${MU.solo||MU.conto?'attivo':''}" data-mb-filtri aria-label="Filtri"><svg viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button></div>
     ${MU.filtri?`<div class="mb-card mb-filtri"><small>Mostra</small><div class="mb-chips">${[['','Tutti'],['prev','Da pagare'],['spese','Spese'],['ent','Entrate'],['fisse','Fisse'],['variabili','Variabili'],['fiscali','Attività'],['giro','Giroconti']].map(([k,n])=>`<button data-mb-solo-f="${k}" class="${MU.solo===k?'on':''}">${n}</button>`).join('')}</div>
       <small>Conto</small><div class="mb-chips">${[['','Tutti']].concat(S.conti.map(c=>[c.id,c.nome])).map(([k,n])=>`<button data-mb-conto-f="${k}" class="${MU.conto===k?'on':''}">${esc(n)}</button>`).join('')}</div></div>`:''}`;
@@ -8462,7 +8463,7 @@ function pOggi0(){return conBase('eff',()=>{
     h+=`<div class="mb-card">${pr('Stipendio di '+MESI[X.m-1],spT,X.lim,'var(--salvia)',r<-0.5?'sfori di '+e0(-r):'restano '+e0(r),dp>0.5?` · di cui ${e0(dp)} da pagare`:'')}${X.TV>0?pr('Budget variabili',spV,X.TV,'var(--lavanda)',rb<-0.5?'sforato di '+e0(-rb):'restano '+e0(rb)):''}</div>`}
   // i conti come le carte dell'app della banca, su una riga che scorre (Paolo 26/11)
   const ord={conto:0,carta:1,cointestato:2}, L=[...X.conti].sort((p,q)=>(ord[p.c.tipo]??3)-(ord[q.c.tipo]??3));
-  h+=`<div class="mb-cc"><div class="mb-c tot"><small>Soldi tuoi oggi</small><b class="${X.tuoi<-0.5?'neg':''}">${Ec(Math.round(X.tuoi))}</b><span>${L.filter(r=>!r.carta).length} conti · metà del cointestato</span></div>${L.map(r=>`<button class="mb-c" style="--b:${r.c.colore}" data-mb-tab="movimenti" data-mb-conto="${r.c.id}"><small>${esc(r.tit)}</small><b class="${r.cifra<-0.5?'neg':''}">${Ec(r.cifra)}</b><span>${r.carta?'spese del mese':esc(String(r.sub).replace(/<[^>]+>/g,''))}</span></button>`).join('')}</div>`;
+  h+=`<div class="mb-cc"><div class="mb-c tot"><small>Soldi tuoi oggi</small><b class="${X.tuoi<-0.5?'neg':''}">${Ec(Math.round(X.tuoi))}</b><span>${L.filter(r=>!r.carta).length} conti · metà del cointestato</span></div>${L.map(r=>`<button class="mb-c" style="--b:${r.c.colore}" data-mb-tab="movimenti" data-mb-conto="${r.c.id}"><small>${esc(r.tit)}</small><b class="${r.cifra<-0.5?'neg':''}">${Ec(r.cifra)}</b><span>${r.carta?'spese del mese':esc(String(r.sub).replace(/<[^>]+>/g,''))}</span></button>`).join('')}<i class="mb-kfine"></i></div>`;
   // i prossimi 7 giorni
   const EV=calEventi(X.oggi,X.fra(6));let w='';
   for(let i=0;i<7;i++){const iso=X.fra(i), d=new Date(iso+'T12:00'), L=EV.filter(x=>x.data===iso), usc=L.filter(x=>x.tipo==='spe'||x.tipo==='tas').reduce((s,x)=>s+x.eur,0), ent=L.filter(x=>x.tipo==='ent').reduce((s,x)=>s+x.eur,0);
@@ -8475,7 +8476,7 @@ const ANNO_RIGHE=true; // Paolo 26/11 17:17: ok, senza I prossimi 7 giorni
 function pAnno(){try{if(!ANNO_RIGHE)throw 0;return pAnnoRighe()}catch(e){if(e)console.error(e);return pOggi0()+pil('Il '+S.anno,'anno')+pAnno0()}}
 /* Paolo 26/11 17:12: pagina Anno a righe che scorrono di lato, una per argomento, tutte con gli stessi riquadri */
 function pAnnoRighe(){
-  const riga_=(...k)=>`<div class="mb-kscr mb-kanno">${k.join('')}</div>`, banda=(t,...k)=>`<div class="mb-kgr mb-kband"><small class="mb-kband-t">${t}</small>${k.join('')}</div>`;
+  const riga_=(...k)=>`<div class="mb-kscr mb-kanno">${k.join('')}<i class="mb-kfine"></i></div>`, banda=(t,...k)=>`<div class="mb-kgr mb-kband"><small class="mb-kband-t">${t}</small>${k.join('')}</div>`;
   const kb=(cls,ic,t,v,s,x,col,att)=>bol(cls,ic,t,v,(s||'')+(x!=null?barra(x,x>1?'no':'',col):''),att);
   let h='';
   // 1. il mese
