@@ -6403,8 +6403,8 @@ function badgeDisp(aa,mm){ // Movimenti: anno e periodo guardati; Home (Paolo 23
   const stato=resta<0?`Sfori di ${euro(-resta)}`:`Restano ${euro(resta)}`;
   const nomeBud=mesi.length===1?'Stipendio del mese':mesi.length===3?'Stipendio del trimestre':'Stipendi dell\'anno';
   const pq=resta<0&&mesiB.length<=3?` perche" data-perche="${mesiB.join(',')}`:'';
-  return `<span class="bd-disp ${cls}${pq}" title="Stipendio = netto del trimestre precedente ÷ 3 (entrate su Unicredit − accantonamento − attività pagata da Unicredit). Spese = fisse e variabili uscite da Unicredit: pagate ${euro(pag)}, previste ${euro(prv)}.${manca?' Per '+manca+' mesi manca il trimestre precedente: sono esclusi dal conto.':''}">
-    <b>${stato}${pq?' <i class="ps-q">perché?</i>':''}</b><span><i class="bd-a">stipendio${manca?' '+MESI[mesiB[0]-1].slice(0,3).toLowerCase()+'–'+MESI[mesiB[mesiB.length-1]-1].slice(0,3).toLowerCase():''} ${euro(bud)} − spese ${euro(pag+prv)}${prv>0.5?` (di cui ${euro(prv)} ancora da pagare)`:''}</i>${inCorso?` <i class="bd-a">· già pagato ${Math.round(usato*100)}% dello stipendio, ${mesi.length===1?'mese':'periodo'} ${alPerc(tempo)}</i>`:''}</span></span>`;
+  return `<span class="bd-disp ${cls}${pq}" title="Stipendio = netto del trimestre precedente ÷ 3 (entrate su Unicredit − accantonamento − attività pagata da Unicredit). Spese = fisse e variabili uscite da Unicredit: pagate ${euro(pag)} + ancora da pagare ${euro(prv)} (solo le spese segnate come previste nei Movimenti, non il budget). Usato = quanto dello stipendio hai già pagato. Mese al = parte del mese già passata.${manca?' Per '+manca+' mesi manca il trimestre precedente: sono esclusi dal conto.':''}">
+    <b>${stato}${pq?' <i class="ps-q">perché?</i>':''}</b><span><i class="bd-a">stipendio${manca?' '+MESI[mesiB[0]-1].slice(0,3).toLowerCase()+'–'+MESI[mesiB[mesiB.length-1]-1].slice(0,3).toLowerCase():''} ${euro(bud)} − spese ${euro(pag+prv)}</i>${inCorso?` <i class="bd-a">· usato ${Math.round(usato*100)}%, ${mesi.length===1?'mese':'periodo'} ${alPerc(tempo)}</i>`:''}</span></span>`;
 }
 function infoMese(){
   const a=S.anno, m=mesiSel(UI.mese), B=sommeBolle(a,m);
