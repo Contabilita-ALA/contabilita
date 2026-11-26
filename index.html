@@ -3140,6 +3140,22 @@ body.mob #modale .finestra:has(.mb-ok) .azioni:not(:has([data-act="m-elimina"],[
 .mb-mesi12 b.gr{color:var(--grigio)}
 .mb-pr .mb-bar{display:block;width:100%;margin:0}
 .mb-pil b{white-space:nowrap}
+
+/* Paolo 26/11: Home discreta (davanti ai clienti): cifre sfocate finché non tocchi l'occhio; si ricorda per la sessione */
+.mb-ciao2{display:grid;grid-template-columns:44px 1fr 44px;align-items:center}
+.mb-occhio{width:44px;height:44px;border:0;border-radius:50%;background:var(--mb-bianco);display:grid;place-items:center;color:var(--inchiostro)}
+.mb-occhio svg{width:22px;height:22px}
+/* schermata di saluto (Paolo 26/11) */
+.mb-bv{min-height:calc(100dvh - 190px);display:flex;flex-direction:column;justify-content:center;gap:22px;padding:8px 0}
+.mb-bv-s{text-align:center}
+.mb-bv-s small{font:600 var(--mb-f4) var(--font);color:var(--grigio)}
+.mb-bv-s h2{margin:6px 0 0;font:700 34px/1.15 var(--font);letter-spacing:-.6px;color:var(--inchiostro)}
+.mb-bv-g{display:grid;grid-template-columns:1fr 1fr;gap:var(--mb-g)}
+#mob .mb-bv-t{border:0;border-radius:var(--mb-r);background:var(--b);padding:16px 12px 14px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;color:var(--inchiostro);font:inherit;min-height:132px;justify-content:center}
+#mob .mb-bv-t b{font:700 var(--mb-f3) var(--font);line-height:1.2}
+#mob .mb-bv-t small{font-size:var(--mb-f5);line-height:1.25;opacity:.85}
+#mob .mb-bv-apri{display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;padding:15px;background:var(--inchiostro);color:#fff;font:600 var(--mb-f3) var(--font)}
+#mob .mb-bv-apri svg{width:22px;height:22px}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -8213,9 +8229,10 @@ new MutationObserver(()=>{if(!window.MOB)return;const f=document.querySelector('
 /* ---------- eventi ---------- */
 document.addEventListener('click',e=>{
   if(!window.MOB||!e.target.closest('#mob'))return;
-  const t=e.target.closest('[data-mb-tab],[data-mb-nuovo],[data-mb-mov],[data-mb-fat],[data-mb-mm],[data-mb-calc],[data-mb-cfda],[data-mb-crea-fat],[data-mb-vista],[data-mb-perc],[data-mb-vmov],[data-mb-giorno],[data-mb-voce],[data-mb-filtri],[data-mb-solo-f],[data-mb-conto-f],[data-mb-prev],[data-mb-piu],[data-mb-chiudi-calc]');if(!t)return;
+  const t=e.target.closest('[data-mb-tab],[data-mb-nuovo],[data-mb-mov],[data-mb-fat],[data-mb-mm],[data-mb-calc],[data-mb-cfda],[data-mb-crea-fat],[data-mb-vista],[data-mb-perc],[data-mb-vmov],[data-mb-giorno],[data-mb-voce],[data-mb-filtri],[data-mb-solo-f],[data-mb-conto-f],[data-mb-prev],[data-mb-piu],[data-mb-chiudi-calc],[data-mb-vedi]');if(!t)return;
   e.preventDefault();e.stopPropagation();const d=t.dataset;
   if(t.matches('[data-mb-piu]')){MU.piu=!MU.piu;render();return}
+  if(t.matches('[data-mb-vedi]')){MU.entrato=!MU.entrato;salvaMU();scrollTo(0,0);render();return} // Paolo 26/11: all'apertura un saluto senza cifre; i conti dopo il tocco
   MU.piu=false;
   if(d.mbNuovo){render();d.mbNuovo==='fat'?apriFattura(null):apriMovimento(null,d.mbNuovo);return}
   if(d.mbMov){const m=S.movimenti.find(x=>x.id==d.mbMov);if(m)apriMovimento(m);return}
@@ -8253,9 +8270,17 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-mb-vista-t
 addEventListener('resize',()=>{const n=telefono();if(n!==window.MOB){window.MOB=n;render()}});
 /* ---------- HOME e IL 2026 scelti da Paolo (26/11 14:56): Home = anello del budget + barre stipendio/budget + settimana; Anno = 3 bolle + ogni 100 € + tasse ---------- */
 const anello=(fr,col,dentro,sz)=>{const R=84,C=2*Math.PI*R,f=Math.max(0,Math.min(1,fr));return `<div class="mb-an" style="--sz:${sz||210}px"><svg viewBox="0 0 200 200"><circle r="${R}" cx="100" cy="100" fill="none" stroke="var(--grigino)" stroke-width="16"/>${f>0.005?`<circle r="${R}" cx="100" cy="100" fill="none" stroke="${col}" stroke-width="16" stroke-linecap="round" stroke-dasharray="${f*C} ${C}" transform="rotate(-90 100 100)"/>`:''}</svg><div class="mb-an-c">${dentro}</div></div>`};
-function pOggi(){return conBase('eff',()=>{
+const OCCHIO=(ap)=>`<svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/>${ap?'':'<path d="M4 4l16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'}</svg>`;
+function pOggi(){return pBenvenuto()} // Paolo 26/11: la Home è solo il saluto; i numeri del mese sono in cima alla pagina Anno
+function pBenvenuto(){ // schermata di saluto: niente cifre, solo le cose da fare al volo (anche davanti a un cliente)
+  const o=new Date(), hh=o.getHours(), nome=(S.impostazioni.nome??'').trim(), sal=hh>=5&&hh<13?'Buongiorno':hh<18?'Buon pomeriggio':'Buonasera';
+  const t=(att,ic,col,tt,ss)=>`<button class="mb-bv-t" ${att} style="--b:${col}">${icoC(ic,'rgba(255,255,255,.55)')}<b>${tt}</b><small>${ss}</small></button>`;
+  return `<div class="mb-bv"><div class="mb-bv-s"><small>${GL[o.getDay()].replace(/^./,c=>c.toUpperCase())} ${o.getDate()} ${MESI[o.getMonth()]} ${o.getFullYear()}</small><h2>${sal}${nome?',<br>'+esc(nome):''}</h2></div>
+    <div class="mb-bv-g">${t('data-mb-calc="fat"','fattura','var(--salvia)','Calcola una fattura','quanto chiedere e quanto ti resta')}${t('data-mb-nuovo="uscita"','variabili','var(--lavanda)','Segna una spesa','uscita da un conto o carta')}${t('data-mb-nuovo="fat"','entrate','var(--azzurro)','Nuova fattura','da incassare o incassata')}${t('data-mb-calc="pp"','salvadanaio','var(--cappuccino)','Posso permettermelo?','prima di una spesa grande')}</div>
+    <button class="mb-bv-apri" data-mb-tab="anno">${OCCHIO(true)}I tuoi conti</button></div>`}
+function pOggi0(){return conBase('eff',()=>{
   const X=h3Dati(), o=new Date(), nome=(S.impostazioni.nome??'').trim();
-  let h=`<p class="mb-ciao">${nome?'Ciao '+esc(nome):'Ciao'}<small>${GL[o.getDay()]} ${o.getDate()} ${MESI[o.getMonth()]}</small></p>`;
+  let h=pil(MESI[X.m-1]+(X.corr?' · oggi '+o.getDate():''),'mese');
   if(X.corr&&X.TV>0){const sp=X.VT.pag, rb=X.TV-sp, fM=X.gOggi/X.giorniMese, fB=sp/X.TV, gg=X.gRest||1, veloce=fB>fM+0.08;
     h+=`<button class="mb-card mb-an-card" data-mb-tab="movimenti" data-mb-solo="variabili">${anello(fB,rb<-0.5?'var(--corallo)':'var(--salvia)',`<small>${rb>=-0.5?'puoi ancora spendere':'hai sforato di'}</small><b>${e0(Math.abs(rb))}</b><small>di ${e0(X.TV)} per le variabili</small>`,190)}
       <p class="mb-an-g">${rb>0.5?`circa <b>${e0(rb/gg)} al giorno</b> fino al ${X.giorniMese} ${MESI[X.m-1]}`:'per questo mese il budget è finito'}</p>
@@ -8275,7 +8300,8 @@ function pOggi(){return conBase('eff',()=>{
   const g=MU.giorno&&MU.giorno>=X.oggi&&MU.giorno<=X.fra(6)?MU.giorno:'', Lg=g?EV.filter(x=>x.data===g):EV.slice(0,4);
   h+=card(Lg.map(x=>evRiga(x,X)).join(''),g?'Niente in questo giorno.':'Niente in programma questa settimana.');
   return h})}
-function pAnno(){const X=h3Dati(), a=X.a;
+function pAnno(){return pOggi0()+pil('Il '+S.anno,'anno')+pAnno0()}
+function pAnno0(){const X=h3Dati(), a=X.a;
   const Yp=conBase('prev',()=>h3Anno(X)), B=sommeBolle(a,0), FISC=new Set(['inarcassa','tasse stato']);
   const LA=S.movimenti.filter(x=>annoDi(x.data)===a&&!x.giro&&bollaMov(x)==='fiscali'&&!FISC.has(x.cat)), att=LA.reduce((s,x)=>s+x.eur,0), attP=LA.filter(x=>x.ok).reduce((s,x)=>s+x.eur,0), Ye=conBase('eff',()=>h3Anno(X));
   const V=[['Accantoni per tasse e Inarcassa','var(--grigio-chiaro)',Yp.acc,Ye.spo,'già messi da parte'],['Spese fisse','var(--azzurro)',B.fisse.pag+B.fisse.prv,B.fisse.pag],['Spese variabili','var(--lavanda)',B.variabili.pag+B.variabili.prv,B.variabili.pag],['Spese per attività','var(--cappuccino)',att,attP]];
