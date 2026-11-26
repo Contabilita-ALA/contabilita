@@ -6329,6 +6329,8 @@ function stipendioHome(a,m,giornoOggi,giorniMese){ // riquadro Home: stipendio d
     <div class="hs-r4"><span><i style="--b:${bF.colore}"></i>fisse ${euro(tF)}</span><span><i style="--b:${bV.colore}"></i>variabili ${euro(tV)} di ${euro(puoi)}</span></div></div>`;
   return {html,d,alGiorno};
 }
+// Paolo 26/11: "al 85%" → "all'85%" (anche 8%, 11%, 80-89%)
+function alPerc(f){const n=Math.round(f*100);return (n===8||n===11||(n>=80&&n<=89)?"all'":'al ')+n+'%'}
 function badgeDisp(aa,mm){ // Movimenti: anno e periodo guardati; Home (Paolo 23/11): mese di oggi, sopra la colonna del mese
   const a=aa??S.anno, mesi=mm||mesiSel(UI.mese)||[1,2,3,4,5,6,7,8,9,10,11,12];
   let bud=0,manca=0;const mesiB=[];for(const m of mesi){const n=nettoTrim(a,Math.ceil(m/3)-1);if(n==null)manca++;else{bud+=n/3;mesiB.push(m)}}
@@ -6342,7 +6344,7 @@ function badgeDisp(aa,mm){ // Movimenti: anno e periodo guardati; Home (Paolo 23
   const nomeBud=mesi.length===1?'Stipendio del mese':mesi.length===3?'Stipendio del trimestre':'Stipendi dell\'anno';
   const pq=resta<0&&mesiB.length<=3?` perche" data-perche="${mesiB.join(',')}`:'';
   return `<span class="bd-disp ${cls}${pq}" title="Stipendio = netto del trimestre precedente ÷ 3 (entrate su Unicredit − accantonamento − attività pagata da Unicredit). Spese = fisse e variabili uscite da Unicredit: pagate ${euro(pag)}, previste ${euro(prv)}.${manca?' Per '+manca+' mesi manca il trimestre precedente: sono esclusi dal conto.':''}">
-    <b>${stato}${pq?' <i class="ps-q">perché?</i>':''}</b><span><i class="bd-a">stipendio${manca?' '+MESI[mesiB[0]-1].slice(0,3).toLowerCase()+'–'+MESI[mesiB[mesiB.length-1]-1].slice(0,3).toLowerCase():''} ${euro(bud)} − spese ${euro(pag+prv)}</i>${inCorso?` <i class="bd-a">· usato ${Math.round(usato*100)}%, ${mesi.length===1?'mese':'periodo'} al ${Math.round(tempo*100)}%</i>`:''}</span></span>`;
+    <b>${stato}${pq?' <i class="ps-q">perché?</i>':''}</b><span><i class="bd-a">stipendio${manca?' '+MESI[mesiB[0]-1].slice(0,3).toLowerCase()+'–'+MESI[mesiB[mesiB.length-1]-1].slice(0,3).toLowerCase():''} ${euro(bud)} − spese ${euro(pag+prv)}${prv>0.5?` (di cui ${euro(prv)} ancora da pagare)`:''}</i>${inCorso?` <i class="bd-a">· già pagato ${Math.round(usato*100)}% dello stipendio, ${mesi.length===1?'mese':'periodo'} ${alPerc(tempo)}</i>`:''}</span></span>`;
 }
 function infoMese(){
   const a=S.anno, m=mesiSel(UI.mese), B=sommeBolle(a,m);
@@ -7977,7 +7979,7 @@ function pOggi(){return conBase('eff',()=>{
   // il mese in due bolle: quanto resta dello stipendio e del budget
   if(X.D&&X.D.completo&&X.lim>0){const r=X.resta;
     const bud=X.corr&&X.TV!=null?(()=>{const sp=X.VT.pag,rb=X.TV-sp;return bol('nero','salvadanaio',rb>=-0.5?'Budget rimasto':'Budget sforato',(rb<-0.5?'− ':'')+e0(Math.abs(rb)),`di ${e0(X.TV)} per le variabili${barra(sp/X.TV)}`,'data-mb-tab="movimenti" data-mb-solo="variabili"')})():bol('nero','salvadanaio','Budget','—','fissalo sul computer');
-    h+=pil(nM,'mese')+`<div class="mb-k2">${bol(r<-0.5?'spe':'ent','entrate',r<-0.5?'Sfori di':'Restano',e0(Math.abs(r)),`stipendio ${e0(X.lim)} − spese ${e0(X.tF+X.tV)}${barra((X.tF+X.tV)/X.lim,r<-0.5?'no':'')}`)}${bud}</div>`}
+    h+=pil(nM,'mese')+`<div class="mb-k2">${bol(r<-0.5?'spe':'ent','entrate',r<-0.5?'Sfori di':'Restano',e0(Math.abs(r)),`stipendio ${e0(X.lim)} − spese ${e0(X.tF+X.tV)}${X.F.prv+X.V.prv>0.5?` (di cui ${e0(X.F.prv+X.V.prv)} da pagare)`:''}${barra((X.tF+X.tV)/X.lim,r<-0.5?'no':'')}`)}${bud}</div>`}
   // il calendario del mese (Paolo 26/11: in Home); tocca un giorno per vedere cosa c'è
   h+=movCal(X.a,m,true);
   return h})}
