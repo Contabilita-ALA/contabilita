@@ -3154,8 +3154,6 @@ body.mob #modale .finestra:has(.mb-ok) .azioni:not(:has([data-act="m-elimina"],[
 #mob .mb-bv-t{border:0;border-radius:var(--mb-r);background:var(--b);padding:16px 12px 14px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;color:var(--inchiostro);font:inherit;min-height:132px;justify-content:center}
 #mob .mb-bv-t b{font:700 var(--mb-f3) var(--font);line-height:1.2}
 #mob .mb-bv-t small{font-size:var(--mb-f5);line-height:1.25;opacity:.85}
-#mob .mb-bv-apri{display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;padding:15px;background:var(--inchiostro);color:#fff;font:600 var(--mb-f3) var(--font)}
-#mob .mb-bv-apri svg{width:22px;height:22px}
 
 /* domande della Home (Paolo 26/11) */
 #mob .mb-bv-t{min-height:112px}
@@ -8298,8 +8296,7 @@ function pBenvenuto(){ // schermata di saluto: niente cifre, solo le cose da far
   const o=new Date(), hh=o.getHours(), nome=(S.impostazioni.nome??'').trim(), sal=hh>=5&&hh<13?'Buongiorno':hh<18?'Buon pomeriggio':'Buonasera';
   const t=(att,ic,col,tt,ss)=>`<button class="mb-bv-t" ${att} style="--b:${col}">${icoC(ic,'rgba(255,255,255,.55)')}<b>${tt}</b><small>${ss}</small></button>`;
   return `<div class="mb-bv"><div class="mb-bv-s"><small>${GL[o.getDay()].replace(/^./,c=>c.toUpperCase())} ${o.getDate()} ${MESI[o.getMonth()]} ${o.getFullYear()}</small><h2>${sal}${nome?',<br>'+esc(nome):''}</h2></div>
-    <div class="mb-bv-g">${bvDomande()}${t('data-mb-calc="fat"','fattura','var(--salvia)','Calcola una fattura','quanto chiedere e quanto ti resta')}${t('data-mb-nuovo="uscita"','variabili','var(--lavanda)','Segna una spesa','uscita da un conto o carta')}${t('data-mb-nuovo="fat"','entrate','var(--azzurro)','Nuova fattura','da incassare o incassata')}${t('data-mb-calc="pp"','salvadanaio','var(--cappuccino)','Posso permettermelo?','prima di una spesa grande')}</div>
-    <button class="mb-bv-apri" data-mb-tab="anno">${OCCHIO(true)}I tuoi conti</button></div>`}
+    <div class="mb-bv-g">${bvDomande()}${t('data-mb-calc="fat"','fattura','var(--salvia)','Calcola una fattura','quanto chiedere e quanto ti resta')}${t('data-mb-nuovo="uscita"','variabili','var(--lavanda)','Segna una spesa','uscita da un conto o carta')}${t('data-mb-nuovo="fat"','entrate','var(--azzurro)','Nuova fattura','da incassare o incassata')}${t('data-mb-calc="pp"','salvadanaio','var(--cappuccino)','Posso permettermelo?','prima di una spesa grande')}</div></div>`}
 function pOggi0(){return conBase('eff',()=>{
   const X=h3Dati(), o=new Date(), nome=(S.impostazioni.nome??'').trim();
   let h=pil(MESI[X.m-1]+(X.corr?' · oggi '+o.getDate():''),'mese');
