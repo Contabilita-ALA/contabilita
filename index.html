@@ -3061,6 +3061,20 @@ body.mob .finestra h3{line-height:40px!important;margin:0 0 10px!important;paddi
 .mb-mm-s{flex-direction:column;justify-content:flex-end;align-items:center;gap:0}.mb-mm-s i{width:12px;border-radius:0}.mb-mm-s i:first-child{border-radius:3px 3px 0 0}
 .mb-mm13 small{font-size:10px}
 .mb-mm-z{position:relative;width:100%;justify-content:center}.mb-mm-z i{position:absolute;left:50%;margin-left:-6px}.mb-mm-z u{position:absolute;left:-2px;right:-2px;height:1px;background:rgba(0,0,0,.25)}
+.pp-fin.pp2{max-width:460px}
+.pp2-campo{display:flex;flex-direction:column;gap:6px;margin:14px 0 12px;font-size:13px;color:var(--testo-2,#556)}
+.pp2-in{display:flex;align-items:center;gap:8px;font-size:26px;font-weight:700;background:#fff;border-radius:14px;padding:8px 14px}
+.pp2-in input{border:0;outline:0;font:inherit;width:100%;background:transparent}
+.pp2-vuoto{color:var(--testo-2,#667);font-size:14px;margin:8px 0 4px}
+.pp2-esito{border-radius:18px;padding:16px 18px;margin-bottom:10px;display:flex;flex-direction:column;gap:4px}
+.pp2-esito b{font-size:28px;line-height:1.1}
+.pp2-esito span{font-size:14px}
+.pp2-esito.si{background:#cfe3cc}.pp2-esito.forse{background:#f6dfae}.pp2-esito.no{background:#f3b3ad}
+.pp2-r{display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-top:1px solid rgba(0,0,0,.07)}
+.pp2-r small{display:block;font-size:12px;color:#667}
+.pp2-n{display:flex;gap:8px;align-items:baseline;white-space:nowrap}
+.pp2-n s{text-decoration:none;color:#889;font-size:13px}.pp2-n i{font-style:normal;color:#889}
+.pp2-n b{font-size:18px}.pp2-r.no .pp2-n b{color:#b3362c}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -3519,7 +3533,7 @@ function renderTop(){
     <span class="nav-b"><button class="btn chiaro piccolo" data-act="nav-indietro" title="Pagina precedente" ${NAV.i>0?'':'disabled'}>←</button><button class="btn chiaro piccolo" data-act="nav-avanti" title="Pagina successiva" ${NAV.i<NAV.st.length-1?'':'disabled'}>→</button></span>
     <button class="btn" data-act="nuova-spesa" title="Spesa, entrata (non da fattura), giroconto tra conti o voce del conto cointestato">+ Movimento</button>
     <button class="btn" data-act="nuova-fattura" title="Fattura: crea da sola l'incasso in Movimenti">+ Fattura</button>
-    <button class="btn chiaro piccolo btn-posso" data-act="posso" title="Dimmi quanto costa e ti dico se ci sta nello stipendio del mese e del trimestre">Posso permettermelo?</button>
+    <button class="btn chiaro piccolo btn-posso" data-act="posso" title="Dimmi quanto costa e ti dico se ci sta nello stipendio di questo mese">Posso permettermelo?</button>
     <span class="spazio"></span>${(()=>{const A=d.getFullYear();return `<span class="an-filt top-base" title="Vale per tutte le pagine: su quale fatturato ${A} fare i conti (Inarcassa e tasse, accantonamento, Previsione, Conti e risparmi, Annuario)"><span class="tb-l">fatturato ${A}</span><button data-cr-base="eff" class="${pvBase()==='eff'?'on':''}" title="Solo le fatture ${A} già incassate">incassato <b>${euro(pvVaEff(A)).replace(/,\d\d$/,'')}</b></button><button data-cr-base="prev" class="${pvBase()==='prev'?'on':''}" title="Tutte le fatture ${A}, anche da incassare (o il volume previsto nel Riepilogo fiscale)">previsto <b>${euro(pvVaPrev(A)).replace(/,\d\d$/,'')}</b></button></span>`})()}
     <span class="oggi">${d.getDate()} ${MESI[d.getMonth()]} ${d.getFullYear()}</span>
     <span class="salvato" id="salvato"></span>`;
@@ -4651,38 +4665,50 @@ function ppTesto(R){
   const tit={si:'Sì, te lo puoi permettere',forse:'Sì, ma con attenzione',no:'Meglio di no, per ora'}[R.esito];
   return {tit,cl:R.esito,L,C};
 }
+/* ---- Posso permettermelo? versione semplice (proposta 26/11/2026) ----
+   Una sola domanda: dopo questa spesa, lo stipendio del mese basta ancora?
+   Stessi numeri della Home: Restano (stipendio − fisse − variabili, anche previste) e Budget delle variabili. */
+function pp2(imp){
+  const o=new Date(), a=o.getFullYear(), m=o.getMonth()+1;
+  const R=ppCalcola(imp,m,1), TV=tettoMese(a,m);
+  if(R.lim==null) return {esito:'forse',tit:'Non riesco a dirlo',m,a,R,TV,manca:true};
+  const budPrima=TV!=null?TV-R.sm.vt:null, budDopo=budPrima!=null?budPrima-imp:null;
+  const esito=R.dopoM<-0.5?'no':(budDopo!=null&&budDopo<-0.5?'forse':'si');
+  let dopo=null;if(esito!=='si'&&m<12){const R2=ppCalcola(imp,m+1,1);if(R2.lim!=null)dopo={m:m+1,ok:R2.dopoM>=-0.5,resta:R2.dopoM}}
+  const tit={si:'Sì',forse:'Sì, ma…',no:'No'}[esito];
+  return {esito,tit,m,a,R,TV,budPrima,budDopo,dopo};
+}
+function pp2Frase(X){const e0=v=>euro(Math.round(v)).replace(/,00$/,''), M=k=>MESI[k-1].toLowerCase();
+  if(X.manca) return 'Manca lo stipendio del mese: serve il netto del trimestre prima.';
+  if(X.esito==='si') return `Dopo la spesa ti restano ${e0(X.R.dopoM)} fino a fine ${M(X.m)}.`;
+  if(X.esito==='forse') return `Lo stipendio basta, ma esci dal budget delle variabili di ${e0(-X.budDopo)}.`;
+  const no=`Lo stipendio di ${M(X.m)} non basta: mancano ${e0(-X.R.dopoM)}.`;
+  if(X.dopo&&X.dopo.ok) return no+` A ${M(X.dopo.m)} invece sì.`;
+  return no+(X.dopo?` Neanche a ${M(X.dopo.m)}.`:'');
+}
+function pp2Righe(X){const e0=v=>(v<-0.5?'− ':'')+euro(Math.round(Math.abs(v))).replace(/,00$/,''), M=MESI[X.m-1].toLowerCase();
+  if(X.manca) return [];
+  const L=[{t:'Restano a '+M,s:'stipendio − spese del mese',p:X.R.restaM,d:X.R.dopoM}];
+  if(X.TV!=null) L.push({t:'Budget variabili',s:'tetto di '+e0(X.TV),p:X.budPrima,d:X.budDopo});
+  return L.map(r=>({...r,pt:e0(r.p),dt:e0(r.d),no:r.d<-0.5}));
+}
+// computer: finestra piccola, un solo campo
 function apriPosso(){
-  const o=new Date(), mOra=o.getMonth()+1, cats=S.categorie.filter(c=>c.bolla==='variabili'||c.bolla==='fisse');
-  const def=cats.find(c=>c.id==='spese variabili')||cats[0];
-  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra pp-fin" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
+  $('#modale').innerHTML=`<div class="velo" data-act="chiudi-velo"><div class="finestra pp-fin pp2" role="dialog" aria-modal="true"><button type="button" class="fin-x" data-act="chiudi" title="Chiudi" aria-label="Chiudi">✕</button>
     <h3>Posso permettermelo?</h3>
-    <p class="aiuto">Guardo lo stipendio del mese e del trimestre, le spese già fatte e quelle previste, e il conto Unicredit fino a fine anno.</p>
-    <div class="pp-campi">
-      <label>Quanto costa<span class="dp-eur">€<input id="pp-imp" inputmode="decimal" placeholder="es. 350"></span></label>
-      <label>Cosa<input id="pp-det" placeholder="es. giacca"></label>
-      <label>Categoria<select id="pp-cat">${cats.map(c=>`<option value="${esc(c.id)}" ${c===def?'selected':''}>${esc(c.nome)}</option>`).join('')}</select></label>
-      <label>Quando<select id="pp-mese">${[0,1,2,3].map(i=>mOra+i).filter(m=>m<=12).map(m=>`<option value="${m}">${m===mOra?'questo mese':MESI[m-1]}</option>`).join('')}</select></label>
-      <label>Rate<select id="pp-nr">${[1,2,3,4,5,6,10,12].map(n=>`<option value="${n}">${n===1?'tutto subito':n+' rate'}</option>`).join('')}</select></label>
-    </div>
-    <div id="pp-ris" class="pp-ris"></div>
+    <label class="pp2-campo"><span>Quanto costa</span><span class="pp2-in">€<input id="pp-imp" inputmode="decimal" placeholder="es. 350"></span></label>
+    <input type="hidden" id="pp-mese" value="${new Date().getMonth()+1}"><input type="hidden" id="pp-nr" value="1"><input type="hidden" id="pp-cat" value="spese variabili"><input type="hidden" id="pp-det" value="">
+    <div id="pp-ris" class="pp2-ris"></div>
     <div class="azioni"><button class="btn chiaro" data-act="chiudi">Chiudi</button><button class="btn" data-pp-segna disabled title="Aggiunge la spesa in Movimenti come prevista">Segna come spesa prevista</button></div>
   </div></div>`;
   $('#pp-imp').focus();
 }
 function ppAggiorna(){
   const el=$('#pp-ris');if(!el)return;const imp=parseNum($('#pp-imp').value), b=$('[data-pp-segna]');
-  if(isNaN(imp)||imp<=0){el.innerHTML='';el.className='pp-ris';if(b)b.disabled=true;return}
-  const R=ppCalcola(imp,+$('#pp-mese').value,+$('#pp-nr').value), T=ppTesto(R);
-  // l'altro scenario del tasto in alto (incassato / previsto)
-  const base=pvBase(), altra=base==='prev'?'eff':'prev', A=new Date().getFullYear();let R2=null;
-  {const s=UI.prevBase;UI.prevBase=altra;try{R2=ppCalcola(imp,+$('#pp-mese').value,+$('#pp-nr').value)}finally{UI.prevBase=s}}
-  const e0=v=>euro(Math.round(v)).replace(/,00$/,''), titE={si:'sì',forse:'sì, con attenzione',no:'meglio di no'};
-  const L2=R2?ppTesto(R2).L:[], altTit=altra==='prev'?`Se incassi quello che hai previsto: fatturato ${A} ${e0(pvVaPrev(A))}`:`Contando solo quello già incassato: ${e0(pvVaEff(A))}`;
-  el.className='pp-ris '+T.cl;
-  const ok={ok:'✓',forse:'!',no:'✕'};
-  el.innerHTML=`<div class="pp-tit"><i>${ok[T.cl==='si'?'ok':T.cl]}</i>${T.tit}<span class="pp-tot">${euro(imp)}${R.nr>1?` · ${R.nr} rate`:''}<small>${base==='prev'?'con il previsto':"con l'incassato"}</small></span></div>
-    <div class="pp-tab"><div class="pp-h"><span></span><span></span><span>prima</span><span></span><span>dopo</span><span></span><span class="pp-x" title="${esc(altTit)}">${altra==='prev'?'se incassi il previsto':'solo incassato'}${R2?`<em class="pp-xe ${R2.esito}">${titE[R2.esito]}</em>`:''}</span></div>${T.L.map(r=>{const r2=L2.find(x=>x.tit===r.tit);return `<div class="pp-r ${r.cl}"><span class="pp-icc"><i class="pp-ic">${ico(r.ic)}</i></span><span class="pp-n"><b>${r.tit}</b><small>${r.sub}</small></span><span class="pp-p">${r.pr??''}</span><span class="pp-fr">${r.pr!=null?'→':''}</span><span class="pp-d">${r.dp}</span><span class="pp-s"><i>${ok[r.cl]}</i>${r.nota||''}</span><span class="pp-x ${r2?r2.cl:''}">${r2?`<b>${r2.dp}</b><i>${ok[r2.cl]}</i><small>${r2.dp!==r.dp?'':'uguale'}</small>`:'–'}</span></div>`}).join('')}</div>
-    ${T.C.length?`<div class="pp-cons"><div class="pp-ct">Se la vuoi fare comunque</div><div class="pp-cg">${T.C.map(c=>`<${c.b?'button type="button" '+c.b:'div'} class="pp-c${c.b?' cl':''}"><span class="pp-ic">${ico(c.ic)}</span><span><small>${c.t}</small><b>${c.v}</b><em>${c.s}${c.b?' · prova ↻':''}</em></span></${c.b?'button':'div'}>`).join('')}</div></div>`:''}`;
+  if(isNaN(imp)||imp<=0){el.innerHTML='<p class="pp2-vuoto">Scrivi quanto costa: ti dico se ci sta nello stipendio di questo mese.</p>';if(b)b.disabled=true;return}
+  const X=pp2(imp);
+  el.innerHTML=`<div class="pp2-esito ${X.esito}"><b>${X.tit}</b><span>${pp2Frase(X)}</span></div>
+    ${pp2Righe(X).map(r=>`<div class="pp2-r ${r.no?'no':''}"><span><b>${r.t}</b><small>${r.s}</small></span><span class="pp2-n"><s>${r.pt}</s><i>→</i><b>${r.dt}</b></span></div>`).join('')}`;
   if(b)b.disabled=false;
 }
 document.addEventListener('input',e=>{if(e.target.closest('.pp-fin'))ppAggiorna()});
@@ -7909,7 +7935,7 @@ function piuMenu(){
     ${r('data-mb-nuovo="coi"','cointestato','var(--corallo)','Cointestato','voce del conto cointestato')}
     <h3>Calcola…</h3>
     ${r('data-mb-calc="fat"','fattura','var(--salvia)','Una fattura','da prestazione, bonifico o netto')}
-    ${r('data-mb-calc="pp"','salvadanaio','var(--giallo)','Posso permettermelo?','mese, trimestre e conto')}
+    ${r('data-mb-calc="pp"','salvadanaio','var(--giallo)','Posso permettermelo?','ci sta nello stipendio del mese?')}
     ${r('data-mb-calc="prev"','calendario','var(--azzurro)','Previsionale '+(S.anno+1),'entrate, spese e Revolut dell\'anno prossimo')}${r('data-mb-calc="coi"','cointestato','var(--corallo)','Risparmi del cointestato','i prossimi anni')}</div>`;
 }
 
@@ -8074,14 +8100,6 @@ function calcFatRis(){
     <p class="mb-nota">Volume d'affari ${euro(c.conBollo)} · soggettivo Inarcassa 14,5% + imposta 15%</p>
     <div class="mb-riga-pill"><button class="mb-pill nero" data-mb-crea-fat="${r2(p)}">Crea questa fattura</button></div>`;
 }
-function ppRis(){const o=new Date(), mOra=o.getMonth()+1, P=MU.pp, imp=parseNum(P.imp), m0=+P.m||mOra;
-  if(!(imp>0)) return `<p class="mb-nota mb-cf-vuoto">Guardo lo stipendio del mese e del trimestre, le spese già fatte e previste, e il conto Unicredit fino a fine anno.</p>`;
-  const R=conBase('eff',()=>ppCalcola(imp,m0,+P.nr||1)), T=ppTesto(R);
-  let h=`<div class="mb-k ${{si:'ent',forse:'att',no:'spe'}[T.cl]} mb-esito"><small>Posso permettermelo?</small><b>${{si:'Sì',forse:'Sì, ma…',no:'No'}[T.cl]}</b><span>${T.tit.toLowerCase().replace(/^./,c=>c.toUpperCase())}</span></div>
-    <div class="mb-k2">${T.L.map(r=>bol('bia'+(r.cl==='no'?' neg':''),'',r.tit,r.dp,(r.nota?r.nota+'<br>':'')+r.sub)).join('')}</div>`;
-  if(T.C.length) h+=pil('Se la vuoi fare comunque')+card(T.C.map(c=>riga({col:'var(--grigino)',ic:c.ic,t:c.t,s:c.s,v:c.v})).join(''));
-  return h;
-}
 function calcCoi(){const P=coiPrev();
   const campo=(k,v,lab,sub)=>`<div class="mb-r"><span class="mb-r-t"><b>${lab}</b><small>${sub}</small></span><span class="mb-in-s"><i>€</i><input data-mb-coi="${k}" inputmode="decimal" value="${n0(v)}"></span></div>`;
   return `<div class="mb-k2">${bol('coi','cointestato','Saldo oggi',e0(P.D.saldoOggi),'a fine '+P.a+' '+e0(P.D.fine))}${bol('coi','conto','La tua metà',e0(P.D.saldoOggi*P.q),'quota '+Math.round(P.q*100)+'%')}</div>
@@ -8110,14 +8128,16 @@ function calcFat(){
     <div class="mb-perc"><small>Accantono${Math.abs(pv-pa)>1e-9?` · <button class="mb-perc-r" data-mb-perc="0">torna a ${pt(pa)}%</button>`:''}</small><span><button data-mb-perc="-1" aria-label="meno">−</button><label><input data-mb-perc-in inputmode="decimal" value="${pt(pv)}"><i>%</i></label><button data-mb-perc="1" aria-label="più">+</button></span></div></div>
     <div class="mb-cf-ris">${calcFatRis()}</div>`;
 }
-function calcPP(){
-  const o=new Date(), mOra=o.getMonth()+1, P=MU.pp, m0=+P.m||mOra, cats=S.categorie.filter(c=>c.bolla==='variabili'||c.bolla==='fisse');
-  const catSel=P.cat||(cats.find(c=>c.id==='spese variabili')||cats[0]||{}).id;
+// iPhone: stesso calcolo, stesso testo
+function calcPP(){const P=MU.pp;
   return `<label class="mb-campo"><small>Quanto costa</small><span><i>€</i><input data-mb-pp="imp" inputmode="decimal" placeholder="es. 350" value="${esc(P.imp)}"></span></label>
-    <div class="mb-sel tre"><select data-mb-pp="m">${[0,1,2,3].map(i=>mOra+i).filter(m=>m<=12).map(m=>`<option value="${m}" ${m===m0?'selected':''}>${m===mOra?'ora':MESI[m-1]}</option>`).join('')}</select>
-    <select data-mb-pp="nr">${[1,2,3,4,5,6,10,12].map(n=>`<option value="${n}" ${n===+P.nr?'selected':''}>${n===1?'subito':n+' rate'}</option>`).join('')}</select>
-    <select id="pp-cat" data-mb-pp="cat">${cats.map(c=>`<option value="${esc(c.id)}" ${c.id===catSel?'selected':''}>${esc(c.nome)}</option>`).join('')}</select></div>
     <div id="mb-pp-ris">${ppRis()}</div>`;
+}
+function ppRis(){const imp=parseNum(MU.pp.imp);
+  if(!(imp>0)) return `<p class="mb-nota mb-cf-vuoto">Scrivi quanto costa: ti dico se ci sta nello stipendio di questo mese.</p>`;
+  const X=conBase('eff',()=>pp2(imp));
+  return `<div class="mb-k ${{si:'ent',forse:'att',no:'spe'}[X.esito]} mb-esito"><small>Posso permettermelo?</small><b>${X.tit}</b><span>${pp2Frase(X)}</span></div>
+    ${card(pp2Righe(X).map(r=>riga({col:r.no?'var(--corallo)':'var(--salvia)',t:r.t,s:r.s+' · prima '+r.pt,v:r.dt,vs:'dopo'})).join(''))}`;
 }
 function coiPrev(){ // il previsionale "I risparmi nei prossimi anni" della pagina Conto cointestato (stessi conti, stessi campi)
   const a=S.anno, D=datiCoi(a), q=D.q, mOra=new Date().getFullYear()===a?new Date().getMonth()+1:(new Date().getFullYear()>a?13:0);
