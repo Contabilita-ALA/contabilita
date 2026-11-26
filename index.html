@@ -3235,6 +3235,42 @@ body.mob .finestra.mb-fin .campi.f-sp{margin-top:-4px}
 body.mob .finestra.mb-fin .calcoli{border-radius:14px;background:var(--carta);font-size:15px;padding:12px 14px}
 body.mob .finestra.mb-fin>p{font-size:13px}
 body.mob .finestra.mb-fin .importo input::placeholder{font-weight:600;color:var(--grigio)}
+/* Pagina Anno a righe che scorrono (Paolo 26/11 17:12) */
+#mob .mb-kanno>.mb-k,#mob .mb-kanno .mb-kgr>.mb-k{flex:0 0 136px}
+.mb-kanno .mb-k span{white-space:normal;line-height:1.25}
+.mb-kanno .mb-k .mb-bar{display:block;width:80%;height:6px;margin:6px auto 0}
+.mb-kanno .mb-k b.mb-neg,.mb-kanno .mb-k.neg b{color:var(--rosso)}
+#mob .mb-kanno .mb-k.nero{background:var(--inchiostro);color:#fff}#mob .mb-kanno .mb-k.nero.neg b{color:#ffb3a8}
+#mob .mb-k.bia{background:var(--mb-bianco)}
+.mb-kband{position:relative;padding-top:24px!important;background:var(--grigino)!important}
+.mb-kband-t{position:absolute;top:6px;left:12px;font:700 var(--mb-f5) var(--font);text-transform:uppercase;letter-spacing:.4px;color:var(--grigio)}
+.mb-stack-k{display:flex!important;gap:2px;height:8px!important;width:80%;margin:6px auto 0;border-radius:4px;overflow:hidden}
+.mb-stack-k>i{display:block;height:100%}
+.mb-kanno+.mb-pil,.mb-card+.mb-pil{margin-top:14px}
+/* Safari: lo spazio a destra di una riga che scorre non c'è, lo aggiungo io (bug fascia rosa, Paolo 26/11) */
+.mb-kscr::after,.mb-cc::after{content:'';flex:0 0 8px}
+#mob .mb-kanno .mb-k{min-height:120px;justify-content:flex-start;padding-top:12px}
+#mob .mb-kanno .mb-kgr>.mb-k{min-height:110px}
+.mb-kanno .mb-k small{min-height:17px}
+/* Finestre in una schermata anche con la barra di Safari (Paolo 26/11 17:16): ~720 px utili */
+body.mob .finestra.mb-fin{padding-top:calc(6px + env(safe-area-inset-top));padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+body.mob .finestra.mb-fin h3{margin:0 0 10px!important}
+body.mob .finestra.mb-fin .tipi{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:0 0 12px}
+body.mob .finestra.mb-fin .tipi button{min-height:40px;padding:4px 2px;font:600 14px var(--font)}
+body.mob .finestra.mb-fin .co-tipo{margin:0 0 12px}.body.mob .finestra.mb-fin .co-tipo button{min-height:40px}
+body.mob .finestra.mb-fin .importo{min-height:54px;margin:0 0 12px;padding:2px 16px}
+body.mob .finestra.mb-fin .importo input,body.mob .finestra.mb-fin .importo span{font-size:28px!important}
+body.mob .finestra.mb-fin .campi{gap:12px 12px!important;margin:0 0 12px}
+body.mob .finestra.mb-fin .campi>label{gap:5px}
+body.mob .finestra.mb-fin .campi input:not([type=checkbox]),body.mob .finestra.mb-fin .campi select,body.mob .finestra.mb-fin .cp-btn{height:44px;min-height:44px;line-height:44px}
+body.mob .finestra.mb-fin .campi>label.spunta{height:44px}
+body.mob .finestra.mb-fin .campi>label.spunta.largo{min-height:44px;padding:0 14px}
+body.mob .finestra.mb-fin .azioni{padding-top:8px}
+body.mob .finestra.mb-fin .azioni .btn{min-height:48px}
+/* data su iPhone: testo a sinistra e centrato in altezza come gli altri campi */
+body.mob .finestra.mb-fin input[type=date]{display:flex;align-items:center;line-height:normal!important;text-align:left}
+body.mob .finestra.mb-fin input[type=date]::-webkit-date-and-time-value{text-align:left;margin:0;line-height:44px}
+body.mob .finestra.mb-fin input[type=date]::-webkit-datetime-edit{padding:0}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -8230,6 +8266,22 @@ function mobFisco(){
     <p class="mb-nota">Su un volume d'affari ${a} di ${e0(E.vaY)} (previsto, con le fatture da incassare).</p>`;
 }
 
+function mobFiscoRighe(riga_,banda,kb){const E0=v=>isFinite(v)?e0(v):'—';
+  const a=S.anno, d=(S.fiscale||{})[a];if(!d||!fiscoAnno(a))return '';
+  const X=fiscoAnno(a), VF=X.VF, fis=x=>!x.giro&&(x.cat==='inarcassa'||x.cat==='tasse stato'), L=S.movimenti.filter(x=>annoDi(x.data)===a&&fis(x));
+  const pag=L.filter(x=>x.ok).reduce((s,x)=>s+x.eur,0), man=L.filter(x=>!x.ok).sort((p,q)=>p.data.localeCompare(q.data)), manT=man.reduce((s,x)=>s+x.eur,0);
+  const calc=inPrev=>{const vaPrev=d.vaPrev!=null?+d.vaPrev:X.va, vaY=inPrev||!VF?vaPrev:VF.inc, Y=fiscoAnno(a,0,vaY), N=fiscoAnno(a+1)||X;
+    const ina=N.minimi+(Y.rate>1?0:Y.cong), tot=ina+Y.saldo+Y.imposta, lordoY=vaY*(1+(S.impostazioni.aliquote.integrativo||0.04)), perc=S.impostazioni.accantonamento[a]??0.25;
+    const LF=VF?datiFatture(a):[], accOggi=LF.filter(x=>x.inc).reduce((s,x)=>s+x.c.accant,0), accPrev=VF?VF.acc:0;
+    const spostato=S.movimenti.filter(x=>annoDi(x.data)===a&&x.giro&&x.ok&&(S.conti.find(c=>c.id===x.verso)||{}).tipo==='salvadanaio').reduce((s,x)=>s+x.eur,0);
+    const accY=(!inPrev&&VF?accOggi:d.vaPrev!=null?lordoY*perc:accPrev)+Math.max(0,spostato-accOggi);return {vaY,Y,ina,tot,accY}};
+  const E=calc(true), PV=calc(false), {Y,ina,tot,accY}=E, diff=accY-tot, ok=diff>=-0.5, tt=pag+manT;
+  return pil('Tasse e Inarcassa')+riga_(
+    banda(String(a),kb('att','fiscali','Pagate',E0(pag),`di ${E0(tt)}`,tt?pag/tt:1,'var(--inchiostro)'),bol('bia','calendario','Mancano',E0(manT),man[0]?'prossima '+giornoIt(man[0].data):'tutto pagato')),
+    banda(String(a+1),bol('att','fiscali','Da pagare',E0(tot),Math.abs(PV.tot-tot)>=1?'ad oggi '+E0(PV.tot):'giugno e novembre'),bol(ok?'net':'spe','salvadanaio','Accantonato',E0(accY),ok?(diff>=1?'avanzano '+E0(diff):'basta giusto'):'mancano '+E0(-diff)),
+      bol('acc','fiscali','Inarcassa',E0(ina),'minimi'+(Y.rate>1?'':' + conguaglio')),bol('acc','fiscali','F24 giugno',E0(Y.saldo+Y.imposta/2),'saldo + 1° acconto'),bol('acc','fiscali','F24 novembre',E0(Y.imposta/2),'2° acconto')))
+    +`<p class="mb-nota">Volume d'affari ${a} previsto ${E0(E.vaY)}, con le fatture da incassare.</p>`}
+
 /* ---------- CALCOLATORI (dal tasto +) ---------- */
 function calcFatRis(){
   const da=MU.cf.da, v=parseNum(MU.cf.v), perc=percCalc();
@@ -8350,12 +8402,14 @@ document.addEventListener('input',e=>{
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mb-vista-tel]');if(!b)return;e.preventDefault();try{localStorage.setItem(K_VISTA,'tel')}catch(x){}window.MOB=true;render()});
 // Paolo 26/11 16:40: finestra "Segna una spesa" ordinata: colonne allineate, categorie solo del tipo giusto (uscita senza entrate e viceversa)
 const gTipo=id=>{const c=S.categorie.find(c=>c.id===id);const g=c&&S.gruppi.find(g=>g.id===c.gruppo);return g?(g.tipo==='entrata'?'entrata':'uscita'):''};
-function mobFinestra(){const f=document.querySelector('#modale .finestra');if(!f)return;f.classList.add('mb-fin');if(!f.querySelector('#m-imp')||!bozza){mobCoppie(f);return}
+function mobFinestra(){const f=document.querySelector('#modale .finestra');if(!f)return;f.classList.add('mb-fin');if(!f.querySelector('#m-imp')||!bozza){const fr=f.querySelector('#f-rip');if(fr&&fr.nextSibling)fr.nextSibling.textContent=' Ogni anno';mobCoppie(f);return}
   const be=f.querySelector('.tipi [data-tipo="entrata"]');if(be)be.textContent='Entrata';
   const t=bozza.tipo, pan=f.querySelector('.cp-pan');
   if(t==='uscita')f.querySelectorAll('.cp-g').forEach(g=>{const v=g.querySelector('[data-cp-v]');g.hidden=!!v&&gTipo(v.dataset.cpV)==='entrata'&&!g.querySelector('.on')});
   if(t==='entrata'&&pan&&!pan.querySelector('.mb-rimb-t')){const G=[...pan.querySelectorAll('.cp-g')],E=G.filter(g=>{const v=g.querySelector('[data-cp-v]');return v&&gTipo(v.dataset.cpV)==='entrata'}),A=G.filter(g=>!E.includes(g));
     E.forEach(g=>pan.prepend(g));if(A.length){const h=document.createElement('p');h.className='mb-rimb-t';h.innerHTML='<b>È un rimborso di una tua spesa?</b>Scegli la categoria della spesa: l\'importo si toglie da quella voce.';A[0].before(h)}}
+  const fr=f.querySelector('#f-rip');if(fr&&fr.nextSibling)fr.nextSibling.textContent=' Ogni anno';
+  const rp=f.querySelector('#m-rip');if(rp&&rp.nextSibling)rp.nextSibling.textContent=' Si ripete ogni anno';
   const fa=f.querySelector('#m-ok');if(fa&&t==='coi'&&fa.nextSibling)fa.nextSibling.textContent=' Fatta';
   ['#c-cat','#m-det'].forEach(q=>{const x=f.querySelector(q);if(x&&t==='coi')x.closest('label').classList.add('largo')});
   const cp=f.querySelector('.campi .cp');if(cp)cp.closest('label').classList.add('largo');
@@ -8417,7 +8471,36 @@ function pOggi0(){return conBase('eff',()=>{
   const g=MU.giorno&&MU.giorno>=X.oggi&&MU.giorno<=X.fra(6)?MU.giorno:'', Lg=g?EV.filter(x=>x.data===g):EV.slice(0,4);
   h+=card(Lg.map(x=>evRiga(x,X)).join(''),g?'Niente in questo giorno.':'Niente in programma questa settimana.');
   return h})}
-function pAnno(){return pOggi0()+pil('Il '+S.anno,'anno')+pAnno0()}
+const ANNO_RIGHE=true; // Paolo 26/11 17:17: ok, senza I prossimi 7 giorni
+function pAnno(){try{if(!ANNO_RIGHE)throw 0;return pAnnoRighe()}catch(e){if(e)console.error(e);return pOggi0()+pil('Il '+S.anno,'anno')+pAnno0()}}
+/* Paolo 26/11 17:12: pagina Anno a righe che scorrono di lato, una per argomento, tutte con gli stessi riquadri */
+function pAnnoRighe(){
+  const riga_=(...k)=>`<div class="mb-kscr mb-kanno">${k.join('')}</div>`, banda=(t,...k)=>`<div class="mb-kgr mb-kband"><small class="mb-kband-t">${t}</small>${k.join('')}</div>`;
+  const kb=(cls,ic,t,v,s,x,col,att)=>bol(cls,ic,t,v,(s||'')+(x!=null?barra(x,x>1?'no':'',col):''),att);
+  let h='';
+  // 1. il mese
+  h+=conBase('eff',()=>{const X=h3Dati(), o=new Date();let r=pil(MESI[X.m-1]+(X.corr?' · oggi '+o.getDate():''),'mese');const K=[];
+    if(X.D&&X.D.completo&&X.lim>0){const spT=X.tF+X.tV, rr=X.resta, us=(X.F.pag+X.V.pag)/X.lim;
+      K.push(kb(rr<-0.5?'spe':'ent','netto','Stipendio',(rr<-0.5?'− ':'')+e0(Math.abs(rr)),`${rr<-0.5?'sfori':'restano'} di ${e0(X.lim)} · usato ${Math.round(us*100)}%`,spT/X.lim,'var(--inchiostro)','data-mb-tab="movimenti"'))}
+    if(X.corr&&X.TV>0){const rb=X.TV-X.VT.pag;K.push(kb(rb<-0.5?'spe':'var','variabili','Budget variabili',(rb<-0.5?'− ':'')+e0(Math.abs(rb)),`${rb<-0.5?'sforato':'restano'} di ${e0(X.TV)}`,X.VT.pag/X.TV,'var(--inchiostro)','data-mb-tab="movimenti" data-mb-solo="variabili"'))}
+    const dp=X.F.prv+X.V.prv;K.push(bol('bia','calendario','Da pagare',e0(dp),dp>0.5?'segnate, non ancora pagate':'niente da pagare','data-mb-tab="movimenti" data-mb-solo="prev"'));
+    if(X.corr){const fM=X.gOggi/X.giorniMese;K.push(kb('acc','calendario','Il mese',Math.round(fM*100)+'%',`passato · mancano ${X.gRest} giorni`,fM,'var(--inchiostro)'))}
+    r+=riga_(...K);
+    // 2. i conti oggi
+    const ord={conto:0,carta:1,cointestato:2}, L=[...X.conti].sort((p,q)=>(ord[p.c.tipo]??3)-(ord[q.c.tipo]??3));
+    r+=pil('I tuoi conti oggi')+riga_(bol('nero'+(X.tuoi<-0.5?' neg':''),'salvadanaio','Soldi tuoi',Ec(Math.round(X.tuoi)),'metà del cointestato'),...L.map(c=>`<button class="mb-k" style="background:${c.c.colore||'var(--mb-bianco)'}" data-mb-tab="movimenti" data-mb-conto="${c.c.id}"><small>${esc(c.c.nome||c.tit)}</small><b class="${c.cifra<-0.5?'mb-neg':''}">${e0(c.cifra)}</b><span>${c.carta?'spese del mese':{conto:'sul conto',salvadanaio:'Revolut',cointestato:'la tua metà'}[c.c.tipo]||'oggi'}</span></button>`));
+    return r});
+  // 3. l'anno: fatturato e dove vanno i soldi
+  const X=h3Dati(), a=X.a, Yp=conBase('prev',()=>h3Anno(X)), Ye=conBase('eff',()=>h3Anno(X)), B=sommeBolle(a,0), FISC=new Set(['inarcassa','tasse stato']);
+  const LA=S.movimenti.filter(x=>annoDi(x.data)===a&&!x.giro&&bollaMov(x)==='fiscali'&&!FISC.has(x.cat)), att=LA.reduce((s,x)=>s+x.eur,0), attP=LA.filter(x=>x.ok).reduce((s,x)=>s+x.eur,0);
+  const V=[['acc','salvadanaio','Accantoni','var(--grigio-chiaro)',Yp.acc,Ye.spo,'messi da parte'],['fis','fisse','Fisse','var(--azzurro)',B.fisse.pag+B.fisse.prv,B.fisse.pag,'già spese'],['var','variabili','Variabili','var(--lavanda)',B.variabili.pag+B.variabili.prv,B.variabili.pag,'già spese'],['att','fiscali','Attività','var(--cappuccino)',att,attP,'già spese']];
+  const usato=V.reduce((s,v)=>s+v[4],0), resto=Yp.vol-usato, base=Math.max(Yp.vol,usato)||1, pc=x=>Yp.vol>0.5?Math.round(x/Yp.vol*100)+'%':'';
+  h+=pil('Il '+a,'anno')+riga_(bol('vol','fattura','Fatturato',e0(Yp.vol),'previsto · incassati '+e0(Ye.vol)),bol(resto<-0.5?'spe':'net','salvadanaio',resto<-0.5?'Mancano':'Ti restano',e0(Math.abs(resto)),resto<-0.5?'le spese superano il fatturato':'a fine anno · '+pc(resto)),
+    banda('dove vanno i soldi',...V.map(v=>kb(v[0],v[1],v[2]+(pc(v[4])?' '+pc(v[4]):''),e0(v[4]),`${v[6]} ${e0(v[5])}`,v[4]?v[5]/v[4]:0,'var(--inchiostro)'))));
+  // 4. tasse e Inarcassa
+  try{h+=mobFiscoRighe(riga_,banda,kb)}catch(e){console.error(e)}
+  return h}
+
 function pAnno0(){const X=h3Dati(), a=X.a;
   const Yp=conBase('prev',()=>h3Anno(X)), B=sommeBolle(a,0), FISC=new Set(['inarcassa','tasse stato']);
   const LA=S.movimenti.filter(x=>annoDi(x.data)===a&&!x.giro&&bollaMov(x)==='fiscali'&&!FISC.has(x.cat)), att=LA.reduce((s,x)=>s+x.eur,0), attP=LA.filter(x=>x.ok).reduce((s,x)=>s+x.eur,0), Ye=conBase('eff',()=>h3Anno(X));
@@ -8433,7 +8516,6 @@ function pAnno0(){const X=h3Dati(), a=X.a;
 
 if(window.MOB)render();
 })();
-document.addEventListener('change',e=>{if(window.MOB&&e.target.matches&&e.target.matches('#mob [data-mb-perc-in]'))render()});
-</script>
+document.addEventListener('change',e=>{if(window.MOB&&e.target.matches&&e.target.matches('#mob [data-mb-perc-in]'))render()});</script>
 </body>
 </html>
