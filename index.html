@@ -3076,6 +3076,10 @@ body.mob .finestra h3{line-height:40px!important;margin:0 0 10px!important;paddi
 .pp2-n{display:flex;gap:8px;align-items:baseline;white-space:nowrap}
 .pp2-n s{text-decoration:none;color:#889;font-size:13px}.pp2-n i{font-style:normal;color:#889}
 .pp2-n b{font-size:18px}.pp2-r.no .pp2-n b{color:#b3362c}
+
+/* Paolo 26/11: nelle finestre restano solo × e ✓ in alto; via Annulla e Salva in basso (Elimina e Salva e nuova restano) */
+body.mob #modale .finestra:has(.mb-ok) .azioni :is([data-act="chiudi"],[data-act="m-salva"],[data-act="f-salva"]){display:none}
+body.mob #modale .finestra:has(.mb-ok) .azioni:not(:has([data-act="m-elimina"],[data-act="f-elimina"],[data-act="m-salva-nuova"])){display:none}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
