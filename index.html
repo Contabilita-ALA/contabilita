@@ -3223,6 +3223,18 @@ body.mob .finestra.mb-fin .mb-rimb-t b{display:block;font:700 15px var(--font);c
 .mb-kscr{scroll-padding-inline:16px}
 #mob .mb-kscr>.mb-k{margin:5px 0;justify-content:center}
 #mob .mb-kscr .mb-k{padding:8px 6px 9px;gap:1px;justify-content:center}
+/* Controllo grafico (Paolo 26/11 17:05): stessa scala di caratteri, stessi allineamenti */
+.mb-filtri .mb-chips button.on{background:var(--inchiostro)}
+#mob .mb-bv-t{justify-content:flex-start;padding-top:18px}
+.mb-kscr .mb-k span{font-size:var(--mb-f5)}
+.mb-kscr .mb-k b{font-size:var(--mb-f2)}
+body.mob .fin-x,body.mob .mb-ok{font-size:16px}
+body.mob .finestra.mb-fin .campi>label{font:600 14px var(--font)!important}
+body.mob .finestra.mb-fin .campi>label.spunta{font:500 16px var(--font)!important}
+body.mob .finestra.mb-fin .campi.f-sp{margin-top:-4px}
+body.mob .finestra.mb-fin .calcoli{border-radius:14px;background:var(--carta);font-size:15px;padding:12px 14px}
+body.mob .finestra.mb-fin>p{font-size:13px}
+body.mob .finestra.mb-fin .importo input::placeholder{font-weight:600;color:var(--grigio)}
 </style>
 <style id="tema-intelly">
 :root{--bd-card:transparent;--div:#ded7c9;--r-card:22px;--r-mid:16px}
@@ -8183,7 +8195,7 @@ function movCal(a,m,home){const X=h3Dati();
     cal+=`<button class="mb-cal-d ${wd>4||fest.has(iso)?'we':''} ${iso===X.oggi?'oggi':''} ${iso<X.oggi?'pass':''} ${MU.giorno===iso?'on':''}" data-mb-giorno="${iso}"><b>${d}</b><span class="mb-cal-p">${Lg.slice(0,4).map(x=>`<i class="${x.ok?'f':'p'}" style="--pc:${x.col}"></i>`).join('')}</span>${ent>0.5?`<em class="pos">+${Math.round(ent)}</em>`:usc>0.5?`<em>${Math.round(usc)}</em>`:'<em></em>'}</button>`}
   let h=`<div class="mb-card mb-cal">${cal}</div>`;
   const rigaE=x=>evRiga(x,X);
-  if(MU.giorno&&MU.giorno.slice(0,7)===`${a}-${mm}`){const Lg=EV.filter(x=>x.data===MU.giorno);h+=pil(giornoIt(MU.giorno))+card(Lg.map(rigaE).join(''),'Niente in questo giorno.')}
+  if(MU.giorno&&MU.giorno.slice(0,7)===`${a}-${mm}`){const Lg=EV.filter(x=>x.data===MU.giorno);h+=pil(giornoIt(MU.giorno))+card(Lg.map(x=>x.m&&!x.m.fat?movRiga(x.m):rigaE(x)).join(''),'Niente in questo giorno.')}
   else if(home){}
   else{const R=calEventi(X.fra(-60),X.fra(-1)).filter(x=>!x.ok&&x.tipo!=='acc').map(x=>({...x,rit:1})), P=[...R,...X.ag(30)].slice(0,10);h+=pil('Cosa ti aspetta')+card(P.map(rigaE).join(''),'Niente in programma.')}
   return h;
@@ -8338,7 +8350,7 @@ document.addEventListener('input',e=>{
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mb-vista-tel]');if(!b)return;e.preventDefault();try{localStorage.setItem(K_VISTA,'tel')}catch(x){}window.MOB=true;render()});
 // Paolo 26/11 16:40: finestra "Segna una spesa" ordinata: colonne allineate, categorie solo del tipo giusto (uscita senza entrate e viceversa)
 const gTipo=id=>{const c=S.categorie.find(c=>c.id===id);const g=c&&S.gruppi.find(g=>g.id===c.gruppo);return g?(g.tipo==='entrata'?'entrata':'uscita'):''};
-function mobFinestra(){const f=document.querySelector('#modale .finestra');if(!f||!bozza)return;f.classList.add('mb-fin');
+function mobFinestra(){const f=document.querySelector('#modale .finestra');if(!f)return;f.classList.add('mb-fin');if(!f.querySelector('#m-imp')||!bozza){mobCoppie(f);return}
   const be=f.querySelector('.tipi [data-tipo="entrata"]');if(be)be.textContent='Entrata';
   const t=bozza.tipo, pan=f.querySelector('.cp-pan');
   if(t==='uscita')f.querySelectorAll('.cp-g').forEach(g=>{const v=g.querySelector('[data-cp-v]');g.hidden=!!v&&gTipo(v.dataset.cpV)==='entrata'&&!g.querySelector('.on')});
@@ -8347,11 +8359,12 @@ function mobFinestra(){const f=document.querySelector('#modale .finestra');if(!f
   const fa=f.querySelector('#m-ok');if(fa&&t==='coi'&&fa.nextSibling)fa.nextSibling.textContent=' Fatta';
   ['#c-cat','#m-det'].forEach(q=>{const x=f.querySelector(q);if(x&&t==='coi')x.closest('label').classList.add('largo')});
   const cp=f.querySelector('.campi .cp');if(cp)cp.closest('label').classList.add('largo');
-  let col=0;[...f.querySelectorAll('.campi>*')].forEach((el,i,L)=>{if(el.hidden||getComputedStyle(el).display==='none')return;el.classList.remove('mb-tutta');
+  mobCoppie(f)}
+function mobCoppie(f){f.querySelectorAll('.campi').forEach(cm=>{let col=0;[...cm.children].forEach((el,i,L)=>{if(el.hidden||getComputedStyle(el).display==='none')return;el.classList.remove('mb-tutta');
     const lg=el.classList.contains('largo');if(lg){col=0;return}
-    const nx=L.slice(i+1).find(x=>!(x.hidden||getComputedStyle(x).display==='none'));if(col===0&&(!nx||nx.classList.contains('largo'))){el.classList.add('mb-tutta');return}col=col?0:1})}
-for(const nome of ['disegnaFinestra','disegnaFinestraCoi']){const orig=window[nome];if(typeof orig!=='function')continue;
-  window[nome]=function(){if(window.MOB&&bozza&&!bozza.id&&(bozza.tipo==='uscita'||bozza.tipo==='entrata')&&gTipo(bozza.cat)&&gTipo(bozza.cat)!==bozza.tipo)bozza.cat=bozza.tipo==='entrata'?'bonifici a mio favore':'spese variabili';
+    const nx=L.slice(i+1).find(x=>!(x.hidden||getComputedStyle(x).display==='none'));if(col===0&&(!nx||nx.classList.contains('largo'))){el.classList.add('mb-tutta');return}col=col?0:1})})}
+for(const nome of ['disegnaFinestra','disegnaFinestraCoi','disegnaFattura']){const orig=window[nome];if(typeof orig!=='function')continue;
+  window[nome]=function(){if(window.MOB&&nome!=='disegnaFattura'&&bozza&&!bozza.id&&(bozza.tipo==='uscita'||bozza.tipo==='entrata')&&gTipo(bozza.cat)&&gTipo(bozza.cat)!==bozza.tipo)bozza.cat=bozza.tipo==='entrata'?'bonifici a mio favore':'spese variabili';
     const r=orig.apply(this,arguments);if(window.MOB)try{mobFinestra()}catch(e){}return r}}
 // Paolo 26/11: nel calendario di Movimenti si cambia mese scorrendo col dito a destra o a sinistra
 let mbTx=null;document.addEventListener('touchstart',e=>{const c=window.MOB&&e.target.closest('.mb-cal');mbTx=c?{x:e.touches[0].clientX,y:e.touches[0].clientY}:null},{passive:true});
@@ -8414,7 +8427,7 @@ function pAnno0(){const X=h3Dati(), a=X.a;
   let h=`<div class="mb-k3">${bol('vol','fattura','Fatturato',e0(Yp.vol),'previsto')}${bol('spe','variabili','Spese',e0(usato),'con gli accantoni')}${bol(resto<-0.5?'spe':'ent','salvadanaio',resto<-0.5?'Mancano':'Restano',e0(Math.abs(resto)),'a fine anno')}</div>`;
   if(resto>0.5)V.push(['Ti resta','var(--salvia)',resto]);
   h+=pil('Ogni 100 € che fatturi','anno')+`<div class="mb-card"><div class="mb-stack">${V.map(v=>`<i style="width:${v[2]/base*100}%;background:${v[1]}"></i>`).join('')}</div>
-    ${V.map(v=>riga({col:v[1],t:v[0],s:v[3]!=null?`${v[4]||'già spesi'} ${e0(v[3])}`:'con il previsto',v:e0(v[2]),vs:Math.round(v[2]/(Yp.vol||1)*100)+'%'})).join('')}${resto<-0.5?riga({col:'var(--corallo)',t:'Mancano',s:'le spese superano il fatturato',v:e0(-resto),vc:'neg',vs:Math.round(-resto/(Yp.vol||1)*100)+'%'}):''}</div>`;
+    ${V.map(v=>riga({col:v[1],t:v[0],s:v[3]!=null?`${v[4]||'già spesi'} ${e0(v[3])}`:'con il previsto',v:e0(v[2]),vs:Yp.vol>0.5?Math.round(v[2]/Yp.vol*100)+'%':''})).join('')}${resto<-0.5?riga({col:'var(--corallo)',t:'Mancano',s:'le spese superano il fatturato',v:e0(-resto),vc:'neg',vs:Yp.vol>0.5?Math.round(-resto/(Yp.vol||1)*100)+'%':''}):''}</div>`;
   try{h+=mobFisco()}catch(e){console.error(e)}
   return h}
 
