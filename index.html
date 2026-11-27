@@ -1412,6 +1412,30 @@ input.rd-lim.mano{border-color:var(--inchiostro)}.rd-g i{position:absolute;top:0
 @media (max-width:1100px){.info-mese.tgm,.info-mese.tgm.senza-stip{grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:repeat(10,auto)}
   .tgm>.tg-c{grid-column:span 3;grid-row:1/6}.tg-grp{grid-column:1/13!important;grid-row:6/11;border-top:1px solid rgba(0,0,0,0.15);border-left:0}.tg-grp>.tg-c:nth-child(2){grid-column:1/8}.tg-grp>.tg-c:nth-child(3){grid-column:8/13}
   .senza-stip .tg-grp>.tg-c:nth-child(2){grid-column:1/5}.senza-stip .tg-grp>.tg-c:nth-child(3){grid-column:5/9}.senza-stip .tg-grp>.tg-c:nth-child(4){grid-column:9/13}}
+/* ---- testa Movimenti compatta con i conti (Paolo 27/11) ---- */
+.info-mese.tgx{display:flex;gap:10px;background:transparent;box-shadow:none;border:0;padding:0;overflow:visible}
+.tgx-g{display:flex;flex-direction:column;min-width:0;flex-basis:0 !important;background:#fff;border-radius:var(--r-card,16px);overflow:hidden;box-shadow:var(--ombra-card,none)}
+.tgx-g.gc{flex:5.6}.tgx-g.gm{flex:5.2}
+.tgx-gh{display:flex;align-items:baseline;gap:8px;padding:3px 12px;background:var(--grigino);font-size:var(--f-mini);white-space:nowrap;overflow:hidden;border-bottom:1px solid rgba(0,0,0,0.1)}
+.tgx-gh span{font-weight:700;text-transform:uppercase;letter-spacing:.4px}.tgx-gh em{font-style:normal;color:var(--grigio)}.tgx-gh em b{color:var(--inchiostro)}
+.tgx-g.gc .tgx-gh{background:color-mix(in srgb,var(--giallo) 55%,#fff)}.tgx-g.gm .tgx-gh{background:var(--corallo-ch)}
+.tgx-r{display:flex;flex:1;min-width:0}
+.tgx-c{position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden;flex-basis:0 !important;padding:6px 12px 9px;border-left:1px solid rgba(0,0,0,0.1);cursor:pointer}
+.tgx-c:first-child{border-left:0}
+.tgx-c:hover{background:color-mix(in srgb,var(--b) 14%,#fff)}.tgx-c.sel{background:color-mix(in srgb,var(--b) 30%,#fff)}
+.tgx-c.acc{cursor:default}
+.tgx-h{display:flex;align-items:center;gap:6px;min-width:0;height:20px;font-size:var(--f-mini);font-weight:700;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.tgx-l{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.tgx-h .im-st{margin-left:auto;padding:1px 6px;font-size:var(--f-mini);text-transform:none;letter-spacing:0;flex:none}
+.tgx-h .im-perc.tg-perc{position:static;margin-left:auto;flex:none;padding:0 5px;font-size:var(--f-mini)}
+.tgx-n{display:flex;align-items:baseline;gap:8px;min-width:0;white-space:nowrap;overflow:hidden}
+.tgx-n b{font:700 var(--f-cifra)/1.15 var(--font-titoli);white-space:nowrap}.tgx-n b.neg{color:var(--rosso,#c0392b)}
+.tgx-s{height:16px;font-size:var(--f-piccolo);line-height:16px;color:var(--grigio);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.tgx-s b{font-weight:700;color:var(--inchiostro)}
+.tgx-di{font:500 var(--f-piccolo) var(--font);color:var(--grigio);margin-left:5px}
+.tgx-bar{position:absolute;left:0;right:0;bottom:0;height:5px;display:flex;background:var(--grigino)}
+.tgx-bar i{display:block;height:100%;flex:none;background:var(--b)}
+.tgx-bar i.v{background:repeating-linear-gradient(45deg,var(--b) 0 3px,var(--retino) 3px 6px)}
+.tgx-c.sel .tgx-bar{height:7px}
 .mov select.sel-coi{font-size:var(--f-piccolo);letter-spacing:-.3px;padding-left:5px;padding-right:2px}
 .mov .c-conto-coi select{appearance:none;-webkit-appearance:none;font-size:var(--f-piccolo);letter-spacing:-.1px;padding-right:4px;cursor:default}
 .tg-n .tg-di{font:500 var(--f-testo) var(--font);color:var(--grigio);margin-left:6px;white-space:nowrap}
@@ -6700,6 +6724,48 @@ function infoMese(){
       fl:`<span><span class="coi-lungo">tua </span>metà <b>${eu(sF*DC.q)}</b></span>`,fr:Math.abs(cR)<0.5?pill('neutro','pari'):cR>0?pill('ok','+ '+eu(cR)+'<span class="coi-lungo"> da parte</span>'):pill('no','− '+eu(-cR))});
     const nGr=D.completo?2:3, perT=mesiP.length===1?'mese':'periodo';
     const cGr=`<div class="tg-grp" style="grid-column:span ${nGr}" title="Tutte le spese del ${perT}: fisse, variabili e per attività, da qualsiasi conto"><div class="tg-gh"><span class="tg-l">Spese del ${perT}</span><span class="tg-gv">pagate <b>${euro(spPag)}</b></span><span class="tg-gp">${spPrv>0.5?`previste in tutto <b>${euro(spese)}</b>`:'tutte pagate'}</span></div>${cMid}${cF}</div>`;
+    // Paolo 27/11: barra in alto più compatta e con i saldi dei conti (Unicredit soprattutto)
+    if(window.STILE_TESTA!=='griglia'){
+      const oggi=oggiISO(), aO=annoDi(oggi), mO=meseDi(oggi);
+      let R, quando;
+      if(a<aO||(a===aO&&mF<mO)){R=saldiMensili(a,true)[mF];quando=`a fine ${MESI3[mF-1]}`}
+      else if(a===aO&&mI<=mO){R=infoOggi().reali[mO];quando='oggi'}
+      else {R=saldiMensili(a,false)[mF];quando=`previsti a fine ${MESI3[mF-1]}`}
+      const cUni=S.conti.find(c=>c.tipo==='conto'), cRev=S.conti.find(c=>c.tipo==='salvadanaio'), cDep=S.conti.find(c=>c.tipo==='deposito'), cCo=S.conti.find(c=>c.tipo==='cointestato');
+      const carta=cUni&&S.conti.find(c=>c.tipo==='carta'&&c.addebito===cUni.id);
+      const v=c=>c&&R?(+R[c.id]||0):0, uni=v(cUni), car=carta?v(carta):0, coiV=v(cCo), q=cCo?(cCo.quota??0.5):0.5;
+      const eN=x=>(x<-0.005?'− ':'')+'€ '+numIt(Math.abs(x)), eK=x=>(x<-0.5?'− ':'')+numIt(Math.abs(Math.round(x))).replace(/,00$/,'');
+      const neg=x=>x<-0.5?' neg':'';
+      const conti=[
+        cUni&&{id:cUni.id,cls:'uni',col:cUni.colore||'#b8d8c4',label:'Unicredit',num:eN(uni),sub:carta?`dopo le carte <b>${eK(uni-car)}</b>`:'',neg:uni,
+          tip:`Saldo del conto Unicredit ${quando}: ${euro(uni)} (movimenti segnati come fatti). Le carte del mese (${euro(car)}) escono dal conto il mese dopo: tolte quelle restano ${euro(uni-car)}. Clicca per vedere i movimenti del conto.`},
+        cRev&&{id:cRev.id,cls:'rev',col:cRev.colore||'#e6d6bd',label:'Revolut',num:eN(v(cRev)),sub:'accantonati',neg:v(cRev),tip:`Revolut accantonamenti ${quando}: ${euro(v(cRev))}. Clicca per vedere i suoi movimenti.`},
+        cDep&&{id:cDep.id,cls:'dep',col:cDep.colore||'#d2bc9c',label:'Deposito',num:eN(v(cDep)),sub:'Revolut',neg:v(cDep),tip:`Revolut deposito ${quando}: ${euro(v(cDep))}. Clicca per vedere i suoi movimenti.`},
+        cCo&&{id:cCo.id,cls:'coi',col:'var(--coi-forte)',label:'Cointestato',num:eN(coiV),sub:`tua metà <b>${eK(coiV*q)}</b>`,neg:coiV,coi:1,tip:`Conto cointestato ${quando}: ${euro(coiV)}, tua metà ${euro(coiV*q)}. Fuori dai totali. Clicca per vedere le sue voci nella lista.`}].filter(Boolean);
+      // Variante A: una sola fila di riquadri bassi (titolo + cifra), barra sottile sul bordo in basso
+      const st=(pag,prv,col)=>{const s=Math.max(pag+prv,0.01);return `<div class="tgx-bar"><i style="--b:${col};width:${Math.max(0,pag)/s*100}%"></i><i class="v" style="--b:${col};width:${Math.max(0,prv)/s*100}%"></i></div>`};
+      const tile=o=>`<div class="tgx-c ${o.cls||''}${o.sel?' sel':''}" style="--b:${o.col};flex:${o.fx||1}" ${o.attr||''} title="${esc(o.tip||'')}"><div class="tgx-h"><span class="tgx-l">${o.label}</span>${o.pill||''}</div><div class="tgx-n"><b class="${o.ncls||''}">${o.num}</b></div><div class="tgx-s">${o.sub||''}</div>${o.bar||`<div class="tgx-bar"><i style="--b:${o.col};width:100%"></i></div>`}</div>`;
+      const pillS=(cls,t)=>`<span class="im-st ${cls}">${t}</span>`;
+      const tc=[
+        tile({...conti[0],fx:1.25,attr:`data-carte-mov="${conti[0].id}"`,sel:UI.conto===conti[0].id,ncls:neg(uni)}),
+        carta&&tile({cls:'car',col:'#8fc4a6',fx:1.05,label:`Carte ${mesiP.length===1?MESI3[mF-1]:''}`,num:eN(cC.pag),sub:mesiP.length===1?`esce a ${MESI3[mF%12]}`:'',attr:`data-carte-mov="${carta.id}"`,sel:UI.conto===carta.id,
+          pill:cC.prv>0.5?pillS('att','+ '+eK(cC.prv)):'',bar:st(cC.pag,cC.prv,'#8fc4a6'),tip:`Spese con le carte Unicredit: registrate ${euro(cC.pag)}${cC.prv>0.5?`, previste ${euro(cC.prv)}`:''}. Escono dal conto il mese dopo. Clicca per vederle.`}),
+        ...conti.slice(1).map(o=>tile({...o,fx:o.coi?1.15:1,attr:o.coi?'data-coi-mov="1"':`data-carte-mov="${o.id}"`,sel:UI.conto===o.id,ncls:neg(o.neg),pill:o.coi&&Math.abs(cR)>=0.5?pillS(cR>0?'ok':'no',(cR>0?'+ ':'− ')+eK(Math.abs(cR))):''}))].filter(Boolean).join('');
+      const xE=B.entrate, xF=B.fiscali, tA2=xF.pag+xF.prv, fu2=speseUni(a,mesiP,'fiscali'), uF2=fu2.pag+fu2.prv, limA2=D.rev+uF2, dA2=limA2-tA2;
+      const tm=[
+        tile({cls:'ent',col:'var(--salvia)',label:'Entrate',num:eN(xE.pag),sub:xE.prv>0.5?`in tutto <b>${eK(entr)}</b>`:'tutte incassate',pill:xE.prv>0.5?pillS('att','+ '+eK(xE.prv)):'',bar:st(xE.pag,xE.prv,'var(--salvia)'),attr:'data-bolla-mov="entrate"',sel:UI.cat==='b:entrate',tip:`Entrate incassate ${euro(xE.pag)}; con quelle previste ${euro(entr)}. Clicca per vederle.`}),
+        tile({cls:'acc',col:'#bab8ac',label:'Accantonare',num:eN(B.accPag),pill:`<span class="im-perc tg-perc">${perc}%</span>`,sub:B.accPrv>0.5?`+ ${eK(B.accPrv)} previsti`:'sulle entrate',bar:st(B.accPag,B.accPrv,'#bab8ac'),tip:`Il ${perc}% delle entrate incassate: ${euro(B.accPag)}; con le previste ${euro(acc)}. Da spostare sul Revolut.`}),
+        D.completo?(()=>{const F=FU,V=VU,bF=SP[0],bV=SP[1],tF=F.pag+F.prv,tV=V.pag+V.prv,tt=tF+tV,lim=D.bud,sc=Math.max(lim,tt,1),d=lim-tt,w=x=>Math.max(0,x)/sc*100;
+          return tile({cls:'stp',col:'#9ec3e6',fx:1.9,label:`Stipendio del ${perT}`,num:`${eN(tt)}<span class="tgx-di">di ${eK(lim)}</span>`,sub:`<span data-bolla-mov="fisse">fisse <b>${eK(tF)}</b></span> · <span data-bolla-mov="variabili">variabili <b>${eK(tV)}</b></span>`,
+            pill:d>=-0.5?pillS('ok','restano '+eK(d)):pillS('no','sfori '+eK(-d)),sel:UI.cat==='b:fisse'||UI.cat==='b:variabili',
+            bar:`<div class="tgx-bar"><i style="--b:${bF.colore};width:${w(F.pag)}%"></i><i class="v" style="--b:${bF.colore};width:${w(F.prv)}%"></i><i style="--b:${bV.colore};width:${w(V.pag)}%"></i><i class="v" style="--b:${bV.colore};width:${w(V.prv)}%"></i></div>`,
+            tip:`Stipendio = netto del trimestre precedente ÷ 3: ${euro(lim)}. Spese fisse ${euro(tF)} (da pagare ${euro(F.prv)}) e variabili ${euro(tV)} da Unicredit, pagate e previste.`})})()
+          :SP.slice(0,2).map(b=>{const x=B[b.id];return tile({col:b.colore,label:esc(b.nome),num:eN(x.pag+x.prv),bar:st(x.pag,x.prv,b.colore),attr:`data-bolla-mov="${b.id}"`,sel:UI.cat==='b:'+b.id,tip:esc(b.spiega)})}).join(''),
+        tile({cls:'att',col:bA.colore,fx:1.15,label:'Per attività',num:eN(tA2),sub:uF2>0.5&&D.rev<0.5?'da Unicredit':`dal Revolut`,pill:uF2>0.5&&D.rev<0.5?pillS('ok','tolte dal netto'):dA2>=-0.5?pillS('ok','restano '+eK(dA2)):pillS('no','sfori '+eK(-dA2)),bar:st(xF.pag,xF.prv,bA.colore),attr:'data-bolla-mov="fiscali"',sel:UI.cat==='b:fiscali',
+          tip:`Spese per attività ${euro(tA2)}. Disponibile sul Revolut: ${euro(D.rev)}. Clicca per vederle.`})].join('');
+      return `<div class="info-mese tgx"><div class="tgx-g gc"><div class="tgx-gh"><span>Conti</span><em>${quando}</em></div><div class="tgx-r">${tc}</div></div>
+        <div class="tgx-g gm"><div class="tgx-gh"><span>${mesiP.length===1?MESI[mF-1]:'Periodo'}</span><em>spese pagate <b>${eK(spPag)}</b>${spPrv>0.5?` · in tutto <b>${eK(spese)}</b>`:''}</em></div><div class="tgx-r">${tm}</div></div></div>`;
+    }
     return `<div class="info-mese tgm ${D.completo?'':'senza-stip'}">${cE}${cA}${cS}${cGr}${cCoi}</div>`;
   }
   if(stile==='A') return `<div class="info-mese st-a">${hero}<div class="im-gruppo"><div class="im-gr-testa"><small>Totale spese</small><b>${euro(spese)}</b><span><em><span class="lungo">registrate</span><span class="corto">reg.</span></em> ${euro(spPag)} · <em><span class="lungo">previste</span><span class="corto">prev.</span></em> ${euro(spPrv)}</span><span class="im-gr-nota">= fisse + variabili + attività</span></div><div class="im-gr-corpo ${D.completo&&(barre==='unita'||barre==='misto')?'unito':''}">${corpo}</div></div></div>`;
